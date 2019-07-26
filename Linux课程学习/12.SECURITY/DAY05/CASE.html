@@ -1,0 +1,508 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD SECURITY DAY05</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#case1">案例1：常用系统监控命令</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#case2">案例2：部署Zabbix监控平台</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#case3">案例3：配置及使用Zabbix监控系统</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#case4">案例4：自定义Zabbix监控项目</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：常用系统监控命令</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求熟悉查看Linux系统状态的常用命令，为进一步执行具体的监控任务做准备：</p>
+      <ol class="list">
+        <li>查看内存信息
+</li>
+        <li>查看交换分区信息
+</li>
+        <li>查看磁盘信息
+</li>
+        <li>查看CPU信息
+</li>
+        <li>查看网卡信息
+</li>
+        <li>查看端口信息
+</li>
+        <li>查看网络连接信息
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>一般企业做监控的目的：实时报告系统状态，提前发现系统的问题。</p>
+      <p>监控的资源可以分为：共有数据（HTTP、FTP等）和私有数据（CPU、内存、进程数等）。</p>
+      <p>监控软件可以使用：系统自带的命令、Cacti监控系统、Nagios监控系统、Zabbix监控系统。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：使用命令查看计算机状态数据</p>
+      <p>1）查看内存与交换分区信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># free &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看内存信息</span></li><li>              total        used        free      shared  <span class="sh_normal">buff</span><span class="sh_symbol">/</span>cache   available</li><li>Mem<span class="sh_symbol">:</span>       <span class="sh_number">16166888</span>     <span class="sh_number">8017696</span>      <span class="sh_number">720016</span>      <span class="sh_number">106504</span>     <span class="sh_number">7429176</span>     <span class="sh_number">7731740</span></li><li>Swap<span class="sh_symbol">:</span>       <span class="sh_number">4194300</span>      <span class="sh_number">218268</span>     <span class="sh_number">3976032</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># free <span class="sh_symbol">|</span> awk <span class="sh_string">'/Mem/{print $4}'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看剩余内存容量</span></li><li><span class="sh_number">720928</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># swapon <span class="sh_symbol">-</span>s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看交换分区信息</span></li><li>文件名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;大小&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;权限</li><li><span class="sh_regexp">/dev/</span>sda3             partition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">4194300</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">218268</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">-</span><span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# free 									//查看内存信息
+              total        used        free      shared  buff/cache   available
+Mem:       16166888     8017696      720016      106504     7429176     7731740
+Swap:       4194300      218268     3976032
+[root@proxy ~]# free | awk '/Mem/{print $4}'				//查看剩余内存容量
+720928
+[root@proxy ~]# swapon -s								//查看交换分区信息
+文件名				类型			大小		已用		权限
+/dev/sda3             partition		4194300	218268	-1
+</pre></div></div>
+      <p class="number">步骤二：查看磁盘与CPU利用率</p>
+      <p>1）查看磁盘信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># df &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看所有磁盘的使用率</span></li><li>文件系统           1K<span class="sh_symbol">-</span>块      已用      可用 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已用<span class="sh_symbol">%</span> 挂载点</li><li><span class="sh_regexp">/dev/</span>sda2      <span class="sh_number">476254208</span> <span class="sh_number">116879624</span> <span class="sh_number">335159084</span>   <span class="sh_number">26</span><span class="sh_symbol">%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">/</span></li><li><span class="sh_regexp">/dev/</span>sda1         <span class="sh_number">198174</span>    <span class="sh_number">133897</span>     <span class="sh_number">49737</span>   <span class="sh_number">73</span><span class="sh_symbol">%</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">/</span>boot</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># df <span class="sh_symbol">|</span> awk <span class="sh_string">'/</span><span class="sh_specialchar">\/</span><span class="sh_string">$/{print $5}'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看根分区的利用率</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# df 									//查看所有磁盘的使用率
+文件系统           1K-块      已用      可用 		已用% 挂载点
+/dev/sda2      476254208 116879624 335159084   26% 		/
+/dev/sda1         198174    133897     49737   73% 		/boot
+[root@proxy ~]# df | awk '/\/$/{print $5}'			//查看根分区的利用率
+</pre></div></div>
+      <p>2）查看CPU平均负载</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># uptime &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看CPU负载（1，5，15分钟）</span></li><li> <span class="sh_number">23</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">12</span> up <span class="sh_number">38</span> days<span class="sh_symbol">,</span> <span class="sh_number">14</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">,</span>  <span class="sh_number">9</span> users<span class="sh_symbol">,</span>  load average<span class="sh_symbol">:</span> <span class="sh_number">0.00</span><span class="sh_symbol">,</span> <span class="sh_number">0.04</span><span class="sh_symbol">,</span> <span class="sh_number">0.05</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># uptime <span class="sh_symbol">|</span>awk <span class="sh_string">'{print $NF}'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//仅查看CPU的15分钟平均负载</span></li><li><span class="sh_number">0.05</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# uptime 							//查看CPU负载（1，5，15分钟）
+ 23:54:12 up 38 days, 14:54,  9 users,  load average: 0.00, 0.04, 0.05
+[root@proxy ~]# uptime |awk '{print $NF}'			//仅查看CPU的15分钟平均负载
+0.05
+</pre></div></div>
+      <p class="number">步骤二：查看网卡信息、端口信息、网络连接信息</p>
+      <p>1）查看网卡信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ifconfig eth0</li><li>eth0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">192.168.4.5</span>  netmask <span class="sh_number">255.255.255.0</span>  broadcast <span class="sh_number">172.25.0.255</span></li><li>        inet6 fe80<span class="sh_symbol">::</span><span class="sh_number">5054</span><span class="sh_symbol">:</span>ff<span class="sh_symbol">:</span>fe00<span class="sh_symbol">:</span>b  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether <span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span>0b  txqueuelen <span class="sh_number">1000</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">62429</span>  bytes <span class="sh_number">10612049</span> <span class="sh_symbol">(</span><span class="sh_number">10.1</span> MiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">5674</span>  bytes <span class="sh_number">4121143</span> <span class="sh_symbol">(</span><span class="sh_number">3.9</span> MiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ifconfig eth0 <span class="sh_symbol">|</span>awk <span class="sh_string">'/inet /{print $2}'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看IP地址信息</span></li><li><span class="sh_number">192.168.4.5</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ifconfig eth0 <span class="sh_symbol">|</span>awk <span class="sh_string">'/RX p/{print $5}'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//网卡接受数据包流量</span></li><li><span class="sh_number">10625295</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ifconfig eth0 <span class="sh_symbol">|</span>awk <span class="sh_string">'/TX p/{print $5}'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//网卡发送数据包流量</span></li><li><span class="sh_number">4130821</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ifconfig eth0
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.4.5  netmask 255.255.255.0  broadcast 172.25.0.255
+        inet6 fe80::5054:ff:fe00:b  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 52:54:00:00:00:0b  txqueuelen 1000  (Ethernet)
+        RX packets 62429  bytes 10612049 (10.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 5674  bytes 4121143 (3.9 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+[root@proxy ~]# ifconfig eth0 |awk '/inet /{print $2}'		//查看IP地址信息
+192.168.4.5
+[root@proxy ~]# ifconfig eth0 |awk '/RX p/{print $5}'		//网卡接受数据包流量
+10625295
+[root@proxy ~]# ifconfig eth0 |awk '/TX p/{print $5}'		//网卡发送数据包流量
+4130821
+</pre></div></div>
+      <p>2）查看端口信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ss <span class="sh_symbol">-</span>ntulp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看本机监听的所有端口</span></li><li><span class="sh_comment">//-n以数字显示端口号</span></li><li><span class="sh_comment">//-t显示tcp连接</span></li><li><span class="sh_comment">//-u显示udp连接</span></li><li><span class="sh_comment">//-p显示监听端口对应的程序名称</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ss -ntulp								//查看本机监听的所有端口
+//-n以数字显示端口号
+//-t显示tcp连接
+//-u显示udp连接
+//-p显示监听端口对应的程序名称
+</pre></div></div>
+      <p>3）查看网络连接信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ss <span class="sh_symbol">-</span>antup&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看所有的网络连接信息</span></li><li><span class="sh_comment">//-a查看所有连接状态信息</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ss -antup								//查看所有的网络连接信息
+//-a查看所有连接状态信息
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：部署Zabbix监控平台</h2>
+      <h3>2.1 问题</h3>
+      <p>本案例要求部署一台Zabbix监控服务器，一台被监控主机，为进一步执行具体的监控任务做准备：</p>
+      <ol class="list">
+        <li>安装LNMP环境
+</li>
+        <li>源码安装Zabbix
+</li>
+        <li>安装监控端主机，修改基本配置
+</li>
+        <li>初始化Zabbix监控Web页面
+</li>
+        <li>修改PHP配置文件，满足Zabbix需求
+</li>
+        <li>安装被监控端主机，修改基本配置
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>使用1台RHEL7虚拟机，安装部署LNMP环境、Zabbix及相关的依赖包，配置数据库并对Zabbix监控平台进行初始化操作。使用2台被监控端，源码安装Zabbix Agent。完成Zabbix实验需要我们搭建一个实验环境，拓扑结构如表-1所示。</p>
+      <div class="table">
+        <p>表-1 实验拓扑结构</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署监控服务器</p>
+      <p>1）安装LNMP环境</p>
+      <p>Zabbix监控管理控制台需要通过Web页面展示出来，并且还需要使用MySQL来存储数据，因此需要先为Zabbix准备基础LNMP环境。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc pcre<span class="sh_symbol">-</span>devel  openssl<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">[</span>root@zabbixserver nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module</li><li><span class="sh_symbol">[</span>root@zabbixserver nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install php php<span class="sh_symbol">-</span>mysql <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> mariadb mariadb<span class="sh_symbol">-</span>devel mariadb<span class="sh_symbol">-</span>server</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y  install  php<span class="sh_symbol">-</span>fpm<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li><span class="sh_comment">//注意，php-fpm这个软件包在lnmp_soft/目录下</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# yum -y install gcc pcre-devel  openssl-devel
+[root@zabbixserver ~]# tar -xf nginx-1.12.2.tar.gz
+[root@zabbixserver ~]# cd nginx-1.12.2
+[root@zabbixserver nginx-1.12.2]# ./configure --with-http_ssl_module
+[root@zabbixserver nginx-1.12.2]# make &amp;&amp; make install
+[root@zabbixserver ~]# yum -y install php php-mysql \
+&gt; mariadb mariadb-devel mariadb-server
+[root@zabbixserver ~]# yum -y  install  php-fpm-5.4.16-42.el7.x86_64.rpm
+//注意，php-fpm这个软件包在lnmp_soft/目录下
+</pre></div></div>
+      <p>2）修改Nginx配置文件</p>
+      <p>配置Nginx支持PHP动态网站，因为有大量PHP脚本需要执行，因此还需要开启Nginx的各种fastcgi缓存，加速PHP脚本的执行速度。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li>… …</li><li>http<span class="sh_cbracket">{</span></li><li>… …</li><li>&nbsp;&nbsp;&nbsp;&nbsp;fastcgi_buffers <span class="sh_number">8</span> 16k<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//缓存php生成的页面内容，8个16k</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;fastcgi_buffer_size 32k<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//缓存php生产的头部信息</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;fastcgi_connect_timeout <span class="sh_number">300</span><span class="sh_symbol">;</span>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//连接PHP的超时时间</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;fastcgi_send_timeout <span class="sh_number">300</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//发送请求的超时时间</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;fastcgi_read_timeout <span class="sh_number">300</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//读取请求的超时时间</span></li><li>location <span class="sh_symbol">~</span> <span class="sh_symbol">\.</span>php$ <span class="sh_cbracket">{</span></li><li>           &nbsp;&nbsp;&nbsp;&nbsp; root           html<span class="sh_symbol">;</span></li><li>           &nbsp;&nbsp;&nbsp;&nbsp; fastcgi_pass   <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">9000</span><span class="sh_symbol">;</span></li><li>           &nbsp;&nbsp;&nbsp;&nbsp; fastcgi_index  index<span class="sh_symbol">.</span>php<span class="sh_symbol">;</span></li><li>           &nbsp;&nbsp;&nbsp;&nbsp; include        fastcgi<span class="sh_symbol">.</span>conf<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li>… …</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# vim /usr/local/nginx/conf/nginx.conf
+… …
+http{
+… …
+	fastcgi_buffers 8 16k;	      			//缓存php生成的页面内容，8个16k
+	fastcgi_buffer_size 32k;	      			//缓存php生产的头部信息
+	fastcgi_connect_timeout 300;     			//连接PHP的超时时间
+	fastcgi_send_timeout 300;	     			//发送请求的超时时间
+	fastcgi_read_timeout 300;	    				//读取请求的超时时间
+location ~ \.php$ {
+           	 root           html;
+           	 fastcgi_pass   127.0.0.1:9000;
+           	 fastcgi_index  index.php;
+           	 include        fastcgi.conf;
+        }
+… …
+</pre></div></div>
+      <p>3）启动服务</p>
+      <p>启动Nginx、PHP-FPM、MariaDB服务，关闭SELinux与防火墙。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># systemctl start  mariadb</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># systemctl start  php<span class="sh_symbol">-</span>fpm</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># ln <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span><span class="sh_normal">nginx </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># nginx</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# systemctl start  mariadb
+[root@zabbixserver ~]# systemctl start  php-fpm
+[root@zabbixserver ~]# ln -s /usr/local/nginx/sbin/nginx /sbin/nginx
+[root@zabbixserver ~]# nginx
+
+[root@zabbixserver ~]# firewall-cmd --set-default-zone=trusted
+[root@zabbixserver ~]# setenforce 0
+</pre></div></div>
+      <p>4）客户端测试LNMP环境</p>
+      <p>服务器创建PHP测试页面，浏览器访问页面测试网页连通性。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>test<span class="sh_symbol">.</span>php</li><li><span class="sh_symbol">&lt;?</span>php</li><li>$i<span class="sh_symbol">=</span><span class="sh_number">33</span><span class="sh_symbol">;</span></li><li>echo $i<span class="sh_symbol">;</span></li><li><span class="sh_symbol">?&gt;</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># curl http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.5/test.php</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# cat /usr/local/nginx/html/test.php
+&lt;?php
+$i=33;
+echo $i;
+?&gt;
+[root@zabbixserver ~]# curl http://192.168.2.5/test.php
+</pre></div></div>
+      <p class="number">步骤二：部署监控服务器Zabbix Server</p>
+      <p>1）源码安装Zabbix Server</p>
+      <p>多数源码包都是需要依赖包的，zabbix也一样，源码编译前需要先安装相关依赖包。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver lnmp_soft<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install  net<span class="sh_symbol">-</span>snmp<span class="sh_symbol">-</span>devel <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> curl<span class="sh_symbol">-</span>devel </li><li><span class="sh_comment">//安装相关依赖包</span></li><li><span class="sh_symbol">[</span>root@zabbixserver lnmp_soft<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install  <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> libevent<span class="sh_symbol">-</span>devel<span class="sh_number">-2.0.21-4</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li><span class="sh_comment">//注意libevent-devel这个软件包在lnmp_soft目录下有提供</span></li><li><span class="sh_symbol">[</span>root@zabbixserver lnmp_soft<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xf zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@zabbixserver lnmp_soft<span class="sh_symbol">]</span># cd zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixserver zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure  <span class="sh_symbol">--</span>enable<span class="sh_symbol">-</span>server <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>enable<span class="sh_symbol">-</span>proxy <span class="sh_symbol">--</span>enable<span class="sh_symbol">-</span>agent <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>mysql<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>mysql_config <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>net<span class="sh_symbol">-</span>snmp <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>libcurl</li><li><span class="sh_comment">// --enable-server安装部署zabbix服务器端软件</span></li><li><span class="sh_comment">// --enable-agent安装部署zabbix被监控端软件</span></li><li><span class="sh_comment">// --enable-proxy安装部署zabbix代理相关软件</span></li><li><span class="sh_comment">// --with-mysql配置mysql_config路径</span></li><li><span class="sh_comment">// --with-net-snmp允许zabbix通过snmp协议监控其他设备</span></li><li><span class="sh_comment">// --with-libcurl安装相关curl库文件，这样zabbix就可以通过curl连接http等服务，测试被监控主机服务的状态</span></li><li><span class="sh_symbol">[</span>root@zabbixserver zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver lnmp_soft]# yum -y install  net-snmp-devel \
+&gt; curl-devel 
+//安装相关依赖包
+[root@zabbixserver lnmp_soft]# yum -y install  \
+&gt; libevent-devel-2.0.21-4.el7.x86_64.rpm
+//注意libevent-devel这个软件包在lnmp_soft目录下有提供
+[root@zabbixserver lnmp_soft]# tar -xf zabbix-3.4.4.tar.gz
+[root@zabbixserver lnmp_soft]# cd zabbix-3.4.4/
+[root@zabbixserver zabbix-3.4.4]# ./configure  --enable-server \
+&gt; --enable-proxy --enable-agent --with-mysql=/usr/bin/mysql_config \
+&gt; --with-net-snmp --with-libcurl
+// --enable-server安装部署zabbix服务器端软件
+// --enable-agent安装部署zabbix被监控端软件
+// --enable-proxy安装部署zabbix代理相关软件
+// --with-mysql配置mysql_config路径
+// --with-net-snmp允许zabbix通过snmp协议监控其他设备
+// --with-libcurl安装相关curl库文件，这样zabbix就可以通过curl连接http等服务，测试被监控主机服务的状态
+[root@zabbixserver zabbix-3.4.4]# make &amp;&amp; make install
+</pre></div></div>
+      <p>2）初始化Zabbix</p>
+      <p>创建数据库，上线Zabbix的Web页面</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># mysql</li><li>mysql<span class="sh_symbol">&gt;</span> create database zabbix character set utf8<span class="sh_symbol">;</span></li><li><span class="sh_comment">//创建数据库，支持中文字符集</span></li><li>mysql<span class="sh_symbol">&gt;</span> grant all on zabbix<span class="sh_symbol">.*</span> to zabbix@<span class="sh_string">'localhost'</span> identified by <span class="sh_string">'zabbix'</span><span class="sh_symbol">;</span></li><li><span class="sh_comment">//创建可以访问数据库的账户与密码</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># cd <span class="sh_normal">lnmp_soft</span><span class="sh_symbol">/</span>zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">/</span><span class="sh_normal">database</span><span class="sh_symbol">/</span><span class="sh_normal">mysql</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixserver mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>uzabbix <span class="sh_symbol">-</span>pzabbix zabbix <span class="sh_symbol">&lt;</span> schema<span class="sh_symbol">.</span>sql</li><li><span class="sh_symbol">[</span>root@zabbixserver mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>uzabbix <span class="sh_symbol">-</span>pzabbix zabbix <span class="sh_symbol">&lt;</span> images<span class="sh_symbol">.</span>sql</li><li><span class="sh_symbol">[</span>root@zabbixserver mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>uzabbix <span class="sh_symbol">-</span>pzabbix zabbix <span class="sh_symbol">&lt;</span> data<span class="sh_symbol">.</span>sql</li><li><span class="sh_comment">//刚刚创建是空数据库，zabbix源码包目录下，有提前准备好的数据</span></li><li><span class="sh_comment">//使用mysql导入这些数据即可（注意导入顺序）</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# mysql
+mysql&gt; create database zabbix character set utf8;
+//创建数据库，支持中文字符集
+mysql&gt; grant all on zabbix.* to zabbix@'localhost' identified by 'zabbix';
+//创建可以访问数据库的账户与密码
+[root@zabbixserver ~]# cd lnmp_soft/zabbix-3.4.4/database/mysql/
+[root@zabbixserver mysql]# mysql -uzabbix -pzabbix zabbix &lt; schema.sql
+[root@zabbixserver mysql]# mysql -uzabbix -pzabbix zabbix &lt; images.sql
+[root@zabbixserver mysql]# mysql -uzabbix -pzabbix zabbix &lt; data.sql
+//刚刚创建是空数据库，zabbix源码包目录下，有提前准备好的数据
+//使用mysql导入这些数据即可（注意导入顺序）
+</pre></div></div>
+      <p>上线Zabbix的Web页面</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># cd <span class="sh_normal">lnmp_soft</span><span class="sh_symbol">/</span>zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">/</span><span class="sh_normal">frontends</span><span class="sh_symbol">/</span><span class="sh_normal">php</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixserver php<span class="sh_symbol">]</span># cp <span class="sh_symbol">-</span>r <span class="sh_symbol">*</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixserver php<span class="sh_symbol">]</span># chmod <span class="sh_symbol">-</span>R <span class="sh_number">777</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>html<span class="sh_comment">/*</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# cd lnmp_soft/zabbix-3.4.4/frontends/php/
+[root@zabbixserver php]# cp -r * /usr/local/nginx/html/
+[root@zabbixserver php]# chmod -R 777 /usr/local/nginx/html/*
+</pre></div></div>
+      <p>修改Zabbix_server配置文件，设置数据库相关参数，启动Zabbix_server服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_server<span class="sh_symbol">.</span>conf</li><li>DBHost<span class="sh_symbol">=</span>localhost</li><li><span class="sh_comment">//数据库主机，默认该行被注释</span></li><li>DBName<span class="sh_symbol">=</span>zabbix</li><li><span class="sh_comment">//设置数据库名称</span></li><li>DBUser<span class="sh_symbol">=</span>zabbix</li><li><span class="sh_comment">//设置数据库账户</span></li><li>DBPassword<span class="sh_symbol">=</span>zabbix</li><li><span class="sh_comment">//设置数据库密码，默认该行被注释</span></li><li>LogFile<span class="sh_symbol">=</span><span class="sh_regexp">/tmp/</span>zabbix_server<span class="sh_symbol">.</span>log&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//设置日志，仅查看以下即可</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># useradd <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin zabbix</li><li><span class="sh_comment">//不创建用户无法启动服务</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># zabbix_server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      <span class="sh_comment">//启动服务</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># ss <span class="sh_symbol">-</span>ntulp <span class="sh_symbol">|</span>grep zabbix_server     <span class="sh_comment">//确认连接状态，端口10051</span></li><li>tcp LISTEN <span class="sh_number">0</span> <span class="sh_number">128</span> <span class="sh_symbol">*:</span><span class="sh_number">10051</span> <span class="sh_symbol">*:*</span> users<span class="sh_symbol">:((</span><span class="sh_string">"zabbix_server"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">23275</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">4</span><span class="sh_symbol">),(</span><span class="sh_string">"zabbix_server"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">23274</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">4</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# vim /usr/local/etc/zabbix_server.conf
+DBHost=localhost
+//数据库主机，默认该行被注释
+DBName=zabbix
+//设置数据库名称
+DBUser=zabbix
+//设置数据库账户
+DBPassword=zabbix
+//设置数据库密码，默认该行被注释
+LogFile=/tmp/zabbix_server.log	
+//设置日志，仅查看以下即可
+[root@zabbixserver ~]# useradd -s /sbin/nologin zabbix
+//不创建用户无法启动服务
+[root@zabbixserver ~]# zabbix_server				      //启动服务
+
+[root@zabbixserver ~]# ss -ntulp |grep zabbix_server     //确认连接状态，端口10051
+tcp LISTEN 0 128 *:10051 *:* users:(("zabbix_server",pid=23275,fd=4),("zabbix_server",pid=23274,fd=4)
+</pre></div></div>
+      <p>提示：如果是因为配置文件不对，导致服务无法启动时，不要重复执行zabbix_server，</p>
+      <p>一定要先使用killall zabbix_server关闭服务后，再重新启动一次。</p>
+      <p>修改Zabbix_agent配置文件，启动Zabbix_agent服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_agentd<span class="sh_symbol">.</span>conf</li><li>Server<span class="sh_symbol">=</span><span class="sh_number">127.0.0.1</span><span class="sh_symbol">,</span><span class="sh_number">192.168.2.5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//允许哪些主机监控本机</span></li><li>ServerActive<span class="sh_symbol">=</span><span class="sh_number">127.0.0.1</span><span class="sh_symbol">,</span><span class="sh_number">192.168.2.5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//允许哪些主机通过主动模式监控本机</span></li><li>Hostname<span class="sh_symbol">=</span>zabbix_server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置本机主机名</span></li><li>LogFile<span class="sh_symbol">=</span><span class="sh_regexp">/tmp/</span>zabbix_server<span class="sh_symbol">.</span>log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置日志文件</span></li><li>UnsafeUserParameters<span class="sh_symbol">=</span><span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//是否允许自定义key</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># zabbix_agentd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动监控agent</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># ss <span class="sh_symbol">-</span>ntulp <span class="sh_symbol">|</span>grep zabbix_agentd   <span class="sh_comment">//查看端口信息为10050</span></li><li>tcp    LISTEN     <span class="sh_number">0</span>      <span class="sh_number">128</span>       <span class="sh_symbol">*:</span><span class="sh_number">10050</span>                 <span class="sh_symbol">*:*</span>                   users<span class="sh_symbol">:((</span><span class="sh_string">"zabbix_agentd"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">23505</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">4</span><span class="sh_symbol">),(</span><span class="sh_string">"zabbix_agentd"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">23504</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">4</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# vim /usr/local/etc/zabbix_agentd.conf
+Server=127.0.0.1,192.168.2.5					//允许哪些主机监控本机
+ServerActive=127.0.0.1,192.168.2.5				//允许哪些主机通过主动模式监控本机
+Hostname=zabbix_server						//设置本机主机名
+LogFile=/tmp/zabbix_server.log					//设置日志文件
+UnsafeUserParameters=1						//是否允许自定义key
+[root@zabbixserver ~]# zabbix_agentd			//启动监控agent
+
+[root@zabbixserver ~]# ss -ntulp |grep zabbix_agentd   //查看端口信息为10050
+tcp    LISTEN     0      128       *:10050                 *:*                   users:(("zabbix_agentd",pid=23505,fd=4),("zabbix_agentd",pid=23504,fd=4)
+</pre></div></div>
+      <p>提示：如果是因为配置文件不对，导致服务无法启动时，不要重复执行zabbix_agentd，</p>
+      <p>一定要先使用killall zabbix_agentd关闭服务后，再重新启动一次。</p>
+      <p>浏览器访问Zabbix_server服务器的Web页面</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.5/index.php</span></li><li><span class="sh_comment">//第一次访问，初始化PHP页面会检查计算机环境是否满足要求，如果不满足会给出修改建议</span></li><li><span class="sh_comment">//默认会提示PHP的配置不满足环境要求，需要修改PHP配置文件</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# firefox http://192.168.2.5/index.php
+//第一次访问，初始化PHP页面会检查计算机环境是否满足要求，如果不满足会给出修改建议
+//默认会提示PHP的配置不满足环境要求，需要修改PHP配置文件
+</pre></div></div>
+      <p>根据错误提示，修改PHP配置文件，满足Zabbix_server的Web环境要求</p>
+      <p>php-bcmath和php-mbstring都在lnmp_soft目录下有提供软件包。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php<span class="sh_symbol">-</span>gd php<span class="sh_symbol">-</span>xml</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># yum install php<span class="sh_symbol">-</span>bcmath<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm  </li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># yum install php<span class="sh_symbol">-</span>mbstring<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>php<span class="sh_symbol">.</span>ini</li><li>date<span class="sh_symbol">.</span>timezone <span class="sh_symbol">=</span> <span class="sh_normal">Asia</span><span class="sh_symbol">/</span>Shanghai&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置时区</span></li><li>max_execution_time <span class="sh_symbol">=</span> <span class="sh_number">300</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//最大执行时间，秒</span></li><li>post_max_size <span class="sh_symbol">=</span> 32M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//POST数据最大容量</span></li><li>max_input_time <span class="sh_symbol">=</span> <span class="sh_number">300</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//服务器接收数据的时间限制</span></li><li>memory_limit <span class="sh_symbol">=</span> 128M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//内存容量限制</span></li><li><span class="sh_symbol">[</span>root@zabbixserver <span class="sh_symbol">~]</span># systemctl restart php<span class="sh_symbol">-</span>fpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixserver ~]# yum -y install  php-gd php-xml
+[root@zabbixserver ~]# yum install php-bcmath-5.4.16-42.el7.x86_64.rpm  
+[root@zabbixserver ~]# yum install php-mbstring-5.4.16-42.el7.x86_64.rpm
+[root@zabbixserver ~]# vim /etc/php.ini
+date.timezone = Asia/Shanghai				//设置时区
+max_execution_time = 300					//最大执行时间，秒
+post_max_size = 32M						//POST数据最大容量
+max_input_time = 300						//服务器接收数据的时间限制
+memory_limit = 128M						//内存容量限制
+[root@zabbixserver ~]# systemctl restart php-fpm
+</pre></div></div>
+      <p>修改完PHP配置文件后，再次使用浏览器访问服务器，则会提示如图-1和图-2所示的提示信息。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>注意：这里有一个PHP LDAP是warning状态是没有问题的！</p>
+      <p>在初始化数据库页面，填写数据库相关参数，如图-3所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>在登陆页面，使用用户(admin)和密码(zabbix)登陆，登陆后设置语言环境为中文，如图-4和图-5所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p class="number">步骤三：部署被监控主机Zabbix Agent</p>
+      <p>1）源码安装Zabbix agent软件</p>
+      <p>在2.100和2.200做相同操作（以zabbixclient_web1为例）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># useradd <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin  zabbix</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc pcre<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xf zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz </li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># cd zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure <span class="sh_symbol">--</span>enable<span class="sh_symbol">-</span>agent</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixclient_web1 ~]# useradd -s /sbin/nologin  zabbix
+[root@zabbixclient_web1 ~]# yum -y install gcc pcre-devel
+[root@zabbixclient_web1 ~]# tar -xf zabbix-3.4.4.tar.gz 
+[root@zabbixclient_web1 ~]# cd zabbix-3.4.4/
+[root@zabbixclient_web1 zabbix-3.4.4]# ./configure --enable-agent
+[root@zabbixclient_web1 zabbix-3.4.4]# make &amp;&amp; make install 
+</pre></div></div>
+      <p>2）修改agent配置文件，启动Agent</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_agentd<span class="sh_symbol">.</span>conf</li><li>Server<span class="sh_symbol">=</span><span class="sh_number">127.0.0.1</span><span class="sh_symbol">,</span><span class="sh_number">192.168.2.5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//谁可以监控本机（被动监控模式）</span></li><li>ServerActive<span class="sh_symbol">=</span><span class="sh_number">127.0.0.1</span><span class="sh_symbol">,</span><span class="sh_number">192.168.2.5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//谁可以监控本机（主动监控模式）</span></li><li>Hostname<span class="sh_symbol">=</span>zabbixclient_web1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//被监控端自己的主机名</span></li><li>EnableRemoteCommands<span class="sh_symbol">=</span><span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//监控异常后，是否允许服务器远程过来执行命令，如重启某个服务</span></li><li>UnsafeUserParameters<span class="sh_symbol">=</span><span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             <span class="sh_comment">//是否允许自定义key监控</span></li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># zabbix_agentd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动agent服务</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixclient_web1 ~]# vim /usr/local/etc/zabbix_agentd.conf
+Server=127.0.0.1,192.168.2.5				//谁可以监控本机（被动监控模式）
+ServerActive=127.0.0.1,192.168.2.5			//谁可以监控本机（主动监控模式）
+Hostname=zabbixclient_web1				    //被监控端自己的主机名
+EnableRemoteCommands=1	
+//监控异常后，是否允许服务器远程过来执行命令，如重启某个服务
+UnsafeUserParameters=1					             //是否允许自定义key监控
+[root@zabbixclient_web1 ~]# zabbix_agentd				//启动agent服务
+</pre></div></div>
+      <p>3）拷贝启动脚本（非必须操作，可选做），有启动脚本可以方便管理服务，启动与关闭服务。启动脚本位于zabbix源码目录下。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># cd <span class="sh_normal">misc</span><span class="sh_symbol">/</span>init<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_normal">fedora</span><span class="sh_symbol">/</span>core</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># cp <span class="sh_normal">zabbix_agentd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>init<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>zabbix_agentd start</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>zabbix_agentd stop</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>zabbix_agentd status</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix<span class="sh_number">-3.4.4</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>zabbix_agentd restart</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixclient_web1 zabbix-3.4.4]# cd misc/init.d/fedora/core
+[root@zabbixclient_web1 zabbix-3.4.4]# cp zabbix_agentd /etc/init.d/
+[root@zabbixclient_web1 zabbix-3.4.4]# /etc/init.d/zabbix_agentd start
+[root@zabbixclient_web1 zabbix-3.4.4]# /etc/init.d/zabbix_agentd stop
+[root@zabbixclient_web1 zabbix-3.4.4]# /etc/init.d/zabbix_agentd status
+[root@zabbixclient_web1 zabbix-3.4.4]# /etc/init.d/zabbix_agentd restart
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：配置及使用Zabbix监控系统</h2>
+      <h3>3.1 问题</h3>
+      <p>沿用练习一，使用Zabbix监控平台监控Linux服务器，实现以下目标：</p>
+      <ol class="list">
+        <li>监控CPU
+</li>
+        <li>监控内存
+</li>
+        <li>监控进程
+</li>
+        <li>监控网络流量
+</li>
+        <li>监控硬盘
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>通过Zabbix监控平台，添加被监控zabbixclient_web1主机（192.168.2.100）并链接监控模板即可，Zabbix默认模板就可以监控CPU、内存、进程、网络、磁盘等项目。</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：添加监控主机</p>
+      <p>主机是Zabbix监控的基础，Zabbix所有监控都是基于Host主机。</p>
+      <p>使用火狐浏览器登录http://192.168.2.5，通过Configuration（配置）--&gt;Hosts（主机）--&gt;Create Host（创建主机）添加被监控Linux主机，如图-7所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image006.png">
+        <p>图-7</p>
+      </div>
+      <p>添加被监控主机时，需要根据提示输入被监控Linux主机的主机名称（最好与电脑的主机名一致，但也允许不一致）、主机组、IP地址等参数，具体参考图-8所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image007.png">
+        <p>图-8</p>
+      </div>
+      <p class="number">步骤二：为被监控主机添加监控模板</p>
+      <p>Zabbix通过监控模板来对监控对象实施具体的监控功能，根据模板来定义需要监控哪些数据，对于Linux服务器的监控，Zabbix已经内置了相关的模板（Template OS Linux），选择模板并链接到主机即可，如图-9所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image008.png">
+        <p>图-9</p>
+      </div>
+      <p class="number">步骤三：查看监控数据</p>
+      <p>查看监控数据，登录Zabbix Web控制台，点击Monitoring(监控中)—&gt; Latest data(最新数据)，正过滤器中填写过滤条件，根据监控组和监控主机选择需要查看哪些监控数据，如图-10所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image009.png">
+        <p>图-10</p>
+      </div>
+      <p>找到需要监控的数据后，可以点击后面的Graph查看监控图形，如图-11所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image010.png">
+        <p>图-11</p>
+      </div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：自定义Zabbix监控项目</h2>
+      <h3>4.1 问题</h3>
+      <p>沿用练习二，使用Zabbix实现自定义监控，实现以下目标：监控Linux服务器系统账户的数量。</p>
+      <h3>4.2 方案</h3>
+      <p>需要使用Zabbix自定义key的方式实现自定义监控，参考如下操作步骤：</p>
+      <ol class="list">
+        <li>创建自定义key
+</li>
+        <li>创建监控项目
+</li>
+        <li>创建监控图形
+</li>
+        <li>将监控模板关联到主机
+</li>
+      </ol>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：被监控主机创建自定义key（在192.168.2.100操作）</p>
+      <p>1）创建自定义key</p>
+      <p>自定义key语法格式为：UserParameter=自定义key名称,命令。</p>
+      <p>自定义的key文件一般存储在/usr/local/etc/zabbix_agentd.conf.d/目录，这里还需要修改zabbix_agentd.conf文件，允许自定义监控key，来读取该目录下的所有文件 。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_agentd<span class="sh_symbol">.</span>conf</li><li>Include<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_agentd<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//加载配置文件目录</span></li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_agentd<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 zabbix_agentd<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>d<span class="sh_symbol">]</span># vim count<span class="sh_symbol">.</span>line<span class="sh_symbol">.</span>passwd</li><li>UserParameter<span class="sh_symbol">=</span>count<span class="sh_symbol">.</span>line<span class="sh_symbol">.</span>passwd<span class="sh_symbol">,</span>wc <span class="sh_symbol">-</span><span class="sh_normal">l </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>passwd <span class="sh_symbol">|</span> awk <span class="sh_string">' {print $1} '</span></li><li><span class="sh_comment">////自定义key语法格式:</span></li><li><span class="sh_comment">//UserParameter=自定义key名称,命令</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixclient_web1 ~]# vim /usr/local/etc/zabbix_agentd.conf
+Include=/usr/local/etc/zabbix_agentd.conf.d/				//加载配置文件目录
+[root@zabbixclient_web1 ~]# cd /usr/local/etc/zabbix_agentd.conf.d/
+[root@zabbixclient_web1 zabbix_agentd.conf.d]# vim count.line.passwd
+UserParameter=count.line.passwd,wc -l /etc/passwd | awk ' {print $1} '
+////自定义key语法格式:
+//UserParameter=自定义key名称,命令
+</pre></div></div>
+      <p>2）测试自定义key是否正常工作</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># killall  zabbix_agentd</li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># zabbix_agentd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重启agent服务</span></li><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># zabbix_get <span class="sh_symbol">-</span>s <span class="sh_number">127.0.0.1</span> <span class="sh_symbol">-</span>k count<span class="sh_symbol">.</span>line<span class="sh_symbol">.</span>passwd</li><li><span class="sh_number">21</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixclient_web1 ~]# killall  zabbix_agentd
+[root@zabbixclient_web1 ~]# zabbix_agentd								//重启agent服务
+[root@zabbixclient_web1 ~]# zabbix_get -s 127.0.0.1 -k count.line.passwd
+21
+</pre></div></div>
+      <p>注意：如zabbix_get命令执行错误，提示Check access restrictions in Zabbix agent configuration，则需要检查agent配置文件是否正确：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SECURITY/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@zabbixclient_web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>zabbix_agentd<span class="sh_symbol">.</span>conf</li><li>Server<span class="sh_symbol">=</span><span class="sh_number">127.0.0.1</span><span class="sh_symbol">,</span><span class="sh_number">192.168.2.5</span></li><li>ServerActive<span class="sh_symbol">=</span><span class="sh_number">127.0.0.1</span><span class="sh_symbol">,</span><span class="sh_number">192.168.2.5</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@zabbixclient_web1 ~]# vim /usr/local/etc/zabbix_agentd.conf
+Server=127.0.0.1,192.168.2.5
+ServerActive=127.0.0.1,192.168.2.5
+</pre></div></div>
+      <p class="number">步骤二：创建监控模板</p>
+      <p>模板、应用集与监控项目的关系图，参考图-12所示</p>
+      <div class="image">
+        <img src="./CASE_files/image011.png">
+        <p>图-12</p>
+      </div>
+      <p>1）添加监控模板</p>
+      <p>登录Zabbix Web监控控制台，通过Configuration(配置)--&gt;Template(模板)--&gt;Create template(创建模板)，填写模板名称，新建模板群组，如图-13所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image012.png">
+        <p>图-13</p>
+      </div>
+      <p>创建模板后，默认模板中没有任何应用、项目、触发器、图形等，如图-14所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image013.png">
+        <p>图-14</p>
+      </div>
+      <p>2）创建应用</p>
+      <p>创建完成模板后，默认模板中没有任何应用、项目、触发器、图形等资源。这里需要点击模板后面的Application（应用集）链接打开创建应用的页面，如图-15所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image014.png">
+        <p>图-15</p>
+      </div>
+      <p>点击Application（应用集）后，会刷新出图-16所示页面，在该页面中点击Create application（创建应用集）按钮。</p>
+      <div class="image">
+        <img src="./CASE_files/image015.png">
+        <p>图-16</p>
+      </div>
+      <p>设置应用名称如图-17所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image016.png">
+        <p>图-17</p>
+      </div>
+      <p>3）创建监控项目item（监控项）</p>
+      <p>与创建应用一样，在模板中还需要创建监控项目，如图-18所示，并在刷新出的新页面中选择Create items（创建监控项）创建项目，如图-19所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image017.png">
+        <p>图-18</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image018.png">
+        <p>图-19</p>
+      </div>
+      <p>接下来，还需要给项目设置名称及对应的自定义key，如图-20所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image019.png">
+        <p>图-20</p>
+      </div>
+      <p>4）创建图形</p>
+      <p>为了后期可以通过图形的方式展示监控数据，还需要在模板中创建图形，设置方法与前面的步骤一致，在监控模板后面点击Graph（图形）即可创建图形，设置监控图形基于什么监控数据，如图-21所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image020.png">
+        <p>图-21</p>
+      </div>
+      <p>5）将模板链接到被监控主机</p>
+      <p>将完整的监控模板制作完成后，就可以将模板链接到主机实现监控功能了。首先找到被监控主机Configuration（配置）--&gt;Hosts（主机），如图-22所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image021.png">
+        <p>图-22</p>
+      </div>
+      <p>点击需要的被监控主机链接，打开监控主机设置页面，在Template（模板）页面中选择需要链接到该主机的模板，在此选择刚刚创建的模板count_line.passwd添加即可，如图-23所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image022.png">
+        <p>图-23</p>
+      </div>
+      <p>6）查看监控数据图形</p>
+      <p>点击Monitoring（监控中）--&gt;Craphs（图形），根据需要选择条件，查看监控图形，如图-24和图-25所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image023.png">
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image024.png">
+        <p>图-25</p>
+      </div>
+    </div>
+  
+</body></html>

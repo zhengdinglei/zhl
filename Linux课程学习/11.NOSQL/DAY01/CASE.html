@@ -1,0 +1,427 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD NOSQL DAY01</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#case1">案例1：搭建Redis服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#case2">案例2：修改Redis服务运行参数</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#case3">案例3：部署LNMP+Redis</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：搭建Redis服务器</h2>
+      <h3>1.1 问题</h3>
+      <ul class="list">
+        <li>具体要求如下：
+</li>
+        <li>在主机 192.168.4.51 上安装并启用 redis 服务
+</li>
+        <li>设置变量test，值为123
+</li>
+        <li>查看变量test的值
+</li>
+      </ul>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：搭建redis服务器</p>
+      <p>1）安装redis服务器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 <span class="sh_symbol">~]</span># cd redis</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_symbol">]</span># ls</li><li>lnmp  redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install gcc gcc<span class="sh_symbol">-</span>c<span class="sh_symbol">++</span> make</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>zxf redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_symbol">]</span># cd redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># ls</li><li><span class="sh_number">00</span><span class="sh_symbol">-</span>RELEASENOTES  CONTRIBUTING  deps     Makefile   README<span class="sh_symbol">.</span>md   runtest          runtest<span class="sh_symbol">-</span>sentinel  src    utils</li><li>BUGS             COPYING       INSTALL  MANIFESTO  redis<span class="sh_symbol">.</span>conf  runtest<span class="sh_symbol">-</span>cluster  sentinel<span class="sh_symbol">.</span>conf     tests</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># make</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># make install</li><li><span class="sh_symbol">[</span>root@redis1 redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># cd <span class="sh_normal">utils</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_symbol">./</span>install_server<span class="sh_symbol">.</span>sh</li><li>Welcome to the redis service installer</li><li>This script will help you easily set up a running redis server</li><li><span style="display:none;">&nbsp;</span></li><li>Please select the redis port <span class="sh_keyword">for</span> <span class="sh_keyword">this</span> instance<span class="sh_symbol">:</span> <span class="sh_symbol">[</span><span class="sh_number">6379</span><span class="sh_symbol">]</span> </li><li>Selecting <span class="sh_keyword">default</span><span class="sh_symbol">:</span> <span class="sh_number">6379</span></li><li>Please select the redis config file name <span class="sh_symbol">[</span><span class="sh_regexp">/etc/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf<span class="sh_symbol">]</span> </li><li>Selected <span class="sh_keyword">default</span> <span class="sh_symbol">-</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf</li><li>Please select the redis log file name <span class="sh_symbol">[</span><span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>log<span class="sh_symbol">]</span> </li><li>Selected <span class="sh_keyword">default</span> <span class="sh_symbol">-</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>log</li><li>Please select the data directory <span class="sh_keyword">for</span> <span class="sh_keyword">this</span> instance <span class="sh_symbol">[</span><span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">]</span> </li><li>Selected <span class="sh_keyword">default</span> <span class="sh_symbol">-</span> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span></li><li>Please select the redis executable path <span class="sh_symbol">[</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>server<span class="sh_symbol">]</span> </li><li>Selected config<span class="sh_symbol">:</span></li><li>Port           <span class="sh_symbol">:</span> <span class="sh_number">6379</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="sh_comment">//端口号</span></li><li>Config file    <span class="sh_symbol">:</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf         <span class="sh_comment">//配置文件目录</span></li><li>Log file       <span class="sh_symbol">:</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>log      <span class="sh_comment">//日志目录</span></li><li>Data dir       <span class="sh_symbol">:</span> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span>          <span class="sh_comment">//数据库目录</span></li><li>Executable     <span class="sh_symbol">:</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>server  <span class="sh_comment">//启动程序的目录</span></li><li>Cli Executable <span class="sh_symbol">:</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>cli     <span class="sh_comment">//命令行的连接工具</span></li><li>Is <span class="sh_keyword">this</span> ok<span class="sh_symbol">?</span> Then press ENTER to go on or Ctrl<span class="sh_symbol">-</span>C to abort<span class="sh_symbol">.</span>  <span class="sh_comment">//回车完成配置</span></li><li><span class="sh_normal">Copied </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf <span class="sh_symbol">=&gt;</span> <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379    <span class="sh_comment">//服务启动脚本</span></li><li>Installing service<span class="sh_symbol">...</span></li><li>Successfully added to chkconfig<span class="sh_symbol">!</span></li><li>Successfully added to runlevels <span class="sh_number">345</span><span class="sh_symbol">!</span></li><li>Starting Redis server<span class="sh_symbol">...</span></li><li>Installation successful<span class="sh_symbol">!</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装成功</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 ~]# cd redis
+[root@redis1 redis]# ls
+lnmp  redis-4.0.8.tar.gz
+[root@redis1 redis]# yum -y install gcc gcc-c++ make
+[root@redis1 redis]# tar -zxf redis-4.0.8.tar.gz
+[root@redis1 redis]# cd redis-4.0.8/
+[root@redis1 redis-4.0.8]# ls
+00-RELEASENOTES  CONTRIBUTING  deps     Makefile   README.md   runtest          runtest-sentinel  src    utils
+BUGS             COPYING       INSTALL  MANIFESTO  redis.conf  runtest-cluster  sentinel.conf     tests
+[root@redis1 redis-4.0.8]# make
+[root@redis1 redis-4.0.8]# make install
+[root@redis1 redis-4.0.8]# cd utils/
+[root@redis1 utils]# ./install_server.sh
+Welcome to the redis service installer
+This script will help you easily set up a running redis server
+
+Please select the redis port for this instance: [6379] 
+Selecting default: 6379
+Please select the redis config file name [/etc/redis/6379.conf] 
+Selected default - /etc/redis/6379.conf
+Please select the redis log file name [/var/log/redis_6379.log] 
+Selected default - /var/log/redis_6379.log
+Please select the data directory for this instance [/var/lib/redis/6379] 
+Selected default - /var/lib/redis/6379
+Please select the redis executable path [/usr/local/bin/redis-server] 
+Selected config:
+Port           : 6379 				  //端口号
+Config file    : /etc/redis/6379.conf         //配置文件目录
+Log file       : /var/log/redis_6379.log      //日志目录
+Data dir       : /var/lib/redis/6379          //数据库目录
+Executable     : /usr/local/bin/redis-server  //启动程序的目录
+Cli Executable : /usr/local/bin/redis-cli     //命令行的连接工具
+Is this ok? Then press ENTER to go on or Ctrl-C to abort.  //回车完成配置
+Copied /tmp/6379.conf =&gt; /etc/init.d/redis_6379    //服务启动脚本
+Installing service...
+Successfully added to chkconfig!
+Successfully added to runlevels 345!
+Starting Redis server...
+Installation successful!		//安装成功
+</pre></div></div>
+      <p>2）查看状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span>#  <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 status</li><li>Redis is <span class="sh_function">running</span> <span class="sh_symbol">(</span><span class="sh_number">15203</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]#  /etc/init.d/redis_6379 status
+Redis is running (15203)
+
+</pre></div></div>
+      <p>3）查看监听的端口</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># netstat <span class="sh_symbol">-</span>antupl <span class="sh_symbol">|</span>grep <span class="sh_symbol">:</span><span class="sh_number">6379</span></li><li>tcp        <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span>          <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>               LISTEN      <span class="sh_number">15203</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>server</li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># ps  <span class="sh_symbol">-</span>C redis<span class="sh_symbol">-</span>server</li><li>  PID TTY          TIME CMD</li><li><span class="sh_number">15203</span> <span class="sh_symbol">?</span>        <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span> redis<span class="sh_symbol">-</span>server</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# netstat -antupl |grep :6379
+tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      15203/redis-server
+[root@redis1 utils]# ps  -C redis-server
+  PID TTY          TIME CMD
+15203 ?        00:00:00 redis-server
+
+</pre></div></div>
+      <p>4）停止服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 stop</li><li>Stopping <span class="sh_symbol">...</span></li><li>Waiting <span class="sh_keyword">for</span> Redis to shutdown <span class="sh_symbol">...</span></li><li>Redis stopped</li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span>#  <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//再次查看，显示 没有那个文件或目录</span></li><li>cat<span class="sh_symbol">:</span> <span class="sh_regexp">/var/</span><span class="sh_normal">run</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>pid<span class="sh_symbol">:</span> No such file or directory</li><li>Redis is <span class="sh_function">running</span> <span class="sh_symbol">()</span>  </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# /etc/init.d/redis_6379 stop
+Stopping ...
+Waiting for Redis to shutdown ...
+Redis stopped
+[root@redis1 utils]#  /etc/init.d/redis_6379 status		
+//再次查看，显示 没有那个文件或目录
+cat: /var/run/redis_6379.pid: No such file or directory
+Redis is running ()  
+</pre></div></div>
+      <p>5）连接redis</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 start </li><li>Starting Redis server<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli </li><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> ping</li><li>PONG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//PONG说明服务正常</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# /etc/init.d/redis_6379 start 
+Starting Redis server...
+[root@redis1 utils]# redis-cli 
+127.0.0.1:6379&gt; ping
+PONG			//PONG说明服务正常
+
+</pre></div></div>
+      <p>6）设置变量test，值为123，查看变量test的值</p>
+      <p>常用指令操作：</p>
+      <p>set  keyname   keyvalue   	存储</p>
+      <p>get keyname    		    获取</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> set test <span class="sh_number">123</span></li><li>OK</li><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> get test</li><li><span class="sh_string">"123"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; set test 123
+OK
+127.0.0.1:6379&gt; get test
+"123"
+</pre></div></div>
+      <p>del  keyname     		   删除变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> set k1 v1</li><li>OK</li><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> get k1</li><li><span class="sh_string">"v1"</span></li><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span>  del k1</li><li><span class="sh_symbol">(</span>integer<span class="sh_symbol">)</span> <span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; set k1 v1
+OK
+127.0.0.1:6379&gt; get k1
+"v1"
+127.0.0.1:6379&gt;  del k1
+(integer) 1
+</pre></div></div>
+      <p>keys    *    			    打印所有变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> keys <span class="sh_symbol">*</span></li><li><span class="sh_number">1</span><span class="sh_symbol">)</span> <span class="sh_string">"test"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; keys *
+1) "test"
+</pre></div></div>
+      <p>EXISTS  keyname   		   测试是否存在</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> exists  k1</li><li><span class="sh_symbol">(</span>integer<span class="sh_symbol">)</span> <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; exists  k1
+(integer) 0
+</pre></div></div>
+      <p>type  keyname   		   查看类型</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> set k2 v1</li><li>OK</li><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> type k2</li><li>string</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; set k2 v1
+OK
+127.0.0.1:6379&gt; type k2
+string
+</pre></div></div>
+      <p>move  keyname   dbname   移动变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> move k2 <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//移动k2到1库</span></li><li><span class="sh_symbol">(</span>integer<span class="sh_symbol">)</span> <span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; move k2 1			//移动k2到1库
+(integer) 1
+</pre></div></div>
+      <p>select   数据库编号0-15  	切换库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">&gt;</span> select <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//切换到1库</span></li><li>OK</li><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]&gt;</span> keys <span class="sh_symbol">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看有k2</span></li><li><span class="sh_number">1</span><span class="sh_symbol">)</span> <span class="sh_string">"k2"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379&gt; select 1		//切换到1库
+OK
+127.0.0.1:6379[1]&gt; keys *			//查看有k2
+1) "k2"
+</pre></div></div>
+      <p>expire keyname  10    	   设置有效时间</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]&gt;</span> EXPIRE k2 <span class="sh_number">10</span></li><li><span class="sh_symbol">(</span>integer<span class="sh_symbol">)</span> <span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379[1]&gt; EXPIRE k2 10
+(integer) 1
+</pre></div></div>
+      <p>ttl   keyname      		   查看生存时间</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]&gt;</span> ttl k2</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379[1]&gt; ttl k2
+</pre></div></div>
+      <p>flushall    			   删除所有变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]&gt;</span>  FLUSHALL</li><li>OK</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379[1]&gt;  FLUSHALL
+OK
+</pre></div></div>
+      <p>save    				   保存所有变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]&gt;</span> save</li><li>OK</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379[1]&gt; save
+OK
+</pre></div></div>
+      <p>shutdown   			       关闭redis服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]&gt;</span> SHUTDOWN </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">127.0.0.1:6379[1]&gt; SHUTDOWN 
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：修改Redis服务运行参数</h2>
+      <h3>2.1 问题</h3>
+      <ul class="list">
+        <li>具体要求如下：
+</li>
+        <li>端口号 6351
+</li>
+        <li>IP地址 192.168.4.51
+</li>
+        <li>连接密码 123456
+</li>
+        <li>客户端连接Redis服务 
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：修改redis运行参数</p>
+      <p>1）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_normal">cp </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span><span class="sh_normal">conf  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf &nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//可以先备份一份，防止修改错误没法还原</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 stop</li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">...</span></li><li>bind  <span class="sh_number">192.168.4.51</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置服务使用的ip</span></li><li>port <span class="sh_number">6351</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//更改端口号</span></li><li>requirepass <span class="sh_number">123456</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置密码</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 start</li><li>Starting Redis server<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># ss <span class="sh_symbol">-</span>antul <span class="sh_symbol">|</span> grep <span class="sh_number">6351</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看有端口6351</span></li><li>tcp    LISTEN     <span class="sh_number">0</span>      <span class="sh_number">128</span>    <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span>                  <span class="sh_symbol">*:*</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# cp /etc/redis/6379.conf  /root/6379.conf 	
+//可以先备份一份，防止修改错误没法还原
+[root@redis1 utils]# /etc/init.d/redis_6379 stop
+[root@redis1 utils]# vim /etc/redis/6379.conf
+...
+bind  192.168.4.51				//设置服务使用的ip
+port 6351							//更改端口号
+requirepass 123456				//设置密码
+[root@redis1 utils]# /etc/init.d/redis_6379 start
+Starting Redis server...
+[root@redis1 utils]# ss -antul | grep 6351		//查看有端口6351
+tcp    LISTEN     0      128    192.168.4.51:6351                  *:*
+</pre></div></div>
+      <p>由于修改了配置文件所以在连接的时候需要加上ip和端口</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span> </li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> ping</li><li><span class="sh_symbol">(</span>error<span class="sh_symbol">)</span> NOAUTH Authentication required<span class="sh_symbol">.</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> auth <span class="sh_number">123456</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//输入密码才能操作（因为之前设置过密码）</span></li><li>OK</li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> ping</li><li>PONG</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# redis-cli  -h 192.168.4.51 -p 6351 
+192.168.4.51:6351&gt; ping
+(error) NOAUTH Authentication required.
+192.168.4.51:6351&gt; auth 123456			//输入密码才能操作（因为之前设置过密码）
+OK
+192.168.4.51:6351&gt; ping
+PONG
+
+</pre></div></div>
+      <p>还可以直接在命令行输入密码连接</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span>  <span class="sh_symbol">-</span>a <span class="sh_number">123456</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> ping</li><li>PONG</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# redis-cli  -h 192.168.4.51 -p 6351  -a 123456
+192.168.4.51:6351&gt; ping
+PONG
+</pre></div></div>
+      <p>2）停止服务</p>
+      <p>由于修改Redis服务运行参数，所以在停止服务的时候也不能用默认的方法停止</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//停止失败</span></li><li>Stopping <span class="sh_symbol">...</span></li><li>Could not connect to Redis at <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span><span class="sh_symbol">:</span> Connection refused</li><li>Waiting <span class="sh_keyword">for</span> Redis to shutdown <span class="sh_symbol">...</span></li><li>Waiting <span class="sh_keyword">for</span> Redis to shutdown <span class="sh_symbol">...</span></li><li>Waiting <span class="sh_keyword">for</span> Redis to shutdown <span class="sh_symbol">...</span></li><li>Waiting <span class="sh_keyword">for</span> Redis to shutdown <span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span>   <span class="sh_symbol">-</span>a <span class="sh_number">123456</span> shutdown&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//停止成功</span></li><li><span class="sh_symbol">[</span>root@redis1 utils<span class="sh_symbol">]</span># ss <span class="sh_symbol">-</span>antul <span class="sh_symbol">|</span> grep <span class="sh_number">6351</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看没有端口</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 utils]# /etc/init.d/redis_6379 stop		//停止失败
+Stopping ...
+Could not connect to Redis at 127.0.0.1:6379: Connection refused
+Waiting for Redis to shutdown ...
+Waiting for Redis to shutdown ...
+Waiting for Redis to shutdown ...
+Waiting for Redis to shutdown ...
+...
+
+
+[root@redis1 utils]# redis-cli  -h 192.168.4.51 -p 6351   -a 123456 shutdown	
+//停止成功
+[root@redis1 utils]# ss -antul | grep 6351		//查看没有端口
+
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：部署LNMP+Redis</h2>
+      <h3>3.1 问题</h3>
+      <ul class="list">
+        <li>具体要求如下：
+</li>
+        <li>在主机 192.168.4.52 上部署LNMP 环境
+</li>
+        <li>把数据存储到本机的redis服务中
+</li>
+      </ul>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署LNMP+Redis</p>
+      <p>1）安装redis，（不会搭建的请参考案例1）</p>
+      <p>2）安装php支持的功能模块（52上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nginx utils<span class="sh_symbol">]</span># which php</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>which<span class="sh_symbol">:</span> no php <span class="sh_keyword">in</span> <span class="sh_symbol">(</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>sbin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span>sbin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/root/</span>bin<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@nginx utils<span class="sh_symbol">]</span># php <span class="sh_symbol">-</span>m</li><li>bash<span class="sh_symbol">:</span> php<span class="sh_symbol">:</span> command not found<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@nginx utils<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install php<span class="sh_symbol">-</span>cli</li><li><span class="sh_symbol">[</span>root@nginx utils<span class="sh_symbol">]</span># which php</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>php</li><li><span class="sh_symbol">[</span>root@nginx utils<span class="sh_symbol">]</span># php <span class="sh_symbol">-</span>m</li><li><span class="sh_symbol">[</span>PHP Modules<span class="sh_symbol">]</span></li><li>bz2</li><li>calendar</li><li>Core</li><li>ctype</li><li>curl</li><li>date</li><li>ereg</li><li>exif</li><li>fileinfo</li><li>filter</li><li>ftp</li><li>gettext</li><li>gmp</li><li>hash</li><li>iconv</li><li>json</li><li>libxml</li><li>mhash</li><li>openssl</li><li>pcntl</li><li>pcre</li><li>Phar</li><li>readline</li><li>Reflection</li><li>session</li><li>shmop</li><li>SimpleXML</li><li>sockets</li><li>SPL</li><li>standard</li><li>tokenizer</li><li>xml</li><li>zip</li><li>zlib</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>Zend Modules<span class="sh_symbol">]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nginx utils]# which php
+/usr/bin/which: no php in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin)
+[root@nginx utils]# php -m
+bash: php: command not found...
+[root@nginx utils]# yum -y install php-cli
+[root@nginx utils]# which php
+/usr/bin/php
+[root@nginx utils]# php -m
+[PHP Modules]
+bz2
+calendar
+Core
+ctype
+curl
+date
+ereg
+exif
+fileinfo
+filter
+ftp
+gettext
+gmp
+hash
+iconv
+json
+libxml
+mhash
+openssl
+pcntl
+pcre
+Phar
+readline
+Reflection
+session
+shmop
+SimpleXML
+sockets
+SPL
+standard
+tokenizer
+xml
+zip
+zlib
+
+[Zend Modules]
+
+</pre></div></div>
+      <p>3）安装连接redis的功能模块</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nginx utils<span class="sh_symbol">]</span>#  php <span class="sh_symbol">-</span>m  <span class="sh_symbol">|</span> grep <span class="sh_symbol">-</span>i redis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//没有redis模块</span></li><li><span class="sh_symbol">[</span>root@nginx redis<span class="sh_symbol">]</span># cd <span class="sh_normal">lnmp</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># ls</li><li>nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz  </li><li>php<span class="sh_symbol">-</span>devel<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm  </li><li>php<span class="sh_symbol">-</span>fpm<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm  </li><li>php<span class="sh_symbol">-</span>redis<span class="sh_number">-2.2.4</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>zxf php<span class="sh_symbol">-</span>redis<span class="sh_number">-2.2.4</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># cd phpredis<span class="sh_number">-2.2.4</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx phpredis<span class="sh_number">-2.2.4</span><span class="sh_symbol">]</span>#  which phpize</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>phpize</li><li><span class="sh_symbol">[</span>root@nginx phpredis<span class="sh_number">-2.2.4</span><span class="sh_symbol">]</span># phpize</li><li>Can<span class="sh_string">'t find PHP headers in /usr/include/php</span></li><li><span class="sh_string">The php-devel package is required for use of this command.</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]# yum -y install autoconf automake&nbsp;&nbsp;&nbsp;&nbsp;pcre-devel</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]# cd ..</span></li><li><span class="sh_string">[root@nginx lnmp]# rpm -ivh php-devel-5.4.16-42.el7.x86_64.rpm</span></li><li><span class="sh_string">[root@nginx lnmp]# cd phpredis-2.2.4/      </span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]# phpize &nbsp;&nbsp;&nbsp;&nbsp;//生成一个php的文件</span></li><li><span class="sh_string">Configuring for:</span></li><li><span class="sh_string">PHP Api Version:         20100412</span></li><li><span class="sh_string">Zend Module Api No:      20100525</span></li><li><span class="sh_string">Zend Extension Api No:   220100525</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]# find / -name "php-config"</span></li><li><span class="sh_string">/usr/bin/php-config</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]#  ./configure  --with-php-config=/usr/bin/php-config</span></li><li><span class="sh_string">//指定模块编译的路径</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]#  make &amp;&amp; make install</span></li><li><span class="sh_string">...</span></li><li><span class="sh_string">Installing shared extensions:     /usr/lib64/php/modules/  //模块文件存放的路径</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]#  ls /usr/lib64/php/modules/</span></li><li><span class="sh_string">curl.so  fileinfo.so  json.so  phar.so  redis.so  zip.so</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]# vim /etc/php.ini</span></li><li><span class="sh_string">728   extension_dir = "/usr/lib64/php/modules/"</span></li><li><span class="sh_string">729 ; On windows:</span></li><li><span class="sh_string">730   extension = "redis.so"</span></li><li><span class="sh_string">[root@nginx phpredis-2.2.4]# php -m  | grep -i redis</span></li><li><span class="sh_string">redis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//出现redis</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nginx utils]#  php -m  | grep -i redis		//没有redis模块
+[root@nginx redis]# cd lnmp/
+[root@nginx lnmp]# ls
+nginx-1.12.2.tar.gz  
+php-devel-5.4.16-42.el7.x86_64.rpm  
+php-fpm-5.4.16-42.el7.x86_64.rpm  
+php-redis-2.2.4.tar.gz
+[root@nginx lnmp]# tar -zxf php-redis-2.2.4.tar.gz
+[root@nginx lnmp]# cd phpredis-2.2.4/
+[root@nginx phpredis-2.2.4]#  which phpize
+/usr/bin/phpize
+[root@nginx phpredis-2.2.4]# phpize
+Can't find PHP headers in /usr/include/php
+The php-devel package is required for use of this command.
+[root@nginx phpredis-2.2.4]# yum -y install autoconf automake	pcre-devel
+[root@nginx phpredis-2.2.4]# cd ..
+[root@nginx lnmp]# rpm -ivh php-devel-5.4.16-42.el7.x86_64.rpm
+[root@nginx lnmp]# cd phpredis-2.2.4/      
+[root@nginx phpredis-2.2.4]# phpize 	//生成一个php的文件
+Configuring for:
+PHP Api Version:         20100412
+Zend Module Api No:      20100525
+Zend Extension Api No:   220100525
+[root@nginx phpredis-2.2.4]# find / -name "php-config"
+/usr/bin/php-config
+[root@nginx phpredis-2.2.4]#  ./configure  --with-php-config=/usr/bin/php-config
+//指定模块编译的路径
+[root@nginx phpredis-2.2.4]#  make &amp;&amp; make install
+...
+Installing shared extensions:     /usr/lib64/php/modules/  //模块文件存放的路径
+[root@nginx phpredis-2.2.4]#  ls /usr/lib64/php/modules/
+curl.so  fileinfo.so  json.so  phar.so  redis.so  zip.so
+[root@nginx phpredis-2.2.4]# vim /etc/php.ini
+728   extension_dir = "/usr/lib64/php/modules/"
+729 ; On windows:
+730   extension = "redis.so"
+[root@nginx phpredis-2.2.4]# php -m  | grep -i redis
+redis		//出现redis
+
+</pre></div></div>
+      <p>4）安装nginx（52上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nginx <span class="sh_symbol">~]</span># cd <span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_normal">lnmp</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># ls</li><li>nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz </li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># cd nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install  gcc pcre<span class="sh_symbol">-</span>devel openssl<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">[</span>root@nginx nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># useradd <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin  nginx</li><li><span class="sh_symbol">[</span>root@nginx nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>nginx <span class="sh_symbol">--</span>group<span class="sh_symbol">=</span>nginx <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module</li><li><span class="sh_symbol">[</span>root@nginx nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li><li><span class="sh_symbol">[</span>root@nginx nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># ln <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span><span class="sh_normal">nginx  </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span>#  <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># echo <span class="sh_string">"aa"</span> <span class="sh_symbol">&gt;</span> text<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install mariadb mariadb<span class="sh_symbol">-</span>server mariadb<span class="sh_symbol">-</span>devel php php<span class="sh_symbol">-</span>mysql</li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_normal">lnmp</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span>#  rpm <span class="sh_symbol">-</span>ivh php<span class="sh_symbol">-</span>fpm<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装php</span></li><li><span class="sh_symbol">[</span>root@nginx lnmp<span class="sh_symbol">]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># vim test<span class="sh_symbol">.</span>php</li><li><span class="sh_symbol">&lt;?</span>php</li><li>$i<span class="sh_symbol">=</span><span class="sh_number">33</span><span class="sh_symbol">;</span></li><li>$j<span class="sh_symbol">=</span><span class="sh_number">44</span><span class="sh_symbol">;</span></li><li><span class="sh_keyword">if</span><span class="sh_symbol">(</span>$i<span class="sh_symbol">&lt;</span>$j<span class="sh_symbol">)</span><span class="sh_cbracket">{</span></li><li>echo <span class="sh_string">"oK"</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">else</span><span class="sh_cbracket">{</span></li><li>echo <span class="sh_string">"error"</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li>#echo $i<span class="sh_symbol">;</span></li><li><span class="sh_symbol">?&gt;</span></li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># php test<span class="sh_symbol">.</span>php &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//在命令行测试</span></li><li>oK</li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># systemctl restart  mariadb</li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># systemctl restart  php<span class="sh_symbol">-</span>fpm</li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">...</span></li><li>        location <span class="sh_symbol">~</span> <span class="sh_symbol">\.</span>php$ <span class="sh_cbracket">{</span></li><li>            root           html<span class="sh_symbol">;</span></li><li>            fastcgi_pass   <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">9000</span><span class="sh_symbol">;</span></li><li>            fastcgi_index  index<span class="sh_symbol">.</span>php<span class="sh_symbol">;</span></li><li>            #fastcgi_param  <span class="sh_normal">SCRIPT_FILENAME  </span><span class="sh_symbol">/</span>scripts$fastcgi_script_name<span class="sh_symbol">;</span></li><li>            include        fastcgi<span class="sh_symbol">.</span>conf<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># nginx&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动nginx</span></li><li>客户端用火狐浏览器访问：</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># firefox  <span class="sh_number">192.168.4.56</span><span class="sh_symbol">/</span>text<span class="sh_symbol">.</span>html&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成功</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># firefox  <span class="sh_number">192.168.4.56</span><span class="sh_symbol">/</span>test<span class="sh_symbol">.</span>php&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成功</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nginx ~]# cd redis/lnmp/
+[root@nginx lnmp]# ls
+nginx-1.12.2.tar.gz
+[root@nginx lnmp]# tar -xf nginx-1.12.2.tar.gz 
+[root@nginx lnmp]# cd nginx-1.12.2/
+[root@nginx nginx-1.12.2]# yum -y install  gcc pcre-devel openssl-devel
+[root@nginx nginx-1.12.2]# useradd -s /sbin/nologin  nginx
+[root@nginx nginx-1.12.2]# ./configure --user=nginx --group=nginx --with-http_ssl_module
+[root@nginx nginx-1.12.2]# make &amp;&amp; make install
+[root@nginx nginx-1.12.2]# ln -s /usr/local/nginx/sbin/nginx  /sbin/
+[root@nginx nginx-1.12.2]#  cd /usr/local/nginx/html/
+[root@nginx html]# echo "aa" &gt; text.html
+[root@nginx html]# yum -y install mariadb mariadb-server mariadb-devel php php-mysql
+[root@nginx html]# cd /root/redis/lnmp/
+[root@nginx lnmp]#  rpm -ivh php-fpm-5.4.16-42.el7.x86_64.rpm		//安装php
+[root@nginx lnmp]# cd /usr/local/nginx/html/
+[root@nginx html]# vim test.php
+&lt;?php
+$i=33;
+$j=44;
+if($i&lt;$j){
+echo "oK";
+}
+else{
+echo "error";
+}
+#echo $i;
+?&gt;
+[root@nginx html]# php test.php 		//在命令行测试
+oK
+[root@nginx html]# systemctl restart  mariadb
+[root@nginx html]# systemctl restart  php-fpm
+[root@nginx html]# vim /usr/local/nginx/conf/nginx.conf
+...
+        location ~ \.php$ {
+            root           html;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            #fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+            include        fastcgi.conf;
+        }
+...
+[root@nginx html]# nginx	//启动nginx
+客户端用火狐浏览器访问：
+[root@room9pc01 ~]# firefox  192.168.4.56/text.html		//成功
+[root@room9pc01 ~]# firefox  192.168.4.56/test.php		//成功
+</pre></div></div>
+      <p>5）连接redis测试</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># vim lkredis<span class="sh_symbol">.</span>php</li><li><span class="sh_symbol">&lt;?</span>php</li><li>$redis <span class="sh_symbol">=</span> <span class="sh_keyword">new</span> <span class="sh_function">redis</span><span class="sh_symbol">();</span></li><li>$redis<span class="sh_symbol">-&gt;</span><span class="sh_function">connect</span><span class="sh_symbol">(</span><span class="sh_string">'192.168.4.51'</span><span class="sh_symbol">,</span><span class="sh_number">6351</span><span class="sh_symbol">);</span></li><li>$redis <span class="sh_symbol">-&gt;</span><span class="sh_function">auth</span><span class="sh_symbol">(</span><span class="sh_string">"123456"</span><span class="sh_symbol">);</span></li><li>$redis<span class="sh_symbol">-&gt;</span><span class="sh_function">set</span><span class="sh_symbol">(</span><span class="sh_string">"redistest"</span><span class="sh_symbol">,</span><span class="sh_string">"666666"</span><span class="sh_symbol">);</span></li><li>echo $redis<span class="sh_symbol">-&gt;</span><span class="sh_function">get</span><span class="sh_symbol">(</span><span class="sh_string">"redistest"</span><span class="sh_symbol">);</span></li><li><span class="sh_symbol">?&gt;</span></li><li><span class="sh_symbol">[</span>root@nginx html<span class="sh_symbol">]</span># php lkredis<span class="sh_symbol">.</span>php &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//命令行测试</span></li><li><span class="sh_number">666666</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nginx html]# vim lkredis.php
+&lt;?php
+$redis = new redis();
+$redis-&gt;connect('192.168.4.51',6351);
+$redis -&gt;auth("123456");
+$redis-&gt;set("redistest","666666");
+echo $redis-&gt;get("redistest");
+?&gt;
+[root@nginx html]# php lkredis.php 		//命令行测试
+666666
+
+</pre></div></div>
+      <p>火狐浏览器测试，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>在51上面查看，有数据存入</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redis1 lnmp<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span> <span class="sh_symbol">-</span>a <span class="sh_number">123456</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> ping</li><li>PONG</li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> keys <span class="sh_symbol">*</span></li><li><span class="sh_number">1</span><span class="sh_symbol">)</span> <span class="sh_string">"redistest"</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> get redistest</li><li><span class="sh_string">"666666"</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redis1 lnmp]# redis-cli  -h 192.168.4.51 -p 6351 -a 123456
+192.168.4.51:6351&gt; ping
+PONG
+192.168.4.51:6351&gt; keys *
+1) "redistest"
+192.168.4.51:6351&gt; get redistest
+"666666"
+192.168.4.51:6351&gt;
+</pre></div></div>
+    </div>
+  
+</body></html>

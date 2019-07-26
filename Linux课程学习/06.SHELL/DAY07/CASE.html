@@ -1,0 +1,265 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD SHELL DAY07</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#case1">案例1：编写一键部署软件脚本</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#case2">案例2：启动脚本</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#case3">案例3：编写监控脚本</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#case4">案例4：编写安全检测脚本</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#case5">案例5：编写进度显示脚本</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：编写一键部署软件脚本</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求编写脚本实现一键部署Nginx软件（Web服务器）：</p>
+      <ul class="list">
+        <li>一键源码安装Nginx软件
+</li>
+        <li>脚本自动安装相关软件的依赖包
+</li>
+        <li>脚本自动判断yum是否可用
+</li>
+      </ul>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备工作</p>
+      <p>1）判断yum源是否可用</p>
+      <p>通过yum repolist查看软件包数量是否大于0：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># yum repolist </li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># yum repolist <span class="sh_symbol">|</span> awk <span class="sh_string">'/repolist/{print $2}'</span> </li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># yum repolist <span class="sh_symbol">|</span> awk <span class="sh_string">'/repolist/{print $2}'</span> <span class="sh_symbol">|</span>sed <span class="sh_string">'s/,//'</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># N<span class="sh_symbol">=</span>$<span class="sh_symbol">(</span>yum repolist <span class="sh_symbol">|</span> awk <span class="sh_string">'/repolist/{print $2}'</span> <span class="sh_symbol">|</span>sed <span class="sh_string">'s/,//'</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">[</span> $N –le <span class="sh_number">0</span> <span class="sh_symbol">]</span> <span class="sh_symbol">&amp;&amp;</span> echo <span class="sh_string">'yum 不可用'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# yum repolist 
+[root@svr5 ~]# yum repolist | awk '/repolist/{print $2}' 
+[root@svr5 ~]# yum repolist | awk '/repolist/{print $2}' |sed 's/,//'
+[root@svr5 ~]# N=$(yum repolist | awk '/repolist/{print $2}' |sed 's/,//')
+[root@svr5 ~]# [ $N –le 0 ] &amp;&amp; echo 'yum 不可用'
+</pre></div></div>
+      <p>2）依赖包</p>
+      <p>源码安装Nginx需要提前安装依赖包软件gcc,openssl-devel,pcre-devel</p>
+      <p class="number">步骤二：编写脚本</p>
+      <p>1）参考脚本内容如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span style="display:none;">&nbsp;</span></li><li>N<span class="sh_symbol">=</span>$<span class="sh_symbol">(</span>yum repolist <span class="sh_symbol">|</span> awk <span class="sh_string">'/repolist/{print $2}'</span> <span class="sh_symbol">|</span> sed <span class="sh_string">'s/,//'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $N <span class="sh_symbol">-</span>le <span class="sh_number">0</span> <span class="sh_symbol">];</span>then</li><li>&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"yum 不可用"</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;exit</li><li>fi</li><li>yum <span class="sh_symbol">-</span>y install gcc openssl<span class="sh_symbol">-</span>devel pcre<span class="sh_symbol">-</span>devel</li><li>tar <span class="sh_symbol">-</span>xf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li>cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">./</span>configure</li><li>make</li><li>make install</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+
+N=$(yum repolist | awk '/repolist/{print $2}' | sed 's/,//')
+if [ $N -le 0 ];then
+	echo "yum 不可用"
+	exit
+fi
+yum -y install gcc openssl-devel pcre-devel
+tar -xf nginx-1.12.2.tar.gz
+cd nginx-1.12.2
+./configure
+make
+make install
+
+</pre></div></div>
+      <p>2）确认安装效果</p>
+      <p>Nginx默认安装路径为/usr/local/nginx,该目录下会提供4个子目录，分别如下：</p>
+      <p>/usr/local/nginx/conf		配置文件目录</p>
+      <p>/usr/local/nginx/html		网站页面目录</p>
+      <p>/usr/local/nginx/logs		Nginx日志目录</p>
+      <p>/usr/local/nginx/sbin		主程序目录</p>
+      <p>主程序命令参数：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动服务</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">-</span>s stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//关闭服务</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">-</span>V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看软件信息</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# /usr/local/nginx/sbin/nginx				//启动服务
+[root@svr5 ~]# /usr/local/nginx/sbin/nginx	-s stop		//关闭服务
+[root@svr5 ~]# /usr/local/nginx/sbin/nginx	-V			//查看软件信息
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：启动脚本</h2>
+      <h3>2.1 问题</h3>
+      <p>本案例要求编写Ngin启动脚本，要求如下：</p>
+      <ul class="list">
+        <li>脚本支持start、stop、restart、status
+</li>
+        <li>脚本支持报错提示
+</li>
+        <li>脚本具有判断是否已经开启或关闭的功能
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <p>脚本通过位置变量$1读取用户的操作指令，判断是start、stop、restart还是status。</p>
+      <p>netstat命令可以查看系统中启动的端口信息，该命令常用选项如下：</p>
+      <p>-n以数字格式显示端口号</p>
+      <p>-t显示TCP连接的端口</p>
+      <p>-u显示UDP连接的端口</p>
+      <p>-l显示服务正在监听的端口信息，如httpd启动后，会一直监听80端口</p>
+      <p>-p显示监听端口的服务名称是什么（也就是程序名称）</p>
+      <p>1）参考脚本内容如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">case</span> $<span class="sh_number">1</span> <span class="sh_keyword">in</span></li><li>start<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">;;</span></li><li>stop<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s stop<span class="sh_symbol">;;</span></li><li>restart<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s stop</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nignx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">;;</span></li><li>status<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;netstat <span class="sh_symbol">-</span>ntulp <span class="sh_symbol">|</span>grep <span class="sh_symbol">-</span>q nginx</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $<span class="sh_symbol">?</span> <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">];</span>then</li><li>echo 服务已启动</li><li><span class="sh_keyword">else</span></li><li>echo 服务未启动</li><li>fi<span class="sh_symbol">;;</span></li><li><span class="sh_symbol">*)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_predef_func">Error</span><span class="sh_symbol">;;</span></li><li>esac</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+
+case $1 in
+start)
+		/usr/local/nginx/sbin/nginx;;
+stop)
+		/usr/local/nginx/sbin/nginx -s stop;;
+restart)
+		/usr/local/nginx/sbin/nginx -s stop
+		/usr/local/nignx/sbin/nginx;;
+status)
+		netstat -ntulp |grep -q nginx
+		if [ $? -eq 0 ];then
+echo 服务已启动
+else
+echo 服务未启动
+fi;;
+*)
+		echo Error;;
+esac
+</pre></div></div>
+      <p>2）执行测试脚本：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh start</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh stop</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh status</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh xyz</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./test.sh start
+[root@svr5 ~]# ./test.sh stop
+[root@svr5 ~]# ./test.sh status
+[root@svr5 ~]# ./test.sh xyz
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：编写监控脚本</h2>
+      <h3>3.1 问题</h3>
+      <p>本案例要求编写脚本，实现计算机各个性能数据监控的功能，具体监控项目要求如下：</p>
+      <ul class="list">
+        <li>CPU负载
+</li>
+        <li>网卡流量
+</li>
+        <li>内存剩余容量
+</li>
+        <li>磁盘剩余容量
+</li>
+        <li>计算机账户数量
+</li>
+        <li>当前登录账户数量
+</li>
+        <li>计算机当前开启的进程数量
+</li>
+        <li>本机已安装的软件包数量
+</li>
+      </ul>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备工作</p>
+      <p>1）查看性能数据的命令</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># uptime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看CPU负载</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># ifconfig eth0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看网卡流量</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># free&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看内存信息</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># df&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看磁盘空间</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># wc <span class="sh_symbol">-</span><span class="sh_normal">l </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>passwd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看计算机账户数量</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># who <span class="sh_symbol">|</span>wc <span class="sh_symbol">-</span>l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看登录账户数量</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>qa <span class="sh_symbol">|</span>wc <span class="sh_symbol">-</span>l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看已安装软件包数量</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# uptime							//查看CPU负载
+[root@svr5 ~]# ifconfig eth0					//查看网卡流量
+[root@svr5 ~]# free							//查看内存信息
+[root@svr5 ~]# df								//查看磁盘空间
+[root@svr5 ~]# wc -l /etc/passwd				//查看计算机账户数量
+[root@svr5 ~]# who |wc -l						//查看登录账户数量
+[root@svr5 ~]# rpm -qa |wc -l					//查看已安装软件包数量
+</pre></div></div>
+      <p class="number">步骤二：编写参考脚本</p>
+      <p>1）脚本内容如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>ip<span class="sh_symbol">=</span>`ifconfig eth0 <span class="sh_symbol">|</span> awk <span class="sh_string">'/inet /{print $2}'</span>`</li><li>echo <span class="sh_string">"本地IP地址是:"</span>$ip</li><li>cpu<span class="sh_symbol">=</span>`uptime <span class="sh_symbol">|</span> awk <span class="sh_string">'{print $NF}'</span>`            </li><li>#awk中NF为当前行的列数，$NF是最后一列</li><li>echo <span class="sh_string">"本机CPU最近15分钟的负载是:"</span>$cpu</li><li>net_in<span class="sh_symbol">=</span>`ifconfig eth0 <span class="sh_symbol">|</span> awk <span class="sh_string">'/RX p/{print $5}'</span>`</li><li>echo <span class="sh_string">"入站网卡流量为:"</span>$net_in</li><li>net_out<span class="sh_symbol">=</span>`ifconfig eth0 <span class="sh_symbol">|</span> awk <span class="sh_string">'/TX p/{print $5}'</span>`</li><li>echo <span class="sh_string">"出站网卡流量为:"</span>$net_out</li><li>mem<span class="sh_symbol">=</span>`free <span class="sh_symbol">|</span> awk <span class="sh_string">'/Mem/{print $4}'</span>`</li><li>echo <span class="sh_string">"内存剩余容量为:"</span>$mem</li><li>disk<span class="sh_symbol">=</span>`df <span class="sh_symbol">|</span> awk <span class="sh_string">'/</span><span class="sh_specialchar">\/</span><span class="sh_string">$/{print $4}'</span>`</li><li>echo <span class="sh_string">"根分区剩余容量为:"</span>$disk</li><li>user<span class="sh_symbol">=</span>`<span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>passwd <span class="sh_symbol">|</span>wc <span class="sh_symbol">-</span>l`</li><li>echo <span class="sh_string">"本地账户数量为:"</span>$user</li><li>login<span class="sh_symbol">=</span>`who <span class="sh_symbol">|</span> wc <span class="sh_symbol">-</span>l`</li><li>echo <span class="sh_string">"当前登陆计算机的账户数量为:"</span>$login</li><li>process<span class="sh_symbol">=</span>`ps aux <span class="sh_symbol">|</span> wc <span class="sh_symbol">-</span>l`</li><li>echo <span class="sh_string">"当前计算机启动的进程数量为:"</span>$process</li><li>soft<span class="sh_symbol">=</span>`rpm <span class="sh_symbol">-</span>qa <span class="sh_symbol">|</span> wc <span class="sh_symbol">-</span>l`</li><li>echo <span class="sh_string">"当前计算机已安装的软件数量为:"</span>$soft</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+ip=`ifconfig eth0 | awk '/inet /{print $2}'`
+echo "本地IP地址是:"$ip
+cpu=`uptime | awk '{print $NF}'`            
+#awk中NF为当前行的列数，$NF是最后一列
+echo "本机CPU最近15分钟的负载是:"$cpu
+net_in=`ifconfig eth0 | awk '/RX p/{print $5}'`
+echo "入站网卡流量为:"$net_in
+net_out=`ifconfig eth0 | awk '/TX p/{print $5}'`
+echo "出站网卡流量为:"$net_out
+mem=`free | awk '/Mem/{print $4}'`
+echo "内存剩余容量为:"$mem
+disk=`df | awk '/\/$/{print $4}'`
+echo "根分区剩余容量为:"$disk
+user=`cat /etc/passwd |wc -l`
+echo "本地账户数量为:"$user
+login=`who | wc -l`
+echo "当前登陆计算机的账户数量为:"$login
+process=`ps aux | wc -l`
+echo "当前计算机启动的进程数量为:"$process
+soft=`rpm -qa | wc -l`
+echo "当前计算机已安装的软件数量为:"$soft
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：编写安全检测脚本</h2>
+      <h3>4.1 问题</h3>
+      <p>本案例要求编写脚本，防止远程ssh暴力破解密码，具体监控项目要求如下：</p>
+      <ul class="list">
+        <li>检测ssh登录日志，如果远程登陆账号名错误3次，则屏蔽远程主机的IP
+</li>
+        <li>检测ssh登录日志，如果远程登陆密码错误3次，则屏蔽远程主机的IP
+</li>
+      </ul>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备工作</p>
+      <p>1）过滤帐户名失败的命令(登陆日志文件为/var/log/secure)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># awk <span class="sh_string">'/Invalid user/{print $10}'</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>secure</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# awk '/Invalid user/{print $10}' /var/log/secure
+</pre></div></div>
+      <p>2）过滤密码失败的命令</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># awk <span class="sh_string">'/Failed password/{print $11}'</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>secure</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# awk '/Failed password/{print $11}' /var/log/secure
+</pre></div></div>
+      <p class="number">步骤二：编写参考脚本</p>
+      <p>1）脚本内容如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>awk <span class="sh_string">'/Failed password/{print $11}'</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>secure  <span class="sh_symbol">|</span> awk <span class="sh_string">'{ip[$1]++}END{for(i in ip){print ip[i],i}}'</span> <span class="sh_symbol">|</span> awk <span class="sh_string">'$1&gt;3{print $2}'</span></li><li><span style="display:none;">&nbsp;</span></li><li>awk <span class="sh_string">'/Invalid user/{print $10}'</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>secure  <span class="sh_symbol">|</span> awk <span class="sh_string">'{ip[$1]++}END{for(i in ip){print ip[i],i}}'</span> <span class="sh_symbol">|</span> awk <span class="sh_string">'$1&gt;3{print $2}'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+awk '/Failed password/{print $11}' /var/log/secure  | awk '{ip[$1]++}END{for(i in ip){print ip[i],i}}' | awk '$1&gt;3{print $2}'
+
+awk '/Invalid user/{print $10}' /var/log/secure  | awk '{ip[$1]++}END{for(i in ip){print ip[i],i}}' | awk '$1&gt;3{print $2}'
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：编写进度显示脚本</h2>
+      <h3>5.1 问题</h3>
+      <p>本案例要求编写脚本，实现带进程显示的复制脚本，具体要求如下：</p>
+      <ul class="list">
+        <li>默认Linux的cp命令不具有进度显示
+</li>
+        <li>我们需要自己编写脚本实现进度显示
+</li>
+        <li>可以使用进度条的方式，或者显示百分比的方式
+</li>
+      </ul>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写参考脚本</p>
+      <p>1）脚本内容如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_function">jindu</span><span class="sh_symbol">()</span><span class="sh_cbracket">{</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">:</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_symbol">-</span>ne <span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[43m </span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;    sleep <span class="sh_number">0.3</span></li><li>done</li><li><span class="sh_cbracket">}</span></li><li>jindu <span class="sh_symbol">&amp;</span></li><li>cp <span class="sh_symbol">-</span>r  $<span class="sh_number">1</span>  $<span class="sh_number">2</span></li><li>kill $<span class="sh_symbol">!</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+jindu(){
+while :
+do
+	echo -ne '\033[43m \033[0m'
+	    sleep 0.3
+done
+}
+jindu &amp;
+cp -r  $1  $2
+kill $!
+</pre></div></div>
+    </div>
+  
+</body></html>

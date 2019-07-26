@@ -1,0 +1,351 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE2_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE2_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE2_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE2_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE2_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devweb DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#case1">案例1：使用 CSS 样式</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#case2">案例2：CSS 基础选择器</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：使用 CSS 样式</h2>
+      <h3>1.1 问题</h3>
+      <p>【参见COOKBOOK】</p>
+      <ol class="list">
+        <li>使用内联样式为&lt;p&gt;元素设置样式
+</li>
+        <li>使用内部样式表为&lt;h1&gt;元素设置样式
+</li>
+        <li>使用外部样式表为&lt;h2&gt;元素设置样式
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：使用内联样式为&lt;p&gt;元素设置样式</p>
+      <p>1)样式定义在 HTML 元素的标准属性 style 里</p>
+      <p>2)CSS语法:</p>
+      <p>只需要将分号隔开的一个或者多个属性/值对作为元素的style 属性的值</p>
+      <p>属性和属性值之间用：连接</p>
+      <p>多对属性之间用；隔开</p>
+      <p>3)要使用内联样式，你需要在相关的标签内使用样式（style）属性。Style 属性可以包含任何 CSS 属性。下例展示如何改变段落的颜色和左外边距</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p style<span class="sh_symbol">=</span><span class="sh_string">"color:red;margin-left:20px"</span><span class="sh_symbol">&gt;</span>段落文本（p）：使用内联样式<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span> </li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;body&gt;
+&lt;p style="color:red;margin-left:20px"&gt;段落文本（p）：使用内联样式&lt;/p&gt; 
+&lt;/body&gt;
+</pre></div></div>
+      <p>4)实例演示如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p class="number">步骤二：使用内部样式表为&lt;h1&gt;元素设置样式</p>
+      <p>1)样式表规则位于文档头元素中的 &lt;style&gt; 元素内</p>
+      <p>文档的 &lt;head&gt; 元素内添加 &lt;style&gt; 元素</p>
+      <p>2)在 &lt;style&gt; 元素中添加样式规则</p>
+      <p>可以定义多个样式规则</p>
+      <p>每个样式规则有两个部分：选择器和样式声明</p>
+      <p>3)选择器：决定哪些元素使用这些规则</p>
+      <p>4)样式声明：一对大括号，包含一个或者多个属性/值对</p>
+      <p>5)当单个文档需要特殊的样式时，就应该使用内部样式表。可以使用 &lt;style&gt; 标签在文档头部定义内部样式表，实例如下所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h1 <span class="sh_cbracket">{</span>color<span class="sh_symbol">:</span>blue<span class="sh_symbol">;</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span>一级标题（h1）：使用内部样式表<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+		h1 {color:blue;}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;一级标题（h1）：使用内部样式表&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p class="number">步骤三：使用外部样式表为&lt;h2&gt;元素设置样式</p>
+      <p>1)创建一个单独的样式表文件用来保存样式规则</p>
+      <p>一个纯文本文件，文件后缀为 .css</p>
+      <p>该文件中只能包含样式规则</p>
+      <p>样式规则由选择器和样式声明组成</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>h2 <span class="sh_cbracket">{</span></li><li>color<span class="sh_symbol">:</span>green<span class="sh_symbol">;</span></li><li>background<span class="sh_symbol">-</span>color<span class="sh_symbol">:</span>silver<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">h2 {
+color:green;
+background-color:silver;
+}
+</pre></div></div>
+      <p>2) 在需要使用该样式表文件的页面上，使用&lt;link&gt; 元素链接需要的外部样式表文件，</p>
+      <p>在文档的 &lt;head&gt; 元素内添加 &lt;link&gt; 元素：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>link rel<span class="sh_symbol">=</span><span class="sh_string">"stylesheet"</span> type<span class="sh_symbol">=</span><span class="sh_string">"text/css"</span> href<span class="sh_symbol">=</span><span class="sh_string">"myStyle.css"</span> <span class="sh_symbol">/&gt;</span></li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>二级标题（h2）：使用外部样式表<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;link rel="stylesheet" type="text/css" href="myStyle.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;二级标题（h2）：使用外部样式表&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：CSS 基础选择器</h2>
+      <h3>2.1 问题</h3>
+      <p>【参见COOKBOOK】</p>
+      <ol class="list">
+        <li>使用 CSS 基础选择器为页面元素设置样式
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：通用选择器</p>
+      <p>通用选择器，显示为一个星号（*）</p>
+      <p>可以与任何元素匹配</p>
+      <p>常用于设置一些默认样式，比如设置整个文档的文本的默认字体和大小、颜色等</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">*</span> <span class="sh_cbracket">{</span>color <span class="sh_symbol">:</span> red<span class="sh_symbol">;</span>font<span class="sh_symbol">-</span>size <span class="sh_symbol">:</span> 9pt<span class="sh_symbol">;</span>font<span class="sh_symbol">-</span>family <span class="sh_symbol">:</span> <span class="sh_string">"Times New Roman"</span><span class="sh_symbol">;</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+	* {color : red;font-size : 9pt;font-family : "Times New Roman";}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;h1&gt;我的第一个标题&lt;/h1&gt; 
+	&lt;p&gt;我的第一个段落&lt;/p&gt;
+	&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p class="number">步骤二：元素选择器</p>
+      <p>html 文档的元素就是选择器， 比如 &lt;p&gt;、&lt;h1&gt; 等</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;h1 <span class="sh_cbracket">{</span>color <span class="sh_symbol">:</span> blue <span class="sh_symbol">;</span><span class="sh_cbracket">}</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;h2 <span class="sh_cbracket">{</span>color <span class="sh_symbol">:</span> silver <span class="sh_symbol">;</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+	h1 {color : blue ;}
+	h2 {color : silver ;}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;h1&gt;我的第一个标题&lt;/h1&gt; 
+	&lt;p&gt;我的第一个段落&lt;/p&gt;
+	&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p class="number">步骤三：类选择器</p>
+      <p>1)语法为：.className { color:red;}</p>
+      <p>类名称不能以数字开头</p>
+      <p>2)所有能够附带class属性的元素都可以使用此样式声明</p>
+      <p>将元素的 class属性的值设置为样式类名</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#样式表中声明一个样式类</li><li><span class="sh_symbol">.</span>myClass</li><li><span class="sh_cbracket">{</span></li><li> background<span class="sh_symbol">-</span>color <span class="sh_symbol">:</span> Pink<span class="sh_symbol">;</span></li><li>font<span class="sh_symbol">-</span>size <span class="sh_symbol">:</span> 35pt<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>#将元素的 <span class="sh_keyword">class</span> 属性的值设置为样式类的名称</li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h1 <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"myClass"</span><span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"myClass"</span><span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+#样式表中声明一个样式类
+.myClass
+{
+ background-color : Pink;
+font-size : 35pt;
+}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+#将元素的 class 属性的值设置为样式类的名称
+	&lt;h1 class="myClass"&gt;我的第一个标题&lt;/h1&gt; 
+	&lt;p class="myClass"&gt;我的第一个段落&lt;/p&gt;
+	&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>3)多类选择器</p>
+      <p>可以将多个类选择器应用于同一个元素</p>
+      <p>HTML 元素的 class 属性的值中可能包含一个词列表</p>
+      <p>各个词之间用空格分隔，每个词都是一个类选择器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#样式表中声明一个样式类</li><li><span class="sh_symbol">.</span>important <span class="sh_cbracket">{</span></li><li>font<span class="sh_symbol">-</span>weight <span class="sh_symbol">:</span> bold<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">.</span>warning <span class="sh_cbracket">{</span></li><li>color <span class="sh_symbol">:</span> red<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>#将元素的 <span class="sh_keyword">class</span> 属性的值设置为样式类的名称</li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h1 <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"important"</span><span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"warning"</span><span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+#样式表中声明一个样式类
+.important {
+font-weight : bold;
+}
+.warning {
+color : red;
+}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+#将元素的 class 属性的值设置为样式类的名称
+	&lt;h1 class="important"&gt;我的第一个标题&lt;/h1&gt; 
+	&lt;p class="warning"&gt;我的第一个段落&lt;/p&gt;
+	&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-7所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <p>4)分类选择器</p>
+      <p>可以将类选择器和元素选择器结合起来使用，实现对某种元素中不同样式的细分控制</p>
+      <p>5)语法为：元素选择器 .className { }</p>
+      <p>先声明一个元素选择器</p>
+      <p>然后使用一个点号（.）代表将使用类选择器</p>
+      <p>然后声明一个类的名称</p>
+      <p>最后使用一对大括号声明样式规则</p>
+      <p>6)将样式规则与附带 class 属性的某种元素匹配</p>
+      <p>元素的 class 属性的值为分类选择器中指定的样式类名</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#样式表中声明一个样式类</li><li>p<span class="sh_symbol">.</span>important</li><li><span class="sh_cbracket">{</span></li><li>color <span class="sh_symbol">:</span> red <span class="sh_symbol">;</span></li><li>font<span class="sh_symbol">-</span>size <span class="sh_symbol">:</span> 20pt<span class="sh_symbol">;</span></li><li>border<span class="sh_symbol">:</span>1px solid black<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span> </li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>#将元素的 <span class="sh_keyword">class</span> 属性的值设置为样式类的名称</li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h1 <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"important"</span><span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>p  <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"important"</span><span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+#样式表中声明一个样式类
+p.important
+{
+color : red ;
+font-size : 20pt;
+border:1px solid black;
+} 
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+#将元素的 class 属性的值设置为样式类的名称
+	&lt;h1 class="important"&gt;我的第一个标题&lt;/h1&gt; 
+	&lt;p  class="important"&gt;我的第一个段落&lt;/p&gt;
+	&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>注意：只有 &lt;p&gt; 元素使用样式，实例演示如图-8所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p class="number">步骤四：id选择器</p>
+      <p>1)id 选择器以一种独立于文档元素的方式来指定样式</p>
+      <p>它仅作用于 id 属性的值</p>
+      <p>2)语法为：</p>
+      <p>选择器前面需要有一个 # 号</p>
+      <p>选择器本身则为文档中某个元素的 id 属性的值</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#定义一个 id 选择器</li><li>#mostImportant</li><li><span class="sh_cbracket">{</span></li><li>color<span class="sh_symbol">:</span>red<span class="sh_symbol">;</span></li><li>background<span class="sh_symbol">:</span>yellow<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>将元素的 id 属性的值设置为选择器的名称</li><li><span class="sh_symbol">&lt;</span>h1  id<span class="sh_symbol">=</span><span class="sh_string">"mostImportant"</span><span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+#定义一个 id 选择器
+#mostImportant
+{
+color:red;
+background:yellow;
+}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+将元素的 id 属性的值设置为选择器的名称
+&lt;h1  id="mostImportant"&gt;我的第一个标题&lt;/h1&gt; 
+&lt;p&gt;我的第一个段落&lt;/p&gt;
+&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-9所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image009.png">
+        <p>图-9</p>
+      </div>
+      <p class="number">步骤五：群组选择器</p>
+      <p>选择器声明为以逗号隔开的选择器列表，将一些相同的规则作用于多个元素</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>h2<span class="sh_symbol">,</span>p<span class="sh_symbol">.</span>important</li><li><span class="sh_cbracket">{</span></li><li>color<span class="sh_symbol">:</span>green<span class="sh_symbol">;</span></li><li>font<span class="sh_symbol">-</span>size<span class="sh_symbol">:</span>20pt<span class="sh_symbol">;</span></li><li>border<span class="sh_symbol">:</span>1px solid red<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>style<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span>我的第一个标题<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span> </li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"important"</span><span class="sh_symbol">&gt;</span>我的第一个段落<span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>h2<span class="sh_symbol">&gt;</span>我的第二个标题<span class="sh_symbol">&lt;/</span>h2<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;	
+h2,p.important
+{
+color:green;
+font-size:20pt;
+border:1px solid red;
+}
+&lt;/style&gt;		
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;我的第一个标题&lt;/h1&gt; 
+&lt;p class="important"&gt;我的第一个段落&lt;/p&gt;
+&lt;h2&gt;我的第二个标题&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>实例演示如图-10所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image010.png">
+        <p>图-10</p>
+      </div>
+      <p class="number">步骤六：伪类选择器</p>
+      <p>1)伪类用于向某些选择器添加特殊的效果</p>
+      <p>2)使用冒号(:)作为结合符，结合符左边是其他选择器，右边是伪类</p>
+      <p>选择器 : 伪类选择器</p>
+      <p>3)链接伪类</p>
+      <p>: link ，适用于尚未访问的链接</p>
+      <p>: visited ，适用于访问过的链接</p>
+      <p>4)动态伪类，用于呈现用户操作</p>
+      <p>:hover，适用于鼠标悬停在 HTML 元素时</p>
+      <p>:active，适用于 HTML 元素被激活时</p>
+      <p>:focus，适用于 HTML 元素获取焦点时</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>#定义伪类选择器</li><li>a<span class="sh_symbol">:</span>link <span class="sh_cbracket">{</span></li><li>color<span class="sh_symbol">:</span> black<span class="sh_symbol">;</span></li><li>font<span class="sh_symbol">-</span>size<span class="sh_symbol">:</span>15pt<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li>a<span class="sh_symbol">:</span>visited <span class="sh_cbracket">{</span></li><li>color<span class="sh_symbol">:</span> pink<span class="sh_symbol">;</span></li><li>font<span class="sh_symbol">-</span>size<span class="sh_symbol">:</span>15pt<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li>a<span class="sh_symbol">:</span>hover <span class="sh_cbracket">{</span></li><li>font<span class="sh_symbol">-</span>size <span class="sh_symbol">:</span> 20pt<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li>a<span class="sh_symbol">:</span>active <span class="sh_cbracket">{</span></li><li>color <span class="sh_symbol">:</span> red<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">#定义伪类选择器
+a:link {
+color: black;
+font-size:15pt;
+}
+a:visited {
+color: pink;
+font-size:15pt;
+}
+a:hover {
+font-size : 20pt;
+}
+a:active {
+color : red;
+}
+</pre></div></div>
+      <p>实例演示如图-11、图-12所示：</p>
+      <div class="image">
+        <img src="./CASE2_files/image011.png">
+        <p>图-11</p>
+      </div>
+      <div class="image">
+        <img src="./CASE2_files/image012.png">
+        <p>图-12</p>
+        <p>
+        </p>
+      </div>
+    </div>
+  
+</body></html>

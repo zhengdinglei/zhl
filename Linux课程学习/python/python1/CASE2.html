@@ -1,0 +1,632 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE2_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE2_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE2_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE2_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE2_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Python1 DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#case1">案例1：判断合法用户</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#case2">案例2：编写判断成绩的程序</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#case3">案例3：编写石头剪刀布小游戏</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#case4">案例4：完善石头剪刀布小游戏</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#case5">案例5：猜数程序</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：判断合法用户</h2>
+      <h3>1.1 问题</h3>
+      <p>编写login2.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>提示用户输入用户名和密码
+</li>
+        <li>将用户名和密码分别保存在变量中
+</li>
+        <li>如果用户名为bob并且密码为123456，则输出Login successful，否则输出Login inorrect
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>本题主要是复合的判断语句，写法有如下两种：</p>
+      <p>1.使用两个判断语句，先判断用户名，如果用户名正确再判断密码是否正确</p>
+      <p>2.在一个判断语句中，同时判断两个条件是否全部成立</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <p>在很多语言中，if后面的判断条件需要使用圆括号或方括号，但是python并不强制，可以直接将判断条件写在if后面，并不会产生错误。</p>
+      <p>有些时候，判断条件可能有多个（使用and或or连接），为了更好的可读性，建议在这种环境下，将多个条件分别用圆括号括起来。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim login2<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>username <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'username: '</span><span class="sh_symbol">)</span></li><li>password <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'password: '</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> username <span class="sh_symbol">==</span> <span class="sh_string">'bob'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_keyword">if</span> password <span class="sh_symbol">==</span> <span class="sh_string">'123456'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Login successful'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Login incorrect'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Login incorrect'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# vim login2.py
+
+#!/usr/bin/env python3
+
+username = input('username: ')
+password = input('password: ')
+
+if username == 'bob':
+    if password == '123456':
+        print('Login successful')
+    else:
+        print('Login incorrect')
+else:
+    print('Login incorrect')
+
+</pre></div></div>
+      <p>或将上面的代码改为以下写法：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim login2<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>username <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'username: '</span><span class="sh_symbol">)</span></li><li>password <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'password: '</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> username <span class="sh_symbol">==</span> <span class="sh_string">'bob'</span> and password <span class="sh_symbol">==</span> <span class="sh_string">'123456'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Login successful'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Login incorrect'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# vim login2.py
+
+#!/usr/bin/env python3
+
+username = input('username: ')
+password = input('password: ')
+
+if username == 'bob' and password == '123456':
+    print('Login successful')
+else:
+    print('Login incorrect')
+
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 login2<span class="sh_symbol">.</span>py</li><li>username<span class="sh_symbol">:</span> bob</li><li>password<span class="sh_symbol">:</span> <span class="sh_number">123456</span></li><li>Login successful</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 login2<span class="sh_symbol">.</span>py</li><li>username<span class="sh_symbol">:</span> bob</li><li>password<span class="sh_symbol">:</span> abcd</li><li>Login incorrect</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 login2<span class="sh_symbol">.</span>py</li><li>username<span class="sh_symbol">:</span> tom</li><li>password<span class="sh_symbol">:</span> <span class="sh_number">123456</span></li><li>Login incorrect</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 login2.py
+username: bob
+password: 123456
+Login successful
+[root@localhost day02]# python3 login2.py
+username: bob
+password: abcd
+Login incorrect
+[root@localhost day02]# python3 login2.py
+username: tom
+password: 123456
+Login incorrect
+</pre></div></div>
+      <p class="number">步骤三：改进脚本</p>
+      <p>脚本程序在运行时，应该将敏感的密码隐藏，不要显示在屏幕上。为了实现这个功能，可以使用getpass模块中的getpass方法。</p>
+      <p>getpass可以像Linux处理密码一样，屏幕上不出现任何字符，但是用户的输入可以保存到相应的变量中。</p>
+      <p>上面的代码可以改写为：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim login2<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import getpass&nbsp;&nbsp;&nbsp;&nbsp;#调用该函数可以在命令行窗口里面无回显输入密码</li><li><span style="display:none;">&nbsp;</span></li><li>username <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'username: '</span><span class="sh_symbol">)</span></li><li>password <span class="sh_symbol">=</span> getpass<span class="sh_symbol">.</span><span class="sh_function">getpass</span><span class="sh_symbol">(</span><span class="sh_string">'password: '</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> username <span class="sh_symbol">==</span> <span class="sh_string">'bob'</span> and password <span class="sh_symbol">==</span> <span class="sh_string">'123456'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[32;1mLogin successful!</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#绿色粗体显示</li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[31;1mLogin incorrect!</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#红色粗体显示</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# vim login2.py
+
+#!/usr/bin/env python3
+
+import getpass	#调用该函数可以在命令行窗口里面无回显输入密码
+
+username = input('username: ')
+password = getpass.getpass('password: ')
+
+if username == 'bob' and password == '123456':
+    print('\033[32;1mLogin successful!\033[0m')		#绿色粗体显示
+else:
+    print('\033[31;1mLogin incorrect!\033[0m')		#红色粗体显示
+</pre></div></div>
+      <p>测试脚本执行：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 login2<span class="sh_symbol">.</span>py</li><li>username<span class="sh_symbol">:</span> bob</li><li>password<span class="sh_symbol">:</span> <span class="sh_number">123456</span>               #此处所填写的密码将不在屏幕上显示</li><li>Login successful</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 login2<span class="sh_symbol">.</span>py</li><li>username<span class="sh_symbol">:</span> tom</li><li>password<span class="sh_symbol">:</span> <span class="sh_number">123456</span>               #此处所填写的密码将不在屏幕上显示</li><li>Login incorrect<span class="sh_symbol">!</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 login2.py
+username: bob
+password: 123456               #此处所填写的密码将不在屏幕上显示
+Login successful
+[root@localhost day02]# python3 login2.py
+username: tom
+password: 123456               #此处所填写的密码将不在屏幕上显示
+Login incorrect!
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：编写判断成绩的程序</h2>
+      <h3>2.1 问题</h3>
+      <p>编写grade.py脚本，根据用户输入的成绩分档，要求如下：</p>
+      <ol class="list">
+        <li>如果成绩大分60分，输出“及格”
+</li>
+        <li>如果成绩大于70分，输出“良”
+</li>
+        <li>如果成绩大于80分，输出“好”
+</li>
+        <li>如果成绩大于90分，输出“优秀”
+</li>
+        <li>否则输出“你要努力了”
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>本题需要注意的是逻辑顺序。在多分支的if语句中，自顶向下逐步匹配，一旦匹配则执行相应的子语句，其他语句将不再执行。</p>
+      <p>因此，在编写代码时要注意逻辑，成绩是100分也大于60分，如果把判断较小分数的语句写在前面，那么是凡大于60分的成绩都是输出“及格”，那么只有第一个判断语句会执行，所以应该把分值更高的判断写在上面。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim grade<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li>#coding<span class="sh_symbol">:</span> utf8                               #为了程序可以支持中文，指定UTF8编码</li><li><span style="display:none;">&nbsp;</span></li><li>score <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'成绩：'</span><span class="sh_symbol">))</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> score <span class="sh_symbol">&gt;=</span> <span class="sh_number">90</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'优秀'</span><span class="sh_symbol">)</span></li><li>elif score <span class="sh_symbol">&gt;=</span> <span class="sh_number">80</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'好'</span><span class="sh_symbol">)</span></li><li>elif score <span class="sh_symbol">&gt;=</span> <span class="sh_number">70</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'良'</span><span class="sh_symbol">)</span></li><li>elif score <span class="sh_symbol">&gt;=</span> <span class="sh_number">60</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'及格'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'你要努力了！'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# vim grade.py
+
+#!/usr/bin/env python3
+#coding: utf8                               #为了程序可以支持中文，指定UTF8编码
+
+score = int(input('成绩：'))
+
+if score &gt;= 90:
+    print('优秀')
+elif score &gt;= 80:
+    print('好')
+elif score &gt;= 70:
+    print('良')
+elif score &gt;= 60:
+    print('及格')
+else:
+    print('你要努力了！')
+
+</pre></div></div>
+      <p>或将上面的代码改为以下写法：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>score <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'成绩：'</span><span class="sh_symbol">))</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> score <span class="sh_symbol">&gt;=</span> <span class="sh_number">60</span> and score <span class="sh_symbol">&lt;</span> <span class="sh_number">70</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'及格'</span><span class="sh_symbol">)</span></li><li>elif <span class="sh_number">70</span> <span class="sh_symbol">&lt;=</span> score <span class="sh_symbol">&lt;</span> <span class="sh_number">80</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'良'</span><span class="sh_symbol">)</span></li><li>elif <span class="sh_number">80</span> <span class="sh_symbol">&lt;=</span> score <span class="sh_symbol">&lt;</span> <span class="sh_number">90</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'好'</span><span class="sh_symbol">)</span></li><li>elif score <span class="sh_symbol">&gt;=</span> <span class="sh_number">90</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'优秀'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'你要努力了！'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">score = int(input('成绩：'))
+
+if score &gt;= 60 and score &lt; 70:
+    print('及格')
+elif 70 &lt;= score &lt; 80:
+    print('良')
+elif 80 &lt;= score &lt; 90:
+    print('好')
+elif score &gt;= 90:
+    print('优秀')
+else:
+    print('你要努力了！')
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 grade<span class="sh_symbol">.</span>py</li><li>成绩： <span class="sh_number">59</span></li><li>你要努力了！</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 grade<span class="sh_symbol">.</span>py</li><li>成绩： <span class="sh_number">88</span></li><li>好</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 grade<span class="sh_symbol">.</span>py</li><li>成绩： <span class="sh_number">64</span></li><li>及格</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 grade<span class="sh_symbol">.</span>py</li><li>成绩： <span class="sh_number">75</span></li><li>良</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 grade<span class="sh_symbol">.</span>py</li><li>成绩： <span class="sh_number">97</span></li><li>优秀</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 grade.py
+成绩： 59
+你要努力了！
+[root@localhost day02]# python3 grade.py
+成绩： 88
+好
+[root@localhost day02]# python3 grade.py
+成绩： 64
+及格
+[root@localhost day02]# python3 grade.py
+成绩： 75
+良
+[root@localhost day02]# python3 grade.py
+成绩： 97
+优秀
+
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：编写石头剪刀布小游戏</h2>
+      <h3>3.1 问题</h3>
+      <p>编写game.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>计算机随机出拳
+</li>
+        <li>玩家自己决定如何出拳
+</li>
+        <li>代码尽量简化
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>引用random模块生成0-2的随机数，提示并获取用户的整数输入值，应用if扩展语句对随机数与输入值进行对比判断，满足指定条件，输出结果</p>
+      <p>为简化代码，玩家获胜条件中用and和or两个逻辑运算符进行多个条件内容的判断，用括号来区分运算优先级，所以用户获胜条件为以下3项中任意一项：</p>
+      <p>1.用户输入剪刀并且随机数是布</p>
+      <p>2.用户输入石头并且随机数是剪刀</p>
+      <p>3.用户输入布并且随机数是石头</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim game<span class="sh_symbol">.</span>py </li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_number">1</span><span class="sh_symbol">.</span> 提示并获取用户的输入</li><li>player <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">"请输入 0剪刀 1石头 2布:"</span><span class="sh_symbol">))</span></li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_number">2</span><span class="sh_symbol">.</span> 让电脑出一个随机数</li><li>computer <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">,</span><span class="sh_number">2</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_number">3</span><span class="sh_symbol">.</span> 判断用户的输入<span class="sh_symbol">,</span>然后显示对应的结果</li><li>#<span class="sh_keyword">if</span> 玩家获胜的条件<span class="sh_symbol">:</span></li><li><span class="sh_keyword">if</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">==</span><span class="sh_number">0</span> and computer<span class="sh_symbol">==</span><span class="sh_number">2</span><span class="sh_symbol">)</span> <span class="sh_function">or</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">==</span><span class="sh_number">1</span> and computer<span class="sh_symbol">==</span><span class="sh_number">0</span><span class="sh_symbol">)</span> <span class="sh_function">or</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">==</span><span class="sh_number">2</span> and computer<span class="sh_symbol">==</span><span class="sh_number">1</span><span class="sh_symbol">):</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"赢了,,,,可以去买奶粉了....."</span><span class="sh_symbol">)</span></li><li>#elif 玩家平局的条件<span class="sh_symbol">:</span></li><li>elif player<span class="sh_symbol">==</span>computer<span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"平局了,,,洗洗手决战到天亮...."</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"输了,,,回家拿钱 再来...."</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@localhost day02]# vim game.py 
+#!/usr/bin/env python3
+
+import random
+
+#1. 提示并获取用户的输入
+player = int(input("请输入 0剪刀 1石头 2布:"))
+
+#2. 让电脑出一个随机数
+computer = random.randint(0,2)
+
+#3. 判断用户的输入,然后显示对应的结果
+#if 玩家获胜的条件:
+if (player==0 and computer==2) or (player==1 and computer==0) or (player==2 and computer==1):
+    print("赢了,,,,可以去买奶粉了.....")
+#elif 玩家平局的条件:
+elif player==computer:
+    print("平局了,,,洗洗手决战到天亮....")
+else:
+    print("输了,,,回家拿钱 再来....")
+</pre></div></div>
+      <p>或将上面的代码改为以下写法：</p>
+      <p>引用random模块choice方法随机生成‘石头’、‘剪刀’、‘布’中任意一项，提示并获取用户的输入字符，应用if扩展语句对随机数与输入值进行对比判断，满足指定条件，输出结果问题结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>computer <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">choice</span><span class="sh_symbol">([</span><span class="sh_string">'石头'</span><span class="sh_symbol">,</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">,</span> <span class="sh_string">'布'</span><span class="sh_symbol">])</span></li><li>player <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'请出拳(石头/剪刀/布)：'</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li># <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'您出了:'</span><span class="sh_symbol">,</span> player<span class="sh_symbol">,</span> <span class="sh_string">'计算机出的是:'</span><span class="sh_symbol">,</span> computer<span class="sh_symbol">)</span></li><li><span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'您出了: %s, 计算机出的是: %s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">,</span> computer<span class="sh_symbol">))</span></li><li><span class="sh_keyword">if</span> player <span class="sh_symbol">==</span> <span class="sh_string">'石头'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_keyword">if</span> computer <span class="sh_symbol">==</span> <span class="sh_string">'石头'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'平局'</span><span class="sh_symbol">)</span></li><li>    elif computer <span class="sh_symbol">==</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'You WIN!!!'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'You LOSE!!!'</span><span class="sh_symbol">)</span></li><li>elif player <span class="sh_symbol">==</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_keyword">if</span> computer <span class="sh_symbol">==</span> <span class="sh_string">'石头'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'You LOSE!!!'</span><span class="sh_symbol">)</span></li><li>    elif computer <span class="sh_symbol">==</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'平局'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'You WIN!!!'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_keyword">if</span> computer <span class="sh_symbol">==</span> <span class="sh_string">'石头'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'You WIN!!!'</span><span class="sh_symbol">)</span></li><li>    elif computer <span class="sh_symbol">==</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'You LOSE!!!'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'平局'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">import random
+
+computer = random.choice(['石头', '剪刀', '布'])
+player = input('请出拳(石头/剪刀/布)：')
+
+# print('您出了:', player, '计算机出的是:', computer)
+print('您出了: %s, 计算机出的是: %s' % (player, computer))
+if player == '石头':
+    if computer == '石头':
+        print('平局')
+    elif computer == '剪刀':
+        print('You WIN!!!')
+    else:
+        print('You LOSE!!!')
+elif player == '剪刀':
+    if computer == '石头':
+        print('You LOSE!!!')
+    elif computer == '剪刀':
+        print('平局')
+    else:
+        print('You WIN!!!')
+else:
+    if computer == '石头':
+        print('You WIN!!!')
+    elif computer == '剪刀':
+        print('You LOSE!!!')
+    else:
+        print('平局')
+
+
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">1</span></li><li>平局了<span class="sh_symbol">,,,</span>洗洗手决战到天亮<span class="sh_symbol">....</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>赢了<span class="sh_symbol">,,,,</span>可以去买奶粉了<span class="sh_symbol">.....</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">2</span></li><li>平局了<span class="sh_symbol">,,,</span>洗洗手决战到天亮<span class="sh_symbol">....</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">1</span></li><li>赢了<span class="sh_symbol">,,,,</span>可以去买奶粉了<span class="sh_symbol">.....</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">1</span></li><li>输了<span class="sh_symbol">,,,</span>回家拿钱 再来<span class="sh_symbol">....</span> </li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请出拳<span class="sh_symbol">(</span>石头<span class="sh_regexp">/剪刀/</span>布<span class="sh_symbol">)</span>：石头</li><li>您出了<span class="sh_symbol">:</span> 石头<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 石头</li><li>平局</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请出拳<span class="sh_symbol">(</span>石头<span class="sh_regexp">/剪刀/</span>布<span class="sh_symbol">)</span>：剪刀</li><li>您出了<span class="sh_symbol">:</span> 剪刀<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 剪刀</li><li>平局</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请出拳<span class="sh_symbol">(</span>石头<span class="sh_regexp">/剪刀/</span>布<span class="sh_symbol">)</span>：布</li><li>您出了<span class="sh_symbol">:</span> 布<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 剪刀</li><li>You LOSE<span class="sh_symbol">!!!</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game<span class="sh_symbol">.</span>py</li><li>请出拳<span class="sh_symbol">(</span>石头<span class="sh_regexp">/剪刀/</span>布<span class="sh_symbol">)</span>：石头</li><li>您出了<span class="sh_symbol">:</span> 石头<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 剪刀</li><li>You WIN<span class="sh_symbol">!!!</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 game.py
+请输入 0剪刀 1石头 2布:1
+平局了,,,洗洗手决战到天亮....
+[root@localhost day02]# python3 game.py
+请输入 0剪刀 1石头 2布:0
+赢了,,,,可以去买奶粉了.....
+[root@localhost day02]# python3 game.py
+请输入 0剪刀 1石头 2布:2
+平局了,,,洗洗手决战到天亮....
+[root@localhost day02]# python3 game.py
+请输入 0剪刀 1石头 2布:1
+赢了,,,,可以去买奶粉了.....
+[root@localhost day02]# python3 game.py
+请输入 0剪刀 1石头 2布:1
+输了,,,回家拿钱 再来.... 
+[root@localhost day02]# python3 game.py
+请出拳(石头/剪刀/布)：石头
+您出了: 石头, 计算机出的是: 石头
+平局
+[root@localhost day02]# python3 game.py
+请出拳(石头/剪刀/布)：剪刀
+您出了: 剪刀, 计算机出的是: 剪刀
+平局
+[root@localhost day02]# python3 game.py
+请出拳(石头/剪刀/布)：布
+您出了: 布, 计算机出的是: 剪刀
+You LOSE!!!
+[root@localhost day02]# python3 game.py
+请出拳(石头/剪刀/布)：石头
+您出了: 石头, 计算机出的是: 剪刀
+You WIN!!!
+
+</pre></div></div>
+      <p class="number">步骤三：改进脚本</p>
+      <p>执行代码后，在终端显示中，根据提示输入‘石头、剪刀、布’对应数值，通过列表切片获取用户输入字符，引用random模块choice方法电脑随机生成‘石头’、‘剪刀’、‘布’中任意一项字符，将可赢组合放入列表中，如果随机生成电脑值与用户获取字符在可赢列表中，则为可赢组合，输出‘you win’，否则，输出‘you lose’</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>all_choices <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_string">'石头'</span><span class="sh_symbol">,</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">,</span> <span class="sh_string">'布'</span><span class="sh_symbol">]</span></li><li>win_list <span class="sh_symbol">=</span> <span class="sh_symbol">[[</span><span class="sh_string">'石头'</span><span class="sh_symbol">,</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">],</span> <span class="sh_symbol">[</span><span class="sh_string">'剪刀'</span><span class="sh_symbol">,</span> <span class="sh_string">'布'</span><span class="sh_symbol">],</span> <span class="sh_symbol">[</span><span class="sh_string">'布'</span><span class="sh_symbol">,</span> <span class="sh_string">'石头'</span><span class="sh_symbol">]]</span></li><li>prompt <span class="sh_symbol">=</span> <span class="sh_string">'''(0) 石头</span></li><li><span class="sh_string">(1) 剪刀</span></li><li><span class="sh_string">(2) 布</span></li><li><span class="sh_string">请选择(0/1/2)：'''</span></li><li>computer <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">choice</span><span class="sh_symbol">(</span>all_choices<span class="sh_symbol">)</span></li><li>ind <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span>prompt<span class="sh_symbol">))</span></li><li>player <span class="sh_symbol">=</span> all_choices<span class="sh_symbol">[</span>ind<span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'您出了: %s, 计算机出的是: %s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">,</span> computer<span class="sh_symbol">))</span></li><li><span class="sh_keyword">if</span> player <span class="sh_symbol">==</span> computer<span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[32;1m平局</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span></li><li>elif <span class="sh_symbol">[</span>player<span class="sh_symbol">,</span> computer<span class="sh_symbol">]</span> <span class="sh_keyword">in</span> win_list<span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[31;1mYou WIN!!!</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[31;1mYou LOSE!!!</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">import random
+
+all_choices = ['石头', '剪刀', '布']
+win_list = [['石头', '剪刀'], ['剪刀', '布'], ['布', '石头']]
+prompt = '''(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：'''
+computer = random.choice(all_choices)
+ind = int(input(prompt))
+player = all_choices[ind]
+
+print('您出了: %s, 计算机出的是: %s' % (player, computer))
+if player == computer:
+    print('\033[32;1m平局\033[0m')
+elif [player, computer] in win_list:
+    print('\033[31;1mYou WIN!!!\033[0m')
+else:
+    print('\033[31;1mYou LOSE!!!\033[0m')
+
+</pre></div></div>
+      <p>测试脚本执行：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">2</span></li><li>您出了<span class="sh_symbol">:</span> 布<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 布</li><li>平局</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">1</span></li><li>您出了<span class="sh_symbol">:</span> 剪刀<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 剪刀</li><li>平局</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">0</span></li><li>您出了<span class="sh_symbol">:</span> 石头<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 石头</li><li>平局</li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">1</span></li><li>您出了<span class="sh_symbol">:</span> 剪刀<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 石头</li><li>You LOSE<span class="sh_symbol">!!!</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">2</span></li><li>您出了<span class="sh_symbol">:</span> 布<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 剪刀</li><li>You LOSE<span class="sh_symbol">!!!</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">1</span></li><li>您出了<span class="sh_symbol">:</span> 剪刀<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 石头</li><li>You LOSE<span class="sh_symbol">!!!</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">)</span>：<span class="sh_number">0</span></li><li>您出了<span class="sh_symbol">:</span> 石头<span class="sh_symbol">,</span> 计算机出的是<span class="sh_symbol">:</span> 剪刀</li><li>You WIN<span class="sh_symbol">!!!</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：2
+您出了: 布, 计算机出的是: 布
+平局
+[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：1
+您出了: 剪刀, 计算机出的是: 剪刀
+平局
+[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：0
+您出了: 石头, 计算机出的是: 石头
+平局
+[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：1
+您出了: 剪刀, 计算机出的是: 石头
+You LOSE!!!
+[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：2
+您出了: 布, 计算机出的是: 剪刀
+You LOSE!!!
+[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：1
+您出了: 剪刀, 计算机出的是: 石头
+You LOSE!!!
+[root@localhost day02]# python3 game2.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2)：0
+您出了: 石头, 计算机出的是: 剪刀
+You WIN!!!
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：完善石头剪刀布小游戏</h2>
+      <h3>4.1 问题</h3>
+      <p>编写game2.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>基于上节game.py程序
+</li>
+        <li>实现循环结构，要求游戏三局两胜
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>用while循环语句让游戏执行3次，在判断输赢之前用if嵌套方式先判断用户输入的值是否合法，如果合法进行输赢判断，如果不合法重新执行循环语句，三次游戏结束后，即循环结束后，用if语句判断赢了几次，赢得次数大于等于2次，获得最终胜利，否则为输</p>
+      <p>此程序需要注意的部分在于：</p>
+      <p>1.要对每次赢局结果进行记录（即赢局次数加1）</p>
+      <p>2.每局输赢判断之后，游戏次数一定要加1，否则游戏次数将永无休止</p>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim game2<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>i <span class="sh_symbol">=</span> <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#游戏次数</li><li>win <span class="sh_symbol">=</span> <span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#赢局次数</li><li><span class="sh_keyword">while</span> i <span class="sh_symbol">&lt;=</span> <span class="sh_number">3</span><span class="sh_symbol">:</span></li><li>    #<span class="sh_number">1</span><span class="sh_symbol">.</span> 提示并获取用户的输入</li><li>    player <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">"请输入 0剪刀 1石头 2布:"</span><span class="sh_symbol">))</span></li><li>    </li><li>    #<span class="sh_number">2</span><span class="sh_symbol">.</span> 让电脑出一个随机数</li><li>    computer <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">,</span><span class="sh_number">2</span><span class="sh_symbol">)</span></li><li>#让用户输入合法</li><li>    <span class="sh_keyword">if</span> player<span class="sh_symbol">==</span><span class="sh_number">0</span> or player<span class="sh_symbol">==</span><span class="sh_number">1</span> or player<span class="sh_symbol">==</span><span class="sh_number">2</span><span class="sh_symbol">:</span></li><li>        #<span class="sh_number">3</span><span class="sh_symbol">.</span> 判断用户的输入<span class="sh_symbol">,</span>然后显示对应的结果</li><li>        <span class="sh_keyword">if</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">==</span><span class="sh_number">0</span> and computer<span class="sh_symbol">==</span><span class="sh_number">2</span><span class="sh_symbol">)</span> <span class="sh_function">or</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">==</span><span class="sh_number">1</span> and computer<span class="sh_symbol">==</span><span class="sh_number">0</span><span class="sh_symbol">)</span> <span class="sh_function">or</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">==</span><span class="sh_number">2</span> and computer<span class="sh_symbol">==</span><span class="sh_number">1</span><span class="sh_symbol">):</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"第"</span><span class="sh_symbol">+</span><span class="sh_function">str</span><span class="sh_symbol">(</span>i<span class="sh_symbol">)+</span><span class="sh_string">"局"</span><span class="sh_symbol">+</span><span class="sh_string">"赢了"</span><span class="sh_symbol">)</span></li><li>            win <span class="sh_symbol">+=</span> <span class="sh_number">1</span>    </li><li>        elif player<span class="sh_symbol">==</span>computer<span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"第"</span><span class="sh_symbol">+</span><span class="sh_function">str</span><span class="sh_symbol">(</span>i<span class="sh_symbol">)+</span><span class="sh_string">"局"</span><span class="sh_symbol">+</span><span class="sh_string">"平局"</span><span class="sh_symbol">)</span></li><li>        <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"第"</span><span class="sh_symbol">+</span><span class="sh_function">str</span><span class="sh_symbol">(</span>i<span class="sh_symbol">)+</span><span class="sh_string">"局"</span><span class="sh_symbol">+</span><span class="sh_string">"输了"</span><span class="sh_symbol">)</span></li><li>        i <span class="sh_symbol">+=</span> <span class="sh_number">1</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"请重新输入合法数字"</span><span class="sh_symbol">)</span></li><li>#<span class="sh_number">4</span><span class="sh_symbol">.</span> 判断最终猜拳结果：<span class="sh_number">3</span>局两胜    </li><li><span class="sh_keyword">if</span> win <span class="sh_symbol">&gt;=</span> <span class="sh_number">2</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"恭喜，你赢了！！"</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span> </li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"你输了！！"</span><span class="sh_symbol">)</span>  </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# vim game2.py
+#!/usr/bin/env python3
+
+import random
+
+i = 1			#游戏次数
+win = 0		#赢局次数
+while i &lt;= 3:
+    #1. 提示并获取用户的输入
+    player = int(input("请输入 0剪刀 1石头 2布:"))
+    
+    #2. 让电脑出一个随机数
+    computer = random.randint(0,2)
+#让用户输入合法
+    if player==0 or player==1 or player==2:
+        #3. 判断用户的输入,然后显示对应的结果
+        if (player==0 and computer==2) or (player==1 and computer==0) or (player==2 and computer==1):
+            print("第"+str(i)+"局"+"赢了")
+            win += 1    
+        elif player==computer:
+            print("第"+str(i)+"局"+"平局")
+        else:
+            print("第"+str(i)+"局"+"输了")
+        i += 1
+    else:
+        print("请重新输入合法数字")
+#4. 判断最终猜拳结果：3局两胜    
+if win &gt;= 2:
+    print("恭喜，你赢了！！")
+else: 
+    print("你输了！！")  
+
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game2<span class="sh_symbol">.</span>py</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">3</span></li><li>请重新输入合法数字</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">1</span></li><li>第<span class="sh_number">1</span>局赢了</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">2</span></li><li>第<span class="sh_number">2</span>局赢了</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">3</span></li><li>请重新输入合法数字</li><li>请输入 <span class="sh_number">0</span>剪刀 <span class="sh_number">1</span>石头 <span class="sh_number">2</span>布<span class="sh_symbol">:</span><span class="sh_number">2</span></li><li>第<span class="sh_number">3</span>局平局</li><li>恭喜，你赢了！！</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 game2.py
+请输入 0剪刀 1石头 2布:3
+请重新输入合法数字
+请输入 0剪刀 1石头 2布:1
+第1局赢了
+请输入 0剪刀 1石头 2布:2
+第2局赢了
+请输入 0剪刀 1石头 2布:3
+请重新输入合法数字
+请输入 0剪刀 1石头 2布:2
+第3局平局
+恭喜，你赢了！！
+</pre></div></div>
+      <p class="number">步骤三：改进脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>all_choices <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_string">'石头'</span><span class="sh_symbol">,</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">,</span> <span class="sh_string">'布'</span><span class="sh_symbol">]</span></li><li>win_list <span class="sh_symbol">=</span> <span class="sh_symbol">[[</span><span class="sh_string">'石头'</span><span class="sh_symbol">,</span> <span class="sh_string">'剪刀'</span><span class="sh_symbol">],</span> <span class="sh_symbol">[</span><span class="sh_string">'剪刀'</span><span class="sh_symbol">,</span> <span class="sh_string">'布'</span><span class="sh_symbol">],</span> <span class="sh_symbol">[</span><span class="sh_string">'布'</span><span class="sh_symbol">,</span> <span class="sh_string">'石头'</span><span class="sh_symbol">]]</span></li><li>prompt <span class="sh_symbol">=</span> <span class="sh_string">"""(0) 石头</span></li><li><span class="sh_string">(1) 剪刀</span></li><li><span class="sh_string">(2) 布</span></li><li><span class="sh_string">请选择(0/1/2): """</span></li><li>cwin <span class="sh_symbol">=</span> <span class="sh_number">0</span></li><li>pwin <span class="sh_symbol">=</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">while</span> cwin <span class="sh_symbol">&lt;</span> <span class="sh_number">2</span> and pwin <span class="sh_symbol">&lt;</span> <span class="sh_number">2</span><span class="sh_symbol">:</span></li><li>    computer <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">choice</span><span class="sh_symbol">(</span>all_choices<span class="sh_symbol">)</span></li><li>    ind <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span>prompt<span class="sh_symbol">))</span></li><li>    player <span class="sh_symbol">=</span> all_choices<span class="sh_symbol">[</span>ind<span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"Your choice: %s, Computer's choice: %s"</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>player<span class="sh_symbol">,</span> computer<span class="sh_symbol">))</span></li><li>    <span class="sh_keyword">if</span> player <span class="sh_symbol">==</span> computer<span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[32;1m平局</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span></li><li>    elif <span class="sh_symbol">[</span>player<span class="sh_symbol">,</span> computer<span class="sh_symbol">]</span> <span class="sh_keyword">in</span> win_list<span class="sh_symbol">:</span></li><li>        pwin <span class="sh_symbol">+=</span> <span class="sh_number">1</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[31;1mYou WIN!!!</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        cwin <span class="sh_symbol">+=</span> <span class="sh_number">1</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\0</span><span class="sh_string">33[31;1mYou LOSE!!!</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">import random
+
+all_choices = ['石头', '剪刀', '布']
+win_list = [['石头', '剪刀'], ['剪刀', '布'], ['布', '石头']]
+prompt = """(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2): """
+cwin = 0
+pwin = 0
+
+while cwin &lt; 2 and pwin &lt; 2:
+    computer = random.choice(all_choices)
+    ind = int(input(prompt))
+    player = all_choices[ind]
+
+    print("Your choice: %s, Computer's choice: %s" % (player, computer))
+    if player == computer:
+        print('\033[32;1m平局\033[0m')
+    elif [player, computer] in win_list:
+        pwin += 1
+        print('\033[31;1mYou WIN!!!\033[0m')
+    else:
+        cwin += 1
+        print('\033[31;1mYou LOSE!!!\033[0m')
+
+</pre></div></div>
+      <p>测试脚本执行：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 game3<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> <span class="sh_number">1</span></li><li>Your choice<span class="sh_symbol">:</span> 剪刀<span class="sh_symbol">,</span> Computer<span class="sh_string">'s choice: 剪刀</span></li><li><span class="sh_string">平局</span></li><li><span class="sh_string">(0) 石头</span></li><li><span class="sh_string">(1) 剪刀</span></li><li><span class="sh_string">(2) 布</span></li><li><span class="sh_string">请选择(0/1/2): 2</span></li><li><span class="sh_string">Your choice: 布, Computer'</span>s choice<span class="sh_symbol">:</span> 石头</li><li>You WIN<span class="sh_symbol">!!!</span></li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> <span class="sh_number">0</span></li><li>Your choice<span class="sh_symbol">:</span> 石头<span class="sh_symbol">,</span> Computer<span class="sh_string">'s choice: 剪刀</span></li><li><span class="sh_string">You WIN!!!</span></li><li><span class="sh_string">[root@localhost day02]# python3 game3.py </span></li><li><span class="sh_string">(0) 石头</span></li><li><span class="sh_string">(1) 剪刀</span></li><li><span class="sh_string">(2) 布</span></li><li><span class="sh_string">请选择(0/1/2): 0</span></li><li><span class="sh_string">Your choice: 石头, Computer'</span>s choice<span class="sh_symbol">:</span> 布</li><li>You LOSE<span class="sh_symbol">!!!</span></li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 石头</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 剪刀</li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> 布</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> <span class="sh_number">1</span></li><li>Your choice<span class="sh_symbol">:</span> 剪刀<span class="sh_symbol">,</span> Computer<span class="sh_string">'s choice: 石头</span></li><li><span class="sh_string">You LOSE!!!</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 game3.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2): 1
+Your choice: 剪刀, Computer's choice: 剪刀
+平局
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2): 2
+Your choice: 布, Computer's choice: 石头
+You WIN!!!
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2): 0
+Your choice: 石头, Computer's choice: 剪刀
+You WIN!!!
+[root@localhost day02]# python3 game3.py 
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2): 0
+Your choice: 石头, Computer's choice: 布
+You LOSE!!!
+(0) 石头
+(1) 剪刀
+(2) 布
+请选择(0/1/2): 1
+Your choice: 剪刀, Computer's choice: 石头
+You LOSE!!!
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：猜数程序</h2>
+      <h3>5.1 问题</h3>
+      <p>编写guess.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>系统随机生成100以内的数字
+</li>
+        <li>要求用户猜生成的数字是多少
+</li>
+        <li>最多猜5次，猜对结束程序
+</li>
+        <li>如果5次全部猜错，则输出正确结果
+</li>
+      </ol>
+      <h3>5.2 方案</h3>
+      <p>引用random模块生成1-100的随机数，用while循环语句让猜数字次数大于0，提示并获取用户输入整数值，在进行猜数字对错判断前先用if嵌套判断方式确定输入值是否合法，如果合法进行猜数字对错判断，判断结束后猜数字次数需减1，如果不合法重新进入循环，此时循环次数不减少</p>
+      <p>此程序需要注意的部分在于：</p>
+      <p>每局对错判断之后，猜数字次数一定要减1，这样猜数字次数等于0的时候，循环就结束了</p>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># vim guess<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>secret <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span><span class="sh_number">100</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#生成随机数  </li><li><span style="display:none;">&nbsp;</span></li><li>time <span class="sh_symbol">=</span> <span class="sh_number">5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#猜数字的次数  </li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"---------欢迎来到猜数字的地方，请开始---------"</span><span class="sh_symbol">)</span>  </li><li><span class="sh_keyword">while</span> time <span class="sh_symbol">&gt;</span> <span class="sh_number">0</span><span class="sh_symbol">:</span>  </li><li>    guess <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">"*数字区间0-100，请输入你猜的数字:"</span><span class="sh_symbol">))</span>  </li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"你输入数字是："</span><span class="sh_symbol">,</span>guess<span class="sh_symbol">)</span> </li><li>    <span class="sh_keyword">if</span> <span class="sh_number">0</span> <span class="sh_symbol">&lt;=</span> guess <span class="sh_symbol">&lt;</span> <span class="sh_number">100</span><span class="sh_symbol">:</span> </li><li>        <span class="sh_keyword">if</span> guess <span class="sh_symbol">==</span> secret<span class="sh_symbol">:</span>  </li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"猜对了，真厉害"</span><span class="sh_symbol">)</span>  </li><li>        <span class="sh_keyword">else</span><span class="sh_symbol">:</span>  </li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"太遗憾了，你猜错了，你还有"</span><span class="sh_symbol">,</span>time<span class="sh_number">-1</span><span class="sh_symbol">,</span><span class="sh_string">"次机会"</span><span class="sh_symbol">)</span>  </li><li>        time <span class="sh_symbol">-=</span> <span class="sh_number">1</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"输入非法，请重新输入"</span><span class="sh_symbol">)</span>  </li><li><span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"游戏结束，正确的结果是："</span><span class="sh_symbol">,</span>secret<span class="sh_symbol">)</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@localhost day02]# vim guess.py
+#!/usr/bin/env python3
+
+import random
+
+secret = random.randint(1,100)		#生成随机数  
+ 
+time = 5		#猜数字的次数  
+ 
+print("---------欢迎来到猜数字的地方，请开始---------")  
+while time &gt; 0:  
+    guess = int(input("*数字区间0-100，请输入你猜的数字:"))  
+    print("你输入数字是：",guess) 
+    if 0 &lt;= guess &lt; 100: 
+        if guess == secret:  
+            print("猜对了，真厉害")  
+        else:  
+            print("太遗憾了，你猜错了，你还有",time-1,"次机会")  
+        time -= 1
+    else:
+        print("输入非法，请重新输入")  
+print("游戏结束，正确的结果是：",secret) 
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 guess<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">---------</span>欢迎来到猜数字的地方，请开始<span class="sh_symbol">---------</span></li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:</span><span class="sh_number">100</span></li><li>你输入数字是： <span class="sh_number">100</span></li><li>输入非法，请重新输入</li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>你输入数字是： <span class="sh_number">0</span></li><li>太遗憾了，你猜错了，你还有 <span class="sh_number">4</span> 次机会</li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:-</span><span class="sh_number">1</span></li><li>你输入数字是： <span class="sh_symbol">-</span><span class="sh_number">1</span></li><li>输入非法，请重新输入</li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:</span><span class="sh_number">12</span></li><li>你输入数字是： <span class="sh_number">12</span></li><li>太遗憾了，你猜错了，你还有 <span class="sh_number">3</span> 次机会</li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:</span><span class="sh_number">34</span></li><li>你输入数字是： <span class="sh_number">34</span></li><li>太遗憾了，你猜错了，你还有 <span class="sh_number">2</span> 次机会</li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:</span><span class="sh_number">56</span></li><li>你输入数字是： <span class="sh_number">56</span></li><li>太遗憾了，你猜错了，你还有 <span class="sh_number">1</span> 次机会</li><li><span class="sh_symbol">*</span>数字区间<span class="sh_number">0-100</span>，请输入你猜的数字<span class="sh_symbol">:</span><span class="sh_number">89</span></li><li>你输入数字是： <span class="sh_number">89</span></li><li>太遗憾了，你猜错了，你还有 <span class="sh_number">0</span> 次机会</li><li>游戏结束，正确的结果是： <span class="sh_number">47</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 guess.py
+---------欢迎来到猜数字的地方，请开始---------
+*数字区间0-100，请输入你猜的数字:100
+你输入数字是： 100
+输入非法，请重新输入
+*数字区间0-100，请输入你猜的数字:0
+你输入数字是： 0
+太遗憾了，你猜错了，你还有 4 次机会
+*数字区间0-100，请输入你猜的数字:-1
+你输入数字是： -1
+输入非法，请重新输入
+*数字区间0-100，请输入你猜的数字:12
+你输入数字是： 12
+太遗憾了，你猜错了，你还有 3 次机会
+*数字区间0-100，请输入你猜的数字:34
+你输入数字是： 34
+太遗憾了，你猜错了，你还有 2 次机会
+*数字区间0-100，请输入你猜的数字:56
+你输入数字是： 56
+太遗憾了，你猜错了，你还有 1 次机会
+*数字区间0-100，请输入你猜的数字:89
+你输入数字是： 89
+太遗憾了，你猜错了，你还有 0 次机会
+游戏结束，正确的结果是： 47
+
+</pre></div></div>
+      <p class="number">步骤三：改进脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>num <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">100</span><span class="sh_symbol">)</span></li><li>counter <span class="sh_symbol">=</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">while</span> counter <span class="sh_symbol">&lt;</span> <span class="sh_number">5</span><span class="sh_symbol">:</span></li><li>    answer <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'guess the number: '</span><span class="sh_symbol">))</span></li><li>    <span class="sh_keyword">if</span> answer <span class="sh_symbol">&gt;</span> num<span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'猜大了'</span><span class="sh_symbol">)</span></li><li>    elif answer <span class="sh_symbol">&lt;</span> num<span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'猜小了'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'猜对了'</span><span class="sh_symbol">)</span></li><li>        <span class="sh_keyword">break</span></li><li>    counter <span class="sh_symbol">+=</span> <span class="sh_number">1</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span>  # 循环被<span class="sh_keyword">break</span>就不执行了，没有被<span class="sh_keyword">break</span>才执行</li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'the number is:'</span><span class="sh_symbol">,</span> num<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">import random
+
+num = random.randint(1, 100)
+counter = 0
+
+while counter &lt; 5:
+    answer = int(input('guess the number: '))
+    if answer &gt; num:
+        print('猜大了')
+    elif answer &lt; num:
+        print('猜小了')
+    else:
+        print('猜对了')
+        break
+    counter += 1
+else:  # 循环被break就不执行了，没有被break才执行
+    print('the number is:', num)
+</pre></div></div>
+      <p>测试脚本执行：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 guess2<span class="sh_symbol">.</span>py </li><li>猜大了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">30</span></li><li>猜小了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">50</span></li><li>猜小了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">70</span></li><li>猜小了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">78</span></li><li>猜小了</li><li>the number is<span class="sh_symbol">:</span> <span class="sh_number">88</span></li><li><span class="sh_symbol">[</span>root@localhost day02<span class="sh_symbol">]</span># python3 guess2<span class="sh_symbol">.</span>py </li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">16</span></li><li>猜小了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">90</span></li><li>猜大了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">50</span></li><li>猜大了</li><li>guess the number<span class="sh_symbol">:</span> <span class="sh_number">30</span></li><li>猜对了</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day02]# python3 guess2.py 
+猜大了
+guess the number: 30
+猜小了
+guess the number: 50
+猜小了
+guess the number: 70
+猜小了
+guess the number: 78
+猜小了
+the number is: 88
+[root@localhost day02]# python3 guess2.py 
+guess the number: 16
+猜小了
+guess the number: 90
+猜大了
+guess the number: 50
+猜大了
+guess the number: 30
+猜对了
+</pre></div></div>
+    </div>
+  
+</body></html>

@@ -1,0 +1,377 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD CLUSTER DAY04</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#case1">案例1：实验环境</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#case2">案例2：部署ceph集群</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#case3">案例3：创建Ceph块存储</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：实验环境</h2>
+      <h3>1.1 问题</h3>
+      <p>准备四台KVM虚拟机，其三台作为存储集群节点，一台安装为客户端，实现如下功能：</p>
+      <ul class="list">
+        <li>创建1台客户端虚拟机
+</li>
+        <li>创建3台存储集群虚拟机
+</li>
+        <li>配置主机名、IP地址、YUM源
+</li>
+        <li>修改所有主机的主机名
+</li>
+        <li>配置无密码SSH连接
+</li>
+        <li>配置NTP时间同步
+</li>
+        <li>创建虚拟机磁盘
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>使用4台虚拟机，1台客户端、3台存储集群服务器，拓扑结构如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>所有主机的主机名及对应的IP地址如表-1所示。</p>
+      <div class="table">
+        <p>表－1 主机名称及对应IP地址表</p>
+        <img src="./CASE_files/table001.png">
+        <p>
+        </p>
+      </div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装前准备</p>
+      <p>1）物理机为所有节点配置yum源服务器。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install vsftpd</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>ceph</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># mount <span class="sh_symbol">-</span>o loop <span class="sh_symbol">\</span></li><li>rhcs2<span class="sh_number">.0</span><span class="sh_symbol">-</span>rhosp9<span class="sh_number">-20161113</span><span class="sh_symbol">-</span>x86_64<span class="sh_symbol">.</span><span class="sh_normal">iso  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>ceph</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># systemctl  restart  vsftpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# yum -y install vsftpd
+[root@room9pc01 ~]# mkdir  /var/ftp/ceph
+[root@room9pc01 ~]# mount -o loop \
+rhcs2.0-rhosp9-20161113-x86_64.iso  /var/ftp/ceph
+[root@room9pc01 ~]# systemctl  restart  vsftpd
+</pre></div></div>
+      <p>2）修改所有节点都需要配置YUM源（这里仅以node1为例）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>ceph<span class="sh_symbol">.</span>repo</li><li><span class="sh_symbol">[</span>mon<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>mon</li><li>baseurl<span class="sh_symbol">=</span>ftp<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.254/ceph/rhceph-2.0-rhel-7-x86_64/MON</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>osd<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>osd</li><li>baseurl<span class="sh_symbol">=</span>ftp<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.254/ceph/rhceph-2.0-rhel-7-x86_64/OSD</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>tools<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>tools</li><li>baseurl<span class="sh_symbol">=</span>ftp<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.254/ceph/rhceph-2.0-rhel-7-x86_64/Tools</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# cat /etc/yum.repos.d/ceph.repo
+[mon]
+name=mon
+baseurl=ftp://192.168.4.254/ceph/rhceph-2.0-rhel-7-x86_64/MON
+gpgcheck=0
+[osd]
+name=osd
+baseurl=ftp://192.168.4.254/ceph/rhceph-2.0-rhel-7-x86_64/OSD
+gpgcheck=0
+[tools]
+name=tools
+baseurl=ftp://192.168.4.254/ceph/rhceph-2.0-rhel-7-x86_64/Tools
+gpgcheck=0
+</pre></div></div>
+      <p>3）修改/etc/hosts并同步到所有主机。</p>
+      <p>警告：/etc/hosts解析的域名必须与本机主机名一致！！！！</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts</li><li><span class="sh_symbol">...</span> <span class="sh_symbol">...</span></li><li><span class="sh_number">192.168.4.10</span>  client</li><li><span class="sh_number">192.168.4.11</span>&nbsp;&nbsp;&nbsp;&nbsp; node1</li><li><span class="sh_number">192.168.4.12</span>&nbsp;&nbsp;&nbsp;&nbsp; node2</li><li><span class="sh_number">192.168.4.13</span>&nbsp;&nbsp;&nbsp;&nbsp; node3</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@node1 ~]# cat /etc/hosts
+... ...
+192.168.4.10  client
+192.168.4.11	 node1
+192.168.4.12	 node2
+192.168.4.13	 node3
+</pre></div></div>
+      <p>警告：/etc/hosts解析的域名必须与本机主机名一致！！！！</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_number">10</span> <span class="sh_number">11</span>  <span class="sh_number">12</span>  <span class="sh_number">13</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_keyword">do</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_normal">scp  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts  <span class="sh_number">192.168.4</span><span class="sh_symbol">.</span>$i<span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span></li><li><span class="sh_symbol">&gt;</span> done</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span>  <span class="sh_number">10</span> <span class="sh_number">11</span>  <span class="sh_number">12</span>  <span class="sh_number">13</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_keyword">do</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_normal">scp  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>ceph<span class="sh_symbol">.</span>repo  <span class="sh_number">192.168.4</span><span class="sh_symbol">.</span>$i<span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">&gt;</span> done</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# for i in 10 11  12  13
+&gt; do
+&gt; scp  /etc/hosts  192.168.4.$i:/etc/
+&gt; done
+[root@node1 ~]# for i in  10 11  12  13
+&gt; do
+&gt; scp  /etc/yum.repos.d/ceph.repo  192.168.4.$i:/etc/yum.repos.d/
+&gt; done
+</pre></div></div>
+      <p>3）配置无密码连接(包括自己远程自己也不需要密码)。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># ssh<span class="sh_symbol">-</span>keygen   <span class="sh_symbol">-</span><span class="sh_normal">f </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/.</span><span class="sh_normal">ssh</span><span class="sh_symbol">/</span>id_rsa    <span class="sh_symbol">-</span>N <span class="sh_string">''</span></li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_number">10</span>  <span class="sh_number">11</span>  <span class="sh_number">12</span>  <span class="sh_number">13</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_keyword">do</span></li><li><span class="sh_symbol">&gt;</span> ssh<span class="sh_symbol">-</span>copy<span class="sh_symbol">-</span>id  <span class="sh_number">192.168.4</span><span class="sh_symbol">.</span>$i</li><li><span class="sh_symbol">&gt;</span> done</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# ssh-keygen   -f /root/.ssh/id_rsa    -N ''
+[root@node1 ~]# for i in 10  11  12  13
+&gt; do
+&gt; ssh-copy-id  192.168.4.$i
+&gt; done
+</pre></div></div>
+      <p class="number">步骤二：配置NTP时间同步</p>
+      <p>1）真实物理机创建NTP服务器。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span>#  yum <span class="sh_symbol">-</span>y install chrony</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span>#  <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>chrony<span class="sh_symbol">.</span>conf</li><li>server <span class="sh_number">0</span><span class="sh_symbol">.</span>centos<span class="sh_symbol">.</span>pool<span class="sh_symbol">.</span>ntp<span class="sh_symbol">.</span>org iburst</li><li>allow <span class="sh_number">192.168.4.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span></li><li>local stratum <span class="sh_number">10</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># systemctl  restart  chronyd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]#  yum -y install chrony
+[root@client ~]#  cat /etc/chrony.conf
+server 0.centos.pool.ntp.org iburst
+allow 192.168.4.0/24
+local stratum 10
+[root@room9pc01 ~]# systemctl  restart  chronyd
+</pre></div></div>
+      <p>如果有防火墙规则，需要清空所有规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># iptables <span class="sh_symbol">-</span>F</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# iptables -F
+</pre></div></div>
+      <p>2）其他所有节点与NTP服务器同步时间（以node1为例）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>chrony<span class="sh_symbol">.</span>conf</li><li>server <span class="sh_number">192.168.4.254</span>   iburst</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># systemctl  restart  chronyd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  cat /etc/chrony.conf
+server 192.168.4.254   iburst
+[root@node1 ~]# systemctl  restart  chronyd
+</pre></div></div>
+      <p class="number">步骤三：准备存储磁盘</p>
+      <p>1）物理机上为每个虚拟机准备3块磁盘。（可以使用命令，也可以使用图形直接添加）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># virt<span class="sh_symbol">-</span>manager</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@room9pc01 ~]# virt-manager
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：部署ceph集群</h2>
+      <h3>2.1 问题</h3>
+      <p>沿用练习一，部署Ceph集群服务器，实现以下目标：</p>
+      <ul class="list">
+        <li>安装部署工具ceph-deploy
+</li>
+        <li>创建ceph集群
+</li>
+        <li>准备日志磁盘分区
+</li>
+        <li>创建OSD存储空间
+</li>
+        <li>查看ceph状态，验证
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署软件</p>
+      <p>1）在node1安装部署工具，学习工具的语法格式。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  yum <span class="sh_symbol">-</span>y install ceph<span class="sh_symbol">-</span>deploy</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  ceph<span class="sh_symbol">-</span>deploy  <span class="sh_symbol">--</span>help</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  yum -y install ceph-deploy
+[root@node1 ~]#  ceph-deploy  --help
+</pre></div></div>
+      <p>2）创建目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  mkdir ceph<span class="sh_symbol">-</span>cluster</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  cd ceph<span class="sh_symbol">-</span><span class="sh_normal">cluster</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  mkdir ceph-cluster
+[root@node1 ~]#  cd ceph-cluster/
+</pre></div></div>
+      <p class="number">步骤二：部署Ceph集群</p>
+      <p>1）创建Ceph集群配置。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy <span class="sh_keyword">new</span> node1 node2 node3</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# ceph-deploy new node1 node2 node3
+</pre></div></div>
+      <p>2）给所有节点安装软件包。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy install node1 node2 node3</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# ceph-deploy install node1 node2 node3
+</pre></div></div>
+      <p>3）初始化所有节点的mon服务（主机名解析必须对）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy mon create<span class="sh_symbol">-</span>initial</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# ceph-deploy mon create-initial
+</pre></div></div>
+      <p>常见错误及解决方法（非必要操作，有错误可以参考）：</p>
+      <p>如果提示如下错误信息：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>node1<span class="sh_symbol">][</span>ERROR <span class="sh_symbol">]</span> admin_socket<span class="sh_symbol">:</span> exception getting command descriptions<span class="sh_symbol">:</span> <span class="sh_symbol">[</span><span class="sh_predef_func">Error</span> <span class="sh_number">2</span><span class="sh_symbol">]</span> No such file or directory</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[node1][ERROR ] admin_socket: exception getting command descriptions: [Error 2] No such file or directory
+</pre></div></div>
+      <p>解决方案如下（在node1操作）：</p>
+      <p>先检查自己的命令是否是在ceph-cluster目录下执行的！！！！如果时确认是在该目录下执行的create-initial命令，依然保存，可以使用如下方式修复。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># vim ceph<span class="sh_symbol">.</span>conf      #文件最后追加以下内容</li><li>public_network <span class="sh_symbol">=</span> <span class="sh_number">192.168.4.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# vim ceph.conf      #文件最后追加以下内容
+public_network = 192.168.4.0/24
+</pre></div></div>
+      <p>修改后重新推送配置文件:</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy <span class="sh_symbol">--</span>overwrite<span class="sh_symbol">-</span>conf config push node1 node2 node3</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# ceph-deploy --overwrite-conf config push node1 node2 node3
+</pre></div></div>
+      <p class="number">步骤三：创建OSD</p>
+      <p>1）准备磁盘分区（node1、node2、node3都做相同操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span>#  <span class="sh_normal">parted  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb  mklabel  gpt</li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span>#  <span class="sh_normal">parted  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb  mkpart primary  1M  <span class="sh_number">50</span><span class="sh_symbol">%</span></li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span>#  <span class="sh_normal">parted  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb  mkpart primary  <span class="sh_number">50</span><span class="sh_symbol">%</span>  <span class="sh_number">100</span><span class="sh_symbol">%</span></li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># chown  ceph<span class="sh_symbol">.</span><span class="sh_normal">ceph  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb1</li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># chown  ceph<span class="sh_symbol">.</span><span class="sh_normal">ceph  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb2</li><li><span class="sh_comment">//这两个分区用来做存储服务器的日志journal盘</span></li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">udev</span><span class="sh_symbol">/</span>rules<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">70</span><span class="sh_symbol">-</span>vdb<span class="sh_symbol">.</span>rules</li><li>ENV<span class="sh_cbracket">{</span>DEVNAME<span class="sh_cbracket">}</span><span class="sh_symbol">==</span><span class="sh_string">"/dev/vdb1"</span><span class="sh_symbol">,</span>OWNER<span class="sh_symbol">=</span><span class="sh_string">"ceph"</span><span class="sh_symbol">,</span>GROUP<span class="sh_symbol">=</span><span class="sh_string">"ceph"</span></li><li>ENV<span class="sh_cbracket">{</span>DEVNAME<span class="sh_cbracket">}</span><span class="sh_symbol">==</span><span class="sh_string">"/dev/vdb2"</span><span class="sh_symbol">,</span>OWNER<span class="sh_symbol">=</span><span class="sh_string">"ceph"</span><span class="sh_symbol">,</span>GROUP<span class="sh_symbol">=</span><span class="sh_string">"ceph"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]#  parted  /dev/vdb  mklabel  gpt
+[root@node1 ceph-cluster]#  parted  /dev/vdb  mkpart primary  1M  50%
+[root@node1 ceph-cluster]#  parted  /dev/vdb  mkpart primary  50%  100%
+[root@node1 ceph-cluster]# chown  ceph.ceph  /dev/vdb1
+[root@node1 ceph-cluster]# chown  ceph.ceph  /dev/vdb2
+//这两个分区用来做存储服务器的日志journal盘
+[root@node1 ceph-cluster]# vim /etc/udev/rules.d/70-vdb.rules
+ENV{DEVNAME}=="/dev/vdb1",OWNER="ceph",GROUP="ceph"
+ENV{DEVNAME}=="/dev/vdb2",OWNER="ceph",GROUP="ceph"
+</pre></div></div>
+      <p>2）初始化清空磁盘数据（仅node1操作即可）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy disk  zap  node1<span class="sh_symbol">:</span>vdc   node1<span class="sh_symbol">:</span>vdd    </li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy disk  zap  node2<span class="sh_symbol">:</span>vdc   node2<span class="sh_symbol">:</span>vdd</li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy disk  zap  node3<span class="sh_symbol">:</span>vdc   node3<span class="sh_symbol">:</span>vdd   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# ceph-deploy disk  zap  node1:vdc   node1:vdd    
+[root@node1 ceph-cluster]# ceph-deploy disk  zap  node2:vdc   node2:vdd
+[root@node1 ceph-cluster]# ceph-deploy disk  zap  node3:vdc   node3:vdd   
+</pre></div></div>
+      <p>3）创建OSD存储空间（仅node1操作即可）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy osd create <span class="sh_symbol">\</span></li><li> node1<span class="sh_symbol">:</span>vdc<span class="sh_symbol">:</span><span class="sh_regexp">/dev/</span>vdb1 node1<span class="sh_symbol">:</span>vdd<span class="sh_symbol">:</span><span class="sh_regexp">/dev/</span>vdb2  </li><li><span class="sh_comment">//创建osd存储设备，vdc为集群提供存储空间，vdb1提供JOURNAL缓存，</span></li><li><span class="sh_comment">//一个存储设备对应一个缓存设备，缓存需要SSD，不需要很大</span></li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy osd create <span class="sh_symbol">\</span></li><li> node2<span class="sh_symbol">:</span>vdc<span class="sh_symbol">:</span><span class="sh_regexp">/dev/</span>vdb1 node2<span class="sh_symbol">:</span>vdd<span class="sh_symbol">:</span><span class="sh_regexp">/dev/</span>vdb2</li><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ceph<span class="sh_symbol">-</span>deploy osd create <span class="sh_symbol">\</span></li><li> node3<span class="sh_symbol">:</span>vdc<span class="sh_symbol">:</span><span class="sh_regexp">/dev/</span>vdb1 node3<span class="sh_symbol">:</span>vdd<span class="sh_symbol">:</span><span class="sh_regexp">/dev/</span>vdb2 </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]# ceph-deploy osd create \
+ node1:vdc:/dev/vdb1 node1:vdd:/dev/vdb2  
+//创建osd存储设备，vdc为集群提供存储空间，vdb1提供JOURNAL缓存，
+//一个存储设备对应一个缓存设备，缓存需要SSD，不需要很大
+[root@node1 ceph-cluster]# ceph-deploy osd create \
+ node2:vdc:/dev/vdb1 node2:vdd:/dev/vdb2
+[root@node1 ceph-cluster]# ceph-deploy osd create \
+ node3:vdc:/dev/vdb1 node3:vdd:/dev/vdb2 
+</pre></div></div>
+      <p>4）常见错误（非必须操作）</p>
+      <p>使用osd create创建OSD存储空间时，如提示run 'gatherkeys'，可以使用如下命令修复：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 ceph<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span>#  ceph<span class="sh_symbol">-</span>deploy gatherkeys node1 node2 node3 </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ceph-cluster]#  ceph-deploy gatherkeys node1 node2 node3 
+</pre></div></div>
+      <p class="number">步骤四：验证测试</p>
+      <p>1) 查看集群状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  ceph  <span class="sh_symbol">-</span>s</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  ceph  -s
+</pre></div></div>
+      <p>2）常见错误（非必须操作）</p>
+      <p>如果查看状态包含如下信息：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>health<span class="sh_symbol">:</span> HEALTH_WARN</li><li>        clock skew detected on  node2<span class="sh_symbol">,</span> node3…  </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">health: HEALTH_WARN
+        clock skew detected on  node2, node3…  
+</pre></div></div>
+      <p>clock skew表示时间不同步，解决办法：请先将所有主机的时间都使用NTP时间同步！！！</p>
+      <p>Ceph要求所有主机时差不能超过0.05s，否则就会提示WARN，如果使用NTP还不能精确同步时间，可以手动修改所有主机的ceph.conf，在[MON]下面添加如下一行：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mon clock drift allowed <span class="sh_symbol">=</span> <span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mon clock drift allowed = 1
+</pre></div></div>
+      <p>如果状态还是失败，可以尝试执行如下命令，重启ceph服务：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  systemctl restart ceph<span class="sh_symbol">\*.</span>service ceph<span class="sh_symbol">\*.</span>target</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  systemctl restart ceph\*.service ceph\*.target
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：创建Ceph块存储</h2>
+      <h3>3.1 问题</h3>
+      <p>沿用练习一，使用Ceph集群的块存储功能，实现以下目标：</p>
+      <ul class="list">
+        <li>创建块存储镜像
+</li>
+        <li>客户端映射镜像
+</li>
+        <li>创建镜像快照
+</li>
+        <li>使用快照还原数据
+</li>
+        <li>使用快照克隆镜像
+</li>
+        <li>删除快照与镜像
+</li>
+      </ul>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建镜像</p>
+      <p>1）查看存储池。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># ceph osd lspools</li><li><span class="sh_number">0</span> rbd<span class="sh_symbol">,</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# ceph osd lspools
+0 rbd,
+</pre></div></div>
+      <p>2）创建镜像、查看镜像</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd create demo<span class="sh_symbol">-</span>image <span class="sh_symbol">--</span>image<span class="sh_symbol">-</span>feature  layering <span class="sh_symbol">--</span>size 10G</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd create <span class="sh_normal">rbd</span><span class="sh_symbol">/</span>image <span class="sh_symbol">--</span>image<span class="sh_symbol">-</span>feature  layering <span class="sh_symbol">--</span>size 10G</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd list</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd info demo<span class="sh_symbol">-</span>image</li><li>rbd image <span class="sh_string">'demo-image'</span><span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;size <span class="sh_number">10240</span> MB <span class="sh_keyword">in</span> <span class="sh_number">2560</span> objects</li><li>&nbsp;&nbsp;&nbsp;&nbsp;order <span class="sh_number">22</span> <span class="sh_symbol">(</span><span class="sh_number">4096</span> kB objects<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;block_name_prefix<span class="sh_symbol">:</span> rbd_data<span class="sh_symbol">.</span>d3aa2ae8944a</li><li>&nbsp;&nbsp;&nbsp;&nbsp;format<span class="sh_symbol">:</span> <span class="sh_number">2</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;features<span class="sh_symbol">:</span> layering</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd create demo-image --image-feature  layering --size 10G
+[root@node1 ~]# rbd create rbd/image --image-feature  layering --size 10G
+[root@node1 ~]# rbd list
+[root@node1 ~]# rbd info demo-image
+rbd image 'demo-image':
+	size 10240 MB in 2560 objects
+	order 22 (4096 kB objects)
+	block_name_prefix: rbd_data.d3aa2ae8944a
+	format: 2
+	features: layering
+</pre></div></div>
+      <p class="number">步骤二：动态调整</p>
+      <p>1）缩小容量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd resize <span class="sh_symbol">--</span>size 7G image <span class="sh_symbol">--</span>allow<span class="sh_symbol">-</span>shrink</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd info image</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd resize --size 7G image --allow-shrink
+[root@node1 ~]# rbd info image
+</pre></div></div>
+      <p>2）扩容容量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd resize <span class="sh_symbol">--</span>size 15G image</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd info image</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd resize --size 15G image
+[root@node1 ~]# rbd info image
+</pre></div></div>
+      <p class="number">步骤三：通过KRBD访问</p>
+      <p>1）集群内将镜像映射为本地磁盘</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd map demo<span class="sh_symbol">-</span>image</li><li><span class="sh_regexp">/dev/</span>rbd0</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># lsblk</li><li>… …</li><li>rbd0          <span class="sh_number">251</span><span class="sh_symbol">:</span><span class="sh_number">0</span>    <span class="sh_number">0</span>   10G  <span class="sh_number">0</span> disk</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># mkfs<span class="sh_symbol">.</span><span class="sh_normal">xfs </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>rbd0</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># <span class="sh_normal">mount  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span><span class="sh_normal">rbd0  </span><span class="sh_symbol">/</span>mnt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd map demo-image
+/dev/rbd0
+[root@node1 ~]# lsblk
+… …
+rbd0          251:0    0   10G  0 disk
+[root@node1 ~]# mkfs.xfs /dev/rbd0
+[root@node1 ~]# mount  /dev/rbd0  /mnt
+</pre></div></div>
+      <p>2）客户端通过KRBD访问</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>#客户端需要安装ceph<span class="sh_symbol">-</span>common软件包</li><li>#拷贝配置文件（否则不知道集群在哪）</li><li>#拷贝连接密钥（否则无连接权限）</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y  install ceph<span class="sh_symbol">-</span>common</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># scp <span class="sh_number">192.168.4.11</span><span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span><span class="sh_normal">ceph</span><span class="sh_symbol">/</span>ceph<span class="sh_symbol">.</span><span class="sh_normal">conf  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">ceph</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># scp <span class="sh_number">192.168.4.11</span><span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span><span class="sh_normal">ceph</span><span class="sh_symbol">/</span>ceph<span class="sh_symbol">.</span>client<span class="sh_symbol">.</span>admin<span class="sh_symbol">.</span>keyring <span class="sh_symbol">\</span></li><li><span class="sh_regexp">/etc/</span><span class="sh_normal">ceph</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># rbd map image</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span>#  lsblk</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># rbd showmapped</li><li>id pool image snap device    </li><li><span class="sh_number">0</span>  rbd  image <span class="sh_symbol">-</span>    <span class="sh_regexp">/dev/</span>rbd0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">#客户端需要安装ceph-common软件包
+#拷贝配置文件（否则不知道集群在哪）
+#拷贝连接密钥（否则无连接权限）
+[root@client ~]# yum -y  install ceph-common
+[root@client ~]# scp 192.168.4.11:/etc/ceph/ceph.conf  /etc/ceph/
+[root@client ~]# scp 192.168.4.11:/etc/ceph/ceph.client.admin.keyring \
+/etc/ceph/
+[root@client ~]# rbd map image
+[root@client ~]#  lsblk
+[root@client ~]# rbd showmapped
+id pool image snap device    
+0  rbd  image -    /dev/rbd0
+</pre></div></div>
+      <p>3) 客户端格式化、挂载分区</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># mkfs<span class="sh_symbol">.</span><span class="sh_normal">xfs </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>rbd0</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">mount </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span><span class="sh_normal">rbd0 </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># echo <span class="sh_string">"test"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/mnt/</span>test<span class="sh_symbol">.</span>txt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# mkfs.xfs /dev/rbd0
+[root@client ~]# mount /dev/rbd0 /mnt/
+[root@client ~]# echo "test" &gt; /mnt/test.txt
+</pre></div></div>
+      <p class="number">步骤四：创建镜像快照</p>
+      <p>1) 查看镜像快照</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd snap ls image</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@node1 ~]# rbd snap ls image
+</pre></div></div>
+      <p>2) 创建镜像快照</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd snap create image <span class="sh_symbol">--</span>snap image<span class="sh_symbol">-</span>snap1</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd snap ls image</li><li>SNAPID NAME            SIZE </li><li>     <span class="sh_number">4</span> image<span class="sh_symbol">-</span>snap1 <span class="sh_number">15360</span> MB</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd snap create image --snap image-snap1
+[root@node1 ~]# rbd snap ls image
+SNAPID NAME            SIZE 
+     4 image-snap1 15360 MB
+</pre></div></div>
+      <p>3) 删除客户端写入的测试文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># rm  <span class="sh_symbol">-</span><span class="sh_normal">rf   </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>test<span class="sh_symbol">.</span>txt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# rm  -rf   /mnt/test.txt
+</pre></div></div>
+      <p>4) 还原快照</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd snap rollback image <span class="sh_symbol">--</span>snap image<span class="sh_symbol">-</span>snap1</li><li>#客户端重新挂载分区</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">umount  </span><span class="sh_symbol">/</span>mnt</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">mount </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span><span class="sh_normal">rbd0 </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">ls  </span><span class="sh_symbol">/</span>mnt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd snap rollback image --snap image-snap1
+#客户端重新挂载分区
+[root@client ~]# umount  /mnt
+[root@client ~]# mount /dev/rbd0 /mnt/
+[root@client ~]# ls  /mnt
+</pre></div></div>
+      <p class="number">步骤四：创建快照克隆</p>
+      <p>1）克隆快照</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  rbd snap protect image <span class="sh_symbol">--</span>snap image<span class="sh_symbol">-</span>snap1</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  rbd snap rm image <span class="sh_symbol">--</span>snap image<span class="sh_symbol">-</span>snap1    <span class="sh_comment">//会失败</span></li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd clone <span class="sh_symbol">\</span></li><li>image <span class="sh_symbol">--</span>snap image<span class="sh_symbol">-</span>snap1 image<span class="sh_symbol">-</span>clone <span class="sh_symbol">--</span>image<span class="sh_symbol">-</span>feature layering</li><li><span class="sh_comment">//使用image的快照image-snap1克隆一个新的image-clone镜像</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  rbd snap protect image --snap image-snap1
+[root@node1 ~]#  rbd snap rm image --snap image-snap1    //会失败
+[root@node1 ~]# rbd clone \
+image --snap image-snap1 image-clone --image-feature layering
+//使用image的快照image-snap1克隆一个新的image-clone镜像
+</pre></div></div>
+      <p>2）查看克隆镜像与父镜像快照的关系</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  rbd info image<span class="sh_symbol">-</span>clone</li><li>rbd image <span class="sh_string">'image-clone'</span><span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;size <span class="sh_number">15360</span> MB <span class="sh_keyword">in</span> <span class="sh_number">3840</span> objects</li><li>&nbsp;&nbsp;&nbsp;&nbsp;order <span class="sh_number">22</span> <span class="sh_symbol">(</span><span class="sh_number">4096</span> kB objects<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;block_name_prefix<span class="sh_symbol">:</span> rbd_data<span class="sh_symbol">.</span>d3f53d1b58ba</li><li>&nbsp;&nbsp;&nbsp;&nbsp;format<span class="sh_symbol">:</span> <span class="sh_number">2</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;features<span class="sh_symbol">:</span> layering</li><li>&nbsp;&nbsp;&nbsp;&nbsp;flags<span class="sh_symbol">:</span> </li><li>&nbsp;&nbsp;&nbsp;&nbsp;parent<span class="sh_symbol">:</span> <span class="sh_normal">rbd</span><span class="sh_symbol">/</span>image@image<span class="sh_symbol">-</span>snap1</li><li>#克隆镜像很多数据都来自于快照链</li><li>#如果希望克隆镜像可以独立工作，就需要将父快照中的数据，全部拷贝一份，但比较耗时！！！</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  rbd flatten image<span class="sh_symbol">-</span>clone</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span>#  rbd info image<span class="sh_symbol">-</span>clone</li><li>rbd image <span class="sh_string">'image-clone'</span><span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;size <span class="sh_number">15360</span> MB <span class="sh_keyword">in</span> <span class="sh_number">3840</span> objects</li><li>&nbsp;&nbsp;&nbsp;&nbsp;order <span class="sh_number">22</span> <span class="sh_symbol">(</span><span class="sh_number">4096</span> kB objects<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;block_name_prefix<span class="sh_symbol">:</span> rbd_data<span class="sh_symbol">.</span>d3f53d1b58ba</li><li>&nbsp;&nbsp;&nbsp;&nbsp;format<span class="sh_symbol">:</span> <span class="sh_number">2</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;features<span class="sh_symbol">:</span> layering</li><li>&nbsp;&nbsp;&nbsp;&nbsp;flags<span class="sh_symbol">:</span> </li><li>#注意，父快照信息没了！</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]#  rbd info image-clone
+rbd image 'image-clone':
+	size 15360 MB in 3840 objects
+	order 22 (4096 kB objects)
+	block_name_prefix: rbd_data.d3f53d1b58ba
+	format: 2
+	features: layering
+	flags: 
+	parent: rbd/image@image-snap1
+#克隆镜像很多数据都来自于快照链
+#如果希望克隆镜像可以独立工作，就需要将父快照中的数据，全部拷贝一份，但比较耗时！！！
+[root@node1 ~]#  rbd flatten image-clone
+[root@node1 ~]#  rbd info image-clone
+rbd image 'image-clone':
+	size 15360 MB in 3840 objects
+	order 22 (4096 kB objects)
+	block_name_prefix: rbd_data.d3f53d1b58ba
+	format: 2
+	features: layering
+	flags: 
+#注意，父快照信息没了！
+</pre></div></div>
+      <p class="number">步骤四：其他操作</p>
+      <p>1） 客户端撤销磁盘映射</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">umount </span><span class="sh_symbol">/</span>mnt</li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># rbd showmapped</li><li>id pool image        snap device    </li><li><span class="sh_number">0</span>  rbd  image        <span class="sh_symbol">-</span>    <span class="sh_regexp">/dev/</span>rbd0</li><li><span class="sh_comment">//语法格式:</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># rbd <span class="sh_normal">unmap </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>rbd0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# umount /mnt
+[root@client ~]# rbd showmapped
+id pool image        snap device    
+0  rbd  image        -    /dev/rbd0
+//语法格式:
+[root@client ~]# rbd unmap /dev/rbd0
+</pre></div></div>
+      <p>2）删除快照与镜像</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd snap rm image <span class="sh_symbol">--</span>snap image<span class="sh_symbol">-</span>snap</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd  list</li><li><span class="sh_symbol">[</span>root@node1 <span class="sh_symbol">~]</span># rbd  rm  image</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node1 ~]# rbd snap rm image --snap image-snap
+[root@node1 ~]# rbd  list
+[root@node1 ~]# rbd  rm  image
+</pre></div></div>
+    </div>
+  
+</body></html>

@@ -1,0 +1,451 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE4_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE4_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE4_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE4_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE4_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devweb DAY04</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#case1">案例1：安装django</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#case2">案例2：创建项目</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#case3">案例3：创建应用</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#case4">案例4：创建模型</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#case5">案例5：生成数据库</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#case6">案例6：注册后台</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：安装django</h2>
+      <h3>1.1 问题</h3>
+      <ol class="list">
+        <li>创建python虚拟环境
+</li>
+        <li>激活python虚拟环境
+</li>
+        <li>在虚拟环境中安装django
+</li>
+        <li>验证django是否安装正确
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建python虚拟环境</p>
+      <p>虚拟环境是python多版本管理的利器，可以搭建独立的python运行环境，有助于包的管理和防止版本冲突。可以理解为在自己的电脑上安装了一个虚拟电脑。</p>
+      <p>1)打开终端，创建pyproject目录，使用cd命令，切换到需要创建虚拟环境的目录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># mkdir pyproject </li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># cd <span class="sh_normal">pyproject</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# mkdir pyproject 
+[root@localhost ~]# cd pyproject/
+</pre></div></div>
+      <p>2)使用如下命令，在当前目录创建虚拟环境：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost pyproject<span class="sh_symbol">]</span># python3 <span class="sh_symbol">-</span>m venv django_env </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost pyproject]# python3 -m venv django_env 
+</pre></div></div>
+      <p class="number">步骤二：激活python虚拟环境</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost pyproject<span class="sh_symbol">]</span># source <span class="sh_normal">django_env</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>activate </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost pyproject]# source django_env/bin/activate 
+</pre></div></div>
+      <p class="number">步骤三：在虚拟环境中安装django</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost pyproject<span class="sh_symbol">]</span># pip install django<span class="sh_symbol">==</span><span class="sh_number">1.11.6</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost pyproject]# pip install django==1.11.6 
+</pre></div></div>
+      <p class="number">步骤四：验证django是否安装正确</p>
+      <p>在python解释器输入以下命令检查是否安装成功，如果输出了django的版本号说明安装成功。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost pyproject<span class="sh_symbol">]</span># python</li><li>Python <span class="sh_number">3.6.4</span> <span class="sh_symbol">(</span><span class="sh_keyword">default</span><span class="sh_symbol">,</span> Apr <span class="sh_number">27</span> <span class="sh_number">2018</span><span class="sh_symbol">,</span> <span class="sh_number">08</span><span class="sh_symbol">:</span><span class="sh_number">26</span><span class="sh_symbol">:</span><span class="sh_number">23</span><span class="sh_symbol">)</span> </li><li><span class="sh_symbol">[</span>GCC <span class="sh_number">4.8.5</span> <span class="sh_number">20150623</span> <span class="sh_symbol">(</span>Red Hat <span class="sh_number">4.8.5-16</span><span class="sh_symbol">)]</span> on linux </li><li>Type <span class="sh_string">"help"</span><span class="sh_symbol">,</span> <span class="sh_string">"copyright"</span><span class="sh_symbol">,</span> <span class="sh_string">"credits"</span> or <span class="sh_string">"license"</span> <span class="sh_keyword">for</span> more information<span class="sh_symbol">.</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> import django </li><li><span class="sh_symbol">&gt;&gt;&gt;</span> django<span class="sh_symbol">.</span>__version__</li><li><span class="sh_string">'1.11.6'</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost pyproject]# python
+Python 3.6.4 (default, Apr 27 2018, 08:26:23) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux 
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import django 
+&gt;&gt;&gt; django.__version__
+'1.11.6' 
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：创建项目</h2>
+      <h3>2.1 问题</h3>
+      <ol class="list">
+        <li>创建名为mysite的项目 
+</li>
+        <li>生成数据库 
+</li>
+        <li>创建超级用户
+</li>
+        <li>登录后台管理页面 
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建名为mysite的项目</p>
+      <p>1)安装django之后，您现在应该已经有了可用的管理工具django-admin.py。我们可以使用django-admin命令来创建mysite项目：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost pyproject<span class="sh_symbol">]</span># django<span class="sh_symbol">-</span>admin startproject mysite </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost pyproject]# django-admin startproject mysite 
+</pre></div></div>
+      <p>2)创建完成后我们可以查看下项目的目录结构：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost pyproject<span class="sh_symbol">]</span># cd mysite </li><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># tree</li><li><span class="sh_symbol">.</span> </li><li>├── manage<span class="sh_symbol">.</span>py </li><li>└── mysite </li><li>    ├── __init__<span class="sh_symbol">.</span>py </li><li>    ├── settings<span class="sh_symbol">.</span>py </li><li>    ├── urls<span class="sh_symbol">.</span>py </li><li>    └── wsgi<span class="sh_symbol">.</span>py </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost pyproject]# cd mysite 
+(django_env) [root@localhost mysite]# tree
+. 
+├── manage.py 
+└── mysite 
+    ├── __init__.py 
+    ├── settings.py 
+    ├── urls.py 
+    └── wsgi.py 
+
+</pre></div></div>
+      <p>目录说明：</p>
+      <p>mysite：项目的容器。</p>
+      <p>manage.py：一个使用的命令行工具，可让你以各种方式与该django项目进行交互</p>
+      <p>mysite/__init__.py：一个空文件，告诉python该目录是一个python包。</p>
+      <p>mysite/settings.py：该django项目的设置/配置。</p>
+      <p>mysite/urls.py：该django项目的URL声明；一份由django驱动的网站“目录”。</p>
+      <p>mysite/wsgi.py：一个WSGI兼容的Web服务器的入口，以便运行你的项目。</p>
+      <p>3)接下来我们进入mysite目录输入以下命令，启动服务器：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py runserver <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">8000</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py runserver 0.0.0.0:8000
+</pre></div></div>
+      <p>0.0.0.0让其它电脑可连接到开发服务器，8000为端口号，如果不说明，那么端口号默认为8000</p>
+      <p>注意：django默认使用sqlite3文件数据，如果不能使用，需要安装sqlite-devel：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># yum install sqlite<span class="sh_symbol">-</span>devel</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">================================================================================</span></li><li>安装 <span class="sh_number">1</span> 软件包</li><li><span style="display:none;">&nbsp;</span></li><li>总下载量：104k</li><li>安装大小：366k</li><li>Is <span class="sh_keyword">this</span> ok <span class="sh_symbol">[</span><span class="sh_normal">y</span><span class="sh_symbol">/</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>N<span class="sh_symbol">]:</span> y</li><li>Downloading packages<span class="sh_symbol">:</span></li><li>Running transaction check</li><li>Running transaction test</li><li>Transaction test succeeded</li><li>Running transaction</li><li>  正在安装    <span class="sh_symbol">:</span> sqlite<span class="sh_symbol">-</span>devel<span class="sh_number">-3.7.17-8</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64                            <span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">1</span> </li><li>  验证中      <span class="sh_symbol">:</span> sqlite<span class="sh_symbol">-</span>devel<span class="sh_number">-3.7.17-8</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64                            <span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">1</span> </li><li><span style="display:none;">&nbsp;</span></li><li>已安装<span class="sh_symbol">:</span></li><li>  sqlite<span class="sh_symbol">-</span>devel<span class="sh_symbol">.</span>x86_64 <span class="sh_number">0</span><span class="sh_symbol">:</span><span class="sh_number">3.7.17-8</span><span class="sh_symbol">.</span>el7                                            </li><li><span style="display:none;">&nbsp;</span></li><li>完毕！</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# yum install sqlite-devel
+
+================================================================================
+安装 1 软件包
+
+总下载量：104k
+安装大小：366k
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  正在安装    : sqlite-devel-3.7.17-8.el7.x86_64                            1/1 
+  验证中      : sqlite-devel-3.7.17-8.el7.x86_64                            1/1 
+
+已安装:
+  sqlite-devel.x86_64 0:3.7.17-8.el7                                            
+
+完毕！
+</pre></div></div>
+      <p>然后重新编译python3，找到python源码包，里面有一个configure可执行文件，过程如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">opt</span><span class="sh_symbol">/</span>Python<span class="sh_number">-3.6.1</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.1</span><span class="sh_symbol">]</span># ls</li><li>aclocal<span class="sh_symbol">.</span>m4     Include          Modules         Python</li><li>build          install<span class="sh_symbol">-</span>sh       Objects         python<span class="sh_symbol">-</span>config</li><li>config<span class="sh_symbol">.</span>guess   Lib              Parser          python<span class="sh_symbol">-</span>config<span class="sh_symbol">.</span>py</li><li>config<span class="sh_symbol">.</span>log     libpython3<span class="sh_symbol">.</span>6m<span class="sh_symbol">.</span>a  PC              python<span class="sh_symbol">-</span>gdb<span class="sh_symbol">.</span>py</li><li>config<span class="sh_symbol">.</span>status  LICENSE          PCbuild         README<span class="sh_symbol">.</span>rst</li><li>config<span class="sh_symbol">.</span>sub     Mac              Programs        setup<span class="sh_symbol">.</span>py</li><li>configure      Makefile         pybuilddir<span class="sh_symbol">.</span>txt  Tools</li><li>configure<span class="sh_symbol">.</span>ac   Makefile<span class="sh_symbol">.</span>pre     pyconfig<span class="sh_symbol">.</span>h</li><li>Doc            Makefile<span class="sh_symbol">.</span>pre<span class="sh_symbol">.</span><span class="sh_keyword">in</span>  pyconfig<span class="sh_symbol">.</span>h<span class="sh_symbol">.</span><span class="sh_keyword">in</span></li><li>Grammar        Misc             python</li><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.1</span><span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/configure --prefix=/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>bin&nbsp;&nbsp;&nbsp;&nbsp;#配置编译</li><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.1</span><span class="sh_symbol">]</span># make&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#编译源码</li><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.1</span><span class="sh_symbol">]</span># make install&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#执行安装</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# cd /opt/Python-3.6.1/
+[root@localhost Python-3.6.1]# ls
+aclocal.m4     Include          Modules         Python
+build          install-sh       Objects         python-config
+config.guess   Lib              Parser          python-config.py
+config.log     libpython3.6m.a  PC              python-gdb.py
+config.status  LICENSE          PCbuild         README.rst
+config.sub     Mac              Programs        setup.py
+configure      Makefile         pybuilddir.txt  Tools
+configure.ac   Makefile.pre     pyconfig.h
+Doc            Makefile.pre.in  pyconfig.h.in
+Grammar        Misc             python
+[root@localhost Python-3.6.1]# ./configure --prefix=/usr/local/bin	#配置编译
+[root@localhost Python-3.6.1]# make		#编译源码
+[root@localhost Python-3.6.1]# make install		#执行安装
+</pre></div></div>
+      <p>4)在浏览器输入你服务器的ip及端口号，如果正常启动，输出信息如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>5)在浏览器输入http://127.0.0.1:8000/admin可访问后台管理界面，输出信息如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p class="number">步骤二：生成数据库：</p>
+      <p>1)将model层转为迁移文件migration：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py makemigrations</li><li>No changes detected</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py makemigrations
+No changes detected
+</pre></div></div>
+      <p>2)将新版本的迁移文件执行，更新数据库：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py migrate</li><li>Operations to perform<span class="sh_symbol">:</span></li><li>  Apply all migrations<span class="sh_symbol">:</span> admin<span class="sh_symbol">,</span> auth<span class="sh_symbol">,</span> contenttypes<span class="sh_symbol">,</span> sessions</li><li>Running migrations<span class="sh_symbol">:</span></li><li>  Applying contenttypes<span class="sh_symbol">.</span>0001_initial<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0001_initial<span class="sh_symbol">...</span> OK</li><li>  Applying admin<span class="sh_symbol">.</span>0001_initial<span class="sh_symbol">...</span> OK</li><li>  Applying admin<span class="sh_symbol">.</span>0002_logentry_remove_auto_add<span class="sh_symbol">...</span> OK</li><li>  Applying contenttypes<span class="sh_symbol">.</span>0002_remove_content_type_name<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0002_alter_permission_name_max_length<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0003_alter_user_email_max_length<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0004_alter_user_username_opts<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0005_alter_user_last_login_null<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0006_require_contenttypes_0002<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0007_alter_validators_add_error_messages<span class="sh_symbol">...</span> OK</li><li>  Applying auth<span class="sh_symbol">.</span>0008_alter_user_username_max_length<span class="sh_symbol">...</span> OK</li><li>  Applying sessions<span class="sh_symbol">.</span>0001_initial<span class="sh_symbol">...</span> OK</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying sessions.0001_initial... OK
+
+</pre></div></div>
+      <p>注意：这两种命令调用默认为全局，即对所欲最新更改的model或迁移文件进行操作，如果想对部分app进行操作，就要在其后追加app name。</p>
+      <p>3)此时项目中会出现一个db.sqlite3文件，这就是默认的数据库文件。输出信息如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p class="number">步骤三：创建超级用户：</p>
+      <p>输入如下命令，创建后台管理员账号：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py createsuperuser</li><li><span class="sh_function">Username</span> <span class="sh_symbol">(</span>leave blank to use <span class="sh_string">'root'</span><span class="sh_symbol">):</span> admin</li><li>Email address<span class="sh_symbol">:</span> zzg@tedu<span class="sh_symbol">.</span>cn </li><li>Password<span class="sh_symbol">:</span> </li><li><span class="sh_function">Password</span> <span class="sh_symbol">(</span>again<span class="sh_symbol">):</span> </li><li>Superuser created successfully<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py createsuperuser
+Username (leave blank to use 'root'): admin
+Email address: zzg@tedu.cn 
+Password: 
+Password (again): 
+Superuser created successfully.
+</pre></div></div>
+      <p class="number">步骤四：登录后台管理页面</p>
+      <p>启动django后，可以登录后台管理页面，登录成功输出信息如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：创建应用</h2>
+      <h3>3.1 问题</h3>
+      <ol class="list">
+        <li>创建应用polls 
+</li>
+        <li>注册polls到项目中 
+</li>
+        <li>配置URLconf，当访问http://127.0.0.1:8000/polls时，由polls进行路由 
+</li>
+        <li>为polls应用配置主页视图 
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建应用</p>
+      <p>在每个django项目中可以包含多个app，相当于一个大型项目中的分系统、子模块、功能部件等，相互之间比较独立，但也有联系，所有的app共享项目资源，执行如下命令，用startapp命令创建app：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py startapp polls </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py startapp polls 
+</pre></div></div>
+      <p>此时项目目录结构如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p class="number">步骤二：激活应用</p>
+      <p>为了让django包含创建的app，我们还需要激活app。打开配置文件setting.py，找到INSTALLED_APPS,然后把我们创建的app配置添加进去，这样django才能使用我们的app。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>INSTALLED_APPS <span class="sh_symbol">=</span> <span class="sh_symbol">[</span></li><li>    <span class="sh_string">'django.contrib.admin'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">'django.contrib.auth'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">'django.contrib.contenttypes'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">'django.contrib.sessions'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">'django.contrib.messages'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">'django.contrib.staticfiles'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">'polls'</span><span class="sh_symbol">,</span></li><li><span class="sh_symbol">]</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'polls',
+] 
+</pre></div></div>
+      <p class="number">步骤三：配置URLconf，当访问http://127.0.0.1:8000/polls时，由polls进行路由</p>
+      <p>1)配置URLconf。在mysite/urls.py文件中添加app中设置的路径，除了admin页面的路径之外，其他路径都应该使用include函数引入</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>urls import url<span class="sh_symbol">,</span> include </li><li>from django<span class="sh_symbol">.</span>contrib import admin </li><li>urlpatterns <span class="sh_symbol">=</span> <span class="sh_symbol">[</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^admin/'</span><span class="sh_symbol">,</span> admin<span class="sh_symbol">.</span>site<span class="sh_symbol">.</span>urls<span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^polls/'</span><span class="sh_symbol">,</span> <span class="sh_function">include</span><span class="sh_symbol">(</span><span class="sh_string">'polls.urls'</span><span class="sh_symbol">))</span></li><li><span class="sh_symbol">]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.conf.urls import url, include 
+from django.contrib import admin 
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^polls/', include('polls.urls'))
+]
+</pre></div></div>
+      <p>2)创建polls应用的URLconf，即创建模块urls.py</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span>#touch <span class="sh_normal">polls</span><span class="sh_symbol">/</span>urls<span class="sh_symbol">.</span>py </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]#touch polls/urls.py 
+</pre></div></div>
+      <p>3)绑定URL与视图函数，在polls/urls.py中，删除原代码，将一下代码写入urls.py文件中：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>urls import url </li><li>from <span class="sh_symbol">.</span> import views </li><li>urlpatterns <span class="sh_symbol">=</span> <span class="sh_symbol">[</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>index<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'index'</span><span class="sh_symbol">),</span></li><li><span class="sh_symbol">]</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.conf.urls import url 
+from . import views 
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+] 
+</pre></div></div>
+      <p class="number">步骤四：为polls应用配置主页视图</p>
+      <p>1)在app的views.py中添加一个新的视图。创建views.index函数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>http import HttpResponse </li><li>def <span class="sh_function">index</span><span class="sh_symbol">(</span>request<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">HttpResponse</span><span class="sh_symbol">(</span>“Hi<span class="sh_symbol">!</span> 这是polls应用的首页。<span class="sh_string">")</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.http import HttpResponse 
+def index(request):
+    return HttpResponse(“Hi! 这是polls应用的首页。")
+</pre></div></div>
+      <p>通过上面的步骤，我们将index这个url指向了views里的index（）函数，它接收用户请求，并返回一个“Hi! 这是polls应用的首页。”字符串。</p>
+      <p>2)验证应用</p>
+      <p>启动django服务，访问http://127.0.0.1:8000/polls，显示如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：创建模型</h2>
+      <h3>4.1 问题</h3>
+      <ol class="list">
+        <li>为polls应用创建模型
+</li>
+        <li>一个模型名为Question，用于记录问题
+</li>
+        <li>另一个模型名为Choice，每个Choice只能对应一个Question，但是一个Question可以对应多个Choice 
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>Django对各种数据库提供了很好的支持，包括：PostgreSQL、MySQL、SQLite、Oracle。Django为这些数据库提供了统一的调用API。我们可以根据自己业务需求选择不同的数据库。以下我们使用sqlite3默认数据库。</p>
+      <p>Django支持ORM模型，也就是说我们可以不使用SQL语句对数据进行增删改查。我们要做的就是在模型中指定和数据库的关系。</p>
+      <p>在这个简单的投票应用中，我们将创建两个模型： Question和Choice</p>
+      <p>Question对象具有一个question_text（问题）属性和一个publish_date（发布时间）属性，用于记录问题</p>
+      <p>Choice有两个字段：选择的内容和选择的得票统计</p>
+      <p>每个Choice与一个Question关联</p>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：打开配置文件settings.py，找到数据库一行，可以看到如下的配置，目前我们使用默认数据库，暂时不需要对如下配置进行修改。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>DATABASES <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span></li><li>    <span class="sh_string">'default'</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{</span></li><li>        <span class="sh_string">'ENGINE'</span><span class="sh_symbol">:</span> <span class="sh_string">'django.db.backends.sqlite3'</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">'NAME'</span><span class="sh_symbol">:</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span>BASE_DIR<span class="sh_symbol">,</span> <span class="sh_string">'db.sqlite3'</span><span class="sh_symbol">),</span></li><li>    <span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+</pre></div></div>
+      <p class="number">步骤二：创建模型：</p>
+      <p>打开polls应用中的models.py文件，然后添加下面两个模型，在polls应用中的models.py文件添加两个模型，每个模型都用一个类表示，该类继承自django.db.models.Model，我们在定义模型的时候指定每一个字段的名字、长度、是否唯一等信息：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>db import models</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> <span class="sh_function">Question</span><span class="sh_symbol">(</span>models<span class="sh_symbol">.</span>Model<span class="sh_symbol">):</span></li><li>    question_text <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">CharField</span><span class="sh_symbol">(</span>max_length<span class="sh_symbol">=</span><span class="sh_number">200</span><span class="sh_symbol">)</span></li><li>    pub_date <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">DateTimeField</span><span class="sh_symbol">(</span><span class="sh_string">'date published'</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> <span class="sh_function">Choice</span><span class="sh_symbol">(</span>models<span class="sh_symbol">.</span>Model<span class="sh_symbol">):</span></li><li>    question <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">ForeignKey</span><span class="sh_symbol">(</span>Question<span class="sh_symbol">,</span> on_delete<span class="sh_symbol">=</span>models<span class="sh_symbol">.</span>CASCADE<span class="sh_symbol">)</span></li><li>    choice_text <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">CharField</span><span class="sh_symbol">(</span>max_length<span class="sh_symbol">=</span><span class="sh_number">200</span><span class="sh_symbol">)</span></li><li>    votes <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">IntegerField</span><span class="sh_symbol">(</span><span class="sh_keyword">default</span><span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+</pre></div></div>
+      <p>值得注意的是，每个字段通过Field类的一个实例表示 ， 例如字符字段CharField、日期字段DateTimeField和整数字段IntegerField。 这种方法告诉Django，每个字段中保存着什么类型的数据。Models.ForeignKey用来指定外键约束。</p>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：生成数据库</h2>
+      <h3>5.1 问题</h3>
+      <ol class="list">
+        <li>执行迁移命令生成数据库
+</li>
+        <li>在pycharm中打开数据库
+</li>
+        <li>观察数据库表名和字段名，发现与模型的关系 
+</li>
+      </ol>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：执行迁移命令生成数据库</p>
+      <p>1)polls应用建立了新的模型，该模型需要反馈到数据库中，通过运行makemigrations命令告诉django，已经对模型做了一些更改，并且会将这些更改记录为迁移文件，迁移文件位于polls/migrations/目录下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py makemigrations</li><li>Migrations <span class="sh_keyword">for</span> <span class="sh_string">'polls'</span><span class="sh_symbol">:</span></li><li>  <span class="sh_normal">polls</span><span class="sh_symbol">/</span><span class="sh_normal">migrations</span><span class="sh_symbol">/</span>0001_initial<span class="sh_symbol">.</span>py</li><li>    <span class="sh_symbol">-</span> Create model Choice</li><li>    <span class="sh_symbol">-</span> Create model Question</li><li>    <span class="sh_symbol">-</span> Add field question to choice</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py makemigrations
+Migrations for 'polls':
+  polls/migrations/0001_initial.py
+    - Create model Choice
+    - Create model Question
+    - Add field question to choice
+</pre></div></div>
+      <p>迁移文件查看如图-7所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <p>2)此时只是生成了迁移文件，并没有真正应用到数据库中。如果要引用到数据库，再次使用migrate命令即可：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py migrate</li><li>Operations to perform<span class="sh_symbol">:</span></li><li>  Apply all migrations<span class="sh_symbol">:</span> admin<span class="sh_symbol">,</span> auth<span class="sh_symbol">,</span> contenttypes<span class="sh_symbol">,</span> polls<span class="sh_symbol">,</span> sessions</li><li>Running migrations<span class="sh_symbol">:</span></li><li>  Applying polls<span class="sh_symbol">.</span>0001_initial<span class="sh_symbol">...</span> OK</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0001_initial... OK
+</pre></div></div>
+      <p class="number">步骤二：在pycharm中打开数据库</p>
+      <p>1)通过pycharm的Database窗口查看数据库，如图-8所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p>2)将db.sqlite3文件拖入Database窗口，如图-9所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image009.png">
+        <p>图-9</p>
+      </div>
+      <p>3)设置Database，如图-10所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image010.png">
+        <p>图-10</p>
+      </div>
+      <p>4)下载丢失的驱动程序文件，如图-11所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image011.png">
+        <p>图-11</p>
+      </div>
+      <p>5)测试连接后，点击/按钮，完成设置，如图-12所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image012.png">
+        <p>图-12</p>
+      </div>
+      <p>6)从Database窗口可查前面创建的数据库模型，如图-13所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image013.png">
+        <p>图-13</p>
+      </div>
+      <p class="number">步骤三：观察数据库表名和字段名</p>
+      <p>了解与模型的关系，如图-14所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image014.png">
+        <p>图-14</p>
+      </div>
+      <a name="case6">
+      </a>
+      <h2>6 案例6：注册后台</h2>
+      <h3>6.1 问题</h3>
+      <ol class="list">
+        <li>将Question和Choice模型添加到后台管理
+</li>
+        <li>在后台页中填写几个问题和选项 
+</li>
+      </ol>
+      <h3>6.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：将Question和Choice模型添加到后台管理</p>
+      <p>1)启动服务器，在浏览器中访问http://127.0.0.1:8000/admin，进入登录界面，输入创建过的超级用户的用户名密码登录，登录成功后，显示如图-15所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image015.png">
+        <p>图-15</p>
+      </div>
+      <p>2)为了让admin界面管理某个数据模型，我们需要先注册该数据模型到admin。比如，我们之前在polls/models.py文件中已经创建了模型Question和Choice，修改polls/admin.py：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>contrib import admin </li><li>from <span class="sh_symbol">.</span>models import Question<span class="sh_symbol">,</span> Choice</li><li><span style="display:none;">&nbsp;</span></li><li>admin<span class="sh_symbol">.</span>site<span class="sh_symbol">.</span><span class="sh_function">register</span><span class="sh_symbol">(</span>Question<span class="sh_symbol">)</span></li><li>admin<span class="sh_symbol">.</span>site<span class="sh_symbol">.</span><span class="sh_function">register</span><span class="sh_symbol">(</span>Choice<span class="sh_symbol">)</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.contrib import admin 
+from .models import Question, Choice
+
+admin.site.register(Question)
+admin.site.register(Choice) 
+</pre></div></div>
+      <p>3)刷新后即可看到polls数据表，如图-16所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image016.png">
+        <p>图-16</p>
+      </div>
+      <p class="number">步骤二：在后台页中填写几个问题和选项</p>
+      <p>1)添加数据，如图-17所示</p>
+      <div class="image">
+        <img src="./CASE4_files/image017.png">
+        <p>图-17</p>
+      </div>
+      <p>2)添加Question数据，如图-18所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image018.png">
+        <p>图-18</p>
+      </div>
+      <p>3)添加Choice数据，如图-19所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image019.png">
+        <p>图-19</p>
+      </div>
+    </div>
+  
+</body></html>

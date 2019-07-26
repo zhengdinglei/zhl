@@ -1,0 +1,305 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ADMIN DAY04</h1>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：访问练习用虚拟机</h2>
+      <h3>1.1 问题</h3>
+      <p>学会在教学环境中访问练习用虚拟机，主要完成以下事项：</p>
+      <ol class="list">
+        <li>快速重置教学虚拟机环境
+</li>
+        <li>通过“虚拟系统管理器”访问虚拟机
+</li>
+        <li>通过 ssh  -X 远程访问 server 的命令行
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>为了方便学员练习所学实验案例，教学环境的CentOS真机已经部署为基于KVM技术的虚拟化服务器，并且预先提供了3个虚拟机：server、desktop、classroom。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：快速重置教学虚拟机环境</p>
+      <p>按照顺序先重置classroom，再依次重置server、desktop；如果只是做Linux管理员技术部分的练习，只需要重置classroom、server就可以。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style=""><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  classroom  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//先重置资源服务器</span></li><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  server &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//再重置练习用虚拟机</span></li><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  desktop</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc13 ~]# rht-vmctl  reset  classroom  		//先重置资源服务器
+[root@room9pc13 ~]# rht-vmctl  reset  server 			//再重置练习用虚拟机
+[root@room9pc13 ~]# rht-vmctl  reset  desktop
+</pre></div></div>
+      <p class="number">步骤二：通过“虚拟系统管理器”访问虚拟机</p>
+      <p>这种方式的优势是，即使虚拟机的IP地址或防火墙配置有误，仍然可以访问；不足的地方是，比较占用系统资源、不方便传递文本信息（复制粘贴）。</p>
+      <p>直接从桌面双击“虚拟系统管理器”图标，找到classroom、server等虚拟机，双击打开运行即可。</p>
+      <p class="number">步骤三：通过 ssh  -X 远程登录到 server 的命令行</p>
+      <p>重置过的练习环境已预先配置好网络，并且为从真机访问答题用虚拟机提前配置了SSH密钥验证，因此直接执行快速登录（ssh -X  root@目标主机地址）即可。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># ssh <span class="sh_symbol">-</span>X root@server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># hostname</li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc13 ~]# ssh -X root@server0.example.com
+[root@server0 ~]# hostname
+server0.example.com
+</pre></div></div>
+      <p>注意ssh添加了-X选项（大写字母X），这是为了在执行远程主机的图形程序时，能够将图形界面在客户机上显示，方便用户操作。例如，连接到server0以后，运行对方的网卡配置工具nm-connection-editor，其程序窗口会直接显示在客户机的图形桌面上。</p>
+      <h1>
+      </h1>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：使用yum软件源</h2>
+      <h3>2.1 问题</h3>
+      <p>本例要求为虚拟机 server0指定可用的yum软件源，相关要求如下：</p>
+      <ol class="list">
+        <li>YUM软件库源为 http://content.example.com/rhel7.0/x86_64/dvd 
+</li>
+        <li>将此配置为虚拟机 server0 的默认软件仓库
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：检查现有yum仓库，去除不可用的设置</p>
+      <p>1）列出yum库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  repolist  </li><li>已加载插件：langpacks</li><li>rhel_dvd                                                    <span class="sh_symbol">|</span> <span class="sh_number">4.1</span> kB  <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span>     </li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> <span class="sh_normal">rhel_dvd</span><span class="sh_symbol">/</span>group_gz                                    <span class="sh_symbol">|</span> <span class="sh_number">134</span> kB  <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span>     </li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> <span class="sh_normal">rhel_dvd</span><span class="sh_symbol">/</span>primary_db                                  <span class="sh_symbol">|</span> <span class="sh_number">3.4</span> MB  <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span>     </li><li>源标识                       源名称                                           状态</li><li>rhel_dvd                     Remote classroom copy of dvd                     <span class="sh_number">4</span><span class="sh_symbol">,</span><span class="sh_number">305</span></li><li>repolist<span class="sh_symbol">:</span> <span class="sh_number">4</span><span class="sh_symbol">,</span><span class="sh_number">305</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  repolist  
+已加载插件：langpacks
+rhel_dvd                                                    | 4.1 kB  00:00:00     
+(1/2): rhel_dvd/group_gz                                    | 134 kB  00:00:00     
+(2/2): rhel_dvd/primary_db                                  | 3.4 MB  00:00:00     
+源标识                       源名称                                           状态
+rhel_dvd                     Remote classroom copy of dvd                     4,305
+repolist: 4,305
+</pre></div></div>
+      <p>2）移除不可用的yum库配置文件</p>
+      <p>当执行yum repolist操作报错时，才执行此步骤（否则此步可跳过）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>repobak</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mv  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span>d<span class="sh_comment">/*.repo  /etc/yum.repos.d/repobak/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /etc/yum.repos.d/repobak
+[root@server0 ~]# mv  /etc/yum.repos.d/*.repo  /etc/yum.repos.d/repobak/
+</pre></div></div>
+      <p class="number">步骤二：添加指定的yum仓库配置</p>
+      <p>1）使用yum-config-manager工具建立新配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum<span class="sh_symbol">-</span>config<span class="sh_symbol">-</span>manager  <span class="sh_symbol">--</span>add<span class="sh_symbol">-</span>repo  http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com/rhel7.0/x86_64/dvd </span></li><li>已加载插件：langpacks</li><li>adding repo from<span class="sh_symbol">:</span> http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com/rhel7.0/x86_64/dvd</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0_x86_64_dvd<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>added from<span class="sh_symbol">:</span> http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com/rhel7.0/x86_64/dvd</span></li><li>baseurl<span class="sh_symbol">=</span>http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com/rhel7.0/x86_64/dvd</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum-config-manager  --add-repo  http://content.example.com/rhel7.0/x86_64/dvd 
+已加载插件：langpacks
+adding repo from: http://content.example.com/rhel7.0/x86_64/dvd
+
+[content.example.com_rhel7.0_x86_64_dvd]
+name=added from: http://content.example.com/rhel7.0/x86_64/dvd
+baseurl=http://content.example.com/rhel7.0/x86_64/dvd
+enabled=1
+</pre></div></div>
+      <p>2）修改新建的仓库配置，添加gpgcheck=0以禁用GPG签名检查</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0_x86_64_dvd</li><li><span class="sh_symbol">[</span>content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0_x86_64_dvd<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>added from<span class="sh_symbol">:</span> http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com/rhel7.0/x86_64/dvd</span></li><li>baseurl<span class="sh_symbol">=</span>http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com/rhel7.0/x86_64/dvd</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/yum.repos.d/content.example.com_rhel7.0_x86_64_dvd
+[content.example.com_rhel7.0_x86_64_dvd]
+name=added from: http://content.example.com/rhel7.0/x86_64/dvd
+baseurl=http://content.example.com/rhel7.0/x86_64/dvd
+enabled=1
+gpgcheck=0 
+</pre></div></div>
+      <p class="number">步骤三：确认新配置的yum源可用</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  clean  all  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//清理缓存</span></li><li>已加载插件：langpacks</li><li>正在清理软件源： content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0_x86_64_dvd</li><li>Cleaning up everything</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  repolist  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重新列出可用的源</span></li><li>已加载插件：langpacks</li><li>content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0_x86_64_dvd                      <span class="sh_symbol">|</span> <span class="sh_number">4.1</span> kB  <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span>     </li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0<span class="sh_normal">_x86_64_dvd</span><span class="sh_symbol">/</span>group_gz      <span class="sh_symbol">|</span> <span class="sh_number">134</span> kB  <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span>     </li><li><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">):</span> content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0<span class="sh_normal">_x86_64_dvd</span><span class="sh_symbol">/</span>primary_db    <span class="sh_symbol">|</span> <span class="sh_number">3.4</span> MB  <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span>     </li><li>源标识                                 源名称                                 状态</li><li>content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com_rhel7<span class="sh_symbol">.</span>0_x86_64_dvd added from<span class="sh_symbol">:</span> http<span class="sh_symbol">:</span><span class="sh_comment">//content.example.com 4,305</span></li><li>repolist<span class="sh_symbol">:</span> <span class="sh_number">4</span><span class="sh_symbol">,</span><span class="sh_number">305</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  clean  all  						//清理缓存
+已加载插件：langpacks
+正在清理软件源： content.example.com_rhel7.0_x86_64_dvd
+Cleaning up everything
+[root@server0 ~]# yum  repolist  						//重新列出可用的源
+已加载插件：langpacks
+content.example.com_rhel7.0_x86_64_dvd                      | 4.1 kB  00:00:00     
+(1/2): content.example.com_rhel7.0_x86_64_dvd/group_gz      | 134 kB  00:00:00     
+(2/2): content.example.com_rhel7.0_x86_64_dvd/primary_db    | 3.4 MB  00:00:00     
+源标识                                 源名称                                 状态
+content.example.com_rhel7.0_x86_64_dvd added from: http://content.example.com 4,305
+repolist: 4,305
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：升级Linux内核</h2>
+      <h3>3.1 问题</h3>
+      <p>本例要求为虚拟机 server0安装升级版的新内核：</p>
+      <ol class="list">
+        <li>新版本的内核安装文件可以从以下地址获取：
+</li>
+        <li>http://classroom/content/rhel7.0/x86_64/errata/Packages/ 
+</li>
+        <li>升级内核，并满足下列要求：当系统重新启动后，升级的新内核应该作为默认内核；原来的内核要被保留，并且仍然可以正常启动
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：下载新版内核的安装文件</p>
+      <p>1）确认新版内核的下载地址</p>
+      <p>如果给定的下载地址中未包含kernel-...rpm文件路径，则打开firefox浏览器，访问指定的网址（如图-5所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-5</p>
+      </div>
+      <p>在打开的网页上找到需要的内核文件，右击对应的链接，选择“Copy Link Location”复制下载地址（如图-6所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-6</p>
+      </div>
+      <p>2）下载新版内核安装文件</p>
+      <p>根据前一步获取到的内核下载地址，使用wget命令下载：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/content/rhel7.0/x86_64/errata/Packages/kernel-3.10.0-123.1.2.el7.x86_64.rpm</span></li><li><span class="sh_symbol">--</span><span class="sh_number">2016-12-23</span> <span class="sh_number">22</span><span class="sh_symbol">:</span><span class="sh_number">13</span><span class="sh_symbol">:</span><span class="sh_number">47</span><span class="sh_symbol">--</span>  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/content/rhel7.0/x86_64/errata/Packages/kernel-3.10.0-123.1.2.el7.x86_64.rpm</span></li><li>正在解析主机 <span class="sh_function">classroom</span> <span class="sh_symbol">(</span>classroom<span class="sh_symbol">)...</span> <span class="sh_number">172.25.254.254</span></li><li>正在连接 <span class="sh_function">classroom</span> <span class="sh_symbol">(</span>classroom<span class="sh_symbol">)|</span><span class="sh_number">172.25.254.254</span><span class="sh_symbol">|:</span><span class="sh_number">80</span><span class="sh_symbol">...</span> 已连接。</li><li>已发出 HTTP 请求，正在等待回应<span class="sh_symbol">...</span> <span class="sh_number">200</span> OK</li><li>长度：<span class="sh_number">30266784</span> <span class="sh_symbol">(</span>29M<span class="sh_symbol">)</span> <span class="sh_symbol">[</span><span class="sh_normal">application</span><span class="sh_symbol">/</span>x<span class="sh_symbol">-</span>rpm<span class="sh_symbol">]</span></li><li>正在保存至<span class="sh_symbol">:</span> “kernel<span class="sh_number">-3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm”</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">100</span><span class="sh_symbol">%[=========================================&gt;]</span> <span class="sh_number">30</span><span class="sh_symbol">,</span><span class="sh_number">266</span><span class="sh_symbol">,</span><span class="sh_number">784</span>  <span class="sh_number">40</span><span class="sh_symbol">.</span>4<span class="sh_normal">MB</span><span class="sh_symbol">/</span>s 用时 <span class="sh_number">0</span><span class="sh_symbol">.</span>7s   </li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">2016-12-23</span> <span class="sh_number">22</span><span class="sh_symbol">:</span><span class="sh_number">13</span><span class="sh_symbol">:</span><span class="sh_number">47</span> <span class="sh_symbol">(</span><span class="sh_number">40.4</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> 已保存 “kernel<span class="sh_number">-3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm” <span class="sh_symbol">[</span><span class="sh_number">30266784</span><span class="sh_symbol">/</span><span class="sh_number">30266784</span><span class="sh_symbol">])</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span>lh  kernel<span class="sh_symbol">-*.</span>rpm  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认下载结果</span></li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> root root 29M <span class="sh_number">6</span>月  <span class="sh_number">11</span> <span class="sh_number">2014</span> kernel<span class="sh_number">-3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# wget  http://classroom/content/rhel7.0/x86_64/errata/Packages/kernel-3.10.0-123.1.2.el7.x86_64.rpm
+--2016-12-23 22:13:47--  http://classroom/content/rhel7.0/x86_64/errata/Packages/kernel-3.10.0-123.1.2.el7.x86_64.rpm
+正在解析主机 classroom (classroom)... 172.25.254.254
+正在连接 classroom (classroom)|172.25.254.254|:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 200 OK
+长度：30266784 (29M) [application/x-rpm]
+正在保存至: “kernel-3.10.0-123.1.2.el7.x86_64.rpm”
+
+100%[=========================================&gt;] 30,266,784  40.4MB/s 用时 0.7s   
+
+2016-12-23 22:13:47 (40.4 MB/s) - 已保存 “kernel-3.10.0-123.1.2.el7.x86_64.rpm” [30266784/30266784])
+
+[root@server0 ~]# ls  -lh  kernel-*.rpm  				//确认下载结果
+-rw-r--r--. 1 root root 29M 6月  11 2014 kernel-3.10.0-123.1.2.el7.x86_64.rpm
+</pre></div></div>
+      <p class="number">步骤二：安装新版内核</p>
+      <p>Linux系统支持安装多个不同版本的内核，开机引导时可以选择使用哪个版本。因此只需要正常安装新版内核即可。</p>
+      <p>1）查看现有内核版本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># uname  <span class="sh_symbol">-</span>r</li><li><span class="sh_number">3.10.0-123</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# uname  -r
+3.10.0-123.el7.x86_64
+</pre></div></div>
+      <p>2）安装新版本内核</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># rpm  <span class="sh_symbol">-</span>ivh  kernel<span class="sh_number">-3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li>警告：kernel<span class="sh_number">-3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm<span class="sh_symbol">:</span> 头V3 <span class="sh_normal">RSA</span><span class="sh_symbol">/</span>SHA256 Signature<span class="sh_symbol">,</span> 密钥 ID fd431d51<span class="sh_symbol">:</span> NOKEY</li><li>准备中<span class="sh_symbol">...</span>                          ################################# <span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span></li><li>正在升级<span class="sh_symbol">/</span>安装<span class="sh_symbol">...</span></li><li>   <span class="sh_number">1</span><span class="sh_symbol">:</span>kernel<span class="sh_number">-3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7        ################################# <span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span></li><li>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//此处需耐心等待，千万别强行终止</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# rpm  -ivh  kernel-3.10.0-123.1.2.el7.x86_64.rpm
+警告：kernel-3.10.0-123.1.2.el7.x86_64.rpm: 头V3 RSA/SHA256 Signature, 密钥 ID fd431d51: NOKEY
+准备中...                          ################################# [100%]
+正在升级/安装...
+   1:kernel-3.10.0-123.1.2.el7        ################################# [100%]
+  										//此处需耐心等待，千万别强行终止
+[root@server0 ~]# 
+</pre></div></div>
+      <p class="number">步骤三：确认新内核版本</p>
+      <p>1）重启系统</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># reboot</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# reboot
+.. ..
+</pre></div></div>
+      <p>2）登入系统，确认使用的内核已是新版本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># uname  <span class="sh_symbol">-</span>r</li><li><span class="sh_number">3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# uname  -r
+3.10.0-123.1.2.el7.x86_64
+
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：配置静态网络地址</h2>
+      <h3>4.1 问题</h3>
+      <p>本例要求为虚拟机 server 配置以下静态地址参数：</p>
+      <ol class="list">
+        <li>主机名：server0.example.com
+</li>
+        <li>IP地址：172.25.0.11
+</li>
+        <li>子网掩码：255.255.255.0
+</li>
+        <li>默认网关：172.25.0.254
+</li>
+        <li>DNS服务器：172.25.254.254
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>使用nmcli配置网络连接时的基本操作，</p>
+      <p>查看网络连接、连接详情：</p>
+      <ul class="list">
+        <li>nmcli  con  show
+</li>
+        <li>nmcli  con  show  "连接名"
+</li>
+      </ul>
+      <p>修改网络连接参数：</p>
+      <ul class="list">
+        <li>nmcli  con  modify  "连接名"  ipv4.method  auto|manual 
+</li>
+        <li>nmcli  con  modify  "连接名"  ipv4.addresses  "IP地址/掩码长度  [默认网关]"  ipv4.dns  DNS服务器地址
+</li>
+        <li>nmcli  con  modify  "连接名"	 connection.autoconnect  yes|no
+</li>
+      </ul>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置固定主机名</p>
+      <p>1）配置前， 检查是否设置静态主机名</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># hostnamectl </li><li>   Static hostname<span class="sh_symbol">:</span> <span class="sh_normal">n</span><span class="sh_symbol">/</span>a &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//未设置静态主机名</span></li><li>Transient hostname<span class="sh_symbol">:</span> server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# hostnamectl 
+   Static hostname: n/a 						//未设置静态主机名
+Transient hostname: server0.example.com
+</pre></div></div>
+      <p>2）设置为指定的主机名</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hostname  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//建立主机名配置文件</span></li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/hostname  			//建立主机名配置文件
+server0.example.com 
+</pre></div></div>
+      <p>3）配置后，检查结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># hostnamectl </li><li>   Static hostname<span class="sh_symbol">:</span> server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//已设置静态主机名</span></li><li>         Icon name<span class="sh_symbol">:</span> computer</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# hostnamectl 
+   Static hostname: server0.example.com  		//已设置静态主机名
+         Icon name: computer
+.. ..
+</pre></div></div>
+      <p class="number">步骤二：配置静态IP地址参数</p>
+      <p>1）查看当前主机的网卡设备、网络连接</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection   show</li><li>名称         UUID                                  类型            设备 </li><li>System eth0  5fb06bd0<span class="sh_symbol">-</span>0bb0<span class="sh_symbol">-</span>7ffb<span class="sh_symbol">-</span>45f1<span class="sh_symbol">-</span>d6edd65f3e03  <span class="sh_number">802-3</span><span class="sh_symbol">-</span>ethernet  eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection   show
+名称         UUID                                  类型            设备 
+System eth0  5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03  802-3-ethernet  eth0
+</pre></div></div>
+      <p>2）修改连接“System eth0”的配置</p>
+      <p>将配置方式指定为manual，指定IP地址、默认网关、DNS地址，并配置自动连接：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  modify  <span class="sh_string">"System eth0"</span>  ipv4<span class="sh_symbol">.</span>method  manual  ipv4<span class="sh_symbol">.</span>addresses  <span class="sh_string">"172.25.0.11/24  172.25.0.254"</span>  ipv4<span class="sh_symbol">.</span>dns  <span class="sh_number">172.25.254.254</span>  connection<span class="sh_symbol">.</span>autoconnect  yes</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  modify  "System eth0"  ipv4.method  manual  ipv4.addresses  "172.25.0.11/24  172.25.0.254"  ipv4.dns  172.25.254.254  connection.autoconnect  yes
+</pre></div></div>
+      <p>3）重新激活连接“System eth0”</p>
+      <p>通过up指令激活连接配置，必要时也可以先down再up：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  <span class="sh_string">"System eth0"</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//激活连接</span></li><li>Connection successfully <span class="sh_function">activated</span> <span class="sh_symbol">(</span>D<span class="sh_symbol">-</span>Bus active path<span class="sh_symbol">:</span> <span class="sh_regexp">/org/</span><span class="sh_normal">freedesktop</span><span class="sh_symbol">/</span><span class="sh_normal">NetworkManager</span><span class="sh_symbol">/</span><span class="sh_normal">ActiveConnection</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  up  "System eth0"  		//激活连接
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/1)
+</pre></div></div>
+      <p>确保系统服务NetworkManager开机自启：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  NetworkManager</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  NetworkManager</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  NetworkManager
+[root@server0 ~]# systemctl  enable  NetworkManager
+</pre></div></div>
+      <p>4）检查修改结果，确认无误</p>
+      <p>检查IP地址：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ifconfig  eth0</li><li>eth0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.25.0.11</span>  netmask <span class="sh_number">255.255.255.0</span>  broadcast <span class="sh_number">172.25.0.255</span></li><li>        inet6 fe80<span class="sh_symbol">::</span><span class="sh_number">5054</span><span class="sh_symbol">:</span>ff<span class="sh_symbol">:</span>fe00<span class="sh_symbol">:</span>b  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether <span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span>0b  txqueuelen <span class="sh_number">1000</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">1394</span>  bytes <span class="sh_number">138855</span> <span class="sh_symbol">(</span><span class="sh_number">135.6</span> KiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">944</span>  bytes <span class="sh_number">98495</span> <span class="sh_symbol">(</span><span class="sh_number">96.1</span> KiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ifconfig  eth0
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.25.0.11  netmask 255.255.255.0  broadcast 172.25.0.255
+        inet6 fe80::5054:ff:fe00:b  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 52:54:00:00:00:0b  txqueuelen 1000  (Ethernet)
+        RX packets 1394  bytes 138855 (135.6 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 944  bytes 98495 (96.1 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></div></div>
+      <p>检查默认网关地址：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># route  <span class="sh_symbol">-</span>n</li><li>Kernel IP routing table</li><li>Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</li><li><span class="sh_number">0.0.0.0</span>         <span class="sh_number">172.25.0.254</span>    <span class="sh_number">0.0.0.0</span>         UG    <span class="sh_number">1024</span>   <span class="sh_number">0</span>        <span class="sh_number">0</span> eth0</li><li><span class="sh_number">172.25.0.0</span>      <span class="sh_number">0.0.0.0</span>         <span class="sh_number">255.255.255.0</span>   U     <span class="sh_number">0</span>      <span class="sh_number">0</span>        <span class="sh_number">0</span> eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# route  -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.25.0.254    0.0.0.0         UG    1024   0        0 eth0
+172.25.0.0      0.0.0.0         255.255.255.0   U     0      0        0 eth0
+</pre></div></div>
+      <p>检查DNS服务器地址：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cat  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>resolv<span class="sh_symbol">.</span>conf </li><li># Generated by NetworkManager</li><li>search example<span class="sh_symbol">.</span>com</li><li>nameserver <span class="sh_number">172.25.254.254</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cat  /etc/resolv.conf 
+# Generated by NetworkManager
+search example.com
+nameserver 172.25.254.254
+</pre></div></div>
+      <p>如果在使用nmcli修改网络连接时并未指定ipv4.dns，也可以直接修改DNS客户端配置文件/etc/resolv.conf，确保添加有上述记录即可。</p>
+      <p class="number">步骤三：验证网络配置结果</p>
+      <p>通过ssh远程访问server0：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># ssh <span class="sh_symbol">-</span>X root@server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>Warning<span class="sh_symbol">:</span> Permanently added <span class="sh_string">'server0.example.com'</span> <span class="sh_symbol">(</span>ECDSA<span class="sh_symbol">)</span> to the list of known hosts<span class="sh_symbol">.</span></li><li>Last login<span class="sh_symbol">:</span> Fri Dec <span class="sh_number">23</span> <span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">12</span> <span class="sh_number">2016</span> from <span class="sh_number">172.25.0.250</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># hostname &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认自己的主机名</span></li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc13 ~]# ssh -X root@server0.example.com
+Warning: Permanently added 'server0.example.com' (ECDSA) to the list of known hosts.
+Last login: Fri Dec 23 19:00:12 2016 from 172.25.0.250
+[root@server0 ~]# hostname 							//确认自己的主机名
+server0.example.com
+</pre></div></div>
+      <p>在虚拟机server0上，可以查询server0、desktop0、content等站点：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># host  server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com has address <span class="sh_number">172.25.0.11</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># host  desktop0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>desktop0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com has address <span class="sh_number">172.25.0.10</span></li><li>desktop0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com mail is handled by <span class="sh_number">10</span> smtp0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># host  content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>content<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com has address <span class="sh_number">172.25.254.254</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# host  server0.example.com
+server0.example.com has address 172.25.0.11
+
+[root@server0 ~]# host  desktop0.example.com
+desktop0.example.com has address 172.25.0.10
+desktop0.example.com mail is handled by 10 smtp0.example.com.
+
+[root@server0 ~]# host  content.example.com
+content.example.com has address 172.25.254.254
+</pre></div></div>
+    </div>
+  
+</body></html>

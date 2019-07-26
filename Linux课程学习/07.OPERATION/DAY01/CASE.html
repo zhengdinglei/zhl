@@ -1,0 +1,375 @@
+
+<!-- saved from url=(0080)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Operation DAY01</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#case1">案例1：搭建Nginx服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#case2">案例2：用户认证</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#case3">案例3：基于域名的虚拟主机</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#case4">案例4：SSL虚拟主机</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：搭建Nginx服务器</h2>
+      <h3>1.1 问题</h3>
+      <p>在IP地址为192.168.4.5的主机上安装部署Nginx服务，并可以将Nginx服务器，要求编译时启用如下功能：</p>
+      <ul class="list">
+        <li>支持SSL加密功能
+</li>
+        <li>设置Nginx账户及组名称均为nginx
+</li>
+        <li>Nginx服务器升级到更高版本。
+</li>
+      </ul>
+      <p>然后客户端访问页面验证Nginx Web服务器：</p>
+      <ul class="list">
+        <li>使用火狐浏览器访问
+</li>
+        <li>使用curl访问
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>提前准备运维课程所需的所有虚拟机，为后续所有实验做准备，克隆4台RHEL7虚拟机，实验环境所需要的主机及对应的IP设置列表如表-1所示，正确配置IP地址、主机名称，并且为每台主机配置YUM源。不需要配置网关与DNS。</p>
+      <div class="table">
+        <p>表－1 主机列表</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <p>第一天课程需要使用2台RHEL7虚拟机，其中一台作为Nginx服务器（192.168.4.5）、另外一台作为测试用的Linux客户机（192.168.4.10），如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>安装nginx-1.10.3版本时，需要使用如下参数：</p>
+      <ul class="list">
+        <li>--with-http_ssl_module：提供SSL加密功能
+</li>
+        <li>--user：指定账户
+</li>
+        <li>--group：指定组
+</li>
+      </ul>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：构建Nginx服务器</p>
+      <p>1）使用源码包安装nginx软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc pcre<span class="sh_symbol">-</span>devel openssl<span class="sh_symbol">-</span>devel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装依赖包</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># useradd <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin nginx</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># tar  <span class="sh_symbol">-</span>xf   nginx<span class="sh_number">-1.10.3</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># cd  nginx<span class="sh_number">-1.10.3</span></li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.10.3</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure   <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>prefix<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>nginx   <span class="sh_symbol">\</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定安装路径</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>nginx   <span class="sh_symbol">\</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定用户</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>group<span class="sh_symbol">=</span>nginx  <span class="sh_symbol">\</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定组</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//开启SSL加密功能</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.10.3</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//编译并安装</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install gcc pcre-devel openssl-devel		//安装依赖包
+[root@proxy ~]# useradd -s /sbin/nologin nginx
+[root@proxy ~]# tar  -xf   nginx-1.10.3.tar.gz
+[root@proxy ~]# cd  nginx-1.10.3
+[root@proxy nginx-1.10.3]# ./configure   \
+&gt; --prefix=/usr/local/nginx   \				//指定安装路径
+&gt; --user=nginx   \							//指定用户
+&gt; --group=nginx  \							//指定组
+&gt; --with-http_ssl_module						//开启SSL加密功能
+ 
+[root@proxy nginx-1.10.3]# make &amp;&amp; make install	//编译并安装
+</pre></div></div>
+      <p>2）nginx命令的用法</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动服务</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//关闭服务</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s reload&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重新加载配置文件</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看软件信息</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ln <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span><span class="sh_normal">nginx </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//方便后期使用</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx					//启动服务
+[root@proxy ~]# /usr/local/nginx/sbin/nginx -s stop			//关闭服务
+[root@proxy ~]# /usr/local/nginx/sbin/nginx -s reload		//重新加载配置文件
+[root@proxy ~]# /usr/local/nginx/sbin/nginx -V				//查看软件信息
+[root@proxy ~]# ln -s /usr/local/nginx/sbin/nginx /sbin/		//方便后期使用
+</pre></div></div>
+      <p>netstat命令可以查看系统中启动的端口信息，该命令常用选项如下：</p>
+      <p>-a显示所有端口的信息</p>
+      <p>-n以数字格式显示端口号</p>
+      <p>-t显示TCP连接的端口</p>
+      <p>-u显示UDP连接的端口</p>
+      <p>-l显示服务正在监听的端口信息，如httpd启动后，会一直监听80端口</p>
+      <p>-p显示监听端口的服务名称是什么（也就是程序名称）</p>
+      <p>nginx服务默认通过TCP 80端口监听客户端请求：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>root@proxy <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>anptu  <span class="sh_symbol">|</span>  grep nginx</li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">80</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">10441</span><span class="sh_symbol">/</span>nginx</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">root@proxy ~]# netstat  -anptu  |  grep nginx
+tcp		0		0 0.0.0.0:80		0.0.0.0:*		LISTEN		10441/nginx
+</pre></div></div>
+      <p>3）设置防火墙与SELinux（非必须的操作，如果有则关闭）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# firewall-cmd --set-default-zone=trusted
+[root@proxy ~]# setenforce 0
+</pre></div></div>
+      <p>4）测试首页文件</p>
+      <p>Nginx Web服务默认首页文档存储目录为/usr/local/nginx/html/，在此目录下默认有一个名为index.html的文件，使用客户端访问测试页面：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># curl http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5</span></li><li><span class="sh_symbol">&lt;</span>html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>title<span class="sh_symbol">&gt;</span>Welcome to nginx<span class="sh_symbol">!&lt;/</span>title<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body bgcolor<span class="sh_symbol">=</span><span class="sh_string">"white"</span> text<span class="sh_symbol">=</span><span class="sh_string">"black"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>center<span class="sh_symbol">&gt;&lt;</span>h1<span class="sh_symbol">&gt;</span>Welcome to nginx<span class="sh_symbol">!&lt;</span><span class="sh_regexp">/h1&gt;&lt;/</span>center<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# curl http://192.168.4.5
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body bgcolor="white" text="black"&gt;
+&lt;center&gt;&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;&lt;/center&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p class="number">步骤二：升级Nginx服务器</p>
+      <p>1）编译新版本nginx软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># tar  <span class="sh_symbol">-</span>zxvf   nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure   <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>prefix<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>nginx   <span class="sh_symbol">\</span> </li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>nginx   <span class="sh_symbol">\</span> </li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>group<span class="sh_symbol">=</span>nginx  <span class="sh_symbol">\</span> </li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module</li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# tar  -zxvf   nginx-1.12.2.tar.gz
+[root@proxy ~]# cd nginx-1.12.2
+[root@proxy nginx-1.12.2]# ./configure   \
+&gt; --prefix=/usr/local/nginx   \ 
+&gt; --user=nginx   \ 
+&gt; --group=nginx  \ 
+&gt; --with-http_ssl_module
+[root@proxy nginx-1.12.2]# make			
+</pre></div></div>
+      <p>2) 备份老的nginx主程序，并使用编译好的新版本nginx替换老版本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># <span class="sh_normal">mv </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx  <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginxold</li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># cp <span class="sh_normal">objs</span><span class="sh_symbol">/</span><span class="sh_normal">nginx  </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;     <span class="sh_comment">//拷贝新版本</span></li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make upgrade&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//升级</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>t</li><li>nginx<span class="sh_symbol">:</span> the configuration <span class="sh_normal">file </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf syntax is ok</li><li>nginx<span class="sh_symbol">:</span> configuration <span class="sh_normal">file </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf test is successful</li><li>kill <span class="sh_symbol">-</span>USR2 `<span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>pid`</li><li>sleep <span class="sh_number">1</span></li><li>test <span class="sh_symbol">-</span><span class="sh_normal">f </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>pid<span class="sh_symbol">.</span>oldbin</li><li>kill <span class="sh_symbol">-</span>QUIT `<span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>pid<span class="sh_symbol">.</span>oldbin`</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx –v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看版本</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy nginx-1.12.2]# mv /usr/local/nginx/sbin/nginx  \
+&gt;/usr/local/nginx/sbin/nginxold
+[root@proxy nginx-1.12.2]# cp objs/nginx  /usr/local/nginx/sbin/	     //拷贝新版本
+[root@proxy nginx-1.12.2]# make upgrade							//升级
+/usr/local/nginx/sbin/nginx -t
+nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok
+nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful
+kill -USR2 `cat /usr/local/nginx/logs/nginx.pid`
+sleep 1
+test -f /usr/local/nginx/logs/nginx.pid.oldbin
+kill -QUIT `cat /usr/local/nginx/logs/nginx.pid.oldbin`
+[root@proxy ~]# /usr/local/nginx/sbin/nginx –v				//查看版本
+</pre></div></div>
+      <p class="number">步骤三：客户端访问测试</p>
+      <p>1）分别使用浏览器和命令行工具curl测试服务器页面</p>
+      <p>如果使用firefox火狐浏览器，注意在ssh远程的时候一定要加-X选项。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># curl http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox http://192.168.4.5
+[root@client ~]# curl http://192.168.4.5
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：用户认证</h2>
+      <h3>2.1 问题</h3>
+      <p>沿用练习一，通过调整Nginx服务端配置，实现以下目标：</p>
+      <ol class="list">
+        <li>访问Web页面需要进行用户认证
+</li>
+        <li>用户名为：tom，密码为：123456
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>模板配置文件框架如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li>全局配置（用户名<span class="sh_symbol">,</span>日志<span class="sh_symbol">,</span>进程<span class="sh_symbol">)</span></li><li>http<span class="sh_cbracket">{</span></li><li>    server<span class="sh_cbracket">{</span></li><li>        listen <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name localhost<span class="sh_symbol">;</span></li><li>        root html<span class="sh_symbol">;</span></li><li>       <span class="sh_cbracket">}</span></li><li>       server<span class="sh_cbracket">{</span></li><li>        listen <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name www<span class="sh_symbol">.</span>xyz<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span></li><li>        root www<span class="sh_symbol">;</span></li><li>       <span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim  /usr/local/nginx/conf/nginx.conf
+全局配置（用户名,日志,进程)
+http{
+    server{
+        listen 80;
+        server_name localhost;
+        root html;
+       }
+       server{
+        listen 80;
+        server_name www.xyz.com;
+        root www;
+       }
+}
+</pre></div></div>
+      <p>通过Nginx实现Web页面的认证，需要修改Nginx配置文件，在配置文件中添加auth语句实现用户认证。最后使用htpasswd命令创建用户及密码即可。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：修改Nginx配置文件</p>
+      <p>1）修改/usr/local/nginx/conf/nginx.conf</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name  localhost<span class="sh_symbol">;</span></li><li>        auth_basic <span class="sh_string">"Input Password:"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//认证提示符</span></li><li>        auth_basic_user_file <span class="sh_string">"/usr/local/nginx/pass"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//认证密码文件</span></li><li>        <span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>            root   html<span class="sh_symbol">;</span></li><li>            index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li>  <span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+server {
+        listen       80;
+        server_name  localhost;
+        auth_basic "Input Password:";						//认证提示符
+        auth_basic_user_file "/usr/local/nginx/pass";		//认证密码文件
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+  }
+</pre></div></div>
+      <p>2）生成密码文件，创建用户及密码</p>
+      <p>使用htpasswd命令创建账户文件，需要确保系统中已经安装了httpd-tools。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  httpd<span class="sh_symbol">-</span>tools</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># htpasswd <span class="sh_symbol">-</span><span class="sh_normal">c </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>pass   tom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建密码文件</span></li><li>New password<span class="sh_symbol">:</span> </li><li>Re<span class="sh_symbol">-</span>type <span class="sh_keyword">new</span> password<span class="sh_symbol">:</span> </li><li>Adding password <span class="sh_keyword">for</span> user tom</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">htpasswd  </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>pass   jerry&nbsp;&nbsp;&nbsp;&nbsp;  <span class="sh_comment">//追加用户，不使用-c选项</span></li><li>New password<span class="sh_symbol">:</span> </li><li>Re<span class="sh_symbol">-</span>type <span class="sh_keyword">new</span> password<span class="sh_symbol">:</span> </li><li>Adding password <span class="sh_keyword">for</span> user jerry</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>pass</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install  httpd-tools
+[root@proxy ~]# htpasswd -c /usr/local/nginx/pass   tom		//创建密码文件
+New password: 
+Re-type new password: 
+Adding password for user tom
+[root@proxy ~]# htpasswd  /usr/local/nginx/pass   jerry	  //追加用户，不使用-c选项
+New password: 
+Re-type new password: 
+Adding password for user jerry
+[root@proxy ~]# cat /usr/local/nginx/pass
+</pre></div></div>
+      <p>3）重启Nginx服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s reload&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重新加载配置文件&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx -s reload	//重新加载配置文件	
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p class="number">步骤二：客户端测试</p>
+      <p>1）登录192.168.4.10客户端主机进行测试</p>
+      <p>如果使用firefox火狐浏览器，注意在ssh远程的时候一定要加-X选项。</p>
+      <p>或者直接使用真实主机的火狐也可以。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//输入密码后可以访问</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox http://192.168.4.5					//输入密码后可以访问
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：基于域名的虚拟主机</h2>
+      <h3>3.1 问题</h3>
+      <p>沿用练习二，配置基于域名的虚拟主机，实现以下目标：</p>
+      <ol class="list">
+        <li>实现两个基于域名的虚拟主机，域名分别为www.a.com和www.b.com
+</li>
+        <li>对域名为www.a.com的站点进行用户认证，用户名称为tom，密码为123456
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>修改Nginx配置文件，添加server容器实现虚拟主机功能；对于需要进行用户认证的虚拟主机添加auth认证语句。</p>
+      <p>虚拟主机一般可用分为：基于域名、基于IP和基于端口的虚拟主机。</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：修改配置文件</p>
+      <p>1）修改Nginx服务配置，添加相关虚拟主机配置如下</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//端口</span></li><li>        server_name  www<span class="sh_symbol">.</span>a<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//域名</span></li><li>auth_basic <span class="sh_string">"Input Password:"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//认证提示符</span></li><li>        auth_basic_user_file <span class="sh_string">"/usr/local/nginx/pass"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//认证密码文件</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>            root   html<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定网站根路径</span></li><li>            index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>       <span class="sh_cbracket">}</span></li><li>       </li><li><span class="sh_cbracket">}</span></li><li>… …</li><li><span style="display:none;">&nbsp;</span></li><li>    server <span class="sh_cbracket">{</span></li><li>        listen  <span class="sh_number">80</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//端口</span></li><li>        server_name  www<span class="sh_symbol">.</span>b<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//域名</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span> </li><li>root   www<span class="sh_symbol">;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定网站根路径</span></li><li>index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+server {
+        listen       80;  									//端口
+        server_name  www.a.com;							    //域名
+auth_basic "Input Password:";						//认证提示符
+        auth_basic_user_file "/usr/local/nginx/pass";		//认证密码文件
+location / {
+            root   html;									//指定网站根路径
+            index  index.html index.htm;
+       }
+       
+}
+… …
+
+    server {
+        listen  80;										//端口
+        server_name  www.b.com;							    //域名
+location / { 
+root   www; 								//指定网站根路径
+index  index.html index.htm;
+}
+}
+</pre></div></div>
+      <p>2）创建网站根目录及对应首页文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>www</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># echo <span class="sh_string">"www"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# mkdir /usr/local/nginx/www
+[root@proxy ~]# echo "www" &gt; /usr/local/nginx/www/index.html
+</pre></div></div>
+      <p>3）重启nginx服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx -s reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p class="number">步骤二：客户端测试</p>
+      <p>1）修改客户端主机192.168.4.10的/etc/hosts文件，进行域名解析</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts</li><li><span class="sh_number">192.168.4.5</span>&nbsp;&nbsp;&nbsp;&nbsp;www<span class="sh_symbol">.</span>a<span class="sh_symbol">.</span>com  www<span class="sh_symbol">.</span>b<span class="sh_symbol">.</span>com</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@client ~]# vim /etc/hosts
+192.168.4.5	www.a.com  www.b.com
+</pre></div></div>
+      <p>2）登录192.168.4.10客户端主机进行测试</p>
+      <p>注意：请先关闭真实机的firefox，再SSH -X远程连接调用虚拟机的firefox。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//www.a.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//输入密码后可以访问</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//www.b.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//直接访问</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox http://www.a.com			//输入密码后可以访问
+[root@client ~]# firefox http://www.b.com			//直接访问
+</pre></div></div>
+      <p>提示：或者直接使用真实主机做客户端主机验证，修改真实主机的/etc/hosts文件，直接使用真实主机的火狐浏览器访问也可以。</p>
+      <p class="number">步骤三：扩展课外实验：其他类型的虚拟主机</p>
+      <p>1.基于端口的虚拟主机（参考模板）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">8080</span><span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          <span class="sh_comment">//端口</span></li><li>        server_name  web1<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//域名</span></li><li>        <span class="sh_symbol">......</span></li><li><span class="sh_cbracket">}</span></li><li>    server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">8000</span><span class="sh_symbol">;</span>                         <span class="sh_comment">//端口</span></li><li>        server_name  web1<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span>           <span class="sh_comment">//域名</span></li><li>      <span class="sh_symbol">.......</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">server {
+        listen       8080;  			          //端口
+        server_name  web1.example.com;  		//域名
+        ......
+}
+    server {
+        listen       8000;                         //端口
+        server_name  web1.example.com;           //域名
+      .......
+}
+</pre></div></div>
+      <p>2.基于IP的虚拟主机（参考模板）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">192.168.0.1</span><span class="sh_symbol">:</span><span class="sh_number">80</span><span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//IP地址与端口</span></li><li>        server_name  web1<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//域名</span></li><li>  <span class="sh_symbol">...</span> <span class="sh_symbol">...</span></li><li><span class="sh_cbracket">}</span></li><li>    server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">192.168.0.2</span><span class="sh_symbol">:</span><span class="sh_number">80</span><span class="sh_symbol">;</span>             <span class="sh_comment">//IP地址与端口</span></li><li>        server_name  web1<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span></li><li><span class="sh_symbol">...</span> <span class="sh_symbol">...</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">server {
+        listen       192.168.0.1:80;  		    //IP地址与端口
+        server_name  web1.example.com;  		//域名
+  ... ...
+}
+    server {
+        listen       192.168.0.2:80;             //IP地址与端口
+        server_name  web1.example.com;
+... ...
+}
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：SSL虚拟主机</h2>
+      <h3>4.1 问题</h3>
+      <p>沿用练习三，配置基于加密网站的虚拟主机，实现以下目标：</p>
+      <ol class="list">
+        <li>域名为www.c.com
+</li>
+        <li>该站点通过https访问
+</li>
+        <li>通过私钥、证书对该站点所有数据加密
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>源码安装Nginx时必须使用--with-http_ssl_module参数，启用加密模块，对于需要进行SSL加密处理的站点添加ssl相关指令（设置网站需要的私钥和证书）。</p>
+      <p>加密算法一般分为对称算法、非对称算法、信息摘要。</p>
+      <p>对称算法有：AES、DES，主要应用在单机数据加密。</p>
+      <p>非对称算法有：RSA、DSA，主要应用在网络数据加密。</p>
+      <p>信息摘要：MD5、sha256，主要应用在数据完整性校验。</p>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p>步骤一：配置SSL虚拟主机</p>
+      <p>1）生成私钥与证书</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>conf</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># openssl genrsa <span class="sh_symbol">&gt;</span> cert<span class="sh_symbol">.</span>key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//生成私钥</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># openssl req <span class="sh_symbol">-</span><span class="sh_keyword">new</span> <span class="sh_symbol">-</span>x509 <span class="sh_symbol">-</span>key cert<span class="sh_symbol">.</span>key <span class="sh_symbol">&gt;</span> cert<span class="sh_symbol">.</span>pem  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//生成证书</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# cd /usr/local/nginx/conf
+[root@proxy ~]# openssl genrsa &gt; cert.key							//生成私钥
+[root@proxy ~]# openssl req -new -x509 -key cert.key &gt; cert.pem  	//生成证书
+</pre></div></div>
+      <p>2）修改Nginx配置文件，设置加密网站的虚拟主机</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li>… …&nbsp;&nbsp;&nbsp;&nbsp;</li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">443</span> ssl<span class="sh_symbol">;</span></li><li>        server_name  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  www<span class="sh_symbol">.</span>c<span class="sh_symbol">.</span>com<span class="sh_symbol">;</span></li><li>        ssl_certificate      cert<span class="sh_symbol">.</span>pem<span class="sh_symbol">;</span>         #这里是证书文件</li><li>        ssl_certificate_key  cert<span class="sh_symbol">.</span>key<span class="sh_symbol">;</span>         #这里是私钥文件</li><li><span style="display:none;">&nbsp;</span></li><li>        ssl_session_cache    shared<span class="sh_symbol">:</span>SSL<span class="sh_symbol">:</span>1m<span class="sh_symbol">;</span></li><li>        ssl_session_timeout  5m<span class="sh_symbol">;</span></li><li><span style="display:none;">&nbsp;</span></li><li>        ssl_ciphers  HIGH<span class="sh_symbol">:!</span>aNULL<span class="sh_symbol">:!</span>MD5<span class="sh_symbol">;</span></li><li>        ssl_prefer_server_ciphers  on<span class="sh_symbol">;</span></li><li><span style="display:none;">&nbsp;</span></li><li>        <span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>            root   html<span class="sh_symbol">;</span></li><li>            index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li>    <span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim  /usr/local/nginx/conf/nginx.conf
+… …	
+server {
+        listen       443 ssl;
+        server_name  		  www.c.com;
+        ssl_certificate      cert.pem;         #这里是证书文件
+        ssl_certificate_key  cert.key;         #这里是私钥文件
+
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers  on;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+    }
+</pre></div></div>
+      <p>3）重启nginx服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx -s reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p>步骤二：客户端验证</p>
+      <p>1）修改客户端主机192.168.4.10的/etc/hosts文件，进行域名解析</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts</li><li><span class="sh_number">192.168.4.5</span>&nbsp;&nbsp;&nbsp;&nbsp;www<span class="sh_symbol">.</span>c<span class="sh_symbol">.</span>com  www<span class="sh_symbol">.</span>a<span class="sh_symbol">.</span>com   www<span class="sh_symbol">.</span>b<span class="sh_symbol">.</span>com</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# vim /etc/hosts
+192.168.4.5	www.c.com  www.a.com   www.b.com
+</pre></div></div>
+      <p>2）登录192.168.4.10客户端主机进行测试</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox https<span class="sh_symbol">:</span><span class="sh_comment">//www.c.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//信任证书后可以访问</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox https://www.c.com			//信任证书后可以访问
+</pre></div></div>
+    </div>
+  
+</body></html>

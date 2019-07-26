@@ -1,0 +1,488 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ENGINEER DAY05</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#case1">案例1：发布iSCSI网络磁盘</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#case2">案例2：访问iSCSI网络磁盘</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#case3">案例3：搭建mariadb数据库系统</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#case4">案例4：配置一个数据库</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#case5">案例5：使用数据库查询</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：发布iSCSI网络磁盘</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求配置 server0 提供 iSCSI 服务，要求如下：</p>
+      <ol class="list">
+        <li>磁盘名为iqn.2016-02.com.example:server0
+</li>
+        <li>服务端口为 3260
+</li>
+        <li>使用 iscsi_store 作其后端卷，其大小为 3GiB
+</li>
+        <li>此磁盘服务只能被 desktop0.example.com 访问
+</li>
+      </ol>
+      <p>方案</p>
+      <p>首先利用parted或fdisk工具划分分区</p>
+      <p>安装targetcli服务端软件，执行targetcli命令进行配置</p>
+      <ol class="list">
+        <li>创建后端存储
+</li>
+        <li>创建iqn对象
+</li>
+        <li>将iqn与后端存储绑定
+</li>
+        <li>授权客户端的iqn
+</li>
+        <li>指定监听地址及本机端口
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备磁盘空间，划分分区</p>
+      <p>1）利用parted命令划分/dev/vdb</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">server0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">parted </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb</li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> mktable gpt                       <span class="sh_comment">//指定分区模式为gpt                                               </span></li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> mkpart primary ext4  <span class="sh_number">0</span>  3GiB</li><li>警告<span class="sh_symbol">:</span> The resulting partition is not properly aligned <span class="sh_keyword">for</span> best performance<span class="sh_symbol">.</span></li><li>忽略<span class="sh_regexp">/Ignore/</span>放弃<span class="sh_symbol">/</span>Cancel<span class="sh_symbol">?</span> Ignore                                               </li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> print                                                            </li><li>……</li><li><span class="sh_predef_func">Number</span>  Start   End     Size    File system  Name     标志</li><li> <span class="sh_number">1</span>      <span class="sh_number">17</span><span class="sh_symbol">.</span>4kB  3221MB  3221MB               primary</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> quit</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 /]# parted /dev/vdb
+(parted) mktable gpt                       //指定分区模式为gpt                                               
+(parted) mkpart primary ext4  0  3GiB
+警告: The resulting partition is not properly aligned for best performance.
+忽略/Ignore/放弃/Cancel? Ignore                                               
+(parted) print                                                            
+……
+Number  Start   End     Size    File system  Name     标志
+ 1      17.4kB  3221MB  3221MB               primary
+
+(parted) quit
+</pre></div></div>
+      <p>2）命令行查看分区信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">server0 </span><span class="sh_symbol">/]</span># lsblk </li><li>NAME          MAJ<span class="sh_symbol">:</span>MIN RM  SIZE RO TYPE MOUNTPOINT</li><li> ……</li><li>└─vdb1        <span class="sh_number">252</span><span class="sh_symbol">:</span><span class="sh_number">17</span>   <span class="sh_number">0</span>    3G  <span class="sh_number">0</span> part ln <span class="sh_symbol">-</span>s </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 /]# lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+ ……
+└─vdb1        252:17   0    3G  0 part ln -s 
+</pre></div></div>
+      <p>3）查看分区设备文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">server0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb1</li><li><span class="sh_regexp">/dev/</span>vdb1   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 /]# ls /dev/vdb1
+/dev/vdb1   
+</pre></div></div>
+      <p class="number">步骤二：安装与配置iSCSI磁盘</p>
+      <p>1）安装软件包targetcli</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  targetcli </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  targetcli 
+</pre></div></div>
+      <p>2）命令行运行targetcli配置iSCSI磁盘</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">server0 </span><span class="sh_symbol">/]</span># targetcli </li><li><span class="sh_regexp">/&gt; backstores/</span>block create <span class="sh_normal">iscsi_store </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb1     <span class="sh_comment">//创建后端存储</span></li><li><span class="sh_regexp">/&gt; iscsi/</span> create iqn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span>server0     <span class="sh_comment">//创建iqn对象</span></li><li><span class="sh_regexp">/&gt; iscsi/i</span>qn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span><span class="sh_normal">server0</span><span class="sh_symbol">/</span><span class="sh_normal">tpg1</span><span class="sh_symbol">/</span>luns <span class="sh_normal">create </span><span class="sh_symbol">/</span><span class="sh_normal">backstores</span><span class="sh_symbol">/</span><span class="sh_normal">block</span><span class="sh_symbol">/</span>iscsi_store    <span class="sh_comment">//将iqn对象与后端存储绑定</span></li><li><span class="sh_regexp">/&gt; iscsi/i</span>qn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span><span class="sh_normal">server0</span><span class="sh_symbol">/</span><span class="sh_normal">tpg1</span><span class="sh_symbol">/</span>acls create iqn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span>desktop0   <span class="sh_comment">//设置客户端的iqn</span></li><li><span class="sh_regexp">/&gt; iscsi/i</span>qn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span><span class="sh_normal">server0</span><span class="sh_symbol">/</span><span class="sh_normal">tpg1</span><span class="sh_symbol">/</span><span class="sh_normal">portals</span><span class="sh_symbol">/</span> create <span class="sh_number">0.0.0.0</span> <span class="sh_number">3260</span>  <span class="sh_comment">//开启本地监听的IP地址与端口</span></li><li><span class="sh_symbol">/&gt;</span> exit</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 /]# targetcli 
+/&gt; backstores/block create iscsi_store /dev/vdb1     //创建后端存储
+/&gt; iscsi/ create iqn.2016-02.com.example:server0     //创建iqn对象
+/&gt; iscsi/iqn.2016-02.com.example:server0/tpg1/luns create /backstores/block/iscsi_store    //将iqn对象与后端存储绑定
+/&gt; iscsi/iqn.2016-02.com.example:server0/tpg1/acls create iqn.2016-02.com.example:desktop0   //设置客户端的iqn
+/&gt; iscsi/iqn.2016-02.com.example:server0/tpg1/portals/ create 0.0.0.0 3260  //开启本地监听的IP地址与端口
+/&gt; exit
+</pre></div></div>
+      <p>3）启动target服务，并设置为开机自启</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">server0 </span><span class="sh_symbol">/]</span># systemctl restart target</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">server0 </span><span class="sh_symbol">/]</span># systemctl enable target</li><li>Created symlink <span class="sh_normal">from </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>multi<span class="sh_symbol">-</span>user<span class="sh_symbol">.</span>target<span class="sh_symbol">.</span><span class="sh_normal">wants</span><span class="sh_symbol">/</span>target<span class="sh_symbol">.</span>service <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>target<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 /]# systemctl restart target
+[root@server0 /]# systemctl enable target
+Created symlink from /etc/systemd/system/multi-user.target.wants/target.service to /usr/lib/systemd/system/target.service.
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：访问iSCSI网络磁盘</h2>
+      <h3>2.1 问题</h3>
+      <p>配置 desktop0 使用 iSCSI 磁盘，要求如下：</p>
+      <ol class="list">
+        <li>目标磁盘组为 iqn.2016-02.com.example:server0
+</li>
+        <li>此 iSCSI 设备在系统启动的期间自动加载
+</li>
+        <li>此 iSCSI 块设备上包含一个大小为 2100MiB 的分区，并将其格式化为 ext4 文件系统
+</li>
+        <li>此分区应该挂载到 /mnt/data 上，同时在系统启动的期间自动挂载
+</li>
+      </ol>
+      <p>方案</p>
+      <p>首先按住客户端软件iscsi-initiator-utils</p>
+      <ol class="list">
+        <li>设置客户端iqn
+</li>
+        <li>重启iscsid服务刷新客户端iqn
+</li>
+        <li>发现服务端iSCSI网络磁盘
+</li>
+        <li>使用iSCSI共享磁盘空间
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装客户端软件iscsi-initiator-utils</p>
+      <p>1）利用yum安装软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># yum  repolist               <span class="sh_comment">//生成yum仓库信息缓存</span></li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># yum <span class="sh_symbol">-</span>y install iscsi<span class="sh_symbol">-</span>initiator<span class="sh_symbol">-</span>utils<span class="sh_symbol">.</span>i686  <span class="sh_comment">//在生成yum仓库信息缓存后，软件包名可以补全（tab）</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# yum  repolist               //生成yum仓库信息缓存
+[root@desktop0 /]# yum -y install iscsi-initiator-utils.i686  //在生成yum仓库信息缓存后，软件包名可以补全（tab）
+</pre></div></div>
+      <p class="number">步骤二：设置客户端iqn名称</p>
+      <p>1）修改配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">iscsi</span><span class="sh_symbol">/</span>initiatorname<span class="sh_symbol">.</span>iscsi</li><li>InitiatorName<span class="sh_symbol">=</span>iqn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span>desktop0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# vim /etc/iscsi/initiatorname.iscsi
+InitiatorName=iqn.2016-02.com.example:desktop0
+</pre></div></div>
+      <p>2）重启iscsid服务刷新iqn名称</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># systemctl restart iscsid</li><li>Warning<span class="sh_symbol">:</span> iscsid<span class="sh_symbol">.</span>service changed on disk<span class="sh_symbol">.</span> Run <span class="sh_string">'systemctl daemon-reload'</span> to reload units<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># systemctl daemon<span class="sh_symbol">-</span>reload</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># systemctl restart iscsid</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># systemctl enable iscsid</li><li>Created symlink <span class="sh_normal">from </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>multi<span class="sh_symbol">-</span>user<span class="sh_symbol">.</span>target<span class="sh_symbol">.</span><span class="sh_normal">wants</span><span class="sh_symbol">/</span>iscsid<span class="sh_symbol">.</span>service <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>iscsid<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# systemctl restart iscsid
+Warning: iscsid.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+[root@desktop0 /]# systemctl daemon-reload
+[root@desktop0 /]# systemctl restart iscsid
+[root@desktop0 /]# systemctl enable iscsid
+Created symlink from /etc/systemd/system/multi-user.target.wants/iscsid.service to /usr/lib/systemd/system/iscsid.service.
+</pre></div></div>
+      <p class="number">步骤三：发现服务端iSCSI网络磁盘</p>
+      <p>1）执行发现iSCSI网络磁盘命令</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># iscsiadm <span class="sh_symbol">--</span>mode discoverydb <span class="sh_symbol">--</span>type sendtargets <span class="sh_symbol">--</span>portal <span class="sh_number">172.25.0.11</span> –discover     <span class="sh_comment">//此命令较长可以通过man  iscsiadm查看帮助信息</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">172.25.0.11</span><span class="sh_symbol">:</span><span class="sh_number">3260</span><span class="sh_symbol">,</span><span class="sh_number">1</span> iqn<span class="sh_number">.2016-02</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>example<span class="sh_symbol">:</span>server0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# iscsiadm --mode discoverydb --type sendtargets --portal 172.25.0.11 –discover     //此命令较长可以通过man  iscsiadm查看帮助信息
+
+172.25.0.11:3260,1 iqn.2016-02.com.example:server0
+</pre></div></div>
+      <p>2）重启iscsi服务加载iSCSI网络磁盘</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># systemctl restart iscsi</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># lsblk </li><li>NAME          MAJ<span class="sh_symbol">:</span>MIN RM  SIZE RO TYPE MOUNTPOINT</li><li>sda             <span class="sh_number">8</span><span class="sh_symbol">:</span><span class="sh_number">0</span>    <span class="sh_number">0</span>    3G  <span class="sh_number">0</span> disk</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># systemctl enable iscsi</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# systemctl restart iscsi
+[root@desktop0 /]# lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda             8:0    0    3G  0 disk
+[root@desktop0 /]# systemctl enable iscsi
+</pre></div></div>
+      <p class="number">步骤四：客户端使用iSCSI网络磁盘</p>
+      <p>1）划分分区</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">parted </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>sda</li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> mktable gpt                                                      </li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> mkpart primary  ext4  <span class="sh_number">0</span>  2100MiB                                 </li><li>警告<span class="sh_symbol">:</span> The resulting partition is not properly aligned <span class="sh_keyword">for</span> best performance<span class="sh_symbol">.</span></li><li>忽略<span class="sh_regexp">/Ignore/</span>放弃<span class="sh_symbol">/</span>Cancel<span class="sh_symbol">?</span> Ignore                                           </li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> print  </li><li><span class="sh_symbol">(</span>parted<span class="sh_symbol">)</span> exit </li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">partprobe </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>sda        <span class="sh_comment">//刷新分区表</span></li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># lsblk </li><li>NAME          MAJ<span class="sh_symbol">:</span>MIN RM  SIZE RO TYPE MOUNTPOINT</li><li>sda             <span class="sh_number">8</span><span class="sh_symbol">:</span><span class="sh_number">0</span>    <span class="sh_number">0</span>    3G  <span class="sh_number">0</span> disk </li><li>└─sda1          <span class="sh_number">8</span><span class="sh_symbol">:</span><span class="sh_number">1</span>    <span class="sh_number">0</span>  <span class="sh_number">2</span><span class="sh_symbol">.</span>1G  <span class="sh_number">0</span> part                                                         </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# parted /dev/sda
+(parted) mktable gpt                                                      
+(parted) mkpart primary  ext4  0  2100MiB                                 
+警告: The resulting partition is not properly aligned for best performance.
+忽略/Ignore/放弃/Cancel? Ignore                                           
+(parted) print  
+(parted) exit 
+[root@desktop0 /]# partprobe /dev/sda        //刷新分区表
+[root@desktop0 /]# lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda             8:0    0    3G  0 disk 
+└─sda1          8:1    0  2.1G  0 part                                                         
+</pre></div></div>
+      <p>2）格式化使用分区，利用UUID实现开机自动挂载</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># mkfs<span class="sh_symbol">.</span><span class="sh_normal">ext4 </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>sda1</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">blkid </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>sda1       #查看分区UUID值</li><li><span class="sh_regexp">/dev/</span>sda1<span class="sh_symbol">:</span> UUID<span class="sh_symbol">=</span><span class="sh_string">"402d1304-5781-4349-8c43-ba45eba8b427"</span> TYPE<span class="sh_symbol">=</span><span class="sh_string">"ext4"</span> PARTLABEL<span class="sh_symbol">=</span><span class="sh_string">"primary"</span> PARTUUID<span class="sh_symbol">=</span><span class="sh_string">"2e41f84d-5123-4511-aaca-7e779087579b"</span></li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>data</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>fstab</li><li>UUID<span class="sh_symbol">=</span><span class="sh_string">"402d1304-5781-4349-8c43-ba45eba8b427"</span>  <span class="sh_regexp">/mnt/</span>data ext4 defaults<span class="sh_symbol">,</span>_netdev <span class="sh_number">0</span> <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># mount <span class="sh_symbol">-</span>a</li><li><span class="sh_symbol">[</span>root@<span class="sh_normal">desktop0 </span><span class="sh_symbol">/]</span># df <span class="sh_symbol">-</span>h</li><li>文件系统               容量  已用  可用 已用<span class="sh_symbol">%</span> 挂载点</li><li>……</li><li><span class="sh_regexp">/dev/</span>sda1              <span class="sh_number">2</span><span class="sh_symbol">.</span>0G  <span class="sh_number">6</span><span class="sh_symbol">.</span>2M  <span class="sh_number">1</span><span class="sh_symbol">.</span>9G    <span class="sh_number">1</span><span class="sh_symbol">%</span> <span class="sh_regexp">/mnt/</span>data</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 /]# mkfs.ext4 /dev/sda1
+[root@desktop0 /]# blkid /dev/sda1       #查看分区UUID值
+/dev/sda1: UUID="402d1304-5781-4349-8c43-ba45eba8b427" TYPE="ext4" PARTLABEL="primary" PARTUUID="2e41f84d-5123-4511-aaca-7e779087579b"
+[root@desktop0 /]# mkdir  /mnt/data
+[root@desktop0 /]# vim /etc/fstab
+UUID="402d1304-5781-4349-8c43-ba45eba8b427"  /mnt/data ext4 defaults,_netdev 0 0
+[root@desktop0 /]# mount -a
+[root@desktop0 /]# df -h
+文件系统               容量  已用  可用 已用% 挂载点
+……
+/dev/sda1              2.0G  6.2M  1.9G    1% /mnt/data
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：搭建mariadb数据库系统</h2>
+      <h3>3.1 问题</h3>
+      <p>本例要求在虚拟机server0上安装 MariaDB 数据库系统：</p>
+      <ol class="list">
+        <li>安装 mariadb-server、mariadb 软件包
+</li>
+        <li>启动 mariadb 服务，并确认监听状态
+</li>
+      </ol>
+      <p>然后在客户端访问此数据库服务：</p>
+      <ol class="list">
+        <li>使用 mysql 命令访问本机的数据库服务，用户名为 root，密码为空
+</li>
+        <li>执行 SHOW  DATABASES; 指令列出有哪些库
+</li>
+        <li>退出 mysql 交互界面
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>数据库表及相关软件的基本知识：</p>
+      <ul class="list">
+        <li>数据（记录）：用来表示一个事物（实体）的一些信息（属性）的文字/图片文件等，例如字符串“：tedu.cn”
+</li>
+        <li>数据表：存放很多条数据记录的容器，例如学员联系信息表、学员月考成绩表
+</li>
+        <li>数据表的每一行：存放一条记录
+</li>
+        <li>数据表的每一列/字段：很多个事物的同一个属性
+</li>
+        <li>数据库：存放很多个相互关联的表格的容器，例如NSD1609学员档案库
+</li>
+        <li>数据库管理系统（DBMS）：用来管理（创建库/添加/查询/删除/授权等）数据库信息的软件平台
+</li>
+      </ul>
+      <p>MariaDB服务端：软件包mariadb-server、系统服务mariadb</p>
+      <p>MariaDB客户端：软件包mariadb、管理工具mysql</p>
+      <p>MariaDB服务端配置文件：/etc/my.cnf</p>
+      <p>传输协议及端口：TCP 3306</p>
+      <p>mysql命令的简单用法：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql  <span class="sh_symbol">[-</span>u用户名<span class="sh_symbol">]</span>  <span class="sh_symbol">[-</span>p<span class="sh_symbol">[</span>密码<span class="sh_symbol">]]</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql  [-u用户名]  [-p[密码]] 
+</pre></div></div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：搭建MariaDB数据库服务器</p>
+      <p>1）安装软件包mariadb-server、mariadb</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  mariadb<span class="sh_symbol">-</span>server  mariadb</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  mariadb-server  mariadb
+.. ..
+</pre></div></div>
+      <p>2）启动系统服务mariadb，并设置开机自启</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  mariadb</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  mariadb</li><li>ln <span class="sh_symbol">-</span>s <span class="sh_string">'/usr/lib/systemd/system/mariadb.service'</span> <span class="sh_string">'/etc/systemd/system/multi-user.target.wants/mariadb.service'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  mariadb
+[root@server0 ~]# systemctl  enable  mariadb
+ln -s '/usr/lib/systemd/system/mariadb.service' '/etc/systemd/system/multi-user.target.wants/mariadb.service'
+</pre></div></div>
+      <p>3）检查监听状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>antpu <span class="sh_symbol">|</span> grep  <span class="sh_symbol">:</span><span class="sh_number">3306</span></li><li>tcp        <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">3306</span>            <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>               LISTEN      <span class="sh_number">2922</span><span class="sh_symbol">/</span>mysqld   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# netstat  -antpu | grep  :3306
+tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      2922/mysqld   
+</pre></div></div>
+      <p class="number">步骤二：访问本机的MariaDB数据库系统</p>
+      <p>1）以用户root连接本机的mariadb（或mysqld）数据库服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>uroot</li><li>Welcome to the MariaDB monitor<span class="sh_symbol">.</span>  Commands end <span class="sh_keyword">with</span> <span class="sh_symbol">;</span> or <span class="sh_symbol">\</span>g<span class="sh_symbol">.</span></li><li>Your MariaDB connection id is <span class="sh_number">3</span></li><li>Server version<span class="sh_symbol">:</span> <span class="sh_number">5.5.35</span><span class="sh_symbol">-</span>MariaDB MariaDB Server</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">Copyright</span> <span class="sh_symbol">(</span>c<span class="sh_symbol">)</span> <span class="sh_number">2000</span><span class="sh_symbol">,</span> <span class="sh_number">2013</span><span class="sh_symbol">,</span> Oracle<span class="sh_symbol">,</span> Monty Program Ab and others<span class="sh_symbol">.</span></li><li><span style="display:none;">&nbsp;</span></li><li>Type <span class="sh_string">'help;'</span> or <span class="sh_string">'</span><span class="sh_specialchar">\h</span><span class="sh_string">'</span> <span class="sh_keyword">for</span> help<span class="sh_symbol">.</span> Type <span class="sh_string">'</span><span class="sh_specialchar">\c</span><span class="sh_string">'</span> to clear the current input statement<span class="sh_symbol">.</span></li><li><span style="display:none;">&nbsp;</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysql  -uroot
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 3
+Server version: 5.5.35-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2013, Oracle, Monty Program Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]&gt;
+</pre></div></div>
+      <p>2）查看当前数据库系统内有哪些库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> SHOW DATABASES<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Database           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> information_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> mysql              <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> performance_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> test               <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">4</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.00 sec)
+</pre></div></div>
+      <p>3）退出操作环境</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> QUIT</li><li>Bye</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; QUIT
+Bye
+[root@server0 ~]#
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：配置一个数据库</h2>
+      <h3>4.1 问题</h3>
+      <p>本例要求在虚拟机server0上部署 MariaDB 数据库，具体要求如下：</p>
+      <ol class="list">
+        <li>此数据库系统只能被 localhost 访问
+</li>
+        <li>新建一个数据库名为 Contacts，其中应该包含来自数据库复制的内容，复制文件的 URL 为：http://classroom/pub/materials/users.sql 
+</li>
+        <li>除了 root 用户，此数据库只能被用户 Raikon 查询，此用户的密码为atenorth
+</li>
+        <li>root用户的密码为 atenorth 
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>为数据库账号修改密码：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysqladmin  <span class="sh_symbol">[-</span>u用户名<span class="sh_symbol">]</span>  <span class="sh_symbol">[-</span>p<span class="sh_symbol">[</span>旧密码<span class="sh_symbol">]]</span>  password  <span class="sh_string">'新密码'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysqladmin  [-u用户名]  [-p[旧密码]]  password  '新密码'
+</pre></div></div>
+      <p>导入/恢复到数据库：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql  <span class="sh_symbol">[-</span>u用户名<span class="sh_symbol">]</span>  <span class="sh_symbol">[-</span>p<span class="sh_symbol">[</span>密码<span class="sh_symbol">]]</span>  数据库名  <span class="sh_symbol">&lt;</span>  备份文件<span class="sh_symbol">.</span>sql </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql  [-u用户名]  [-p[密码]]  数据库名  &lt;  备份文件.sql 
+</pre></div></div>
+      <p>为数据库用户授权/撤销权限：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>grant  权限<span class="sh_number">1</span><span class="sh_symbol">,</span>权限<span class="sh_number">2</span><span class="sh_symbol">...</span>  on  库名<span class="sh_symbol">.</span>表名  to  用户名@客户机地址  identified  by <span class="sh_string">'密码'</span><span class="sh_symbol">;</span></li><li>revoke 权限<span class="sh_number">1</span><span class="sh_symbol">,</span>权限<span class="sh_number">2</span><span class="sh_symbol">...</span> on  库名<span class="sh_symbol">.</span>表名  from  用户名@客户机地址<span class="sh_symbol">;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">grant  权限1,权限2...  on  库名.表名  to  用户名@客户机地址  identified  by '密码';
+revoke 权限1,权限2... on  库名.表名  from  用户名@客户机地址;
+</pre></div></div>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：禁止mariadb服务提供网络监听（只服务于本机）</p>
+      <p>1）修改配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>my<span class="sh_symbol">.</span>cnf </li><li><span class="sh_symbol">[</span>mysqld<span class="sh_symbol">]</span></li><li>skip<span class="sh_symbol">-</span>networking  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//跳过网络</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/my.cnf 
+[mysqld]
+skip-networking  										//跳过网络
+</pre></div></div>
+      <p>2）重启mariadb服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  mariadb  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重启服务</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  mariadb  			//重启服务
+</pre></div></div>
+      <p>3）确认结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>anptu  <span class="sh_symbol">|</span>  grep  <span class="sh_symbol">:</span><span class="sh_number">3306</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//已经不提供端口监听</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># pgrep  <span class="sh_symbol">-</span>l  mysqld  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//但进程仍在</span></li><li><span class="sh_number">3127</span> mysqld_safe</li><li><span class="sh_number">3297</span> mysqld</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# netstat  -anptu  |  grep  :3306  		//已经不提供端口监听
+[root@server0 ~]# pgrep  -l  mysqld  					//但进程仍在
+3127 mysqld_safe
+3297 mysqld
+</pre></div></div>
+      <p class="number">步骤二：配置数据库管理密码</p>
+      <p>1）使用mysqladmin为用户root设置密码</p>
+      <p>原管理账号root的密码为空，因此无需验证旧密码：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysqladmin  <span class="sh_symbol">-</span>u  root  password  <span class="sh_string">'atenorth'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysqladmin  -u  root  password  'atenorth'
+</pre></div></div>
+      <p>2）验证新密码是否可用</p>
+      <p>root使用空密码从本机连接将会失败：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>uroot</li><li>ERROR <span class="sh_number">1045</span> <span class="sh_symbol">(</span><span class="sh_number">28000</span><span class="sh_symbol">):</span> Access denied <span class="sh_keyword">for</span> user <span class="sh_string">'root'</span>@<span class="sh_string">'localhost'</span> <span class="sh_symbol">(</span>using password<span class="sh_symbol">:</span> NO<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysql  -uroot
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+</pre></div></div>
+      <p>必须指定正确的新密码才能连接成功：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>uroot  <span class="sh_symbol">-</span>patenorth</li><li>Welcome to the MariaDB monitor<span class="sh_symbol">.</span>  Commands end <span class="sh_keyword">with</span> <span class="sh_symbol">;</span> or <span class="sh_symbol">\</span>g<span class="sh_symbol">.</span></li><li>Your MariaDB connection id is <span class="sh_number">4</span></li><li>Server version<span class="sh_symbol">:</span> <span class="sh_number">5.5.35</span><span class="sh_symbol">-</span>MariaDB MariaDB Server</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">Copyright</span> <span class="sh_symbol">(</span>c<span class="sh_symbol">)</span> <span class="sh_number">2000</span><span class="sh_symbol">,</span> <span class="sh_number">2013</span><span class="sh_symbol">,</span> Oracle<span class="sh_symbol">,</span> Monty Program Ab and others<span class="sh_symbol">.</span></li><li><span style="display:none;">&nbsp;</span></li><li>Type <span class="sh_string">'help;'</span> or <span class="sh_string">'</span><span class="sh_specialchar">\h</span><span class="sh_string">'</span> <span class="sh_keyword">for</span> help<span class="sh_symbol">.</span> Type <span class="sh_string">'</span><span class="sh_specialchar">\c</span><span class="sh_string">'</span> to clear the current input statement<span class="sh_symbol">.</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysql  -uroot  -patenorth
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 4
+Server version: 5.5.35-MariaDB MariaDB Server
+
+Copyright (c) 2000, 2013, Oracle, Monty Program Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+.. ..
+</pre></div></div>
+      <p class="number">步骤三：建Contacts库并导入备份数据</p>
+      <p>1）创建新库Contacts，并退出操作环境</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> CREATE  DATABASE  Contacts<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> QUIT</li><li>Bye</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; CREATE  DATABASE  Contacts;
+Query OK, 1 row affected (0.00 sec)
+
+MariaDB [(none)]&gt; QUIT
+Bye
+</pre></div></div>
+      <p>2）下载指定的数据库备份</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/users.sql</span></li><li><span class="sh_symbol">--</span><span class="sh_number">2016-11-26</span> <span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">37</span><span class="sh_symbol">--</span>  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/users.sql</span></li><li>Resolving classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span><span class="sh_function">com</span> <span class="sh_symbol">(</span>classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">)...</span> <span class="sh_number">172.25.254.254</span></li><li>Connecting to classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span><span class="sh_function">com</span> <span class="sh_symbol">(</span>classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">)|</span><span class="sh_number">172.25.254.254</span><span class="sh_symbol">|:</span><span class="sh_number">80</span><span class="sh_symbol">...</span> connected<span class="sh_symbol">.</span></li><li>HTTP request sent<span class="sh_symbol">,</span> awaiting response<span class="sh_symbol">...</span> <span class="sh_number">200</span> OK</li><li>Length<span class="sh_symbol">:</span> <span class="sh_number">2634</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">.</span>6K<span class="sh_symbol">)</span> <span class="sh_symbol">[</span><span class="sh_normal">application</span><span class="sh_symbol">/</span>sql<span class="sh_symbol">]</span></li><li>Saving to<span class="sh_symbol">:</span> ‘users<span class="sh_symbol">.</span>sql’</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">100</span><span class="sh_symbol">%[=====================&gt;]</span> <span class="sh_number">2</span><span class="sh_symbol">,</span><span class="sh_number">634</span>       <span class="sh_symbol">--.-</span><span class="sh_normal">K</span><span class="sh_symbol">/</span>s   <span class="sh_keyword">in</span> 0s      </li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">2016-11-26</span> <span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">37</span> <span class="sh_symbol">(</span><span class="sh_number">269</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘users<span class="sh_symbol">.</span>sql’ saved <span class="sh_symbol">[</span><span class="sh_number">2634</span><span class="sh_symbol">/</span><span class="sh_number">2634</span><span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span>lh  users<span class="sh_symbol">.</span>sql  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认下载的文件</span></li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> root root <span class="sh_number">2</span><span class="sh_symbol">.</span>6K Mar <span class="sh_number">31</span>  <span class="sh_number">2016</span> users<span class="sh_symbol">.</span>sql</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# wget  http://classroom.example.com/pub/materials/users.sql
+--2016-11-26 19:00:37--  http://classroom.example.com/pub/materials/users.sql
+Resolving classroom.example.com (classroom.example.com)... 172.25.254.254
+Connecting to classroom.example.com (classroom.example.com)|172.25.254.254|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2634 (2.6K) [application/sql]
+Saving to: ‘users.sql’
+
+100%[=====================&gt;] 2,634       --.-K/s   in 0s      
+
+2016-11-26 19:00:37 (269 MB/s) - ‘users.sql’ saved [2634/2634]
+
+[root@server0 ~]# ls  -lh  users.sql  					//确认下载的文件
+-rw-r--r--. 1 root root 2.6K Mar 31  2016 users.sql
+</pre></div></div>
+      <p>3）导入数据库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>uroot  <span class="sh_symbol">-</span>patenorth  Contacts  <span class="sh_symbol">&lt;</span>  users<span class="sh_symbol">.</span>sql</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysql  -uroot  -patenorth  Contacts  &lt;  users.sql
+</pre></div></div>
+      <p>4）重新连入操作环境，确认导入结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>uroot  <span class="sh_symbol">-</span>patenorth</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> USE  Contacts<span class="sh_symbol">;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//使用指定库</span></li><li>Database changed</li><li><span style="display:none;">&nbsp;</span></li><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> SHOW  TABLES<span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//列出有哪些表</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Tables_in_Contacts <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> base               <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> location           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">2</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysql  -uroot  -patenorth
+.. ..
+MariaDB [(none)]&gt; USE  Contacts; 					//使用指定库
+Database changed
+
+MariaDB [Contacts]&gt; SHOW  TABLES;  				//列出有哪些表
++--------------------+
+| Tables_in_Contacts |
++--------------------+
+| base               |
+| location           |
++--------------------+
+2 rows in set (0.00 sec)
+</pre></div></div>
+      <p class="number">步骤四：为Contacts库授权</p>
+      <p>1）允许用户Raikon从本机访问，具有查询权限，密码为atenorth</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> GRANT  select  ON  Contacts<span class="sh_symbol">.*</span>  TO  Raikon@localhost  IDENTIFIED BY  <span class="sh_string">'atenorth'</span><span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [Contacts]&gt; GRANT  select  ON  Contacts.*  TO  Raikon@localhost  IDENTIFIED BY  'atenorth';
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+      <p>2）退出操作环境</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> QUIT</li><li>Bye</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [Contacts]&gt; QUIT
+Bye
+[root@server0 ~]#
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：使用数据库查询</h2>
+      <h3>5.1 问题</h3>
+      <p>本例要求配置MariaDB数据库，完成以下任务：</p>
+      <ol class="list">
+        <li>禁止空密码root用户访问mariadb数据库
+</li>
+        <li>在系统server0上使用数据库Contacts，通过SQL查询回答下列问题：密码是solicitous的人的名字？有多少人的姓名是Barbara同时居住在 Sunnyvale？
+</li>
+      </ol>
+      <h3>5.2 方案</h3>
+      <p>表记录增删改查：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>insert  into  <span class="sh_symbol">[</span>库名<span class="sh_symbol">.]</span>表名  <span class="sh_function">values</span><span class="sh_symbol">(</span>值<span class="sh_number">1</span><span class="sh_symbol">,</span>值<span class="sh_number">2</span><span class="sh_symbol">,</span>值<span class="sh_number">3</span><span class="sh_symbol">);</span></li><li><span class="sh_keyword">delete</span>  from  <span class="sh_symbol">[</span>库名<span class="sh_symbol">.]</span>表名  where <span class="sh_symbol">...;</span></li><li>update  <span class="sh_symbol">[</span>库名<span class="sh_symbol">.]</span>表名  set  字段名<span class="sh_symbol">=</span>字段值  where <span class="sh_symbol">....;</span></li><li>select  字段列表  from  <span class="sh_symbol">[</span>库名<span class="sh_symbol">.]</span>表名  where  字段名<span class="sh_number">1</span><span class="sh_symbol">=</span>值  and<span class="sh_symbol">|</span>or  字段名<span class="sh_number">2</span><span class="sh_symbol">=</span>值<span class="sh_symbol">;</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">insert  into  [库名.]表名  values(值1,值2,值3);
+delete  from  [库名.]表名  where ...;
+update  [库名.]表名  set  字段名=字段值  where ....;
+select  字段列表  from  [库名.]表名  where  字段名1=值  and|or  字段名2=值; 
+</pre></div></div>
+      <p>统计查询结果的数量：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>select  <span class="sh_function">count</span><span class="sh_symbol">(*)</span>  from  <span class="sh_symbol">[</span>库名<span class="sh_symbol">.]</span>表名  where  <span class="sh_symbol">..</span> <span class="sh_symbol">..;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">select  count(*)  from  [库名.]表名  where  .. ..;
+</pre></div></div>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：清理空密码root用户</p>
+      <p>1）确认空密码root用户记录</p>
+      <p>MariaDB服务端默认的mysql库user表保存了用户授权记录。</p>
+      <p>使用DESC指令查看表结构，以便了解相关字段名：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> DESC  mysql<span class="sh_symbol">.</span>user<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------------------------+-----------------------------------+------+-----+---------+-------+</span></li><li><span class="sh_symbol">|</span> Field                  <span class="sh_symbol">|</span> Type                              <span class="sh_symbol">|</span> Null <span class="sh_symbol">|</span> Key <span class="sh_symbol">|</span> Default <span class="sh_symbol">|</span> Extra <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------------+-----------------------------------+------+-----+---------+-------+</span></li><li><span class="sh_symbol">|</span> Host                   <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">60</span><span class="sh_symbol">)</span>                          <span class="sh_symbol">|</span> NO   <span class="sh_symbol">|</span> PRI <span class="sh_symbol">|</span>         <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> User                   <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">16</span><span class="sh_symbol">)</span>                          <span class="sh_symbol">|</span> NO   <span class="sh_symbol">|</span> PRI <span class="sh_symbol">|</span>         <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Password               <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">41</span><span class="sh_symbol">)</span>                          <span class="sh_symbol">|</span> NO   <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span>         <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; DESC  mysql.user;
++------------------------+-----------------------------------+------+-----+---------+-------+
+| Field                  | Type                              | Null | Key | Default | Extra |
++------------------------+-----------------------------------+------+-----+---------+-------+
+| Host                   | char(60)                          | NO   | PRI |         |       |
+| User                   | char(16)                          | NO   | PRI |         |       |
+| Password               | char(41)                          | NO   |     |         |       |
+</pre></div></div>
+      <p>列出user表中的Host、User、Password字段，限定密码为空的root用户：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> SELECT  Host<span class="sh_symbol">,</span>User<span class="sh_symbol">,</span>Password  FROM  mysql<span class="sh_symbol">.</span>user  WHERE  User<span class="sh_symbol">=</span><span class="sh_string">'root'</span>  AND  Password<span class="sh_symbol">=</span><span class="sh_string">''</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+---------------------+------+----------+</span></li><li><span class="sh_symbol">|</span> Host                <span class="sh_symbol">|</span> User <span class="sh_symbol">|</span> Password <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+---------------------+------+----------+</span></li><li><span class="sh_symbol">|</span> server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com <span class="sh_symbol">|</span> root <span class="sh_symbol">|</span>          <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> <span class="sh_number">127.0.0.1</span>           <span class="sh_symbol">|</span> root <span class="sh_symbol">|</span>          <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> <span class="sh_symbol">::</span><span class="sh_number">1</span>                 <span class="sh_symbol">|</span> root <span class="sh_symbol">|</span>          <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+---------------------+------+----------+</span></li><li><span class="sh_number">3</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; SELECT  Host,User,Password  FROM  mysql.user  WHERE  User='root'  AND  Password='';
++---------------------+------+----------+
+| Host                | User | Password |
++---------------------+------+----------+
+| server0.example.com | root |          |
+| 127.0.0.1           | root |          |
+| ::1                 | root |          |
++---------------------+------+----------+
+3 rows in set (0.00 sec)
+
+MariaDB [(none)]&gt;
+</pre></div></div>
+      <p>2）删除空密码root用户记录</p>
+      <p>使用DELETE指令删除掉需要清除的授权记录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> DELETE  FROM  mysql<span class="sh_symbol">.</span>user  WHERE  User<span class="sh_symbol">=</span><span class="sh_string">'root'</span>  AND  Password<span class="sh_symbol">=</span><span class="sh_string">''</span><span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">3</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; DELETE  FROM  mysql.user  WHERE  User='root'  AND  Password='';
+Query OK, 3 rows affected (0.00 sec)
+</pre></div></div>
+      <p>再次查询，确认删除结果：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> SELECT  Host<span class="sh_symbol">,</span>User<span class="sh_symbol">,</span>Password  FROM  mysql<span class="sh_symbol">.</span>user  WHERE  User<span class="sh_symbol">=</span><span class="sh_string">'root'</span>  AND  Password<span class="sh_symbol">=</span><span class="sh_string">''</span><span class="sh_symbol">;</span></li><li>Empty <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; SELECT  Host,User,Password  FROM  mysql.user  WHERE  User='root'  AND  Password='';
+Empty set (0.00 sec)
+</pre></div></div>
+      <p class="number">步骤二：按条件查询表记录</p>
+      <p>1）按单个条件查询</p>
+      <p>找出密码是solicitous的人的名字？</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> SELECT  name  FROM  Contacts<span class="sh_symbol">.</span>base  WHERE  Password<span class="sh_symbol">=</span><span class="sh_string">'solicitous'</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-------+</span></li><li><span class="sh_symbol">|</span> name  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------+</span></li><li><span class="sh_symbol">|</span> James <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; SELECT  name  FROM  Contacts.base  WHERE  Password='solicitous';
++-------+
+| name  |
++-------+
+| James |
++-------+
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p>2）按多个条件在关联的两张表中查询</p>
+      <p>有多少人的姓名是Barbara同时居住在 Sunnyvale？</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> USE  Contacts<span class="sh_symbol">;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>Database changed</li><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> SELECT  <span class="sh_function">COUNT</span><span class="sh_symbol">(*)</span>  FROM  base<span class="sh_symbol">,</span>location  WHERE  base<span class="sh_symbol">.</span>name<span class="sh_symbol">=</span><span class="sh_string">'Barbara'</span>  AND  location<span class="sh_symbol">.</span>city<span class="sh_symbol">=</span><span class="sh_string">'Sunnyvale'</span>  AND  base<span class="sh_symbol">.</span>id<span class="sh_symbol">=</span>location<span class="sh_symbol">.</span>id<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+----------+</span></li><li><span class="sh_symbol">|</span> <span class="sh_function">COUNT</span><span class="sh_symbol">(*)</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------+</span></li><li><span class="sh_symbol">|</span>        <span class="sh_number">1</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">MariaDB [(none)]&gt; USE  Contacts;
+.. ..
+Database changed
+MariaDB [Contacts]&gt; SELECT  COUNT(*)  FROM  base,location  WHERE  base.name='Barbara'  AND  location.city='Sunnyvale'  AND  base.id=location.id;
++----------+
+| COUNT(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+</pre></div></div>
+    </div>
+  
+</body></html>

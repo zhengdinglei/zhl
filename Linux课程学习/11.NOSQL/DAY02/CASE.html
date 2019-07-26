@@ -1,0 +1,450 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD NOSQL DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#case1">案例1：部署redis集群</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#case2">案例2：管理redis集群</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：部署redis集群</h2>
+      <h3>1.1 问题</h3>
+      <ul class="list">
+        <li>具体要求如下：
+</li>
+        <li>准备集群环境
+</li>
+        <li>安装redis并创建集群
+</li>
+        <li>查看集群信息
+</li>
+        <li>  
+</li>
+      </ul>
+      <ol class="list">
+        <li>
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>搭建redis集群，拓扑规划如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图－1</p>
+      </div>
+      <p>IP，端口规划如表-1所示：</p>
+      <div class="table">
+        <p>表-1</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备集群环境</p>
+      <p>1）按照表-1配置主机名，ip地址，配置yum源（系统源）这里不再操作</p>
+      <p>2）把redis的软件包传到6台数据库服务器上面，安装redis服务器，六台服务器同样操作（以51为例）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc gcc<span class="sh_symbol">-</span>c<span class="sh_symbol">++</span> make</li><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># cd redis</li><li><span class="sh_normal">redis</span><span class="sh_symbol">/</span>         redis<span class="sh_symbol">-</span><span class="sh_normal">cluster</span><span class="sh_symbol">/</span> </li><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># cd <span class="sh_normal">redis</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">]</span># ls</li><li>lnmp  redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xf redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz </li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">]</span># cd redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install </li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/utils/i</span>nstall_server<span class="sh_symbol">.</span>sh</li><li>Welcome to the redis service installer</li><li>This script will help you easily set up a running redis server</li><li><span style="display:none;">&nbsp;</span></li><li>Please select the redis port <span class="sh_keyword">for</span> <span class="sh_keyword">this</span> instance<span class="sh_symbol">:</span> <span class="sh_symbol">[</span><span class="sh_number">6379</span><span class="sh_symbol">]</span> </li><li>Selecting <span class="sh_keyword">default</span><span class="sh_symbol">:</span> <span class="sh_number">6379</span></li><li>Please select the redis config file name <span class="sh_symbol">[</span><span class="sh_regexp">/etc/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf<span class="sh_symbol">]</span> </li><li>Selected <span class="sh_keyword">default</span> <span class="sh_symbol">-</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf</li><li>Please select the redis log file name <span class="sh_symbol">[</span><span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>log<span class="sh_symbol">]</span> </li><li>Selected <span class="sh_keyword">default</span> <span class="sh_symbol">-</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>log</li><li>Please select the data directory <span class="sh_keyword">for</span> <span class="sh_keyword">this</span> instance <span class="sh_symbol">[</span><span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">]</span> </li><li>Selected <span class="sh_keyword">default</span> <span class="sh_symbol">-</span> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span></li><li>Please select the redis executable path <span class="sh_symbol">[</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>server<span class="sh_symbol">]</span> </li><li>Selected config<span class="sh_symbol">:</span></li><li>Port           <span class="sh_symbol">:</span> <span class="sh_number">6379</span></li><li>Config file    <span class="sh_symbol">:</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf</li><li>Log file       <span class="sh_symbol">:</span> <span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>redis_6379<span class="sh_symbol">.</span>log</li><li>Data dir       <span class="sh_symbol">:</span> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span></li><li>Executable     <span class="sh_symbol">:</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>server</li><li>Cli Executable <span class="sh_symbol">:</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>cli</li><li>Is <span class="sh_keyword">this</span> ok<span class="sh_symbol">?</span> Then press ENTER to go on or Ctrl<span class="sh_symbol">-</span>C to abort<span class="sh_symbol">.</span></li><li><span class="sh_normal">Copied </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf <span class="sh_symbol">=&gt;</span> <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379</li><li>Installing service<span class="sh_symbol">...</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>Successfully added to chkconfig<span class="sh_symbol">!</span></li><li>Successfully added to runlevels <span class="sh_number">345</span><span class="sh_symbol">!</span></li><li>Starting Redis server<span class="sh_symbol">...</span></li><li>Installation successful<span class="sh_symbol">!</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装成功</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># ss <span class="sh_symbol">-</span>antlp <span class="sh_symbol">|</span> grep <span class="sh_number">6379</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看时有端口</span></li><li>LISTEN     <span class="sh_number">0</span>      <span class="sh_number">128</span>    <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">6379</span>                     <span class="sh_symbol">*:*</span>                   users<span class="sh_symbol">:((</span><span class="sh_string">"redis-server"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">10788</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">6</span><span class="sh_symbol">))</span>   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# yum -y install gcc gcc-c++ make
+[root@redisA ~]# cd redis
+redis/         redis-cluster/ 
+[root@redisA ~]# cd redis/
+[root@redisA redis]# ls
+lnmp  redis-4.0.8.tar.gz
+[root@redisA redis]# tar -xf redis-4.0.8.tar.gz 
+[root@redisA redis]# cd redis-4.0.8/
+[root@redisA redis-4.0.8]# make &amp;&amp; make install 
+[root@redisA redis-4.0.8]# ./utils/install_server.sh
+Welcome to the redis service installer
+This script will help you easily set up a running redis server
+
+Please select the redis port for this instance: [6379] 
+Selecting default: 6379
+Please select the redis config file name [/etc/redis/6379.conf] 
+Selected default - /etc/redis/6379.conf
+Please select the redis log file name [/var/log/redis_6379.log] 
+Selected default - /var/log/redis_6379.log
+Please select the data directory for this instance [/var/lib/redis/6379] 
+Selected default - /var/lib/redis/6379
+Please select the redis executable path [/usr/local/bin/redis-server] 
+Selected config:
+Port           : 6379
+Config file    : /etc/redis/6379.conf
+Log file       : /var/log/redis_6379.log
+Data dir       : /var/lib/redis/6379
+Executable     : /usr/local/bin/redis-server
+Cli Executable : /usr/local/bin/redis-cli
+Is this ok? Then press ENTER to go on or Ctrl-C to abort.
+Copied /tmp/6379.conf =&gt; /etc/init.d/redis_6379
+Installing service...
+
+
+Successfully added to chkconfig!
+Successfully added to runlevels 345!
+Starting Redis server...
+Installation successful!			//安装成功
+
+[root@redisA redis-4.0.8]# ss -antlp | grep 6379			//查看时有端口
+LISTEN     0      128    127.0.0.1:6379                     *:*                   users:(("redis-server",pid=10788,fd=6))   
+
+</pre></div></div>
+      <p>2）修改配置文件，6台redis服务器都要修改（以51为例子）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//停止已经开启的redis服务</span></li><li>Stopping <span class="sh_symbol">...</span></li><li>Waiting <span class="sh_keyword">for</span> Redis to shutdown <span class="sh_symbol">...</span></li><li>Redis stopped</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span><span class="sh_number">6379</span><span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">...</span></li><li>bind <span class="sh_number">192.168.4.51</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改ip</span></li><li>port <span class="sh_number">6351</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//不允许相同，只指定物理接口的ip</span></li><li>daemonize yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="sh_comment">//以守护进程方式运行</span></li><li><span class="sh_normal">pidfile </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/run/</span>redis_6351<span class="sh_symbol">.</span>pid </li><li>cluster<span class="sh_symbol">-</span>enabled yes &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//是否启用集群，前提是以守护进程方式运行</span></li><li>cluster<span class="sh_symbol">-</span>config<span class="sh_symbol">-</span>file nodes<span class="sh_number">-6351</span><span class="sh_symbol">.</span>conf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//存储集群信息的配置文件，自动生成，不允许相同</span></li><li>cluster<span class="sh_symbol">-</span>node<span class="sh_symbol">-</span>timeout <span class="sh_number">5000</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//集群节点通信超时时间</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6379 start &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动服务</span></li><li>Starting Redis server<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># ss <span class="sh_symbol">-</span>antlp <span class="sh_symbol">|</span> grep <span class="sh_number">6351</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看有端口</span></li><li>LISTEN     <span class="sh_number">0</span>      <span class="sh_number">128</span>    <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span>                     <span class="sh_symbol">*:*</span>                   users<span class="sh_symbol">:((</span><span class="sh_string">"redis-server"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">11092</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">6</span><span class="sh_symbol">))</span></li><li>LISTEN     <span class="sh_number">0</span>      <span class="sh_number">128</span>    <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">16351</span>                    <span class="sh_symbol">*:*</span>                   users<span class="sh_symbol">:((</span><span class="sh_string">"redis-server"</span><span class="sh_symbol">,</span>pid<span class="sh_symbol">=</span><span class="sh_number">11092</span><span class="sh_symbol">,</span>fd<span class="sh_symbol">=</span><span class="sh_number">8</span><span class="sh_symbol">))</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//16051：集群中的主机通信时用的端口</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># ps <span class="sh_symbol">-</span>C redis</li><li>  PID TTY          TIME CMD</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA redis-4.0.8]# /etc/init.d/redis_6379 stop		
+//停止已经开启的redis服务
+Stopping ...
+Waiting for Redis to shutdown ...
+Redis stopped
+
+
+[root@redisA redis-4.0.8]# vim /etc/redis/6379.conf
+...
+bind 192.168.4.51		//修改ip
+port 6351		//不允许相同，只指定物理接口的ip
+daemonize yes		 //以守护进程方式运行
+pidfile /var/run/redis_6351.pid 
+cluster-enabled yes 	//是否启用集群，前提是以守护进程方式运行
+cluster-config-file nodes-6351.conf		
+//存储集群信息的配置文件，自动生成，不允许相同
+cluster-node-timeout 5000		//集群节点通信超时时间
+...
+[root@redisA redis-4.0.8]# /etc/init.d/redis_6379 start 	//启动服务
+Starting Redis server...
+[root@redisA redis-4.0.8]# ss -antlp | grep 6351			//查看有端口
+LISTEN     0      128    192.168.4.51:6351                     *:*                   users:(("redis-server",pid=11092,fd=6))
+LISTEN     0      128    192.168.4.51:16351                    *:*                   users:(("redis-server",pid=11092,fd=8))		//16051：集群中的主机通信时用的端口
+[root@redisA redis-4.0.8]# ps -C redis
+  PID TTY          TIME CMD
+</pre></div></div>
+      <p>注意：其他几台主机在修改时请注意ip，端口等的修改，不要和51主机的一样</p>
+      <p>3）关闭防火墙51-56主机（以51为例子）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span>#  getenforce</li><li>Permissive</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># systemctl disable  firewalld &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//关闭防火墙不自启</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA redis-4.0.8]#  getenforce
+Permissive
+
+[root@redisA redis-4.0.8]# systemctl disable  firewalld 		
+//关闭防火墙不自启
+</pre></div></div>
+      <p>4）查看集群信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> ping</li><li>PONG</li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> cluster info</li><li>cluster_state<span class="sh_symbol">:</span>fail</li><li>cluster_slots_assigned<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>cluster_slots_ok<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>cluster_slots_pfail<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>cluster_slots_fail<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>cluster_known_nodes<span class="sh_symbol">:</span><span class="sh_number">1</span></li><li>cluster_size<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li><span class="sh_symbol">...</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> cluster nodes</li><li>f81f997d5ed988ec1587558e78d5f7dbc96abcbf <span class="sh_symbol">:</span><span class="sh_number">6351</span>@<span class="sh_number">16351</span> myself<span class="sh_symbol">,</span>master <span class="sh_symbol">-</span> <span class="sh_number">0</span> <span class="sh_number">0</span> <span class="sh_number">0</span> connected</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA redis-4.0.8]# redis-cli  -h 192.168.4.51 -p 6351
+192.168.4.51:6351&gt; ping
+PONG
+192.168.4.51:6351&gt; cluster info
+cluster_state:fail
+cluster_slots_assigned:0
+cluster_slots_ok:0
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:1
+cluster_size:0
+...
+
+192.168.4.51:6351&gt; cluster nodes
+f81f997d5ed988ec1587558e78d5f7dbc96abcbf :6351@16351 myself,master - 0 0 0 connected
+
+</pre></div></div>
+      <p class="number">步骤二：创建集群（在任意一台上执行创建集群的脚本都可以）这里在51上面执行</p>
+      <p>1）部署ruby脚本运行环境（在51上面执行）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span><span class="sh_normal">cluster</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># ls</li><li>redis<span class="sh_number">-3.2.1</span><span class="sh_symbol">.</span>gem  ruby<span class="sh_symbol">-</span>devel<span class="sh_number">-2.0.0.648-30</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install  ruby rubygems</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># rpm <span class="sh_symbol">-</span>ivh –nodeps <span class="sh_symbol">\</span> </li><li> ruby<span class="sh_symbol">-</span>devel<span class="sh_number">-2.0.0.648-30</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li>warning<span class="sh_symbol">:</span> ruby<span class="sh_symbol">-</span>devel<span class="sh_number">-2.0.0.648-30</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm<span class="sh_symbol">:</span> Header V3 <span class="sh_normal">RSA</span><span class="sh_symbol">/</span>SHA256 Signature<span class="sh_symbol">,</span> key ID f4a80eb5<span class="sh_symbol">:</span> NOKEY</li><li>Preparing<span class="sh_symbol">...</span>                          ################################# <span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span></li><li><span class="sh_normal">Updating </span><span class="sh_symbol">/</span> installing<span class="sh_symbol">...</span></li><li>   <span class="sh_number">1</span><span class="sh_symbol">:</span>ruby<span class="sh_symbol">-</span>devel<span class="sh_number">-2.0.0.648-30</span><span class="sh_symbol">.</span>el7      ################################# <span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span></li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># which gem</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>gem</li><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># gem install redis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>Successfully installed redis<span class="sh_number">-3.2.1</span></li><li>Parsing documentation <span class="sh_keyword">for</span> redis<span class="sh_number">-3.2.1</span></li><li>Installing ri documentation <span class="sh_keyword">for</span> redis<span class="sh_number">-3.2.1</span></li><li><span class="sh_number">1</span> gem installed</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA redis-4.0.8]# cd /root/redis-cluster/
+[root@redisA redis-cluster]# ls
+redis-3.2.1.gem  ruby-devel-2.0.0.648-30.el7.x86_64.rpm
+[root@redisA redis-cluster]# yum -y install  ruby rubygems
+
+[root@redisA redis-cluster]# rpm -ivh –nodeps \ 
+ ruby-devel-2.0.0.648-30.el7.x86_64.rpm
+warning: ruby-devel-2.0.0.648-30.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:ruby-devel-2.0.0.648-30.el7      ################################# [100%]
+[root@redisA redis-cluster]# which gem
+/usr/bin/gem
+[root@redisA redis-cluster]# gem install redis		
+Successfully installed redis-3.2.1
+Parsing documentation for redis-3.2.1
+Installing ri documentation for redis-3.2.1
+1 gem installed
+</pre></div></div>
+      <p>2）生成创建集群的脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA redis<span class="sh_symbol">-</span>cluster<span class="sh_symbol">]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">redis</span><span class="sh_symbol">/</span>redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">/</span><span class="sh_normal">src</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redisA src<span class="sh_symbol">]</span># cp redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span><span class="sh_normal">rb </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@redisA src<span class="sh_symbol">]</span># <span class="sh_normal">ll </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb</li><li><span class="sh_symbol">-</span>rwxr<span class="sh_symbol">-</span>xr<span class="sh_symbol">-</span>x<span class="sh_symbol">.</span> <span class="sh_number">1</span> root root <span class="sh_number">65991</span> Sep <span class="sh_number">27</span> <span class="sh_number">16</span><span class="sh_symbol">:</span><span class="sh_number">12</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA redis-cluster]# cd /root/redis/redis-4.0.8/src/
+[root@redisA src]# cp redis-trib.rb /usr/local/bin/
+[root@redisA src]# ll /usr/local/bin/redis-trib.rb
+-rwxr-xr-x. 1 root root 65991 Sep 27 16:12 /usr/local/bin/redis-trib.rb
+
+</pre></div></div>
+      <p>3）创建集群</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA src<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  create <span class="sh_symbol">--</span>replicas <span class="sh_number">1</span> <span class="sh_symbol">\</span> </li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span>  <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span> <span class="sh_symbol">\</span> </li><li><span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> <span class="sh_number">192.168.4.54</span><span class="sh_symbol">:</span><span class="sh_number">6354</span>  <span class="sh_symbol">\</span> </li><li><span class="sh_number">192.168.4.55</span><span class="sh_symbol">:</span><span class="sh_number">6355</span> <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span></li><li><span class="sh_comment">//--replicas 1 给每一个主配置一个从库</span></li><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb create <span class="sh_symbol">--</span>replicas <span class="sh_number">1</span> <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span> <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span>    <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> <span class="sh_number">192.168.4.54</span><span class="sh_symbol">:</span><span class="sh_number">6354</span>    <span class="sh_number">192.168.4.55</span><span class="sh_symbol">:</span><span class="sh_number">6355</span> <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Creating cluster</li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Performing hash slots allocation on <span class="sh_number">6</span> nodes<span class="sh_symbol">...</span></li><li>Using <span class="sh_number">3</span> masters<span class="sh_symbol">:</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span></li><li><span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span></li><li>Adding replica <span class="sh_number">192.168.4.55</span><span class="sh_symbol">:</span><span class="sh_number">6355</span> to <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li>Adding replica <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span> to <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span></li><li>Adding replica <span class="sh_number">192.168.4.54</span><span class="sh_symbol">:</span><span class="sh_number">6354</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All nodes agree about slots configuration<span class="sh_symbol">.</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Check <span class="sh_keyword">for</span> open slots<span class="sh_symbol">...</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Check slots coverage<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All <span class="sh_number">16384</span> slots covered<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA src]# redis-trib.rb  create --replicas 1 \ 
+192.168.4.51:6351  192.168.4.52:6352 \ 
+192.168.4.53:6353 192.168.4.54:6354  \ 
+192.168.4.55:6355 192.168.4.56:6356
+//--replicas 1 给每一个主配置一个从库
+[root@redisA log]# redis-trib.rb create --replicas 1 192.168.4.51:6351 192.168.4.52:6352    192.168.4.53:6353 192.168.4.54:6354    192.168.4.55:6355 192.168.4.56:6356
+&gt;&gt;&gt; Creating cluster
+&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...
+Using 3 masters:
+192.168.4.51:6351
+192.168.4.52:6352
+192.168.4.53:6353
+Adding replica 192.168.4.55:6355 to 192.168.4.51:6351
+Adding replica 192.168.4.56:6356 to 192.168.4.52:6352
+Adding replica 192.168.4.54:6354 to 192.168.4.53:6353
+...
+...
+...
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+</pre></div></div>
+      <p>4）查看集群信息，任意一台主机访问本机的redis服务查看即可</p>
+      <p>cluster  info  	查看集群信息</p>
+      <p>cluster  nodes  	查看集群节点信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>h  <span class="sh_number">192.168.4.52</span>  <span class="sh_symbol">-</span>p  <span class="sh_number">6352</span> </li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span> CLUSTER INFO</li><li>cluster_state<span class="sh_symbol">:</span>ok&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//状态</span></li><li>cluster_slots_assigned<span class="sh_symbol">:</span><span class="sh_number">16384</span></li><li>cluster_slots_ok<span class="sh_symbol">:</span><span class="sh_number">16384</span></li><li>cluster_slots_pfail<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>cluster_slots_fail<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>cluster_known_nodes<span class="sh_symbol">:</span><span class="sh_number">6</span></li><li>cluster_size<span class="sh_symbol">:</span><span class="sh_number">3</span></li><li>cluster_current_epoch<span class="sh_symbol">:</span><span class="sh_number">6</span></li><li>cluster_my_epoch<span class="sh_symbol">:</span><span class="sh_number">2</span></li><li>cluster_stats_messages_ping_sent<span class="sh_symbol">:</span><span class="sh_number">367</span></li><li>cluster_stats_messages_pong_sent<span class="sh_symbol">:</span><span class="sh_number">327</span></li><li>cluster_stats_messages_meet_sent<span class="sh_symbol">:</span><span class="sh_number">5</span></li><li>cluster_stats_messages_sent<span class="sh_symbol">:</span><span class="sh_number">699</span></li><li>cluster_stats_messages_ping_received<span class="sh_symbol">:</span><span class="sh_number">327</span></li><li>cluster_stats_messages_pong_received<span class="sh_symbol">:</span><span class="sh_number">372</span></li><li>cluster_stats_messages_received<span class="sh_symbol">:</span><span class="sh_number">699</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span> CLUSTER NODES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看集群节点信息</span></li><li>63afbb5e7d63b1f142358634578a3488e3c9e634 <span class="sh_number">192.168.4.54</span><span class="sh_symbol">:</span><span class="sh_number">6354</span>@<span class="sh_number">16354</span> slave bc5c4e082a5a3391b634cf433a6486c867cfc44b <span class="sh_number">0</span> <span class="sh_number">1538039278871</span> <span class="sh_number">4</span> connected</li><li>bc5c4e082a5a3391b634cf433a6486c867cfc44b <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span>@<span class="sh_number">16353</span> master <span class="sh_symbol">-</span> <span class="sh_number">0</span> <span class="sh_number">1538039278571</span> <span class="sh_number">3</span> connected <span class="sh_number">10923-16383</span></li><li>28e06c5f24a2b6c6412f81369e09bc9653cc51ff <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span>@<span class="sh_number">16356</span> slave 8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">0</span> <span class="sh_number">1538039278069</span> <span class="sh_number">6</span> connected</li><li>7e8d9121f44d8331ff55b45c218b87df9bda1b70 <span class="sh_number">192.168.4.55</span><span class="sh_symbol">:</span><span class="sh_number">6355</span>@<span class="sh_number">16355</span> slave a3083123bc5c87a76aab2655171634d4ee84f418 <span class="sh_number">0</span> <span class="sh_number">1538039278000</span> <span class="sh_number">5</span> connected</li><li>8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span>@<span class="sh_number">16352</span> myself<span class="sh_symbol">,</span>master <span class="sh_symbol">-</span> <span class="sh_number">0</span> <span class="sh_number">1538039277000</span> <span class="sh_number">2</span> connected <span class="sh_number">5461-10922</span></li><li>a3083123bc5c87a76aab2655171634d4ee84f418 <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span>@<span class="sh_number">16351</span> master <span class="sh_symbol">-</span> <span class="sh_number">0</span> <span class="sh_number">1538039277869</span> <span class="sh_number">1</span> connected <span class="sh_number">0-5460</span></li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA log]# redis-cli  -h  192.168.4.52  -p  6352 
+192.168.4.52:6352&gt; CLUSTER INFO
+cluster_state:ok			//状态
+cluster_slots_assigned:16384
+cluster_slots_ok:16384
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:6
+cluster_size:3
+cluster_current_epoch:6
+cluster_my_epoch:2
+cluster_stats_messages_ping_sent:367
+cluster_stats_messages_pong_sent:327
+cluster_stats_messages_meet_sent:5
+cluster_stats_messages_sent:699
+cluster_stats_messages_ping_received:327
+cluster_stats_messages_pong_received:372
+cluster_stats_messages_received:699
+
+192.168.4.52:6352&gt; CLUSTER NODES		//查看集群节点信息
+63afbb5e7d63b1f142358634578a3488e3c9e634 192.168.4.54:6354@16354 slave bc5c4e082a5a3391b634cf433a6486c867cfc44b 0 1538039278871 4 connected
+bc5c4e082a5a3391b634cf433a6486c867cfc44b 192.168.4.53:6353@16353 master - 0 1538039278571 3 connected 10923-16383
+28e06c5f24a2b6c6412f81369e09bc9653cc51ff 192.168.4.56:6356@16356 slave 8568fbd73cb296cad6915d524e34761b2114af47 0 1538039278069 6 connected
+7e8d9121f44d8331ff55b45c218b87df9bda1b70 192.168.4.55:6355@16355 slave a3083123bc5c87a76aab2655171634d4ee84f418 0 1538039278000 5 connected
+8568fbd73cb296cad6915d524e34761b2114af47 192.168.4.52:6352@16352 myself,master - 0 1538039277000 2 connected 5461-10922
+a3083123bc5c87a76aab2655171634d4ee84f418 192.168.4.51:6351@16351 master - 0 1538039277869 1 connected 0-5460
+192.168.4.52:6352&gt;
+
+</pre></div></div>
+      <p>5）测试集群</p>
+      <p>命令：</p>
+      <p>redis-cli   -c   -h   ip地址    -p   端口</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>c <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> set name jim</li><li><span class="sh_symbol">-&gt;</span> Redirected to slot <span class="sh_symbol">[</span><span class="sh_number">5798</span><span class="sh_symbol">]</span> located at <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span></li><li>OK</li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span> get name</li><li><span class="sh_string">"jim"</span></li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span> set <span class="sh_keyword">class</span> linux</li><li>OK</li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span> get <span class="sh_keyword">class</span></li><li><span class="sh_string">"linux"</span></li><li><span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span><span class="sh_symbol">&gt;</span> set pay <span class="sh_number">26800</span></li><li><span class="sh_symbol">-&gt;</span> Redirected to slot <span class="sh_symbol">[</span><span class="sh_number">4013</span><span class="sh_symbol">]</span> located at <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li>OK</li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> get pay</li><li><span class="sh_string">"26800"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA log]# redis-cli  -c -h 192.168.4.51 -p 6351
+192.168.4.51:6351&gt; set name jim
+-&gt; Redirected to slot [5798] located at 192.168.4.52:6352
+OK
+192.168.4.52:6352&gt; get name
+"jim"
+192.168.4.52:6352&gt; set class linux
+OK
+192.168.4.52:6352&gt; get class
+"linux"
+192.168.4.52:6352&gt; set pay 26800
+-&gt; Redirected to slot [4013] located at 192.168.4.51:6351
+OK
+192.168.4.51:6351&gt; get pay
+"26800"
+</pre></div></div>
+      <p>集群不能用的情况：</p>
+      <p>有半数或者半数以上的主库机器挂掉，集群就不能用了</p>
+      <p>把一个从库升级成主，没有从库，集群不能用（前提是：有半数或者半数以上的主库机器挂掉）</p>
+      <p>一个主库挂掉，它的从库自动顶替为主库，正常使用（前提是：有半数或者半数以上的主库机器能用），挂掉的主库修复好后，会成为从库，不会抢占为主</p>
+      <p>6）集群节点选举策略（三主，三从）</p>
+      <p>停止某个主库的redis服务，对应的从库会自动升级为主库</p>
+      <p>先查看节点信息的主从情况</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>c <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> CLUSTER  nodes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">...</span></li><li>8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span>@<span class="sh_number">16352</span> master <span class="sh_symbol">-</span> <span class="sh_number">0</span> <span class="sh_number">1538040400840</span> <span class="sh_number">2</span> connected <span class="sh_number">5461-10922</span></li><li>28e06c5f24a2b6c6412f81369e09bc9653cc51ff <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span>@<span class="sh_number">16356</span> slave 8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">0</span> <span class="sh_number">1538040400000</span> <span class="sh_number">6</span> connected</li><li><span class="sh_symbol">...</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA log]# redis-cli  -c -h 192.168.4.51 -p 6351
+192.168.4.51:6351&gt; CLUSTER  nodes		
+...
+8568fbd73cb296cad6915d524e34761b2114af47 192.168.4.52:6352@16352 master - 0 1538040400840 2 connected 5461-10922
+28e06c5f24a2b6c6412f81369e09bc9653cc51ff 192.168.4.56:6356@16356 slave 8568fbd73cb296cad6915d524e34761b2114af47 0 1538040400000 6 connected
+...
+192.168.4.51:6351&gt;
+</pre></div></div>
+      <p>看谁是谁的从库，如：</p>
+      <p>看节点前后的编号id是否有相同的</p>
+      <p>如：8568fbd73cb296cad6915d524e34761b2114af47</p>
+      <p>发现52的从库为56</p>
+      <p>停止主库52</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span>#  redis<span class="sh_symbol">-</span>cli    <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.52</span> <span class="sh_symbol">-</span>p <span class="sh_number">6352</span>  shutdown</li><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>c <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> CLUSTER NODES</li><li><span class="sh_symbol">...</span></li><li>8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span>@<span class="sh_number">16352</span> master<span class="sh_symbol">,</span>fail <span class="sh_symbol">-</span> <span class="sh_number">1538041052349</span> <span class="sh_number">1538041051000</span> <span class="sh_number">2</span> disconnected&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//52的主库坏掉</span></li><li>28e06c5f24a2b6c6412f81369e09bc9653cc51ff <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span>@<span class="sh_number">16356</span> master <span class="sh_symbol">-</span> <span class="sh_number">0</span> <span class="sh_number">1538041066000</span> <span class="sh_number">7</span> connected <span class="sh_number">5461-10922</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//56成为主库</span></li><li><span class="sh_symbol">...</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA log]#  redis-cli    -h 192.168.4.52 -p 6352  shutdown
+[root@redisA log]# redis-cli  -c -h 192.168.4.51 -p 6351
+192.168.4.51:6351&gt; CLUSTER NODES
+...
+8568fbd73cb296cad6915d524e34761b2114af47 192.168.4.52:6352@16352 master,fail - 1538041052349 1538041051000 2 disconnected		//52的主库坏掉
+28e06c5f24a2b6c6412f81369e09bc9653cc51ff 192.168.4.56:6356@16356 master - 0 1538041066000 7 connected 5461-10922		//56成为主库
+...
+
+</pre></div></div>
+      <p>开启52，发现52成为从库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisB redis<span class="sh_number">-4.0.8</span><span class="sh_symbol">]</span># <span class="sh_regexp">/etc/i</span>nit<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>redis_6352 start </li><li>Starting Redis server<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@redisA log<span class="sh_symbol">]</span># redis<span class="sh_symbol">-</span>cli  <span class="sh_symbol">-</span>c <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.51</span> <span class="sh_symbol">-</span>p <span class="sh_number">6351</span></li><li><span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">&gt;</span> CLUSTER NODES</li><li>8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span>@<span class="sh_number">16352</span> slave 28e06c5f24a2b6c6412f81369e09bc9653cc51ff <span class="sh_number">0</span> <span class="sh_number">1538041254000</span> <span class="sh_number">7</span> connected</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisB redis-4.0.8]# /etc/init.d/redis_6352 start 
+Starting Redis server...
+[root@redisA log]# redis-cli  -c -h 192.168.4.51 -p 6351
+192.168.4.51:6351&gt; CLUSTER NODES
+8568fbd73cb296cad6915d524e34761b2114af47 192.168.4.52:6352@16352 slave 28e06c5f24a2b6c6412f81369e09bc9653cc51ff 0 1538041254000 7 connected
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：管理redis集群</h2>
+      <h3>2.1 问题</h3>
+      <ul class="list">
+        <li>具体要求如下：
+</li>
+        <li>练习添加主机
+</li>
+        <li>练习删除主机
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：添加主机</p>
+      <p>1）部署一台新redis服务器，ip为192.168.4.58，装包，初始化，启用集群配置，重启服务（这里之前已经操作过，不会的可以参考案例1）</p>
+      <p>2）	添加集群4.58（添加master节点）</p>
+      <p>格式：redis-trib.rb   选项   参数</p>
+      <p>选项： add-nade  添加主机（不指定角色为主）</p>
+      <p>由于之前是在51上面创建ruby脚本，所以只有51上面有redis-trib.rb命令，在51上面执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb add<span class="sh_symbol">-</span>node <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Adding node <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to cluster <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Performing Cluster <span class="sh_function">Check</span> <span class="sh_symbol">(</span>using node <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">)</span></li><li>S<span class="sh_symbol">:</span> a3083123bc5c87a76aab2655171634d4ee84f418 <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li>   slots<span class="sh_symbol">:</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> slots<span class="sh_symbol">)</span> slave</li><li>   replicates 7e8d9121f44d8331ff55b45c218b87df9bda1b70</li><li>M<span class="sh_symbol">:</span> 7e8d9121f44d8331ff55b45c218b87df9bda1b70 <span class="sh_number">192.168.4.55</span><span class="sh_symbol">:</span><span class="sh_number">6355</span></li><li>   slots<span class="sh_symbol">:</span><span class="sh_number">0-5460</span> <span class="sh_symbol">(</span><span class="sh_number">5461</span> slots<span class="sh_symbol">)</span> master</li><li>   <span class="sh_number">1</span> additional <span class="sh_function">replica</span><span class="sh_symbol">(</span>s<span class="sh_symbol">)</span></li><li>S<span class="sh_symbol">:</span> 8568fbd73cb296cad6915d524e34761b2114af47 <span class="sh_number">192.168.4.52</span><span class="sh_symbol">:</span><span class="sh_number">6352</span></li><li>   slots<span class="sh_symbol">:</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> slots<span class="sh_symbol">)</span> slave</li><li>   replicates 28e06c5f24a2b6c6412f81369e09bc9653cc51ff</li><li>M<span class="sh_symbol">:</span> bc5c4e082a5a3391b634cf433a6486c867cfc44b <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span></li><li>   slots<span class="sh_symbol">:</span><span class="sh_number">10923-16383</span> <span class="sh_symbol">(</span><span class="sh_number">5461</span> slots<span class="sh_symbol">)</span> master</li><li>   <span class="sh_number">1</span> additional <span class="sh_function">replica</span><span class="sh_symbol">(</span>s<span class="sh_symbol">)</span></li><li>S<span class="sh_symbol">:</span> 63afbb5e7d63b1f142358634578a3488e3c9e634 <span class="sh_number">192.168.4.54</span><span class="sh_symbol">:</span><span class="sh_number">6354</span></li><li>   slots<span class="sh_symbol">:</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> slots<span class="sh_symbol">)</span> slave</li><li>   replicates bc5c4e082a5a3391b634cf433a6486c867cfc44b</li><li>M<span class="sh_symbol">:</span> 28e06c5f24a2b6c6412f81369e09bc9653cc51ff <span class="sh_number">192.168.4.56</span><span class="sh_symbol">:</span><span class="sh_number">6356</span></li><li>   slots<span class="sh_symbol">:</span><span class="sh_number">5461-10922</span> <span class="sh_symbol">(</span><span class="sh_number">5462</span> slots<span class="sh_symbol">)</span> master</li><li>   <span class="sh_number">1</span> additional <span class="sh_function">replica</span><span class="sh_symbol">(</span>s<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All nodes agree about slots configuration<span class="sh_symbol">.</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Check <span class="sh_keyword">for</span> open slots<span class="sh_symbol">...</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Check slots coverage<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All <span class="sh_number">16384</span> slots covered<span class="sh_symbol">.</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Send CLUSTER MEET to node <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to make it join the cluster<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> New node added correctly<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb add-node 192.168.4.58:6358 192.168.4.51:6351
+&gt;&gt;&gt; Adding node 192.168.4.58:6358 to cluster 192.168.4.51:6351
+&gt;&gt;&gt; Performing Cluster Check (using node 192.168.4.51:6351)
+S: a3083123bc5c87a76aab2655171634d4ee84f418 192.168.4.51:6351
+   slots: (0 slots) slave
+   replicates 7e8d9121f44d8331ff55b45c218b87df9bda1b70
+M: 7e8d9121f44d8331ff55b45c218b87df9bda1b70 192.168.4.55:6355
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+S: 8568fbd73cb296cad6915d524e34761b2114af47 192.168.4.52:6352
+   slots: (0 slots) slave
+   replicates 28e06c5f24a2b6c6412f81369e09bc9653cc51ff
+M: bc5c4e082a5a3391b634cf433a6486c867cfc44b 192.168.4.53:6353
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 63afbb5e7d63b1f142358634578a3488e3c9e634 192.168.4.54:6354
+   slots: (0 slots) slave
+   replicates bc5c4e082a5a3391b634cf433a6486c867cfc44b
+M: 28e06c5f24a2b6c6412f81369e09bc9653cc51ff 192.168.4.56:6356
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.4.58:6358 to make it join the cluster.
+[OK] New node added correctly.
+</pre></div></div>
+      <p>3）检查集群主机的状态信息</p>
+      <p>选项：check     检查权限</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>  <span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  check <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看状态</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Performing Cluster <span class="sh_function">Check</span> <span class="sh_symbol">(</span>using node <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">)</span></li><li>M<span class="sh_symbol">:</span> c5e0da48f335c46a2ec199faa99b830f537dd8a0 <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span></li><li>   slots<span class="sh_symbol">:</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> slots<span class="sh_symbol">)</span> master&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//发现没有hash槽</span></li><li>   <span class="sh_number">0</span> additional <span class="sh_function">replica</span><span class="sh_symbol">(</span>s<span class="sh_symbol">)</span></li><li>M<span class="sh_symbol">:</span> 7e8d9121f44d8331ff55b45c218b87df9bda1b70 <span class="sh_number">192.168.4.55</span><span class="sh_symbol">:</span><span class="sh_number">6355</span></li><li>   slots<span class="sh_symbol">:</span><span class="sh_number">0-5460</span> <span class="sh_symbol">(</span><span class="sh_number">5461</span> slots<span class="sh_symbol">)</span> master</li><li>   <span class="sh_number">1</span> additional <span class="sh_function">replica</span><span class="sh_symbol">(</span>s<span class="sh_symbol">)</span></li><li><span class="sh_symbol">...</span></li><li>S<span class="sh_symbol">:</span> a3083123bc5c87a76aab2655171634d4ee84f418 <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li>   slots<span class="sh_symbol">:</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> slots<span class="sh_symbol">)</span> slave</li><li>   replicates 7e8d9121f44d8331ff55b45c218b87df9bda1b70</li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All nodes agree about slots configuration<span class="sh_symbol">.</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Check <span class="sh_keyword">for</span> open slots<span class="sh_symbol">...</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Check slots coverage<span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All <span class="sh_number">16384</span> slots covered<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">  [root@redisA ~]# redis-trib.rb  check 192.168.4.58:6358		//查看状态
+&gt;&gt;&gt; Performing Cluster Check (using node 192.168.4.58:6358)
+M: c5e0da48f335c46a2ec199faa99b830f537dd8a0 192.168.4.58:6358
+   slots: (0 slots) master		//发现没有hash槽
+   0 additional replica(s)
+M: 7e8d9121f44d8331ff55b45c218b87df9bda1b70 192.168.4.55:6355
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+...
+S: a3083123bc5c87a76aab2655171634d4ee84f418 192.168.4.51:6351
+   slots: (0 slots) slave
+   replicates 7e8d9121f44d8331ff55b45c218b87df9bda1b70
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+</pre></div></div>
+      <p>4）手动对集群进行分片迁移</p>
+      <p>选项：reshard   重新分配hash槽</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  reshard   <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span>  </li><li>How many slots <span class="sh_keyword">do</span> you want to <span class="sh_function">move</span> <span class="sh_symbol">(</span>from <span class="sh_number">1</span> to <span class="sh_number">16384</span><span class="sh_symbol">)?</span><span class="sh_number">4096</span>   </li><li><span class="sh_comment">//拿出多少个hash 槽给主机192.168.4.58</span></li><li>What is the receiving node ID<span class="sh_symbol">?</span>  c5e0da48f335c46a2ec199faa99b830f537dd8a0   </li><li><span class="sh_comment">//主机192.168.4.58的id值</span></li><li>Source node #<span class="sh_number">1</span><span class="sh_symbol">:</span>all      <span class="sh_comment">//从当前所有的主里面获取hash槽</span></li><li>Do you want to proceed <span class="sh_keyword">with</span> the proposed reshard <span class="sh_function">plan</span> <span class="sh_symbol">(</span><span class="sh_normal">yes</span><span class="sh_symbol">/</span>no<span class="sh_symbol">)?</span>yes</li><li><span class="sh_symbol">...</span></li><li>Moving slot <span class="sh_number">12283</span> from <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> to <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12284</span> from <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> to <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12285</span> from <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> to <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12286</span> from <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> to <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12287</span> from <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span> to <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">:</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb  reshard   192.168.4.58:6358  
+How many slots do you want to move (from 1 to 16384)?4096   
+//拿出多少个hash 槽给主机192.168.4.58
+What is the receiving node ID?  c5e0da48f335c46a2ec199faa99b830f537dd8a0   
+//主机192.168.4.58的id值
+Source node #1:all      //从当前所有的主里面获取hash槽
+Do you want to proceed with the proposed reshard plan (yes/no)?yes
+...
+Moving slot 12283 from 192.168.4.53:6353 to 192.168.4.58:6358: 
+Moving slot 12284 from 192.168.4.53:6353 to 192.168.4.58:6358: 
+Moving slot 12285 from 192.168.4.53:6353 to 192.168.4.58:6358: 
+Moving slot 12286 from 192.168.4.53:6353 to 192.168.4.58:6358: 
+Moving slot 12287 from 192.168.4.53:6353 to 192.168.4.58:6358:
+</pre></div></div>
+      <p>再次查看发现4.58有4096个hash slot</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  check <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Performing Cluster <span class="sh_function">Check</span> <span class="sh_symbol">(</span>using node <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span><span class="sh_symbol">)</span></li><li>M<span class="sh_symbol">:</span> c5e0da48f335c46a2ec199faa99b830f537dd8a0 <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span></li><li>   slots<span class="sh_symbol">:</span><span class="sh_number">0-1364</span><span class="sh_symbol">,</span><span class="sh_number">5461-6826</span><span class="sh_symbol">,</span><span class="sh_number">10923-12287</span> <span class="sh_symbol">(</span><span class="sh_number">4096</span> slots<span class="sh_symbol">)</span> master</li><li>   <span class="sh_number">0</span> additional <span class="sh_function">replica</span><span class="sh_symbol">(</span>s<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb  check 192.168.4.58:6358
+&gt;&gt;&gt; Performing Cluster Check (using node 192.168.4.58:6358)
+M: c5e0da48f335c46a2ec199faa99b830f537dd8a0 192.168.4.58:6358
+   slots:0-1364,5461-6826,10923-12287 (4096 slots) master
+   0 additional replica(s)
+</pre></div></div>
+      <p>5）删除master角色的主机</p>
+      <p>先删除主机占用的hash槽</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  reshard <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span></li><li>How many slots <span class="sh_keyword">do</span> you want to <span class="sh_function">move</span> <span class="sh_symbol">(</span>from <span class="sh_number">1</span> to <span class="sh_number">16384</span><span class="sh_symbol">)?</span><span class="sh_number">4096</span>       &nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//移除hash 槽的个数</span></li><li>What is the receiving node ID<span class="sh_symbol">?</span>  bc5c4e082a5a3391b634cf433a6486c867cfc44b </li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//要移动给谁的id即目标主机（这里可以随机写一个master的ID）  </span></li><li>Source node #<span class="sh_number">1</span><span class="sh_symbol">:</span> c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li><span class="sh_comment">//从谁那移动即源主机（这里写4.58的ID）  </span></li><li>Source node #<span class="sh_number">2</span><span class="sh_symbol">:</span>done&nbsp;&nbsp;&nbsp;&nbsp;   &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置完毕</span></li><li><span class="sh_symbol">...</span></li><li>    Moving slot <span class="sh_number">12282</span> from c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li>    Moving slot <span class="sh_number">12283</span> from c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li>    Moving slot <span class="sh_number">12284</span> from c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li>    Moving slot <span class="sh_number">12285</span> from c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li>    Moving slot <span class="sh_number">12286</span> from c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li>    Moving slot <span class="sh_number">12287</span> from c5e0da48f335c46a2ec199faa99b830f537dd8a0</li><li>Do you want to proceed <span class="sh_keyword">with</span> the proposed reshard <span class="sh_function">plan</span> <span class="sh_symbol">(</span><span class="sh_normal">yes</span><span class="sh_symbol">/</span>no<span class="sh_symbol">)?</span>yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提交</span></li><li><span class="sh_symbol">...</span> </li><li>Moving slot <span class="sh_number">12282</span> from <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12283</span> from <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12284</span> from <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12285</span> from <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12286</span> from <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span><span class="sh_symbol">:</span> </li><li>Moving slot <span class="sh_number">12287</span> from <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> to <span class="sh_number">192.168.4.53</span><span class="sh_symbol">:</span><span class="sh_number">6353</span><span class="sh_symbol">:</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb  reshard 192.168.4.58:6358
+How many slots do you want to move (from 1 to 16384)?4096       	
+//移除hash 槽的个数
+What is the receiving node ID?  bc5c4e082a5a3391b634cf433a6486c867cfc44b 
+	//要移动给谁的id即目标主机（这里可以随机写一个master的ID）  
+Source node #1: c5e0da48f335c46a2ec199faa99b830f537dd8a0
+//从谁那移动即源主机（这里写4.58的ID）  
+Source node #2:done	   	//设置完毕
+...
+    Moving slot 12282 from c5e0da48f335c46a2ec199faa99b830f537dd8a0
+    Moving slot 12283 from c5e0da48f335c46a2ec199faa99b830f537dd8a0
+    Moving slot 12284 from c5e0da48f335c46a2ec199faa99b830f537dd8a0
+    Moving slot 12285 from c5e0da48f335c46a2ec199faa99b830f537dd8a0
+    Moving slot 12286 from c5e0da48f335c46a2ec199faa99b830f537dd8a0
+    Moving slot 12287 from c5e0da48f335c46a2ec199faa99b830f537dd8a0
+Do you want to proceed with the proposed reshard plan (yes/no)?yes		//提交
+... 
+Moving slot 12282 from 192.168.4.58:6358 to 192.168.4.53:6353: 
+Moving slot 12283 from 192.168.4.58:6358 to 192.168.4.53:6353: 
+Moving slot 12284 from 192.168.4.58:6358 to 192.168.4.53:6353: 
+Moving slot 12285 from 192.168.4.58:6358 to 192.168.4.53:6353: 
+Moving slot 12286 from 192.168.4.58:6358 to 192.168.4.53:6353: 
+Moving slot 12287 from 192.168.4.58:6358 to 192.168.4.53:6353:
+
+</pre></div></div>
+      <p>删除集群主机4.58(删除之后redis服务自动关闭)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb del<span class="sh_symbol">-</span>node <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span> <span class="sh_symbol">\</span> </li><li> c5e0da48f335c46a2ec199faa99b830f537dd8a0&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//删除谁+删除的id</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Removing node c5e0da48f335c46a2ec199faa99b830f537dd8a0 from cluster <span class="sh_number">192.168.4.58</span><span class="sh_symbol">:</span><span class="sh_number">6358</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Sending CLUSTER FORGET messages to the cluster<span class="sh_symbol">...</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> SHUTDOWN the node<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb del-node 192.168.4.58:6358 \ 
+ c5e0da48f335c46a2ec199faa99b830f537dd8a0	//删除谁+删除的id
+&gt;&gt;&gt; Removing node c5e0da48f335c46a2ec199faa99b830f537dd8a0 from cluster 192.168.4.58:6358
+&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...
+&gt;&gt;&gt; SHUTDOWN the node.
+</pre></div></div>
+      <p>6）添加从节点主机，随机添加</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  add<span class="sh_symbol">-</span>node  <span class="sh_symbol">--</span>slave <span class="sh_symbol">\</span> </li><li><span class="sh_number">192.168.4.57</span><span class="sh_symbol">:</span><span class="sh_number">6357</span>  <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Adding node <span class="sh_number">192.168.4.57</span><span class="sh_symbol">:</span><span class="sh_number">6357</span> to cluster <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Performing Cluster <span class="sh_function">Check</span> <span class="sh_symbol">(</span>using node <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">)</span></li><li>……</li><li>……</li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> All <span class="sh_number">16384</span> slots covered<span class="sh_symbol">.</span></li><li>Automatically selected master <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Send CLUSTER MEET to node <span class="sh_number">192.168.4.57</span><span class="sh_symbol">:</span><span class="sh_number">6357</span> to make it join the cluster<span class="sh_symbol">.</span></li><li>Waiting <span class="sh_keyword">for</span> the cluster to join<span class="sh_symbol">.</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Configure node as replica of <span class="sh_number">192.168.4.51</span><span class="sh_symbol">:</span><span class="sh_number">6351</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>OK<span class="sh_symbol">]</span> New node added correctly<span class="sh_symbol">.</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb  add-node  --slave \ 
+192.168.4.57:6357  192.168.4.51:6351
+&gt;&gt;&gt; Adding node 192.168.4.57:6357 to cluster 192.168.4.51:6351
+&gt;&gt;&gt; Performing Cluster Check (using node 192.168.4.51:6351)
+……
+……
+[OK] All 16384 slots covered.
+Automatically selected master 192.168.4.51:6351
+&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.4.57:6357 to make it join the cluster.
+Waiting for the cluster to join.
+&gt;&gt;&gt; Configure node as replica of 192.168.4.51:6351.
+[OK] New node added correctly. 
+</pre></div></div>
+      <p>7）移除从节点，从节点主机没有槽位范围，直接移除即可</p>
+      <p>命令格式：</p>
+      <p>redis-trib.rb del-node 192.168.4.57:6357 主机id值</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/NOSQL/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@redisA <span class="sh_symbol">~]</span># redis<span class="sh_symbol">-</span>trib<span class="sh_symbol">.</span>rb  del<span class="sh_symbol">-</span>node <span class="sh_number">192.168.4.57</span><span class="sh_symbol">:</span><span class="sh_number">6357</span>  <span class="sh_symbol">\</span> </li><li>f6649ea99b2f01faca26217691222c17a3854381</li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Removing node f6649ea99b2f01faca26217691222c17a3854381 </li><li>       from cluster <span class="sh_number">192.168.4.57</span><span class="sh_symbol">:</span><span class="sh_number">6351</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Sending CLUSTER FORGET messages to the cluster<span class="sh_symbol">...</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> SHUTDOWN the node<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@redisA ~]# redis-trib.rb  del-node 192.168.4.57:6357  \ 
+f6649ea99b2f01faca26217691222c17a3854381
+&gt;&gt;&gt; Removing node f6649ea99b2f01faca26217691222c17a3854381 
+       from cluster 192.168.4.57:6351
+&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...
+&gt;&gt;&gt; SHUTDOWN the node.
+
+</pre></div></div>
+    </div>
+  
+</body></html>

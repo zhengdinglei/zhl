@@ -1,0 +1,517 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD CLUSTER DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#case1">案例1：Keepalived高可用服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#case2">案例3：Keepalived+LVS服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#case3">案例1：配置HAProxy负载平衡集群</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：Keepalived高可用服务器</h2>
+      <h3>1.1 问题</h3>
+      <p>准备三台Linux服务器，两台做Web服务器，并部署Keepalived高可用软件，一台作为客户端主机，实现如下功能：</p>
+      <ul class="list">
+        <li>使用Keepalived实现web服务器的高可用
+</li>
+        <li>Web服务器IP地址分别为192.168.4.100和192.168.4.200
+</li>
+        <li>Web服务器的浮动VIP地址为192.168.4.80
+</li>
+        <li>客户端通过访问VIP地址访问Web页面
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>使用3台虚拟机，2台作为Web服务器，并部署Keepalived、1台作为客户端，拓扑结构如图-1所示，主机配置如表-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <div class="table">
+        <p>表-1</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置网络环境（如果在前面课程已经完成该配置，可以忽略此步骤）</p>
+      <p>1）设置Web1服务器网络参数、配置Web服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.100</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection up eth0</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.4.100"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl restart httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# nmcli connection modify eth0 ipv4.method manual ipv4.addresses 192.168.4.100/24 connection.autoconnect yes
+[root@web1 ~]# nmcli connection up eth0
+[root@web1 ~]# yum -y install httpd
+[root@web1 ~]# echo "192.168.4.100" &gt; /var/www/html/index.html
+[root@web1 ~]# systemctl restart httpd
+</pre></div></div>
+      <p>2）设置Web2服务器网络参数、配置Web服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.200</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection up eth0</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.4.200"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl restart httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# nmcli connection modify eth0 ipv4.method manual ipv4.addresses 192.168.4.200/24 connection.autoconnect yes
+[root@web2 ~]# nmcli connection up eth0
+[root@web2 ~]# yum -y install httpd
+[root@web2 ~]# echo "192.168.4.200" &gt; /var/www/html/index.html
+[root@web2 ~]# systemctl restart httpd
+</pre></div></div>
+      <p>3）配置proxy主机的网络参数（如果已经设置，可以忽略此步骤）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.5</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# nmcli connection modify eth0 ipv4.method manual ipv4.addresses 192.168.4.5/24 connection.autoconnect yes
+[root@proxy ~]# nmcli connection up eth0
+</pre></div></div>
+      <p class="number">步骤二：安装Keepalived软件</p>
+      <p class="emphasiz">注意：两台Web服务器做相同的操作。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y keepalived</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y keepalived </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum install -y keepalived
+[root@web2 ~]# yum install -y keepalived 
+</pre></div></div>
+      <p class="number">步骤三：部署Keepalived服务</p>
+      <p>1）修改web1服务器Keepalived配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">keepalived</span><span class="sh_symbol">/</span>keepalived<span class="sh_symbol">.</span>conf</li><li>global_defs <span class="sh_cbracket">{</span></li><li>  notification_email <span class="sh_cbracket">{</span></li><li>    admin@tarena<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>cn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置报警收件人邮箱</span></li><li>  <span class="sh_cbracket">}</span></li><li>  notification_email_from ka@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置发件人</span></li><li>  smtp_server <span class="sh_number">127.0.0.1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义邮件服务器</span></li><li>  smtp_connect_timeout <span class="sh_number">30</span></li><li>  router_id  web1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置路由ID号（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li><li>vrrp_instance VI_1 <span class="sh_cbracket">{</span></li><li>  state MASTER    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主服务器为MASTER（备服务器需要修改为BACKUP）</span></li><li>  <span class="sh_keyword">interface</span> eth0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义网络接口</span></li><li>  virtual_router_id <span class="sh_number">50</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主备服务器VRID号必须一致</span></li><li>  priority <span class="sh_number">100</span>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//服务器优先级,优先级高优先获取VIP（实验需要修改）</span></li><li>  advert_int <span class="sh_number">1</span></li><li>  authentication <span class="sh_cbracket">{</span></li><li>    auth_type pass</li><li>    auth_pass <span class="sh_number">1111</span>  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主备服务器密码必须一致</span></li><li>  <span class="sh_cbracket">}</span></li><li>  virtual_ipaddress <span class="sh_cbracket">{</span> <span class="sh_number">192.168.4.80</span>  <span class="sh_cbracket">}</span>    <span class="sh_comment">//谁是主服务器谁获得该VIP（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim /etc/keepalived/keepalived.conf
+global_defs {
+  notification_email {
+    admin@tarena.com.cn				//设置报警收件人邮箱
+  }
+  notification_email_from ka@localhost	//设置发件人
+  smtp_server 127.0.0.1				//定义邮件服务器
+  smtp_connect_timeout 30
+  router_id  web1						//设置路由ID号（实验需要修改）
+}
+vrrp_instance VI_1 {
+  state MASTER    		 			//主服务器为MASTER（备服务器需要修改为BACKUP）
+  interface eth0					//定义网络接口
+  virtual_router_id 50				//主备服务器VRID号必须一致
+  priority 100     				//服务器优先级,优先级高优先获取VIP（实验需要修改）
+  advert_int 1
+  authentication {
+    auth_type pass
+    auth_pass 1111  	 				//主备服务器密码必须一致
+  }
+  virtual_ipaddress { 192.168.4.80  }    //谁是主服务器谁获得该VIP（实验需要修改）
+}
+</pre></div></div>
+      <p>2）修改web2服务器Keepalived配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">keepalived</span><span class="sh_symbol">/</span>keepalived<span class="sh_symbol">.</span>conf</li><li>global_defs <span class="sh_cbracket">{</span></li><li>  notification_email <span class="sh_cbracket">{</span></li><li>    admin@tarena<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>cn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置报警收件人邮箱</span></li><li>  <span class="sh_cbracket">}</span></li><li>  notification_email_from ka@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置发件人</span></li><li>  smtp_server <span class="sh_number">127.0.0.1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义邮件服务器</span></li><li>  smtp_connect_timeout <span class="sh_number">30</span></li><li>  router_id  web2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置路由ID号（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li><li>vrrp_instance VI_1 <span class="sh_cbracket">{</span></li><li>  state BACKUP    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//备服务器为BACKUP（实验需要修改）</span></li><li>  <span class="sh_keyword">interface</span> eth0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义网络接口</span></li><li>  virtual_router_id <span class="sh_number">50</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主辅VRID号必须一致</span></li><li>  priority <span class="sh_number">50</span>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//服务器优先级（实验需要修改）</span></li><li>  advert_int <span class="sh_number">1</span></li><li>  authentication <span class="sh_cbracket">{</span></li><li>     auth_type pass</li><li>     auth_pass <span class="sh_number">1111</span>  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主辅服务器密码必须一致</span></li><li>  <span class="sh_cbracket">}</span></li><li>  virtual_ipaddress <span class="sh_cbracket">{</span>  <span class="sh_number">192.168.4.80</span>  <span class="sh_cbracket">}</span>    <span class="sh_comment">//谁是主服务器谁配置VIP（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# vim /etc/keepalived/keepalived.conf
+global_defs {
+  notification_email {
+    admin@tarena.com.cn				//设置报警收件人邮箱
+  }
+  notification_email_from ka@localhost	//设置发件人
+  smtp_server 127.0.0.1				//定义邮件服务器
+  smtp_connect_timeout 30
+  router_id  web2						//设置路由ID号（实验需要修改）
+}
+vrrp_instance VI_1 {
+  state BACKUP    		 				//备服务器为BACKUP（实验需要修改）
+  interface eth0						//定义网络接口
+  virtual_router_id 50					//主辅VRID号必须一致
+  priority 50     						//服务器优先级（实验需要修改）
+  advert_int 1
+  authentication {
+     auth_type pass
+     auth_pass 1111  	 				//主辅服务器密码必须一致
+  }
+  virtual_ipaddress {  192.168.4.80  }    //谁是主服务器谁配置VIP（实验需要修改）
+}
+</pre></div></div>
+      <p>3）启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl start keepalived</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl start keepalived</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl start keepalived
+[root@web2 ~]# systemctl start keepalived
+</pre></div></div>
+      <p>4）配置防火墙和SELinux</p>
+      <p>启动keepalived会自动添加一个drop的防火墙规则，需要清空！</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># iptables <span class="sh_symbol">-</span>F</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># iptables <span class="sh_symbol">-</span>F</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# iptables -F
+[root@web1 ~]# setenforce 0
+[root@web2 ~]# iptables -F
+[root@web1 ~]# setenforce 0
+</pre></div></div>
+      <p class="number">步骤四：测试</p>
+      <p>1）登录两台Web服务器查看VIP信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># ip addr show</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># ip addr show</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# ip addr show
+[root@web2 ~]# ip addr show
+</pre></div></div>
+      <p>2) 客户端访问</p>
+      <p>客户端使用curl命令连接http://192.168.4.80，查看Web页面；关闭Web1服务器的网卡，客户端再次访问http://192.168.4.80，验证是否可以正常访问服务。</p>
+      <a name="case2">
+      </a>
+      <h2>2 案例3：Keepalived+LVS服务器</h2>
+      <h3>2.1 问题</h3>
+      <p>使用Keepalived为LVS调度器提供高可用功能，防止调度器单点故障，为用户提供Web服务：</p>
+      <ul class="list">
+        <li>LVS1调度器真实IP地址为192.168.4.5
+</li>
+        <li>LVS2调度器真实IP地址为192.168.4.6
+</li>
+        <li>服务器VIP地址设置为192.168.4.15
+</li>
+        <li>真实Web服务器地址分别为192.168.4.100、192.168.4.200
+</li>
+        <li>使用加权轮询调度算法，真实web服务器权重不同
+</li>
+      </ul>
+      <h3>2.2 方案</h3>
+      <p>使用5台虚拟机，1台作为客户端主机、2台作为LVS调度器、2台作为Real Server，实验拓扑环境结构如图-2所示，基础环境配置如表-2所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-3</p>
+      </div>
+      <div class="table">
+        <p>表-2</p>
+        <img src="./CASE_files/table002.png">
+      </div>
+      <p>注意：所有主机都需要配置IP地址与有效的YUM源。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置网络环境</p>
+      <p>1）设置Web1服务器的网络参数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.100</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.100/24 connection.autoconnect yes
+[root@web1 ~]# nmcli connection up eth0
+</pre></div></div>
+      <p>接下来给web1配置VIP地址</p>
+      <p>注意：这里的子网掩码必须是32（也就是全255），网络地址与IP地址一样，广播地址与IP地址也一样。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cp ifcfg<span class="sh_symbol">-</span>lo<span class="sh_cbracket">{</span><span class="sh_symbol">,:</span><span class="sh_number">0</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># vim ifcfg<span class="sh_symbol">-</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>DEVICE<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>NETMASK<span class="sh_symbol">=</span><span class="sh_number">255.255.255.255</span></li><li>NETWORK<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>BROADCAST<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>NAME<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# cd /etc/sysconfig/network-scripts/
+[root@web1 ~]# cp ifcfg-lo{,:0}
+[root@web1 ~]# vim ifcfg-lo:0
+DEVICE=lo:0
+IPADDR=192.168.4.15
+NETMASK=255.255.255.255
+NETWORK=192.168.4.15
+BROADCAST=192.168.4.15
+ONBOOT=yes
+NAME=lo:0
+</pre></div></div>
+      <p>注意：这里因为web1也配置与调度器一样的VIP地址，默认肯定会出现地址冲突。</p>
+      <p>写入这四行的主要目的就是访问192.168.4.15的数据包，只有调度器会响应，其他主机都不做任何响应。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>sysctl<span class="sh_symbol">.</span>conf</li><li>#手动写入如下<span class="sh_number">4</span>行内容</li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>#当有arp广播问谁是<span class="sh_number">192.168.4.15</span>时，本机忽略该ARP广播，不做任何回应</li><li>#本机不要向外宣告自己的lo回环地址是<span class="sh_number">192.168.4.15</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim /etc/sysctl.conf
+#手动写入如下4行内容
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_announce = 2
+#当有arp广播问谁是192.168.4.15时，本机忽略该ARP广播，不做任何回应
+#本机不要向外宣告自己的lo回环地址是192.168.4.15
+</pre></div></div>
+      <p>重启网络服务，设置防火墙与SELinux</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl restart network</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># ifconfig</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl stop firewalld</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl restart network
+[root@web1 ~]# ifconfig
+[root@web1 ~]# systemctl stop firewalld
+[root@web1 ~]# setenforce 0
+</pre></div></div>
+      <p>2）设置Web2服务器的网络参数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.200</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.200/24 connection.autoconnect yes
+[root@web2 ~]# nmcli connection up eth0
+</pre></div></div>
+      <p>接下来给web2配置VIP地址</p>
+      <p>注意：这里的子网掩码必须是32（也就是全255），网络地址与IP地址一样，广播地址与IP地址也一样。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># cp ifcfg<span class="sh_symbol">-</span>lo<span class="sh_cbracket">{</span><span class="sh_symbol">,:</span><span class="sh_number">0</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># vim ifcfg<span class="sh_symbol">-</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>DEVICE<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>NETMASK<span class="sh_symbol">=</span><span class="sh_number">255.255.255.255</span></li><li>NETWORK<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>BROADCAST<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>NAME<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# cd /etc/sysconfig/network-scripts/
+[root@web2 ~]# cp ifcfg-lo{,:0}
+[root@web2 ~]# vim ifcfg-lo:0
+DEVICE=lo:0
+IPADDR=192.168.4.15
+NETMASK=255.255.255.255
+NETWORK=192.168.4.15
+BROADCAST=192.168.4.15
+ONBOOT=yes
+NAME=lo:0
+</pre></div></div>
+      <p>注意：这里因为web2也配置与代理一样的VIP地址，默认肯定会出现地址冲突。</p>
+      <p>写入这四行的主要目的就是访问192.168.4.15的数据包，只有调度器会响应，其他主机都不做任何响应。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>sysctl<span class="sh_symbol">.</span>conf</li><li>#手动写入如下<span class="sh_number">4</span>行内容</li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>#当有arp广播问谁是<span class="sh_number">192.168.4.15</span>时，本机忽略该ARP广播，不做任何回应</li><li>#本机不要向外宣告自己的lo回环地址是<span class="sh_number">192.168.4.15</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# vim /etc/sysctl.conf
+#手动写入如下4行内容
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_announce = 2
+#当有arp广播问谁是192.168.4.15时，本机忽略该ARP广播，不做任何回应
+#本机不要向外宣告自己的lo回环地址是192.168.4.15
+</pre></div></div>
+      <p>重启网络服务，设置防火墙与SELinux</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl restart network</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># ifconfig</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl stop firewalld</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# systemctl restart network
+[root@web2 ~]# ifconfig
+[root@web2 ~]# systemctl stop firewalld
+[root@web2 ~]# setenforce 0
+</pre></div></div>
+      <p>3）配置proxy1主机的网络参数(不配置VIP，由keepalvied自动配置)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.5</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy1 ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.5/24 connection.autoconnect yes
+[root@proxy1 ~]# nmcli connection up eth0
+</pre></div></div>
+      <p>4）配置proxy2主机的网络参数(不配置VIP，由keepalvied自动配置)</p>
+      <p>注意：按照前面的课程环境，默认没有该虚拟机，需要重新建一台虚拟机proxy2。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.6</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy2 ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.6/24 connection.autoconnect yes
+[root@proxy2 ~]# nmcli connection up eth0
+</pre></div></div>
+      <p class="number">步骤二：配置后台web服务</p>
+      <p>1）安装软件，自定义Web页面（web1和web2主机）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.4.100"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.4.200"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install httpd
+[root@web1 ~]# echo "192.168.4.100" &gt; /var/www/html/index.html
+[root@web2 ~]# yum -y install httpd
+[root@web2 ~]# echo "192.168.4.200" &gt; /var/www/html/index.html
+</pre></div></div>
+      <p>3）启动Web服务器软件(web1和web2主机)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl start httpd <span class="sh_symbol">;</span> systemctl enable httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl start httpd <span class="sh_symbol">;</span> systemctl enable httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl start httpd ; systemctl enable httpd
+[root@web2 ~]# systemctl start httpd ; systemctl enable httpd
+</pre></div></div>
+      <p class="number">步骤三：调度器安装Keepalived与ipvsadm软件</p>
+      <p class="emphasiz">注意：两台LVS调度器执行相同的操作（如何已经安装软件，可用忽略此步骤）。</p>
+      <p>安装软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y keepalived</li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># systemctl enable keepalived</li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y ipvsadm</li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>C</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y keepalived</li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># systemctl enable keepalived</li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y ipvsadm</li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>C</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy1 ~]# yum install -y keepalived
+[root@proxy1 ~]# systemctl enable keepalived
+[root@proxy1 ~]# yum install -y ipvsadm
+[root@proxy1 ~]# ipvsadm -C
+
+
+[root@proxy2 ~]# yum install -y keepalived
+[root@proxy2 ~]# systemctl enable keepalived
+[root@proxy2 ~]# yum install -y ipvsadm
+[root@proxy2 ~]# ipvsadm -C
+</pre></div></div>
+      <p class="number">步骤四：部署Keepalived实现LVS-DR模式调度器的高可用</p>
+      <p>1）LVS1调度器设置Keepalived，并启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">keepalived</span><span class="sh_symbol">/</span>keepalived<span class="sh_symbol">.</span>conf</li><li>global_defs <span class="sh_cbracket">{</span></li><li>  notification_email <span class="sh_cbracket">{</span></li><li>    admin@tarena<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>cn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置报警收件人邮箱</span></li><li>  <span class="sh_cbracket">}</span></li><li>  notification_email_from ka@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置发件人</span></li><li>  smtp_server <span class="sh_number">127.0.0.1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义邮件服务器</span></li><li>  smtp_connect_timeout <span class="sh_number">30</span></li><li>  router_id  lvs1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置路由ID号(实验需要修改)</span></li><li><span class="sh_cbracket">}</span></li><li>vrrp_instance VI_1 <span class="sh_cbracket">{</span></li><li>  state MASTER    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主服务器为MASTER</span></li><li>  <span class="sh_keyword">interface</span> eth0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义网络接口</span></li><li>  virtual_router_id <span class="sh_number">50</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主辅VRID号必须一致</span></li><li>  priority <span class="sh_number">100</span>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//服务器优先级</span></li><li>  advert_int <span class="sh_number">1</span></li><li>  authentication <span class="sh_cbracket">{</span></li><li>    auth_type pass</li><li>    auth_pass <span class="sh_number">1111</span>  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主辅服务器密码必须一致</span></li><li>  <span class="sh_cbracket">}</span></li><li>  virtual_ipaddress <span class="sh_cbracket">{</span>  <span class="sh_number">192.168.4.15</span>  <span class="sh_cbracket">}</span>   <span class="sh_comment">//配置VIP（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li><li>virtual_server <span class="sh_number">192.168.4.15</span> <span class="sh_number">80</span> <span class="sh_cbracket">{</span>  &nbsp;&nbsp;&nbsp;&nbsp;     <span class="sh_comment">//设置ipvsadm的VIP规则（实验需要修改）</span></li><li>  delay_loop <span class="sh_number">6</span></li><li>  lb_algo wrr          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置LVS调度算法为WRR</span></li><li>  lb_kind DR      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置LVS的模式为DR</span></li><li>  #persistence_timeout <span class="sh_number">50</span></li><li>#注意这样的作用是保持连接，开启后，客户端在一定时间内始终访问相同服务器</li><li>  protocol TCP</li><li>  real_server <span class="sh_number">192.168.4.100</span> <span class="sh_number">80</span> <span class="sh_cbracket">{</span>         <span class="sh_comment">//设置后端web服务器真实IP（实验需要修改）</span></li><li>    weight <span class="sh_number">1</span>         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//设置权重为1</span></li><li>    TCP_CHECK <span class="sh_cbracket">{</span>                            <span class="sh_comment">//对后台real_server做健康检查</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry <span class="sh_number">3</span></li><li>    <span class="sh_cbracket">}</span></li><li>  <span class="sh_cbracket">}</span></li><li> real_server <span class="sh_number">192.168.4.200</span> <span class="sh_number">80</span> <span class="sh_cbracket">{</span>       <span class="sh_comment">//设置后端web服务器真实IP（实验需要修改）</span></li><li>    weight <span class="sh_number">2</span>         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="sh_comment">//设置权重为2</span></li><li>    TCP_CHECK <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry <span class="sh_number">3</span></li><li>    <span class="sh_cbracket">}</span></li><li>  <span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># systemctl start keepalived</li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln                     #查看LVS规则</li><li><span class="sh_symbol">[</span>root@proxy1 <span class="sh_symbol">~]</span># ip a  s                          #查看VIP配置</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy1 ~]# vim /etc/keepalived/keepalived.conf
+global_defs {
+  notification_email {
+    admin@tarena.com.cn				//设置报警收件人邮箱
+  }
+  notification_email_from ka@localhost	//设置发件人
+  smtp_server 127.0.0.1				//定义邮件服务器
+  smtp_connect_timeout 30
+  router_id  lvs1						//设置路由ID号(实验需要修改)
+}
+vrrp_instance VI_1 {
+  state MASTER    		 				//主服务器为MASTER
+  interface eth0						//定义网络接口
+  virtual_router_id 50					//主辅VRID号必须一致
+  priority 100     					//服务器优先级
+  advert_int 1
+  authentication {
+    auth_type pass
+    auth_pass 1111  	 				//主辅服务器密码必须一致
+  }
+  virtual_ipaddress {  192.168.4.15  }   //配置VIP（实验需要修改）
+}
+virtual_server 192.168.4.15 80 {  	     //设置ipvsadm的VIP规则（实验需要修改）
+  delay_loop 6
+  lb_algo wrr          				//设置LVS调度算法为WRR
+  lb_kind DR      				 		//设置LVS的模式为DR
+  #persistence_timeout 50
+#注意这样的作用是保持连接，开启后，客户端在一定时间内始终访问相同服务器
+  protocol TCP
+  real_server 192.168.4.100 80 {         //设置后端web服务器真实IP（实验需要修改）
+    weight 1         				    //设置权重为1
+    TCP_CHECK {                            //对后台real_server做健康检查
+	connect_timeout 3
+	nb_get_retry 3
+	delay_before_retry 3
+    }
+  }
+ real_server 192.168.4.200 80 {       //设置后端web服务器真实IP（实验需要修改）
+    weight 2         				 //设置权重为2
+    TCP_CHECK {
+	connect_timeout 3
+	nb_get_retry 3
+	delay_before_retry 3
+    }
+  }
+}
+[root@proxy1 ~]# systemctl start keepalived
+[root@proxy1 ~]# ipvsadm -Ln                     #查看LVS规则
+[root@proxy1 ~]# ip a  s                          #查看VIP配置
+</pre></div></div>
+      <p>2）LVS2调度器设置Keepalived</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">keepalived</span><span class="sh_symbol">/</span>keepalived<span class="sh_symbol">.</span>conf</li><li>global_defs <span class="sh_cbracket">{</span></li><li>  notification_email <span class="sh_cbracket">{</span></li><li>    admin@tarena<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>cn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置报警收件人邮箱</span></li><li>  <span class="sh_cbracket">}</span></li><li>  notification_email_from ka@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置发件人</span></li><li>  smtp_server <span class="sh_number">127.0.0.1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义邮件服务器</span></li><li>  smtp_connect_timeout <span class="sh_number">30</span></li><li>  router_id  lvs2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置路由ID号（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li><li>vrrp_instance VI_1 <span class="sh_cbracket">{</span></li><li>  state BACKUP    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//从服务器为BACKUP（实验需要修改）</span></li><li>  <span class="sh_keyword">interface</span> eth0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义网络接口</span></li><li>  virtual_router_id <span class="sh_number">50</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主辅VRID号必须一致</span></li><li>  priority <span class="sh_number">50</span>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//服务器优先级（实验需要修改）</span></li><li>  advert_int <span class="sh_number">1</span></li><li>  authentication <span class="sh_cbracket">{</span></li><li>    auth_type pass</li><li>    auth_pass <span class="sh_number">1111</span>  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主辅服务器密码必须一致</span></li><li>  <span class="sh_cbracket">}</span></li><li>  virtual_ipaddress <span class="sh_cbracket">{</span>  <span class="sh_number">192.168.4.15</span>  <span class="sh_cbracket">}</span>  <span class="sh_comment">//设置VIP（实验需要修改）</span></li><li><span class="sh_cbracket">}</span></li><li>virtual_server <span class="sh_number">192.168.4.15</span> <span class="sh_number">80</span> <span class="sh_cbracket">{</span>  &nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_comment">//自动设置LVS规则（实验需要修改）</span></li><li>  delay_loop <span class="sh_number">6</span></li><li>  lb_algo wrr          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置LVS调度算法为WRR</span></li><li>  lb_kind DR      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置LVS的模式为DR</span></li><li> # persistence_timeout <span class="sh_number">50</span></li><li>#注意这样的作用是保持连接，开启后，客户端在一定时间内始终访问相同服务器</li><li>  protocol TCP</li><li>  real_server <span class="sh_number">192.168.4.100</span> <span class="sh_number">80</span> <span class="sh_cbracket">{</span>        <span class="sh_comment">//设置后端web服务器的真实IP（实验需要修改）</span></li><li>    weight <span class="sh_number">1</span>         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     <span class="sh_comment">//设置权重为1</span></li><li>    TCP_CHECK <span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     <span class="sh_comment">//对后台real_server做健康检查</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry <span class="sh_number">3</span></li><li>    <span class="sh_cbracket">}</span></li><li>  <span class="sh_cbracket">}</span></li><li> real_server <span class="sh_number">192.168.4.200</span> <span class="sh_number">80</span> <span class="sh_cbracket">{</span>         <span class="sh_comment">//设置后端web服务器的真实IP（实验需要修改）</span></li><li>    weight <span class="sh_number">2</span>         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     <span class="sh_comment">//设置权重为2</span></li><li>    TCP_CHECK <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry <span class="sh_number">3</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry <span class="sh_number">3</span></li><li>    <span class="sh_cbracket">}</span></li><li>  <span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># systemctl start keepalived</li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln                 #查看LVS规则</li><li><span class="sh_symbol">[</span>root@proxy2 <span class="sh_symbol">~]</span># ip  a   s                    #查看VIP设置</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy2 ~]# vim /etc/keepalived/keepalived.conf
+global_defs {
+  notification_email {
+    admin@tarena.com.cn				//设置报警收件人邮箱
+  }
+  notification_email_from ka@localhost	//设置发件人
+  smtp_server 127.0.0.1				//定义邮件服务器
+  smtp_connect_timeout 30
+  router_id  lvs2						//设置路由ID号（实验需要修改）
+}
+vrrp_instance VI_1 {
+  state BACKUP    		 				//从服务器为BACKUP（实验需要修改）
+  interface eth0						//定义网络接口
+  virtual_router_id 50					//主辅VRID号必须一致
+  priority 50     					    //服务器优先级（实验需要修改）
+  advert_int 1
+  authentication {
+    auth_type pass
+    auth_pass 1111  	 				//主辅服务器密码必须一致
+  }
+  virtual_ipaddress {  192.168.4.15  }  //设置VIP（实验需要修改）
+}
+virtual_server 192.168.4.15 80 {  	    //自动设置LVS规则（实验需要修改）
+  delay_loop 6
+  lb_algo wrr          				//设置LVS调度算法为WRR
+  lb_kind DR      				 		//设置LVS的模式为DR
+ # persistence_timeout 50
+#注意这样的作用是保持连接，开启后，客户端在一定时间内始终访问相同服务器
+  protocol TCP
+  real_server 192.168.4.100 80 {        //设置后端web服务器的真实IP（实验需要修改）
+    weight 1         				     //设置权重为1
+    TCP_CHECK {					     //对后台real_server做健康检查
+	connect_timeout 3
+	nb_get_retry 3
+	delay_before_retry 3
+    }
+  }
+ real_server 192.168.4.200 80 {         //设置后端web服务器的真实IP（实验需要修改）
+    weight 2         				     //设置权重为2
+    TCP_CHECK {
+	connect_timeout 3
+	nb_get_retry 3
+	delay_before_retry 3
+    }
+  }
+[root@proxy2 ~]# systemctl start keepalived
+[root@proxy2 ~]# ipvsadm -Ln                 #查看LVS规则
+[root@proxy2 ~]# ip  a   s                    #查看VIP设置
+</pre></div></div>
+      <p class="number">步骤五：客户端测试</p>
+      <p>客户端使用curl命令反复连接http://192.168.4.15，查看访问的页面是否会轮询到不同的后端真实服务器。</p>
+      <a name="case3">
+      </a>
+      <h2>3 案例1：配置HAProxy负载平衡集群</h2>
+      <h3>3.1 问题</h3>
+      <p>准备4台Linux服务器，两台做Web服务器，1台安装HAProxy，1台做客户端，实现如下功能：</p>
+      <ul class="list">
+        <li>客户端访问HAProxy，HAProxy分发请求到后端Real Server
+</li>
+        <li>开启HAProxy监控页面，及时查看调度器状态
+</li>
+        <li>设置HAProxy为开机启动
+</li>
+      </ul>
+      <h3>3.2 方案</h3>
+      <p>使用4台虚拟机，1台作为HAProxy调度器、2台作为Real Server、1台作为客户端，拓扑结构如图-3所示，具体配置如表-3所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <div class="table">
+        <p>表-3</p>
+        <img src="./CASE_files/table003.png">
+      </div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">注意事项：</p>
+      <p class="number">将前面实验VIP、LVS等实验的内容清理干净！！！！！！</p>
+      <p class="number">删除所有设备的VIP，清空所有LVS设置，关闭keepalived！！！</p>
+      <p>web1关闭多余的网卡与VIP，配置本地真实IP地址。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># ifdown eth0</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># ifdown lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection modify eth1 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.2.100</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection up eth1</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# ifdown eth0
+[root@web1 ~]# ifdown lo:0
+[root@web1 ~]# nmcli connection modify eth1 ipv4.method manual \
+ipv4.addresses 192.168.2.100/24 connection.autoconnect yes
+[root@web1 ~]# nmcli connection up eth1
+</pre></div></div>
+      <p>Web2关闭多余的网卡与VIP，配置本地真实IP地址。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># ifdown eth0</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># ifdown lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection modify eth1 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.2.200</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection up eth1</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# ifdown eth0
+[root@web2 ~]# ifdown lo:0
+[root@web2 ~]# nmcli connection modify eth1 ipv4.method manual \
+ipv4.addresses 192.168.2.200/24 connection.autoconnect yes
+[root@web2 ~]# nmcli connection up eth1
+</pre></div></div>
+      <p>proxy关闭keepalived服务，清理LVS规则。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl stop keepalived</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl disable keepalived</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>C</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.5</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># nmcli connection up eth0</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># nmcli connection modify eth1 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.2.5</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># nmcli connection up eth1</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# systemctl stop keepalived
+[root@proxy ~]# systemctl disable keepalived
+[root@proxy ~]# ipvsadm -C
+
+[root@proxy ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.5/24 connection.autoconnect yes
+[root@proxy ~]# nmcli connection up eth0
+
+[root@proxy ~]# nmcli connection modify eth1 ipv4.method manual \
+ipv4.addresses 192.168.2.5/24 connection.autoconnect yes
+[root@proxy ~]# nmcli connection up eth1
+</pre></div></div>
+      <p class="number">步骤一：配置后端Web服务器</p>
+      <p>设置两台后端Web服务（如果已经配置完成，可用忽略此步骤）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl start httpd</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.2.100"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl start httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.2.200"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install httpd
+[root@web1 ~]# systemctl start httpd
+[root@web1 ~]# echo "192.168.2.100" &gt; /var/www/html/index.html
+
+[root@web2 ~]# yum -y install httpd
+[root@web2 ~]# systemctl start httpd
+[root@web2 ~]# echo "192.168.2.200" &gt; /var/www/html/index.html
+</pre></div></div>
+      <p class="number">步骤二：部署HAProxy服务器</p>
+      <p>1）配置网络，安装软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@haproxy <span class="sh_symbol">~]</span># echo <span class="sh_string">'net.ipv4.ip_forward = 1'</span> <span class="sh_symbol">&gt;&gt;</span> sysctl<span class="sh_symbol">.</span>conf  <span class="sh_comment">//开启路由转发</span></li><li><span class="sh_symbol">[</span>root@haproxy <span class="sh_symbol">~]</span># sysctl <span class="sh_symbol">-</span>p</li><li><span class="sh_symbol">[</span>root@haproxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install haproxy</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@haproxy ~]# echo 'net.ipv4.ip_forward = 1' &gt;&gt; sysctl.conf  //开启路由转发
+[root@haproxy ~]# sysctl -p
+[root@haproxy ~]# yum -y install haproxy
+</pre></div></div>
+      <p>2）修改配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@haproxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">haproxy</span><span class="sh_symbol">/</span>haproxy<span class="sh_symbol">.</span>cfg</li><li>global</li><li> log <span class="sh_number">127.0.0.1</span> local2   ###<span class="sh_symbol">[</span>err warning info debug<span class="sh_symbol">]</span></li><li> <span class="sh_normal">chroot </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>haproxy</li><li> <span class="sh_normal">pidfile </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/run/</span>haproxy<span class="sh_symbol">.</span>pid ###haproxy的pid存放路径</li><li> maxconn <span class="sh_number">4000</span>     ###最大连接数，默认<span class="sh_number">4000</span></li><li> user haproxy</li><li> group haproxy</li><li> daemon       ###创建<span class="sh_number">1</span>个进程进入deamon模式运行</li><li>defaults</li><li> mode http    ###默认的模式mode <span class="sh_cbracket">{</span> tcp<span class="sh_symbol">|</span>http<span class="sh_symbol">|</span>health <span class="sh_cbracket">}</span> log global   ###采用全局定义的日志</li><li> option dontlognull  ###不记录健康检查的日志信息</li><li> option httpclose  ###每次请求完毕后主动关闭http通道</li><li> option httplog   ###日志类别http日志格式</li><li> option forwardfor  ###后端服务器可以从Http Header中获得客户端ip</li><li> option redispatch  ###serverid服务器挂掉后强制定向到其他健康服务器</li><li> timeout connect <span class="sh_number">10000</span> #如果backend没有指定，默认为10s</li><li> timeout client <span class="sh_number">300000</span> ###客户端连接超时</li><li> timeout server <span class="sh_number">300000</span> ###服务器连接超时</li><li> maxconn  <span class="sh_number">60000</span>  ###最大连接数</li><li> retries  <span class="sh_number">3</span>   ###<span class="sh_number">3</span>次连接失败就认为服务不可用，也可以通过后面设置</li><li>listen stats</li><li>    bind <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">1080</span>   #监听端口</li><li>    stats refresh 30s   #统计页面自动刷新时间</li><li>    stats <span class="sh_normal">uri </span><span class="sh_symbol">/</span>stats   #统计页面url</li><li>    stats realm Haproxy Manager #统计页面密码框上提示文本</li><li>    stats auth admin<span class="sh_symbol">:</span>admin  #统计页面用户名和密码设置</li><li>  #stats hide<span class="sh_symbol">-</span>version   #隐藏统计页面上HAProxy的版本信息</li><li>listen  websrv<span class="sh_symbol">-</span>rewrite <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">80</span></li><li>   balance roundrobin</li><li>   server  web1 <span class="sh_number">192.168.2.100</span><span class="sh_symbol">:</span><span class="sh_number">80</span> check inter <span class="sh_number">2000</span> rise <span class="sh_number">2</span> fall <span class="sh_number">5</span></li><li>   server  web2 <span class="sh_number">192.168.2.200</span><span class="sh_symbol">:</span><span class="sh_number">80</span> check inter <span class="sh_number">2000</span> rise <span class="sh_number">2</span> fall <span class="sh_number">5</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@haproxy ~]# vim /etc/haproxy/haproxy.cfg
+global
+ log 127.0.0.1 local2   ###[err warning info debug]
+ chroot /usr/local/haproxy
+ pidfile /var/run/haproxy.pid ###haproxy的pid存放路径
+ maxconn 4000     ###最大连接数，默认4000
+ user haproxy
+ group haproxy
+ daemon       ###创建1个进程进入deamon模式运行
+defaults
+ mode http    ###默认的模式mode { tcp|http|health } log global   ###采用全局定义的日志
+ option dontlognull  ###不记录健康检查的日志信息
+ option httpclose  ###每次请求完毕后主动关闭http通道
+ option httplog   ###日志类别http日志格式
+ option forwardfor  ###后端服务器可以从Http Header中获得客户端ip
+ option redispatch  ###serverid服务器挂掉后强制定向到其他健康服务器
+ timeout connect 10000 #如果backend没有指定，默认为10s
+ timeout client 300000 ###客户端连接超时
+ timeout server 300000 ###服务器连接超时
+ maxconn  60000  ###最大连接数
+ retries  3   ###3次连接失败就认为服务不可用，也可以通过后面设置
+listen stats
+    bind 0.0.0.0:1080   #监听端口
+    stats refresh 30s   #统计页面自动刷新时间
+    stats uri /stats   #统计页面url
+    stats realm Haproxy Manager #统计页面密码框上提示文本
+    stats auth admin:admin  #统计页面用户名和密码设置
+  #stats hide-version   #隐藏统计页面上HAProxy的版本信息
+listen  websrv-rewrite 0.0.0.0:80
+   balance roundrobin
+   server  web1 192.168.2.100:80 check inter 2000 rise 2 fall 5
+   server  web2 192.168.2.200:80 check inter 2000 rise 2 fall 5
+
+</pre></div></div>
+      <p>3）启动服务器并设置开机启动</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@haproxy <span class="sh_symbol">~]</span># systemctl start haproxy</li><li><span class="sh_symbol">[</span>root@haproxy <span class="sh_symbol">~]</span># systemctl enable haproxy</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@haproxy ~]# systemctl start haproxy
+[root@haproxy ~]# systemctl enable haproxy
+</pre></div></div>
+      <p class="number">步骤三：客户端验证</p>
+      <p>客户端配置与HAProxy相同网络的IP地址，并使用火狐浏览器访问http://192.168.4.5，测试调度器是否正常工作，客户端访问http://192.168.4.5:1080/stats测试状态监控页面是否正常。访问状态监控页的内容，参考图-4所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>备注：</p>
+      <p>Queue队列数据的信息（当前队列数量，最大值，队列限制数量）；</p>
+      <p>Session rate每秒会话率（当前值，最大值，限制数量）；</p>
+      <p>Sessions总会话量（当前值，最大值，总量，Lbtot: total number of times a server was selected选中一台服务器所用的总时间）；</p>
+      <p>Bytes（入站、出站流量）；</p>
+      <p>Denied（拒绝请求、拒绝回应）；</p>
+      <p>Errors（错误请求、错误连接、错误回应）；</p>
+      <p>Warnings（重新尝试警告retry、重新连接redispatches）；</p>
+      <p>Server(状态、最后检查的时间（多久前执行的最后一次检查）、权重、备份服务器数量、down机服务器数量、down机时长)。</p>
+    </div>
+  
+</body></html>

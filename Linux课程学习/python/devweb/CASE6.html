@@ -1,0 +1,333 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE6_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE6_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE6_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE6_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE6_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devweb DAY06</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#case1">案例1：实现鉴权</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#case2">案例2：修改模板</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#case3">案例3：熟悉模型</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：实现鉴权</h2>
+      <h3>1.1 问题</h3>
+      <ol class="list">
+        <li>编写登陆页面模板
+</li>
+        <li>编写三个视图，分别用于登陆页、验证登陆以及受保护页面
+</li>
+        <li>如果用户密码正确给出登陆成功，否则重定向到登陆页
+</li>
+        <li>编写URLCONF，实现入口 
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>1.浏览器访问任意入口，检测session变量，如果没有设置就跳转/home入口，展示登陆页面</p>
+      <p>2.用户在登陆页面填写账号、密码信息，提交给/login入口，使用数据库鉴定是否是合法用户。如果合法，设置session变量为任意值，然后跳转到原始路径。</p>
+      <p>3.如果在任意入口检测logined变量存在，则正常显示页面。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写登陆页面模板</p>
+      <p>创建模板文件polls/templates/polls/home.html，将如下代码写入：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style=""><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>form action<span class="sh_symbol">=</span><span class="sh_string">"/polls/login/"</span> method<span class="sh_symbol">=</span><span class="sh_string">"post"</span><span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#表单提交后会转到login（验证用户是否登录成功）页面</li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> csrf_token <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    用户名：<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"text"</span> name<span class="sh_symbol">=</span><span class="sh_string">"username"</span><span class="sh_symbol">&gt;&lt;</span>br<span class="sh_symbol">&gt;</span></li><li>    密码：<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"text"</span> name<span class="sh_symbol">=</span><span class="sh_string">"pwd"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"submit"</span> value<span class="sh_symbol">=</span><span class="sh_string">"提交"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>form<span class="sh_symbol">&gt;</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;form action="/polls/login/" method="post"&gt;		#表单提交后会转到login（验证用户是否登录成功）页面
+{% csrf_token %}
+    用户名：&lt;input type="text" name="username"&gt;&lt;br&gt;
+    密码：&lt;input type="text" name="pwd"&gt;
+&lt;input type="submit" value="提交"&gt;
+&lt;/form&gt; 
+</pre></div></div>
+      <p class="number">步骤二：编写三个视图，分别用于登陆页、验证登陆以及受保护页面</p>
+      <p>将三个视图写入前面案例创建项目中，在</p>
+      <p>Session 就是保存在后台数据或者缓存中的一个键值对,同样的存储着用户信息,为了更好的保护用户隐私,其实是对前端cookie的一个升级的保护措施.</p>
+      <p>当登录成功后,会向后台数据库与前端Cookie同时发放一段随机字符串,分别保存在后台的session中,前端写到用户浏览器中,用户下次登录时候 拿着浏览器存着的sessionID当做KEY去后台数据库中匹配进行验证登录即可拿到用户相关信息,可以防止敏感信息直接暴露在浏览器上。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>#登录页面</li><li>def <span class="sh_function">home</span><span class="sh_symbol">(</span>request<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">render</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> <span class="sh_string">'polls/home.html'</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>#验证用户是否登录成功</li><li>def <span class="sh_function">login</span><span class="sh_symbol">(</span>request<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">if</span> request<span class="sh_symbol">.</span>method <span class="sh_symbol">==</span> <span class="sh_string">'POST'</span><span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   #这里可以根据登录的用户显示不同的数据</li><li>        username <span class="sh_symbol">=</span> request<span class="sh_symbol">.</span>POST<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span><span class="sh_string">'username'</span><span class="sh_symbol">)</span></li><li>        pwd <span class="sh_symbol">=</span> request<span class="sh_symbol">.</span>POST<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span><span class="sh_string">'pwd'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">if</span> username <span class="sh_symbol">==</span> <span class="sh_string">'zhangsan'</span> and pwd <span class="sh_symbol">==</span> <span class="sh_string">'123456'</span><span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   # 设置session</li><li>        request<span class="sh_symbol">.</span>session<span class="sh_symbol">[</span><span class="sh_string">'IS_LOGIN'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> True</li><li>        <span class="sh_keyword">return</span> <span class="sh_function">redirect</span><span class="sh_symbol">(</span><span class="sh_string">'index'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">redirect</span><span class="sh_symbol">(</span><span class="sh_string">'home'</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>#受保护页面：已登录用户可以访问，如果没有登录重定向到登录页面</li><li>def <span class="sh_keyword">protected</span><span class="sh_symbol">(</span>request<span class="sh_symbol">):</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#从请求里获取username session</li><li> &nbsp;&nbsp;&nbsp;&nbsp;#首先判断存不存在session，如果不存在跳转到home页面</li><li>    is_login <span class="sh_symbol">=</span> request<span class="sh_symbol">.</span>session<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span><span class="sh_string">'IS_LOGIN'</span><span class="sh_symbol">,</span> False<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>    <span class="sh_keyword">if</span> is_login<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">return</span> <span class="sh_function">HttpResponse</span><span class="sh_symbol">(</span><span class="sh_string">'OK'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">redirect</span><span class="sh_symbol">(</span><span class="sh_string">'home'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">#登录页面
+def home(request):
+    return render(request, 'polls/home.html')
+
+#验证用户是否登录成功
+def login(request):
+    if request.method == 'POST':
+		   #这里可以根据登录的用户显示不同的数据
+        username = request.POST.get('username')
+        pwd = request.POST.get('pwd')
+    if username == 'zhangsan' and pwd == '123456':
+		   # 设置session
+        request.session['IS_LOGIN'] = True
+        return redirect('index')
+    return redirect('home')
+
+#受保护页面：已登录用户可以访问，如果没有登录重定向到登录页面
+def protected(request):
+		#从请求里获取username session
+ 	#首先判断存不存在session，如果不存在跳转到home页面
+    is_login = request.session.get('IS_LOGIN', False)	
+    if is_login:
+        return HttpResponse('OK')
+    return redirect('home')
+
+
+</pre></div></div>
+      <p class="number">步骤三：编写URLCONF，实现入口</p>
+      <p>修改polls/urls.py文件并更改URL，配对新视图</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^home/$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>home<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'home'</span><span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^login/$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>login<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'login'</span><span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^protected/$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span><span class="sh_keyword">protected</span><span class="sh_symbol">,</span> name <span class="sh_symbol">=</span> <span class="sh_string">'protected'</span><span class="sh_symbol">),</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">    url(r'^home/$', views.home, name='home'),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^protected/$', views.protected, name = 'protected'), 
+</pre></div></div>
+      <p class="number">步骤四：如果用户密码正确给出登陆成功，否则重定向到登陆页</p>
+      <p>当访问http://127.0.0.1:8000/polls/protected时，页面会跳转到如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE6_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>此时，登录账号密码输入错误时，页面自动重定向到登陆页，如图-2、图-3所示：</p>
+      <div class="image">
+        <img src="./CASE6_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <div class="image">
+        <img src="./CASE6_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>如果用户名密码输入正确，给出登录成功，输出结果如图-4、图-5所示：</p>
+      <div class="image">
+        <img src="./CASE6_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <div class="image">
+        <img src="./CASE6_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：修改模板</h2>
+      <h3>2.1 问题</h3>
+      <ol class="list">
+        <li>为投票、投票结果、问题详情修改模板 
+</li>
+        <li>创建一个基础页面 
+</li>
+        <li>其他模板文件继承于基础页面
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建一个基础页面：</p>
+      <p>在之前投票系统项目基础上，定义一个基础模板，该框架之后由子模板继承，</p>
+      <p>在templates文件下，创建基础模板base.html文件，为其他页面增加标题与页脚：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>html lang<span class="sh_symbol">=</span><span class="sh_string">"en"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>title<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block title <span class="sh_symbol">%</span><span class="sh_cbracket">}{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span><span class="sh_symbol">&lt;/</span>title<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span>My helpful timestamp site<span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block content <span class="sh_symbol">%</span><span class="sh_cbracket">}{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block footer <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_symbol">&lt;</span>hr<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span>Thanks <span class="sh_keyword">for</span> visiting my site<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;title&gt;{% block title %}{% endblock %}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;My helpful timestamp site&lt;/h1&gt;
+    {% block content %}{% endblock %}
+    {% block footer %}
+    &lt;hr&gt;
+    &lt;p&gt;Thanks for visiting my site.&lt;/p&gt;
+    {% endblock %}
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p>这个页面主要放公用部分代码，各个子页面都可以继承这个页面的样式</p>
+      <p>这个模版，它定义了一个可以用于两列排版页面的简单HTML骨架。“子模版”的工作是用它们的内容填充空的blocks。</p>
+      <p>在这个例子中，&nbsp;block&nbsp;标签定义了三个可以被子模版内容填充的block。&nbsp;block&nbsp;告诉模版引擎： 子模版可能会覆盖掉模版中的这些位置。</p>
+      <p class="number">步骤二：为投票、投票结果、问题详情修改模板</p>
+      <p>1)修改投票详情模板detail.html，让该模板继承base.html文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">extends</span> <span class="sh_string">"polls/base.html"</span> <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block title <span class="sh_symbol">%</span><span class="sh_cbracket">}</span>投票详情<span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block content <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> question<span class="sh_symbol">.</span>question_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">if</span> error_message <span class="sh_symbol">%</span><span class="sh_cbracket">}</span><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;&lt;</span>strong<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> error_message <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;</span><span class="sh_regexp">/strong&gt;&lt;/</span>p<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endif <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;</span>form action<span class="sh_symbol">=</span><span class="sh_string">"/polls/{{ question.id }}/vote/"</span> method<span class="sh_symbol">=</span><span class="sh_string">"post"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> csrf_token <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">for</span> choice <span class="sh_keyword">in</span> question<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span>all <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"radio"</span> name<span class="sh_symbol">=</span><span class="sh_string">"choice"</span> id<span class="sh_symbol">=</span><span class="sh_string">"choice{{ forloop.counter }}"</span> value<span class="sh_symbol">=</span><span class="sh_string">"{{ choice.id }}"</span> <span class="sh_symbol">/&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>label <span class="sh_keyword">for</span><span class="sh_symbol">=</span><span class="sh_string">"choice{{ forloop.counter }}"</span><span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>choice_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;</span><span class="sh_regexp">/label&gt;&lt;br /</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endfor <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"submit"</span> value<span class="sh_symbol">=</span><span class="sh_string">"投票"</span> <span class="sh_symbol">/&gt;</span></li><li><span class="sh_symbol">&lt;/</span>form<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">{% extends "polls/base.html" %}
+{% block title %}投票详情{% endblock %}
+{% block content %}
+
+&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+{% if error_message %}&lt;p&gt;&lt;strong&gt;{{ error_message }}&lt;/strong&gt;&lt;/p&gt;{% endif %}
+&lt;form action="/polls/{{ question.id }}/vote/" method="post"&gt;
+{% csrf_token %}
+{% for choice in question.choice_set.all %}
+    &lt;input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" /&gt;
+    &lt;label for="choice{{ forloop.counter }}"&gt;{{ choice.choice_text }}&lt;/label&gt;&lt;br /&gt;
+{% endfor %}
+&lt;input type="submit" value="投票" /&gt;
+&lt;/form&gt;
+
+{% endblock %} 
+</pre></div></div>
+      <p>2)修改投票结果模板results.html，让该模板继承base.html文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">extends</span> <span class="sh_string">"polls/base.html"</span> <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block title <span class="sh_symbol">%</span><span class="sh_cbracket">}</span>投票结果<span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block content <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> question<span class="sh_symbol">.</span>question_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&lt;</span>ul<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">for</span> choice <span class="sh_keyword">in</span> question<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span>all <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>choice_text <span class="sh_cbracket">}}</span> <span class="sh_symbol">:</span> <span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>votes <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endfor <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"/polls/"</span><span class="sh_symbol">&gt;</span>投票首页<span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">{% extends "polls/base.html" %}
+{% block title %}投票结果{% endblock %}
+{% block content %}
+
+&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+
+&lt;ul&gt;
+{% for choice in question.choice_set.all %}
+    &lt;li&gt;{{ choice.choice_text }} : {{ choice.votes }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+
+&lt;a href="/polls/"&gt;投票首页&lt;/a&gt;
+
+{% endblock %}
+</pre></div></div>
+      <p>如上所示，{% extends ‘polls/base.html’ %}作为基础模板，必须放在第一行才可以识别。</p>
+      <p>{% block %}这个标签，告诉模板引擎，子模板可以重载这些</p>
+      <p>注意：修改results.html以及detail.html文件只需将以下代码加入即可</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">extends</span> <span class="sh_string">"polls/base.html"</span> <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block title <span class="sh_symbol">%</span><span class="sh_cbracket">}</span>#可替换内容<span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> block content <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li>#子模板内容</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endblock <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">{% extends "polls/base.html" %}
+{% block title %}#可替换内容{% endblock %}
+{% block content %}
+
+#子模板内容
+
+{% endblock %}
+</pre></div></div>
+      <p class="number">步骤三：其他模板文件继承于基础页面结果显示</p>
+      <p>访问http://127.0.0.1:8000/polls/1/ ，现在启动服务器，在浏览器中查看效果，如图-6：</p>
+      <div class="image">
+        <img src="./CASE6_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>访问http://127.0.0.1:8000/polls/1/ ，现在启动服务器，在浏览器中查看效果，如图：</p>
+      <div class="image">
+        <img src="./CASE6_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <p>如此两个html效果就显示出来了，同时也解释一下base.html中所起的作用，两个html中都使用了{% extends  %}标记</p>
+      <p>这个就是继承base.html中的内容，在使用{ % block XXXXX %}    {% endblock%}时，中间的内容便是插入在使用了base.html两个标签的</p>
+      <p>中间，由此便极大的避免了代码的冗余。每个模板只包含自己独一无二的代码，无需多余的部分，而如果想要进行站点级的设计修改，仅需</p>
+      <p>修改base.html，所有其他模板会立即反映出所做修改。</p>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：熟悉模型</h2>
+      <h3>3.1 问题</h3>
+      <ol class="list">
+        <li>进入python shell
+</li>
+        <li>导入模型 
+</li>
+        <li>对模型进行检索、增删改查操作
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写Student类</p>
+      <p>1)在已创建的项目mysite中，创建Student模型，即修改mysite/polls/models.py文件内容如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_keyword">class</span> <span class="sh_function">Student</span><span class="sh_symbol">(</span>models<span class="sh_symbol">.</span>Model<span class="sh_symbol">):</span></li><li>    id <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">IntegerField</span><span class="sh_symbol">(</span>primary_key<span class="sh_symbol">=</span>True<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#整型、主键</li><li>    cname <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">CharField</span><span class="sh_symbol">(</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#字符串字段</li><li>            unique<span class="sh_symbol">=</span>True<span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#不允许重复</li><li>            max_length<span class="sh_symbol">=</span><span class="sh_number">128</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>            blank<span class="sh_symbol">=</span>True<span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#django的Admin中添加数据时是否可允许空值</li><li>            <span class="sh_keyword">null</span><span class="sh_symbol">=</span>True&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#数据库中字段是可以为空</li><li>            <span class="sh_symbol">)</span></li><li>    cage <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">TextField</span><span class="sh_symbol">(</span>blank<span class="sh_symbol">=</span>True<span class="sh_symbol">,</span> <span class="sh_keyword">null</span><span class="sh_symbol">=</span>True<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#字符串<span class="sh_symbol">=</span>longtext</li><li>   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">class Student(models.Model):
+    id = models.IntegerField(primary_key=True)	#整型、主键
+    cname = models.CharField(		#字符串字段
+            unique=True,		#不允许重复
+            max_length=128,	
+            blank=True,	#django的Admin中添加数据时是否可允许空值
+            null=True		#数据库中字段是可以为空
+            )
+    cage = models.TextField(blank=True, null=True)		#字符串=longtext
+   
+</pre></div></div>
+      <p>文件中每个class相当于单个数据库表，此时创建了Student表，每个属性也是这个表中的一个字段。 属性名就是字段名，它的类型（例如 CharField ）相当于数据库的字段类型。</p>
+      <p class="number">步骤二：同步数据库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py makemigrations</li><li><span style="display:none;">&nbsp;</span></li><li>Migrations <span class="sh_keyword">for</span> <span class="sh_string">'polls'</span><span class="sh_symbol">:</span></li><li>  <span class="sh_normal">polls</span><span class="sh_symbol">/</span><span class="sh_normal">migrations</span><span class="sh_symbol">/</span>0002_student<span class="sh_symbol">.</span>py</li><li>    <span class="sh_symbol">-</span> Create model Student</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@ localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py migrate</li><li><span style="display:none;">&nbsp;</span></li><li>Operations to perform<span class="sh_symbol">:</span></li><li>  Apply all migrations<span class="sh_symbol">:</span> admin<span class="sh_symbol">,</span> auth<span class="sh_symbol">,</span> contenttypes<span class="sh_symbol">,</span> polls<span class="sh_symbol">,</span> sessions</li><li>Running migrations<span class="sh_symbol">:</span></li><li>  Applying polls<span class="sh_symbol">.</span>0002_student<span class="sh_symbol">...</span> OK</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> (django_env) [root@localhost mysite]# python manage.py makemigrations
+
+Migrations for 'polls':
+  polls/migrations/0002_student.py
+    - Create model Student
+
+(django_env) [root@ localhost mysite]# python manage.py migrate
+
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0002_student... OK
+
+</pre></div></div>
+      <p class="number">步骤三：进入python shell</p>
+      <p>使用如下命令来调用Python shell：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py shell </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py shell 
+
+</pre></div></div>
+      <p class="number">步骤四：导入Student模型</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> from polls<span class="sh_symbol">.</span>models import Student</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; from polls.models import Student
+</pre></div></div>
+      <p class="number">步骤五：对模型进行检索、增删改查操作</p>
+      <p>1)增加数据：</p>
+      <p>通过create方法增加数据</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>Person<span class="sh_symbol">=</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">create</span><span class="sh_symbol">(</span>cname<span class="sh_symbol">=</span><span class="sh_string">'Tom'</span><span class="sh_symbol">,</span>cage<span class="sh_symbol">=</span><span class="sh_number">12</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp; #新增name字段的值为tom，age字段值为<span class="sh_number">12</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;Person=Student.objects.create(cname='Tom',cage=12)	 #新增name字段的值为tom，age字段值为12
+</pre></div></div>
+      <p>通过创建实例方法增加数据</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>p <span class="sh_symbol">=</span> <span class="sh_function">Student</span><span class="sh_symbol">(</span>cname<span class="sh_symbol">=</span><span class="sh_string">"hanmeimei"</span><span class="sh_symbol">,</span> cage<span class="sh_symbol">=</span><span class="sh_number">23</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #新增name字段的值为Tom，age字段值为<span class="sh_number">23</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>p<span class="sh_symbol">.</span><span class="sh_function">save</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;p = Student(cname="hanmeimei", cage=23)				 #新增name字段的值为Tom，age字段值为23
+&gt;&gt;&gt;p.save()
+</pre></div></div>
+      <p>2)删除数据：</p>
+      <p>直接删除</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>student <span class="sh_symbol">=</span> <span class="sh_function">Student</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>student<span class="sh_symbol">.</span>id <span class="sh_symbol">=</span> <span class="sh_number">13</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>student<span class="sh_symbol">.</span><span class="sh_keyword">delete</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">,</span> <span class="sh_cbracket">{</span><span class="sh_string">'polls.Student'</span><span class="sh_symbol">:</span> <span class="sh_number">0</span><span class="sh_cbracket">}</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;student = Student()
+&gt;&gt;&gt;student.id = 13
+&gt;&gt;&gt;student.delete()
+
+(0, {'polls.Student': 0})
+</pre></div></div>
+      <p>查找对象后删除</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>s<span class="sh_symbol">=</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>cage<span class="sh_symbol">=</span><span class="sh_number">12</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>s<span class="sh_symbol">.</span><span class="sh_keyword">delete</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#删除一条id<span class="sh_symbol">=</span><span class="sh_number">13</span>的数据</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_cbracket">{</span><span class="sh_string">'polls.Student'</span><span class="sh_symbol">:</span> <span class="sh_number">1</span><span class="sh_cbracket">}</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;s=Student.objects.get(cage=12)
+&gt;&gt;&gt;s.delete()		#删除一条id=13的数据
+
+(1, {'polls.Student': 1})
+</pre></div></div>
+      <p>3)修改数据：</p>
+      <p>通过save方法修改记录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>s <span class="sh_symbol">=</span> <span class="sh_function">Student</span><span class="sh_symbol">(</span>id<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">,</span> cname<span class="sh_symbol">=</span><span class="sh_string">'Tom'</span><span class="sh_symbol">,</span> cage<span class="sh_symbol">=</span><span class="sh_number">12</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>s<span class="sh_symbol">.</span><span class="sh_function">save</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;s = Student(id=1, cname='Tom', cage=12)
+&gt;&gt;&gt;s.save()
+</pre></div></div>
+      <p>通过update方法修改记录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">filter</span><span class="sh_symbol">(</span>id<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">).</span><span class="sh_function">update</span><span class="sh_symbol">(</span>cname<span class="sh_symbol">=</span><span class="sh_string">'Tom'</span><span class="sh_symbol">,</span> cage<span class="sh_symbol">=</span><span class="sh_number">33</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;Student.objects.filter(id=1).update(cname='Tom', cage=33)
+
+1
+</pre></div></div>
+      <p>4)查询数据：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>id<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">)</span> &nbsp;# 查询单条数据</li><li><span class="sh_symbol">&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">filter</span><span class="sh_symbol">(</span>cname<span class="sh_symbol">=</span><span class="sh_string">'Tom'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 查询匹配条件的多条数据</li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;]&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">filter</span><span class="sh_symbol">(</span>cname__contains<span class="sh_symbol">=</span><span class="sh_string">'Tom'</span><span class="sh_symbol">)</span> &nbsp;# 模糊查询；name为查询的字段名</li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;]&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">filter</span><span class="sh_symbol">(</span>cname__contains<span class="sh_symbol">=</span>Tom<span class="sh_symbol">)[</span><span class="sh_number">0</span><span class="sh_symbol">:</span><span class="sh_number">5</span><span class="sh_symbol">]</span> # <span class="sh_symbol">[</span><span class="sh_number">0</span><span class="sh_symbol">]</span>显示第一条 <span class="sh_symbol">[</span><span class="sh_number">0</span><span class="sh_symbol">:</span><span class="sh_number">2</span><span class="sh_symbol">]</span>会显示前两条，切片不支持负数</li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;Student.objects.get(id=1) &nbsp;# 查询单条数据
+&lt;Student: Tom&gt;
+
+&gt;&gt;&gt; Student.objects.filter(cname='Tom')		# 查询匹配条件的多条数据
+&lt;QuerySet [&lt;Student: Tom&gt;]&gt;
+
+&gt;&gt;&gt;Student.objects.filter(cname__contains='Tom') &nbsp;# 模糊查询；name为查询的字段名
+&lt;QuerySet [&lt;Student: Tom&gt;]&gt;
+
+&gt;&gt;&gt;Student.objects.filter(cname__contains=Tom)[0:5] # [0]显示第一条 [0:2]会显示前两条，切片不支持负数
+&lt;QuerySet [&lt;Student: Tom&gt;]&gt;
+
+</pre></div></div>
+      <p>获取表的所有记录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;,</span> <span class="sh_symbol">&lt;</span>Student<span class="sh_symbol">:</span> hanmeimei<span class="sh_symbol">&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;Student.objects.all()
+&lt;QuerySet [&lt;Student: Tom&gt;, &lt;Student: hanmeimei&gt;]&gt;
+</pre></div></div>
+      <p>获取特定条件的记录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>cname<span class="sh_symbol">=</span><span class="sh_string">"hanmeimei"</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>Student<span class="sh_symbol">:</span> hanmeimei<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;Student.objects.get(cname="hanmeimei")
+&lt;Student: hanmeimei&gt;
+</pre></div></div>
+      <p>获取前10条记录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span>Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()[:</span><span class="sh_number">10</span><span class="sh_symbol">]</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;,</span> <span class="sh_symbol">&lt;</span>Student<span class="sh_symbol">:</span> hanmeimei<span class="sh_symbol">&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt;Student.objects.all()[:10]
+&lt;QuerySet [&lt;Student: Tom&gt;, &lt;Student: hanmeimei&gt;]&gt;
+</pre></div></div>
+      <p>排序：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> Student<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">order_by</span><span class="sh_symbol">(</span><span class="sh_string">'cname'</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Student<span class="sh_symbol">:</span> Tom<span class="sh_symbol">&gt;,</span> <span class="sh_symbol">&lt;</span>Student<span class="sh_symbol">:</span> hanmeimei<span class="sh_symbol">&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; Student.objects.order_by('cname')
+&lt;QuerySet [&lt;Student: Tom&gt;, &lt;Student: hanmeimei&gt;]&gt;
+</pre></div></div>
+    </div>
+  
+</body></html>

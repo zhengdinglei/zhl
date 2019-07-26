@@ -1,0 +1,671 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE3_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE3_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE3_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE3_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE3_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devweb DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#case1">案例1：编写Bootstrap模板</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#case2">案例2：使用全局 CSS 样式</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#case3">案例3：使用常用组件</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#case4">例4：使用常用插件</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：编写Bootstrap模板</h2>
+      <h3>1.1 问题</h3>
+      <p>【参见COOKBOOK】</p>
+      <ol class="list">
+        <li>使用 BootStrap 模版创建页面
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：使用内联样式为&lt;p&gt;元素设置样式</p>
+      <p>目录说明：</p>
+      <p>1)css目录用于存放Bootstrap框架使用的样式文件：</p>
+      <p>bootstrap.css文件：Bootstrap框架的样式文件</p>
+      <p>bootstrap.min.css文件：Bootstrap框架的样式压缩文件</p>
+      <p>bootstrap-theme.css文件：Bootstrap框架的主题文件</p>
+      <p>2)fonts目录用于存放Bootstrap框架使用的字体文件：</p>
+      <p>3)js目录用于存放Bootstrap框架使用的核心javascript文件：</p>
+      <p>bootstrap.js文件：Bootstrap框架的核心javascript文件</p>
+      <p>bootstrap.min.js文件：Bootstrap框架的核心javascript压缩文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;!</span>—声明 <span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;!</span>DOCTYPE html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>html lang<span class="sh_symbol">=</span><span class="sh_string">"en"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>meta charset<span class="sh_symbol">=</span><span class="sh_string">"UTF-8"</span><span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>meta name<span class="sh_symbol">=</span><span class="sh_string">"viewport"</span> content<span class="sh_symbol">=</span><span class="sh_string">"width=device-width, initial-scale=1"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_symbol">&lt;!--</span> 上述meta标签<span class="sh_symbol">*</span>必须<span class="sh_symbol">*</span>放在最前面，任何其他内容都<span class="sh_symbol">*</span>必须<span class="sh_symbol">*</span>跟随其后！ 元数据<span class="sh_symbol">--&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>title<span class="sh_symbol">&gt;</span>my bootstrap test<span class="sh_symbol">&lt;/</span>title<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;!--</span> Bootstrap 样式<span class="sh_symbol">--&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>link rel<span class="sh_symbol">=</span><span class="sh_string">"stylesheet"</span> href<span class="sh_symbol">=</span><span class="sh_string">"static/css/bootstrap.min.css"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!</span>—页面内容<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"container"</span><span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span></li><li>        press <span class="sh_symbol">&lt;</span>kbd<span class="sh_symbol">&gt;</span>ctrl <span class="sh_symbol">+</span> C<span class="sh_symbol">&lt;/</span>kbd<span class="sh_symbol">&gt;</span> to <span class="sh_keyword">break</span><span class="sh_symbol">.</span></li><li>    <span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"http://www.bootcss.com"</span><span class="sh_symbol">&gt;</span>bootstrap中文网<span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span> <span class="sh_function">jQuery</span> <span class="sh_symbol">(</span>Bootstrap 的所有 JavaScript 插件都依赖 jQuery<span class="sh_symbol">)</span>，想要使用Bootstrap框架，必须要先引入jQuery文 件 <span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>script src<span class="sh_symbol">=</span><span class="sh_string">"static/js/jquery.min.js"</span><span class="sh_symbol">&gt;&lt;/</span>script<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span> 加载 Bootstrap 的所有 JavaScript 插件<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>script src<span class="sh_symbol">=</span><span class="sh_string">"static/js/bootstrap.min.js"</span><span class="sh_symbol">&gt;&lt;/</span>script<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;!—声明 --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+	    &lt;!-- 上述meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ 元数据--&gt;
+    &lt;title&gt;my bootstrap test&lt;/title&gt;
+    &lt;!-- Bootstrap 样式--&gt;
+    &lt;link rel="stylesheet" href="static/css/bootstrap.min.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!—页面内容--&gt;
+&lt;div class="container"&gt;
+    &lt;p&gt;
+        press &lt;kbd&gt;ctrl + C&lt;/kbd&gt; to break.
+    &lt;/p&gt;
+    &lt;a href="http://www.bootcss.com"&gt;bootstrap中文网&lt;/a&gt;
+&lt;/div&gt;
+&lt;!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery)，想要使用Bootstrap框架，必须要先引入jQuery文 件 --&gt;
+&lt;script src="static/js/jquery.min.js"&gt;&lt;/script&gt;
+&lt;!-- 加载 Bootstrap 的所有 JavaScript 插件--&gt;
+&lt;script src="static/js/bootstrap.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p class="number">步骤二：实例演示如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：使用全局 CSS 样式</h2>
+      <h3>2.1 问题</h3>
+      <p>【参见COOKBOOK】</p>
+      <ol class="list">
+        <li>使用全局 CSS 样式定义页面
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：HTML5 文档类型</p>
+      <p>Bootstrap 使用到的某些 HTML 元素和 CSS 属性需要将页面设置为 HTML5 文档类型。在你项目中的每个页面都要参照下面的格式进行设置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;!</span>DOCTYPE html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>html lang<span class="sh_symbol">=</span><span class="sh_string">"zh-CN"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+  ...
+&lt;/html&gt;
+</pre></div></div>
+      <p class="number">步骤二：移动设备优先</p>
+      <p>为了确保适当的绘制和触屏缩放，需要在&lt;head&gt;之中添加viewport元数据元素</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>meta name<span class="sh_symbol">=</span><span class="sh_string">"viewport"</span> content<span class="sh_symbol">=</span><span class="sh_string">"width=device-width, initial-scale=1"</span><span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+</pre></div></div>
+      <p class="number">步骤三：将Bootstrap模板补充完整</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;!</span>DOCTYPE html<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>html lang<span class="sh_symbol">=</span><span class="sh_string">"en"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>head<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>meta charset<span class="sh_symbol">=</span><span class="sh_string">"UTF-8"</span><span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>meta name<span class="sh_symbol">=</span><span class="sh_string">"viewport"</span> content<span class="sh_symbol">=</span><span class="sh_string">"width=device-width, initial-scale=1"</span><span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>title<span class="sh_symbol">&gt;</span>my bootstrap test<span class="sh_symbol">&lt;/</span>title<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>link rel<span class="sh_symbol">=</span><span class="sh_string">"stylesheet"</span> href<span class="sh_symbol">=</span><span class="sh_string">"static/css/bootstrap.min.css"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>head<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;</span>script src<span class="sh_symbol">=</span><span class="sh_string">"static/js/jquery.min.js"</span><span class="sh_symbol">&gt;&lt;/</span>script<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>script src<span class="sh_symbol">=</span><span class="sh_string">"static/js/bootstrap.min.js"</span><span class="sh_symbol">&gt;&lt;/</span>script<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>body<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>html<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;title&gt;my bootstrap test&lt;/title&gt;
+    &lt;link rel="stylesheet" href="static/css/bootstrap.min.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+...
+...
+&lt;script src="static/js/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="static/js/bootstrap.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></div>
+      <p class="number">步骤四：了解CSS全局样式的设置</p>
+      <p>1)为 body 元素设置 background-color: #fff;body元素背景色设置为白色</p>
+      <p>2)使用 @font-family-base、@font-size-base 和 @line-height-base 变量作为排版的基本参数</p>
+      <p>3)为所有链接设置了基本颜色 @link-color ，并且当链接处于 :hover 状态时才添加下划线</p>
+      <p class="number">步骤五：布局容器</p>
+      <p>.container 类用于固定宽度并支持响应式布局的容器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"container"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="container"&gt;
+  ...
+&lt;/div&gt;
+</pre></div></div>
+      <p>.container-fluid 类用于 100% 宽度，占据全部视口（viewport）的容器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"container-fluid"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="container-fluid"&gt;
+  ...
+&lt;/div&gt;
+</pre></div></div>
+      <p class="number">步骤五：按钮</p>
+      <p>1)按钮预定义样式</p>
+      <p>使用下面列出的类可以快速创建一个带有预定义样式的按钮：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default"</span><span class="sh_symbol">&gt;</span>（默认样式）Default<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-primary"</span><span class="sh_symbol">&gt;</span>（首选项）Primary<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-success"</span><span class="sh_symbol">&gt;</span>（成功）Success<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-info"</span><span class="sh_symbol">&gt;</span>（一般信息）Info<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-warning"</span><span class="sh_symbol">&gt;</span>（警告）Warning<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-danger"</span><span class="sh_symbol">&gt;</span>（危险）Danger<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>链接按钮鼠标悬停才有下划线<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-link"</span><span class="sh_symbol">&gt;</span>（链接）Link<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;button type="button" class="btn btn-default"&gt;（默认样式）Default&lt;/button&gt;
+&lt;button type="button" class="btn btn-primary"&gt;（首选项）Primary&lt;/button&gt;
+&lt;button type="button" class="btn btn-success"&gt;（成功）Success&lt;/button&gt;
+&lt;button type="button" class="btn btn-info"&gt;（一般信息）Info&lt;/button&gt;
+&lt;button type="button" class="btn btn-warning"&gt;（警告）Warning&lt;/button&gt;
+&lt;button type="button" class="btn btn-danger"&gt;（危险）Danger&lt;/button&gt;
+&lt;!--链接按钮鼠标悬停才有下划线--&gt;
+&lt;button type="button" class="btn btn-link"&gt;（链接）Link&lt;/button&gt;
+</pre></div></div>
+      <p>实例演示如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>2)按钮尺寸</p>
+      <p>使用 .btn-lg、.btn-sm 或 .btn-xs 可以获得不同尺寸的按钮</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-primary btn-lg"</span><span class="sh_symbol">&gt;</span>（大按钮）Large button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default btn-lg"</span><span class="sh_symbol">&gt;</span>（大按钮）Large button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-primary"</span><span class="sh_symbol">&gt;</span>（默认尺寸）Default button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default"</span><span class="sh_symbol">&gt;</span>（默认尺寸）Default button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-primary btn-sm"</span><span class="sh_symbol">&gt;</span>（小按钮）Small button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default btn-sm"</span><span class="sh_symbol">&gt;</span>（小按钮）Small button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-primary btn-xs"</span><span class="sh_symbol">&gt;</span>（超小尺寸）Extra small button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default btn-xs"</span><span class="sh_symbol">&gt;</span>（超小尺寸）Extra small button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>p<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;p&gt;
+  &lt;button type="button" class="btn btn-primary btn-lg"&gt;（大按钮）Large button&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default btn-lg"&gt;（大按钮）Large button&lt;/button&gt;
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;button type="button" class="btn btn-primary"&gt;（默认尺寸）Default button&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default"&gt;（默认尺寸）Default button&lt;/button&gt;
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;button type="button" class="btn btn-primary btn-sm"&gt;（小按钮）Small button&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default btn-sm"&gt;（小按钮）Small button&lt;/button&gt;
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;button type="button" class="btn btn-primary btn-xs"&gt;（超小尺寸）Extra small button&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default btn-xs"&gt;（超小尺寸）Extra small button&lt;/button&gt;
+&lt;/p&gt;
+</pre></div></div>
+      <p>实例演示如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>通过给按钮添加 .btn-block 类可以将其拉伸至父元素100%的宽度，而且按钮也变为了块级（block）元素。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-primary btn-lg btn-block"</span><span class="sh_symbol">&gt;</span>（块级元素）Block level button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default btn-lg btn-block"</span><span class="sh_symbol">&gt;</span>（块级元素）Block level button<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;button type="button" class="btn btn-primary btn-lg btn-block"&gt;（块级元素）Block level button&lt;/button&gt;
+&lt;button type="button" class="btn btn-default btn-lg btn-block"&gt;（块级元素）Block level button&lt;/button&gt;
+</pre></div></div>
+      <p>实例演示如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p class="number">步骤六：文本</p>
+      <p>1)对齐</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;!--</span>设定文本左对齐<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-left"</span><span class="sh_symbol">&gt;</span>Left aligned text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>设定文本右对齐<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-center"</span><span class="sh_symbol">&gt;</span>Center aligned text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>设定文本居中对齐<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-right"</span><span class="sh_symbol">&gt;</span>Right aligned text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>设定文本对齐，段落超出屏幕部分文字自动换行<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-justify"</span><span class="sh_symbol">&gt;</span>Justified text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>段落超出屏幕部分不换行<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-nowrap"</span><span class="sh_symbol">&gt;</span>No wrap text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;!--设定文本左对齐--&gt;
+&lt;p class="text-left"&gt;Left aligned text.&lt;/p&gt;
+&lt;!--设定文本右对齐--&gt;
+&lt;p class="text-center"&gt;Center aligned text.&lt;/p&gt;
+&lt;!--设定文本居中对齐--&gt;
+&lt;p class="text-right"&gt;Right aligned text.&lt;/p&gt;
+&lt;!--设定文本对齐，段落超出屏幕部分文字自动换行--&gt;
+&lt;p class="text-justify"&gt;Justified text.&lt;/p&gt;
+&lt;!--段落超出屏幕部分不换行--&gt;
+&lt;p class="text-nowrap"&gt;No wrap text.&lt;/p&gt;
+</pre></div></div>
+      <p>2)大小写</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;!--</span>小写（仅英文）<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-lowercase"</span><span class="sh_symbol">&gt;</span>Lowercased text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>文字大写（仅英文）<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-uppercase"</span><span class="sh_symbol">&gt;</span>Uppercased text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;!--</span>首字母大写<span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-capitalize"</span><span class="sh_symbol">&gt;</span>Capitalized text<span class="sh_symbol">.&lt;/</span>p<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;!--小写（仅英文）--&gt;
+&lt;p class="text-lowercase"&gt;Lowercased text.&lt;/p&gt;
+&lt;!--文字大写（仅英文）--&gt;
+&lt;p class="text-uppercase"&gt;Uppercased text.&lt;/p&gt;
+&lt;!--首字母大写--&gt;
+&lt;p class="text-capitalize"&gt;Capitalized text.&lt;/p&gt;
+</pre></div></div>
+      <p>实例演示如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p>3)情境文本颜色</p>
+      <p>通过颜色来展示意图，Bootstrap 提供了一组工具类。这些类可以应用于链接，并且在鼠标经过时颜色可以还可以加深，就像默认的链接一样</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-muted"</span><span class="sh_symbol">&gt;...&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-primary"</span><span class="sh_symbol">&gt;...&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-success"</span><span class="sh_symbol">&gt;...&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-info"</span><span class="sh_symbol">&gt;...&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-warning"</span><span class="sh_symbol">&gt;...&lt;/</span>p<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>p <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"text-danger"</span><span class="sh_symbol">&gt;...&lt;/</span>p<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;p class="text-muted"&gt;...&lt;/p&gt;
+&lt;p class="text-primary"&gt;...&lt;/p&gt;
+&lt;p class="text-success"&gt;...&lt;/p&gt;
+&lt;p class="text-info"&gt;...&lt;/p&gt;
+&lt;p class="text-warning"&gt;...&lt;/p&gt;
+&lt;p class="text-danger"&gt;...&lt;/p&gt;
+</pre></div></div>
+      <p>实例演示如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p class="number">步骤七：列表</p>
+      <p>1)无样式列表</p>
+      <p>移除了默认的 list-style 样式和左侧外边距的一组元素</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"list-unstyled"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;...&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;ul class="list-unstyled"&gt;
+  &lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+</pre></div></div>
+      <p>实例演示如图-7所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <p>2)内联列表</p>
+      <p>通过设置 display: inline-block，将所有元素放置于同一行。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"list-inline"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;...&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;ul class="list-inline"&gt;
+  &lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+</pre></div></div>
+      <p>实例演示如图-8所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p>3)描述</p>
+      <p>带有描述的短语列表</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>dl<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>dt<span class="sh_symbol">&gt;...&lt;/</span>dt<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>dd<span class="sh_symbol">&gt;...&lt;/</span>dd<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>dl<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;dl&gt;
+  &lt;dt&gt;...&lt;/dt&gt;
+  &lt;dd&gt;...&lt;/dd&gt;
+&lt;/dl&gt;
+</pre></div></div>
+      <p>实例演示如图-9所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image009.png">
+        <p>图-9</p>
+      </div>
+      <p>水平排列的描述</p>
+      <p>.dl-horizontal 可以让 &lt;dl&gt; 内的短语及其描述排在一行。开始是像 &lt;dl&gt; 的默认样式堆叠在一起，随着导航条逐渐展开而排列在一行。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>dl <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dl-horizontal"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>dt<span class="sh_symbol">&gt;...&lt;/</span>dt<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>dd<span class="sh_symbol">&gt;...&lt;/</span>dd<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>dl<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;dl class="dl-horizontal"&gt;
+  &lt;dt&gt;...&lt;/dt&gt;
+  &lt;dd&gt;...&lt;/dd&gt;
+&lt;/dl&gt;
+</pre></div></div>
+      <p>实例演示如图-10所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image010.png">
+        <p>图-10</p>
+      </div>
+      <p class="number">步骤八：表单</p>
+      <p>1)基本表单</p>
+      <p>实现基本的表单样式</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>form action<span class="sh_symbol">=</span>“” role<span class="sh_symbol">=</span>“form”<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-group"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>label<span class="sh_symbol">&gt;</span>电子邮件：<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"email"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-control"</span> placeholder<span class="sh_symbol">=</span><span class="sh_string">"email地址"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-group"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>label<span class="sh_symbol">&gt;</span>密码<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"password"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-control"</span> placeholder<span class="sh_symbol">=</span><span class="sh_string">"输入密码"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>input <span class="sh_keyword">class</span><span class="sh_symbol">=</span>“btn btn<span class="sh_symbol">-</span>primary” type<span class="sh_symbol">=</span>“submit”value<span class="sh_symbol">=</span>“提交”<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>form<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;form action=“” role=“form”&gt;
+&lt;div class="form-group"&gt;
+&lt;label&gt;电子邮件：&lt;/label&gt;
+&lt;input type="email" class="form-control" placeholder="email地址"&gt;
+&lt;/div&gt;
+&lt;div class="form-group"&gt;
+&lt;label&gt;密码&lt;/label&gt;
+&lt;input type="password" class="form-control" placeholder="输入密码"&gt;
+&lt;/div&gt;
+&lt;input class=“btn btn-primary” type=“submit”value=“提交”&gt;
+&lt;/form&gt;
+</pre></div></div>
+      <p>实例演示如图-11所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image011.png">
+        <p>图-11</p>
+      </div>
+      <p>2)内联表单</p>
+      <p>让表单左对齐浮动，并表现为inline-block 内联块结构，为上面代码form元素增加类</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>form <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-inline"</span><span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;form class="form-inline"&gt;
+</pre></div></div>
+      <p>实例演示如图-12所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image012.png">
+        <p>图-12</p>
+      </div>
+      <p>3)表单合组</p>
+      <p>前后增加片段</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>form action<span class="sh_symbol">=</span>“” role<span class="sh_symbol">=</span>“form”<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"input-group"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"input-group-addon"</span><span class="sh_symbol">&gt;</span>￥<span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"text"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-control"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"input-group-addon"</span><span class="sh_symbol">&gt;.</span><span class="sh_number">00</span><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>form<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;form action=“” role=“form”&gt;
+		&lt;div class="input-group"&gt;
+			&lt;div class="input-group-addon"&gt;￥&lt;/div&gt;
+			&lt;input type="text" class="form-control"&gt;
+			&lt;div class="input-group-addon"&gt;.00&lt;/div&gt;
+		&lt;/div&gt;
+&lt;/form&gt;
+</pre></div></div>
+      <p>实例演示如图-13所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image013.png">
+        <p>图-13</p>
+      </div>
+      <p>4)水平排列</p>
+      <p>让表单内的元素保持水平排列</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>form <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-horizontal"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-group"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>label <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"col-sm-2 control-label"</span><span class="sh_symbol">&gt;</span>电子邮件<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"col-sm-10"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"email"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-control"</span> placeholder<span class="sh_symbol">=</span><span class="sh_string">"请输入您的电子邮件"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>form<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;form class="form-horizontal"&gt;
+		&lt;div class="form-group"&gt;
+			&lt;label class="col-sm-2 control-label"&gt;电子邮件&lt;/label&gt;
+			&lt;div class="col-sm-10"&gt;
+				&lt;input type="email" class="form-control" placeholder="请输入您的电子邮件"&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+&lt;/form&gt;
+</pre></div></div>
+      <p>注：这里用到了col-sm 栅格系统，后面章节会重点讲解，而control-label 表示和</p>
+      <p>父元素样式同步。</p>
+      <p>5)复选框和单选框</p>
+      <p>设置复选框，在一行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>label<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span><span class="sh_symbol">&gt;</span>体育</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>label<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span><span class="sh_symbol">&gt;</span>音乐</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="checkbox"&gt;
+		&lt;label&gt;
+			&lt;input type="checkbox"&gt;体育
+		&lt;/label&gt;
+&lt;/div&gt;
+&lt;div class="checkbox"&gt;
+		&lt;label&gt;
+			&lt;input type="checkbox"&gt;音乐
+		&lt;/label&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>设置禁用的复选框</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"checkbox disabled"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>label<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span> disabled<span class="sh_symbol">&gt;</span>音乐</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="checkbox disabled"&gt;
+		&lt;label&gt;
+			&lt;input type="checkbox" disabled&gt;音乐
+		&lt;/label&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>设置内联一行显示的复选框</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>label <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"checkbox-inline"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span><span class="sh_symbol">&gt;</span>体育</li><li><span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>label <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"checkbox-inline disabled"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"checkbox"</span> disabled<span class="sh_symbol">&gt;</span>音乐</li><li><span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;label class="checkbox-inline"&gt;
+		&lt;input type="checkbox"&gt;体育
+&lt;/label&gt;
+&lt;label class="checkbox-inline disabled"&gt;
+		&lt;input type="checkbox" disabled&gt;音乐
+&lt;/label&gt;
+</pre></div></div>
+      <p>设置单选框</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"radio disabled"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>label<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"radio"</span> name<span class="sh_symbol">=</span><span class="sh_string">"sex"</span> disabled<span class="sh_symbol">&gt;</span>男</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;/</span>label<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="radio disabled"&gt;
+		&lt;label&gt;
+			&lt;input type="radio" name="sex" disabled&gt;男
+		&lt;/label&gt;
+</pre></div></div>
+      <p>6)下拉列表</p>
+      <p>设置下拉列表</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>select <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"form-control"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>option<span class="sh_symbol">&gt;</span><span class="sh_number">1</span><span class="sh_symbol">&lt;/</span>option<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>option<span class="sh_symbol">&gt;</span><span class="sh_number">2</span><span class="sh_symbol">&lt;/</span>option<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>option<span class="sh_symbol">&gt;</span><span class="sh_number">3</span><span class="sh_symbol">&lt;/</span>option<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>option<span class="sh_symbol">&gt;</span><span class="sh_number">4</span><span class="sh_symbol">&lt;/</span>option<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>option<span class="sh_symbol">&gt;</span><span class="sh_number">5</span><span class="sh_symbol">&lt;/</span>option<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>select<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;select class="form-control"&gt;
+		&lt;option&gt;1&lt;/option&gt;
+		&lt;option&gt;2&lt;/option&gt;
+		&lt;option&gt;3&lt;/option&gt;
+		&lt;option&gt;4&lt;/option&gt;
+		&lt;option&gt;5&lt;/option&gt;
+&lt;/select&gt;
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：使用常用组件</h2>
+      <h3>3.1 问题</h3>
+      <p>【参见COOKBOOK】</p>
+      <ol class="list">
+        <li>使用常用组件为页面添加元素
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：字体图标</p>
+      <p>1)Bootstrap提供了一套专用于Web开发/移动开发常用的</p>
+      <p>一套图标字体——Glyphicons Halflings</p>
+      <p>基本样式类 glyphicon</p>
+      <p>其他修饰类</p>
+      <p>2)注意事项</p>
+      <p>引入 fonts 文件</p>
+      <p>不要和其他组件混合使用</p>
+      <p>只对内容为空的元素起作用</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"Left Align"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>span <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"glyphicon glyphicon-align-left"</span> aria<span class="sh_symbol">-</span>hidden<span class="sh_symbol">=</span><span class="sh_string">"true"</span><span class="sh_symbol">&gt;&lt;/</span>span<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default btn-lg"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>span <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"glyphicon glyphicon-star"</span> aria<span class="sh_symbol">-</span>hidden<span class="sh_symbol">=</span><span class="sh_string">"true"</span><span class="sh_symbol">&gt;&lt;/</span>span<span class="sh_symbol">&gt;</span> Star</li><li><span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;button type="button" class="btn btn-default" aria-label="Left Align"&gt;
+  &lt;span class="glyphicon glyphicon-align-left" aria-hidden="true"&gt;&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;button type="button" class="btn btn-default btn-lg"&gt;
+  &lt;span class="glyphicon glyphicon-star" aria-hidden="true"&gt;&lt;/span&gt; Star
+&lt;/button&gt;
+</pre></div></div>
+      <p>实例演示如图-14所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image014.png">
+        <p>图-14</p>
+      </div>
+      <p class="number">步骤二：下拉菜单</p>
+      <p>1)基本格式</p>
+      <p>将下拉菜单触发器和下拉菜单都包裹在 .dropdown 里，或者另一个声明了 position: relative; 的元素。然后加入组成菜单的 HTML 代码</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dropdown"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default dropdown-toggle"</span> type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> id<span class="sh_symbol">=</span><span class="sh_string">"dropdownMenu1"</span> data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"dropdown"</span> aria<span class="sh_symbol">-</span>haspopup<span class="sh_symbol">=</span><span class="sh_string">"true"</span> aria<span class="sh_symbol">-</span>expanded<span class="sh_symbol">=</span><span class="sh_string">"true"</span><span class="sh_symbol">&gt;</span></li><li>    Dropdown</li><li>    <span class="sh_symbol">&lt;</span>span <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"caret"</span><span class="sh_symbol">&gt;&lt;/</span>span<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dropdown-menu"</span> aria<span class="sh_symbol">-</span>labelledby<span class="sh_symbol">=</span><span class="sh_string">"dropdownMenu1"</span><span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Action<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Another action<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Something <span class="sh_keyword">else</span> here<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>li role<span class="sh_symbol">=</span><span class="sh_string">"separator"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"divider"</span><span class="sh_symbol">&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Separated link<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="dropdown"&gt;
+  &lt;button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"&gt;
+    Dropdown
+    &lt;span class="caret"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;ul class="dropdown-menu" aria-labelledby="dropdownMenu1"&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Action&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Another action&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Something else here&lt;/a&gt;&lt;/li&gt;
+    &lt;li role="separator" class="divider"&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Separated link&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-15所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image015.png">
+        <p>图-15</p>
+      </div>
+      <p>2)标题</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dropdown-menu"</span> aria<span class="sh_symbol">-</span>labelledby<span class="sh_symbol">=</span><span class="sh_string">"dropdownMenu3"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li>  <span class="sh_symbol">&lt;</span>li <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dropdown-header"</span><span class="sh_symbol">&gt;</span>Dropdown header<span class="sh_symbol">&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;ul class="dropdown-menu" aria-labelledby="dropdownMenu3"&gt;
+  ...
+  &lt;li class="dropdown-header"&gt;Dropdown header&lt;/li&gt;
+  ...
+&lt;/ul&gt;
+</pre></div></div>
+      <p>实例演示如图-16所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image016.png">
+        <p>图-16</p>
+      </div>
+      <p>3)分割线</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dropdown-menu"</span> aria<span class="sh_symbol">-</span>labelledby<span class="sh_symbol">=</span><span class="sh_string">"dropdownMenuDivider"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li>  <span class="sh_symbol">&lt;</span>li role<span class="sh_symbol">=</span><span class="sh_string">"separator"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"divider"</span><span class="sh_symbol">&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider"&gt;
+  ...
+  &lt;li role="separator" class="divider"&gt;&lt;/li&gt;
+  ...
+&lt;/ul&gt;
+</pre></div></div>
+      <p>实例演示如图-17所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image017.png">
+        <p>图-17</p>
+      </div>
+      <p>4)禁用的菜单项</p>
+      <p>为下拉菜单中的 &lt;li&gt; 元素添加 .disabled 类，从而禁用相应的菜单项</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"dropdown-menu"</span> aria<span class="sh_symbol">-</span>labelledby<span class="sh_symbol">=</span><span class="sh_string">"dropdownMenu4"</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Regular link<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>li <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"disabled"</span><span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Disabled link<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span><span class="sh_symbol">&gt;</span>Another link<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;ul class="dropdown-menu" aria-labelledby="dropdownMenu4"&gt;
+  &lt;li&gt;&lt;a href="#"&gt;Regular link&lt;/a&gt;&lt;/li&gt;
+  &lt;li class="disabled"&gt;&lt;a href="#"&gt;Disabled link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="#"&gt;Another link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre></div></div>
+      <p>实例演示如图-18所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image018.png">
+        <p>图-18</p>
+      </div>
+      <p class="number">步骤三：按钮组</p>
+      <p>1)基本按钮组</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default"</span><span class="sh_symbol">&gt;</span>Left<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default"</span><span class="sh_symbol">&gt;</span>Middle<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>button type<span class="sh_symbol">=</span><span class="sh_string">"button"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn btn-default"</span><span class="sh_symbol">&gt;</span>Right<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="btn-group" role="group" aria-label="..."&gt;
+  &lt;button type="button" class="btn btn-default"&gt;Left&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default"&gt;Middle&lt;/button&gt;
+  &lt;button type="button" class="btn btn-default"&gt;Right&lt;/button&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-19所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image019.png">
+        <p>图-19</p>
+      </div>
+      <p>2)按钮工具栏</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-toolbar"</span> role<span class="sh_symbol">=</span><span class="sh_string">"toolbar"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="btn-toolbar" role="toolbar" aria-label="..."&gt;
+  &lt;div class="btn-group" role="group" aria-label="..."&gt;...&lt;/div&gt;
+  &lt;div class="btn-group" role="group" aria-label="..."&gt;...&lt;/div&gt;
+  &lt;div class="btn-group" role="group" aria-label="..."&gt;...&lt;/div&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-20所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image020.png">
+        <p>图-20</p>
+      </div>
+      <p>3)尺寸</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group btn-group-lg"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group btn-group-sm"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group btn-group-xs"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="btn-group btn-group-lg" role="group" aria-label="..."&gt;...&lt;/div&gt;
+&lt;div class="btn-group" role="group" aria-label="..."&gt;...&lt;/div&gt;
+&lt;div class="btn-group btn-group-sm" role="group" aria-label="..."&gt;...&lt;/div&gt;
+&lt;div class="btn-group btn-group-xs" role="group" aria-label="..."&gt;...&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-21所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image021.png">
+        <p>图-21</p>
+      </div>
+      <p>4)垂直排列</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"btn-group-vertical"</span> role<span class="sh_symbol">=</span><span class="sh_string">"group"</span> aria<span class="sh_symbol">-</span>label<span class="sh_symbol">=</span><span class="sh_string">"..."</span><span class="sh_symbol">&gt;</span></li><li>  <span class="sh_symbol">...</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="btn-group-vertical" role="group" aria-label="..."&gt;
+  ...
+&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-22所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image022.png">
+        <p>图-22</p>
+      </div>
+      <p class="number">步骤四：警告框</p>
+      <p>警告框组件通过提供一些灵活的预定义消息，为常见的用户动作提供反馈消息</p>
+      <p>将任意文本和一个可选的关闭按钮组合在一起就能组成一个警告框，.alert 类是必须要设置的，另外我们还提供了有特殊意义的4个类（例如，.alert-success），代表不同的警告信息。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"alert alert-success"</span> role<span class="sh_symbol">=</span><span class="sh_string">"alert"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"alert alert-info"</span> role<span class="sh_symbol">=</span><span class="sh_string">"alert"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"alert alert-warning"</span> role<span class="sh_symbol">=</span><span class="sh_string">"alert"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"alert alert-danger"</span> role<span class="sh_symbol">=</span><span class="sh_string">"alert"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="alert alert-success" role="alert"&gt;...&lt;/div&gt;
+&lt;div class="alert alert-info" role="alert"&gt;...&lt;/div&gt;
+&lt;div class="alert alert-warning" role="alert"&gt;...&lt;/div&gt;
+&lt;div class="alert alert-danger" role="alert"&gt;...&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-23所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image023.png">
+        <p>图-23</p>
+      </div>
+      <a name="case4">
+      </a>
+      <h2>4 例4：使用常用插件</h2>
+      <h3>4.1 问题</h3>
+      <p>【参见COOKBOOK】</p>
+      <ol class="list">
+        <li>使用常用插件为页面添加元素
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：标签页</p>
+      <p>1)标签页</p>
+      <p>通过data属性:添加data-toggle="tab"或data-toggle="pill"到锚文本链接中</p>
+      <p>添加nav 和nav-tabs 类到ul中，将会应用Bootstrap标签样式，添加nav和 nav-pills类到ul中，将会应用Bootstrap胶囊式样式</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>ul <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"nav nav-tabs"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>li <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"active"</span><span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#home"</span> data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tab"</span><span class="sh_symbol">&gt;</span>Home<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#Pro"</span> data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tab"</span><span class="sh_symbol">&gt;</span>Profile<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#Pro"</span> data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tab"</span><span class="sh_symbol">&gt;</span>Dropdown<span class="sh_symbol">&lt;</span><span class="sh_regexp">/a&gt;&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;ul class="nav nav-tabs"&gt;
+		&lt;li class="active"&gt;&lt;a href="#home" data-toggle="tab"&gt;Home&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#Pro" data-toggle="tab"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#Pro" data-toggle="tab"&gt;Dropdown&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre></div></div>
+      <p>实例演示如图-24所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image024.png">
+        <p>图-24</p>
+      </div>
+      <p>2)淡入淡出效果</p>
+      <p>如果需要为标签页设置淡入淡出效果，请添加 .fade 到每个 .tab-pane 后面。第一个标签页必须添加 .in 类，以便淡入显示初始内容</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"tab-content"</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"tab-pane fade in active"</span> id<span class="sh_symbol">=</span><span class="sh_string">"home"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"tab-pane fade"</span> id<span class="sh_symbol">=</span><span class="sh_string">"svn"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"tab-pane fade"</span> id<span class="sh_symbol">=</span><span class="sh_string">"ios"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"tab-pane fade"</span> id<span class="sh_symbol">=</span><span class="sh_string">"java"</span><span class="sh_symbol">&gt;...&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="tab-content"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="tab-pane fade in active" id="home"&gt;...&lt;/div&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="tab-pane fade" id="svn"&gt;...&lt;/div&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="tab-pane fade" id="ios"&gt;...&lt;/div&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="tab-pane fade" id="java"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>3)折叠框</p>
+      <p>data-toggle="collapse"添加到您想要展开或折叠的组件的链接上。</p>
+      <p>href或data-target属性添加到父组件，它的值是子组件的id。</p>
+      <p>data-parent属性把折叠面板（accordion）的id添加到要展开或折叠的组件链接上。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-group"</span> id<span class="sh_symbol">=</span><span class="sh_string">"accordion"</span><span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel panel-default"</span><span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-heading"</span><span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;</span>h4 <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-title"</span><span class="sh_symbol">&gt;</span></li><li>                <span class="sh_symbol">&lt;</span>a data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"collapse"</span> data<span class="sh_symbol">-</span>parent<span class="sh_symbol">=</span><span class="sh_string">"#accordion"</span> </li><li>                href<span class="sh_symbol">=</span><span class="sh_string">"#collapseOne"</span><span class="sh_symbol">&gt;</span></li><li>                点击我进行展开，再次点击我进行折叠。第 <span class="sh_number">1</span> 部分</li><li>                <span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;/</span>h4<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div id<span class="sh_symbol">=</span><span class="sh_string">"collapseOne"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-collapse collapse in"</span><span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-body"</span><span class="sh_symbol">&gt;</span></li><li>                Nihil anim keffiyeh helvetica<span class="sh_symbol">,</span> craft beer labore wes anderson </li><li>                cred nesciunt sapiente ea proident<span class="sh_symbol">.</span> Ad vegan excepteur butcher </li><li>                vice lomo<span class="sh_symbol">.</span></li><li>            <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel panel-default"</span><span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-heading"</span><span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;</span>h4 <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-title"</span><span class="sh_symbol">&gt;</span></li><li>                <span class="sh_symbol">&lt;</span>a data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"collapse"</span> data<span class="sh_symbol">-</span>parent<span class="sh_symbol">=</span><span class="sh_string">"#accordion"</span> </li><li>                href<span class="sh_symbol">=</span><span class="sh_string">"#collapseTwo"</span><span class="sh_symbol">&gt;</span></li><li>                点击我进行展开，再次点击我进行折叠。第 <span class="sh_number">2</span> 部分</li><li>            <span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;/</span>h4<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div id<span class="sh_symbol">=</span><span class="sh_string">"collapseTwo"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-collapse collapse"</span><span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-body"</span><span class="sh_symbol">&gt;</span></li><li>            Nihil anim keffiyeh helvetica<span class="sh_symbol">,</span> craft beer labore wes anderson </li><li>            cred nesciunt sapiente ea proident<span class="sh_symbol">.</span> Ad vegan excepteur butcher </li><li>            vice lomo<span class="sh_symbol">.</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel panel-default"</span><span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-heading"</span><span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;</span>h4 <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-title"</span><span class="sh_symbol">&gt;</span></li><li>                <span class="sh_symbol">&lt;</span>a data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"collapse"</span> data<span class="sh_symbol">-</span>parent<span class="sh_symbol">=</span><span class="sh_string">"#accordion"</span> </li><li>                href<span class="sh_symbol">=</span><span class="sh_string">"#collapseThree"</span><span class="sh_symbol">&gt;</span></li><li>                点击我进行展开，再次点击我进行折叠。第 <span class="sh_number">3</span> 部分</li><li>                <span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;/</span>h4<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>div id<span class="sh_symbol">=</span><span class="sh_string">"collapseThree"</span> <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-collapse collapse"</span><span class="sh_symbol">&gt;</span></li><li>            <span class="sh_symbol">&lt;</span>div <span class="sh_keyword">class</span><span class="sh_symbol">=</span><span class="sh_string">"panel-body"</span><span class="sh_symbol">&gt;</span></li><li>                Nihil anim keffiyeh helvetica<span class="sh_symbol">,</span> craft beer labore wes anderson </li><li>                cred nesciunt sapiente ea proident<span class="sh_symbol">.</span> Ad vegan excepteur butcher </li><li>                vice lomo<span class="sh_symbol">.</span></li><li>            <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>div<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;div class="panel-group" id="accordion"&gt;
+    &lt;div class="panel panel-default"&gt;
+        &lt;div class="panel-heading"&gt;
+            &lt;h4 class="panel-title"&gt;
+                &lt;a data-toggle="collapse" data-parent="#accordion" 
+                href="#collapseOne"&gt;
+                点击我进行展开，再次点击我进行折叠。第 1 部分
+                &lt;/a&gt;
+            &lt;/h4&gt;
+        &lt;/div&gt;
+        &lt;div id="collapseOne" class="panel-collapse collapse in"&gt;
+            &lt;div class="panel-body"&gt;
+                Nihil anim keffiyeh helvetica, craft beer labore wes anderson 
+                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher 
+                vice lomo.
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="panel panel-default"&gt;
+        &lt;div class="panel-heading"&gt;
+            &lt;h4 class="panel-title"&gt;
+                &lt;a data-toggle="collapse" data-parent="#accordion" 
+                href="#collapseTwo"&gt;
+                点击我进行展开，再次点击我进行折叠。第 2 部分
+            &lt;/a&gt;
+            &lt;/h4&gt;
+        &lt;/div&gt;
+        &lt;div id="collapseTwo" class="panel-collapse collapse"&gt;
+        &lt;div class="panel-body"&gt;
+            Nihil anim keffiyeh helvetica, craft beer labore wes anderson 
+            cred nesciunt sapiente ea proident. Ad vegan excepteur butcher 
+            vice lomo.
+        &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="panel panel-default"&gt;
+        &lt;div class="panel-heading"&gt;
+            &lt;h4 class="panel-title"&gt;
+                &lt;a data-toggle="collapse" data-parent="#accordion" 
+                href="#collapseThree"&gt;
+                点击我进行展开，再次点击我进行折叠。第 3 部分
+                &lt;/a&gt;
+            &lt;/h4&gt;
+        &lt;/div&gt;
+        &lt;div id="collapseThree" class="panel-collapse collapse"&gt;
+            &lt;div class="panel-body"&gt;
+                Nihil anim keffiyeh helvetica, craft beer labore wes anderson 
+                cred nesciunt sapiente ea proident. Ad vegan excepteur butcher 
+                vice lomo.
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre></div></div>
+      <p>实例演示如图-25所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image025.png">
+        <p>图-25</p>
+      </div>
+      <p>3)工具提示</p>
+      <p>提示工具（Tooltip）插件根据需求生成内容和标记，默认情况下是把提示工具（tooltip）放在它们的触发元素后面。</p>
+      <p>通过 data 属性：如需添加一个提示工具（tooltip），只需向一个标签添加 data-toggle="tooltip" 即可。标签的 title 即为提示工具（tooltip）的文本。默认情况下，插件把提示工具（tooltip）设置在顶部。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>button data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tooltip"</span>  title<span class="sh_symbol">=</span><span class="sh_string">"默认的 Tooltip"</span><span class="sh_symbol">&gt;</span> 默认的 Tooltip<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tooltip"</span> data<span class="sh_symbol">-</span>placement<span class="sh_symbol">=</span><span class="sh_string">"left"</span> title<span class="sh_symbol">=</span><span class="sh_string">"左侧的 Tooltip"</span><span class="sh_symbol">&gt;</span>左侧的 Tooltip<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tooltip"</span> data<span class="sh_symbol">-</span>placement<span class="sh_symbol">=</span><span class="sh_string">"top"</span> title<span class="sh_symbol">=</span><span class="sh_string">"顶部的 Tooltip"</span><span class="sh_symbol">&gt;</span>顶部的 Tooltip<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tooltip"</span> data<span class="sh_symbol">-</span>placement<span class="sh_symbol">=</span><span class="sh_string">"bottom"</span> title<span class="sh_symbol">=</span><span class="sh_string">"底部的 Tooltip"</span><span class="sh_symbol">&gt;</span>底部的 Tooltip<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>button data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"tooltip"</span> data<span class="sh_symbol">-</span>placement<span class="sh_symbol">=</span><span class="sh_string">"right"</span> title<span class="sh_symbol">=</span><span class="sh_string">"右侧的 Tooltip"</span><span class="sh_symbol">&gt;</span>右侧的 Tooltip<span class="sh_symbol">&lt;/</span>button<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;button data-toggle="tooltip"  title="默认的 Tooltip"&gt; 默认的 Tooltip&lt;/button&gt;
+&lt;button data-toggle="tooltip" data-placement="left" title="左侧的 Tooltip"&gt;左侧的 Tooltip&lt;/button&gt;
+&lt;button data-toggle="tooltip" data-placement="top" title="顶部的 Tooltip"&gt;顶部的 Tooltip&lt;/button&gt;
+&lt;button data-toggle="tooltip" data-placement="bottom" title="底部的 Tooltip"&gt;底部的 Tooltip&lt;/button&gt;
+&lt;button data-toggle="tooltip" data-placement="right" title="右侧的 Tooltip"&gt;右侧的 Tooltip&lt;/button&gt;
+</pre></div></div>
+      <p>提示工具（Tooltip）插件不像之前所讨论的下拉菜单及其他插件那样，它不是纯 CSS 插件。如需使用该插件，您必须使用 jquery 激活它（读取 javascript）。使用下面的脚本来启用页面中的所有的提示工具（tooltip）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>script<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$<span class="sh_symbol">(</span><span class="sh_keyword">function</span> <span class="sh_symbol">()</span> <span class="sh_cbracket">{</span> $<span class="sh_symbol">(</span><span class="sh_string">"[data-toggle='tooltip']"</span><span class="sh_symbol">).</span><span class="sh_function">tooltip</span><span class="sh_symbol">();</span> <span class="sh_cbracket">}</span><span class="sh_symbol">);</span></li><li><span class="sh_symbol">&lt;/</span>script<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;script&gt;
+		$(function () { $("[data-toggle='tooltip']").tooltip(); });
+&lt;/script&gt;
+</pre></div></div>
+      <p>实例演示如图-26、图-27所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image026.png">
+        <p>图-26</p>
+      </div>
+      <div class="image">
+        <img src="./CASE3_files/image027.png">
+        <p>图-27</p>
+      </div>
+      <p>4)弹出框</p>
+      <p>弹出框（Popover）插件根据需求生成内容和标记，默认情况下是把弹出框（popover）放在它们的触发元素后面。</p>
+      <p>通过 data 属性：如需添加一个弹出框（popover），只需向一个锚/按钮标签添加 data-toggle="popover" 即可。锚的 title 即为弹出框（popover）的文本。默认情况下，插件把弹出框（popover）设置在顶部。。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"#"</span> data<span class="sh_symbol">-</span>toggle<span class="sh_symbol">=</span><span class="sh_string">"popover"</span> title<span class="sh_symbol">=</span><span class="sh_string">"请悬停在我的上面"</span><span class="sh_symbol">&gt;</span></li><li>    请悬停在我的上面</li><li><span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;a href="#" data-toggle="popover" title="请悬停在我的上面"&gt;
+    请悬停在我的上面
+&lt;/a&gt;
+</pre></div></div>
+      <p>弹出框（Popover）插件不像之前所讨论的下拉菜单及其他插件那样，它不是纯 CSS 插件。如需使用该插件，您必须使用 jquery 激活它（读取 javascript）。使用下面的脚本来启用页面中的所有的弹出框（popover）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>script<span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$<span class="sh_symbol">(</span><span class="sh_keyword">function</span> <span class="sh_symbol">()</span> <span class="sh_cbracket">{</span> $<span class="sh_symbol">(</span><span class="sh_string">"[data-toggle='popover']"</span><span class="sh_symbol">).</span><span class="sh_function">popover</span><span class="sh_symbol">();</span> <span class="sh_cbracket">}</span><span class="sh_symbol">);</span> </li><li><span class="sh_symbol">&lt;/</span>script<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;script&gt;
+		$(function () { $("[data-toggle='popover']").popover(); }); 
+&lt;/script&gt;
+</pre></div></div>
+      <p>实例演示如图-28所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image028.png">
+        <p>图-28</p>
+        <p>
+        </p>
+      </div>
+    </div>
+  
+</body></html>

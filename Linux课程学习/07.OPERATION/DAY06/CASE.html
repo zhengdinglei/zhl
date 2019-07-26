@@ -1,0 +1,428 @@
+
+<!-- saved from url=(0080)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD OPERATION DAY06</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#case1">案例1：Subversion基本操作</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#case2">案例2：使用Subversion协同工作</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#case3">案例3：制作nginx的RPM包</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：Subversion基本操作</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求先快速搭建好一台Subversion服务器，并测试该版本控制软件：</p>
+      <ul class="list">
+        <li>创建版本库
+</li>
+        <li>导入初始化数据
+</li>
+        <li>检出数据至用户本地副本
+</li>
+        <li>对本地副本进行增删改查等操作
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>使用YUM安装subversion软件，使用svn客户端工具连接svnserver服务器并测试版本控制软件。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装Subversion服务器</p>
+      <p>1）YUM安装subversion软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install subversion</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>q subversion</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install subversion
+[root@web1 ~]# rpm -q subversion
+</pre></div></div>
+      <p>2)创建版本库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span> </li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svnadmin <span class="sh_normal">create </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span>project</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span><span class="sh_normal">project</span><span class="sh_symbol">/</span></li><li><span class="sh_normal">conf</span><span class="sh_symbol">/</span>  <span class="sh_normal">db</span><span class="sh_symbol">/</span>  format  <span class="sh_normal">hooks</span><span class="sh_symbol">/</span>  <span class="sh_normal">locks</span><span class="sh_symbol">/</span>  README<span class="sh_symbol">.</span>txt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# mkdir /var/svn/ 
+[root@web1 ~]# svnadmin create /var/svn/project
+[root@web1 ~]# ls /var/svn/project/
+conf/  db/  format  hooks/  locks/  README.txt
+</pre></div></div>
+      <p>3）本地导入初始化数据</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span> </li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svn import <span class="sh_symbol">.</span> file<span class="sh_symbol">:</span><span class="sh_comment">///var/svn/project/ -m "Init Data"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# cd /usr/lib/systemd/system/ 
+[root@web1 ~]# svn import . file:///var/svn/project/ -m "Init Data"
+</pre></div></div>
+      <p>4）修改配置文件，创建账户与密码</p>
+      <p>所有配置文件，要求顶头写，开头不要有空格。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span><span class="sh_normal">project</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>svnserve<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">[</span>general<span class="sh_symbol">]</span></li><li>### These options control access to the repository <span class="sh_keyword">for</span> unauthenticated</li><li>### and authenticated users<span class="sh_symbol">.</span>  Valid values are <span class="sh_string">"write"</span><span class="sh_symbol">,</span> <span class="sh_string">"read"</span><span class="sh_symbol">,</span></li><li>### and <span class="sh_string">"none"</span><span class="sh_symbol">.</span>  The sample settings below are the defaults<span class="sh_symbol">.</span></li><li>anon<span class="sh_symbol">-</span>access <span class="sh_symbol">=</span> none</li><li><span class="sh_comment">//19行，匿名无任何权限</span></li><li>auth<span class="sh_symbol">-</span>access <span class="sh_symbol">=</span> write</li><li><span class="sh_comment">//20行，有效账户可写</span></li><li>password<span class="sh_symbol">-</span>db <span class="sh_symbol">=</span> passwd</li><li><span class="sh_comment">//27行，密码文件</span></li><li>authz<span class="sh_symbol">-</span>db <span class="sh_symbol">=</span> authz</li><li><span class="sh_comment">//34行，ACL访问控制列表文件</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span><span class="sh_normal">project</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>passwd </li><li>… …</li><li><span class="sh_symbol">[</span>users<span class="sh_symbol">]</span></li><li>harry <span class="sh_symbol">=</span> <span class="sh_number">123456</span></li><li><span class="sh_comment">//用户名和密码</span></li><li>tom <span class="sh_symbol">=</span> <span class="sh_number">123456</span></li><li><span class="sh_comment">//用户名和密码</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span><span class="sh_normal">project</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>authz </li><li><span class="sh_symbol">[</span><span class="sh_regexp">/]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</span><span class="sh_symbol">/</span>定义ACL访问控制</li><li>harry <span class="sh_symbol">=</span> rw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//用户对项目根路径可读可写</span></li><li>tom <span class="sh_symbol">=</span> rw</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim /var/svn/project/conf/svnserve.conf
+[general]
+### These options control access to the repository for unauthenticated
+### and authenticated users.  Valid values are "write", "read",
+### and "none".  The sample settings below are the defaults.
+anon-access = none
+//19行，匿名无任何权限
+auth-access = write
+//20行，有效账户可写
+password-db = passwd
+//27行，密码文件
+authz-db = authz
+//34行，ACL访问控制列表文件
+
+[root@web1 ~]# vim /var/svn/project/conf/passwd 
+… …
+[users]
+harry = 123456
+//用户名和密码
+tom = 123456
+//用户名和密码
+
+[root@web1 ~]# cat /var/svn/project/conf/authz 
+[/]								//定义ACL访问控制
+harry = rw						//用户对项目根路径可读可写
+tom = rw
+</pre></div></div>
+      <p>5）启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svnserve <span class="sh_symbol">-</span>d  <span class="sh_symbol">-</span><span class="sh_normal">r </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span>project</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># netstat <span class="sh_symbol">-</span>nutlp <span class="sh_symbol">|</span>grep svnserve</li><li>tcp        <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">3690</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;LISTEN      <span class="sh_number">4043</span><span class="sh_symbol">/</span>svnserve  </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# svnserve -d  -r /var/svn/project
+[root@web1 ~]# netstat -nutlp |grep svnserve
+tcp        0      0 0.0.0.0:3690	0.0.0.0:*	LISTEN      4043/svnserve  
+</pre></div></div>
+      <p>备注：启动服务也可以使用svnserve -d启动，但客户端访问时需要指定绝对路径（svn://服务器IP/var/svn/project）。</p>
+      <p class="number">步骤二：客户端测试(192.168.2.200)</p>
+      <p>1）将服务器上的代码下载到本地</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span>tmp</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># svn <span class="sh_symbol">--</span>username harry <span class="sh_symbol">--</span>password <span class="sh_number">123456</span> <span class="sh_symbol">\</span></li><li>co svn<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100/ code&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span class="sh_comment">//建立本地副本,从服务器192.168.2.100上co下载代码到本地code目录</span></li><li><span class="sh_comment">//用户名harry,密码123456</span></li><li><span style="display:none;">&nbsp;</span></li><li>Store password <span class="sh_function">unencrypted</span> <span class="sh_symbol">(</span><span class="sh_normal">yes</span><span class="sh_symbol">/</span>no<span class="sh_symbol">)?</span> yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提示是否保存密码</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>code</li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># ls</li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># vim user<span class="sh_symbol">.</span>slice &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//挑选任意文件修改其内容</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"modify user"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//将本地修改的数据同步到服务器</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//将服务器上新的数据同步到本地</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn info&nbsp;&nbsp;&nbsp;&nbsp; svn<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100&nbsp;&nbsp;&nbsp;&nbsp;//查看版本仓库基本信息</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn log&nbsp;&nbsp;&nbsp;&nbsp; svn<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100&nbsp;&nbsp;&nbsp;&nbsp;//查看版本仓库的日志</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># echo <span class="sh_string">"test"</span> <span class="sh_symbol">&gt;</span> test<span class="sh_symbol">.</span>sh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//本地新建一个文件</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"new file"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提交失败，该文件不被svn管理</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn add test<span class="sh_symbol">.</span>sh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//将文件或目录加入版本控制</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"new file"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//再次提交，成功</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn mkdir subdir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建子目录</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn rm timers<span class="sh_symbol">.</span>target&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//使用svn删除文件</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"xxx"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提交一次代码</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># vim umount<span class="sh_symbol">.</span>target&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//任意修改本地的一个文件</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn diff &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看所有文件的差异</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn diff umount<span class="sh_symbol">.</span>target&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//仅查看某一个文件的差异</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn cat svn<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100/reboot.target&nbsp;&nbsp;&nbsp;&nbsp;//查看服务器文件的内容</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># sed <span class="sh_symbol">-</span>i <span class="sh_string">'d'</span> tmp<span class="sh_symbol">.</span>mount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//删除文件所有内容，但未提交</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn revert tmp<span class="sh_symbol">.</span>mount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//还原tmp.mount文件</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># rm <span class="sh_symbol">-</span>rf  <span class="sh_symbol">*.</span>target&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//任意删除若干文件</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//还原</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># sed <span class="sh_symbol">-</span>i <span class="sh_string">'1a #test###'</span> tuned<span class="sh_symbol">.</span>service</li><li><span class="sh_comment">//修改本地副本中的代码文件</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn ci  <span class="sh_symbol">-</span>m  <span class="sh_string">"xxx"</span></li><li><span class="sh_comment">//提交代码</span></li><li><span class="sh_symbol">[</span>root@web2 code<span class="sh_symbol">]</span># svn merge <span class="sh_symbol">-</span>r7<span class="sh_symbol">:</span><span class="sh_number">2</span>&nbsp;&nbsp;&nbsp;&nbsp;tuned<span class="sh_symbol">.</span>service&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//将文件从版本7还原到版本2</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# cd /tmp
+[root@web2 ~]# svn --username harry --password 123456 \
+co svn://192.168.2.100/ code		
+//建立本地副本,从服务器192.168.2.100上co下载代码到本地code目录
+//用户名harry,密码123456
+
+Store password unencrypted (yes/no)? yes			//提示是否保存密码
+
+[root@web2 ~]# cd /tmp/code
+[root@web2 code]# ls
+[root@web2 code]# vim user.slice 				//挑选任意文件修改其内容
+[root@web2 code]# svn ci -m "modify user"		//将本地修改的数据同步到服务器
+
+[root@web2 code]# svn update					//将服务器上新的数据同步到本地
+[root@web2 code]# svn info	 svn://192.168.2.100	//查看版本仓库基本信息
+[root@web2 code]# svn log	 svn://192.168.2.100	//查看版本仓库的日志
+
+[root@web2 code]# echo "test" &gt; test.sh		//本地新建一个文件
+[root@web2 code]# svn ci -m "new file"			//提交失败，该文件不被svn管理
+[root@web2 code]# svn add test.sh				//将文件或目录加入版本控制
+[root@web2 code]# svn ci -m "new file"			//再次提交，成功
+
+[root@web2 code]# svn mkdir subdir				//创建子目录
+[root@web2 code]# svn rm timers.target			//使用svn删除文件
+[root@web2 code]# svn ci -m "xxx"				//提交一次代码
+
+[root@web2 code]# vim umount.target			//任意修改本地的一个文件
+[root@web2 code]# svn diff 					//查看所有文件的差异
+[root@web2 code]# svn diff umount.target		//仅查看某一个文件的差异
+[root@web2 code]# svn cat svn://192.168.2.100/reboot.target	//查看服务器文件的内容
+
+[root@web2 code]# sed -i 'd' tmp.mount			
+//删除文件所有内容，但未提交
+[root@web2 code]# svn revert tmp.mount			
+//还原tmp.mount文件
+
+[root@web2 code]# rm -rf  *.target				
+//任意删除若干文件
+[root@web2 code]# svn update					
+//还原
+
+[root@web2 code]# sed -i '1a #test###' tuned.service
+//修改本地副本中的代码文件
+[root@web2 code]# svn ci  -m  "xxx"
+//提交代码
+[root@web2 code]# svn merge -r7:2	tuned.service	
+//将文件从版本7还原到版本2
+</pre></div></div>
+      <p>使用svn命令测试svnserver服务时可以使用的命令列表如表-1所示。</p>
+      <div class="table">
+        <p>表－1 svn命令列表</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：使用Subversion协同工作</h2>
+      <h3>2.1 问题</h3>
+      <p>沿用练习一，通过svn工具，对subversion版本库进行多人协同工作测试，要求如下：</p>
+      <ul class="list">
+        <li>该版本库支持多个账户同时协作编辑文件
+</li>
+        <li>测试演示多人协作编辑的具体操作
+</li>
+        <li>手动解决版本冲突问题
+</li>
+        <li>备份版本库数据
+</li>
+        <li>注册使用Github
+</li>
+      </ul>
+      <h3>2.2 方案</h3>
+      <p>使用svn客户端工具连接subversion服务器并测试多人协同工作以及如何手动解决冲突问题，账户名称分别为harry和tom，最后使用svnadmin dump指令对版本库进行备份工作。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：多人协同工作</p>
+      <p>1）远程连接两个终端，每个人下载代码本地副本，注意web1(192.168.2.100)和web2（192.168.2.200）代表了两个不同的主机，看清楚操作是在哪一台计算机上执行！</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span>tmp</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svn <span class="sh_symbol">--</span>username tom <span class="sh_symbol">--</span>password <span class="sh_number">123456</span> <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> co svn<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100/ code</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span>tmp</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># svn <span class="sh_symbol">--</span>username harry <span class="sh_symbol">--</span>password <span class="sh_number">123456</span> <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> co svn<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100/ code</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cd code</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># cd code</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# cd /tmp
+[root@web1 ~]# svn --username tom --password 123456 \
+&gt; co svn://192.168.2.100/ code
+[root@web2 ~]# cd /tmp
+[root@web2 ~]# svn --username harry --password 123456 \
+&gt; co svn://192.168.2.100/ code
+[root@web1 ~]# cd code
+[root@web2 ~]# cd code
+</pre></div></div>
+      <p>2) harry和tom修改不同的文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># sed <span class="sh_symbol">-</span>i <span class="sh_string">"3a ###tom modify#####"</span>  tmp<span class="sh_symbol">.</span>mount</li><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m  <span class="sh_string">"has modified"</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># sed <span class="sh_symbol">-</span>i <span class="sh_string">"3a ###harry modify#####"</span>  umount<span class="sh_symbol">.</span>target</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"has modified"</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn update</li><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># svn update</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 mycode]# sed -i "3a ###tom modify#####"  tmp.mount
+[root@web1 mycode]# svn ci -m  "has modified"
+[root@web2 mycode]# sed -i "3a ###harry modify#####"  umount.target
+[root@web2 mycode]# svn ci -m "has modified"
+[root@web2 mycode]# svn update
+[root@web1 mycode]# svn update
+</pre></div></div>
+      <p>3）harry和tom修改相同文件的不同行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@srv5 <span class="sh_symbol">~]</span># cd harry</li><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># sed <span class="sh_symbol">-</span>i <span class="sh_string">"3a ###tom modify#####"</span> user<span class="sh_symbol">.</span>slice</li><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m  <span class="sh_string">"modified"</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># sed <span class="sh_symbol">-</span>i <span class="sh_string">"6a ###harry  modify#####"</span>  user<span class="sh_symbol">.</span>slice</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"modified"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提交失败</span></li><li>Sending        svnserve</li><li>Transmitting file data <span class="sh_symbol">.</span>svn<span class="sh_symbol">:</span> Commit <span class="sh_function">failed</span> <span class="sh_symbol">(</span>details follow<span class="sh_symbol">):</span></li><li>svn<span class="sh_symbol">:</span> File <span class="sh_string">'/user.slice'</span> is out of date（过期）</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提示失败后，先更新再提交即可</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"modified"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提交成功</span></li><li>Sending        user<span class="sh_symbol">.</span>slice</li><li>Transmitting file data <span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@srv5 ~]# cd harry
+[root@web1 mycode]# sed -i "3a ###tom modify#####" user.slice
+[root@web1 mycode]# svn ci -m  "modified"
+[root@web2 mycode]# sed -i "6a ###harry  modify#####"  user.slice
+[root@web2 mycode]# svn ci -m "modified"		//提交失败
+Sending        svnserve
+Transmitting file data .svn: Commit failed (details follow):
+svn: File '/user.slice' is out of date（过期）
+[root@web2 mycode]# svn update					//提示失败后，先更新再提交即可
+[root@web2 mycode]# svn ci -m "modified"		//提交成功
+Sending        user.slice
+Transmitting file data .
+</pre></div></div>
+      <p>4) harry和tom修改相同文件的相同行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># sed  <span class="sh_symbol">-</span>i  <span class="sh_string">'1c [UNIT]'</span> tuned<span class="sh_symbol">.</span>service</li><li><span class="sh_symbol">[</span>root@web1 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"modified"</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># sed  <span class="sh_symbol">-</span>i  <span class="sh_string">'1c [unit]'</span> tuned<span class="sh_symbol">.</span>service</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"modified"</span></li><li>Sending        tuned<span class="sh_symbol">.</span>service</li><li>Transmitting file data <span class="sh_symbol">.</span>svn<span class="sh_symbol">:</span> Commit <span class="sh_function">failed</span> <span class="sh_symbol">(</span>details follow<span class="sh_symbol">):</span></li><li>svn<span class="sh_symbol">:</span> File <span class="sh_string">'/tuned.service'</span> is out of <span class="sh_function">date</span><span class="sh_symbol">(</span>过期<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//出现冲突，需要解决</span></li><li><span class="sh_function">Conflict</span><span class="sh_symbol">(</span>冲突<span class="sh_symbol">)</span> discovered <span class="sh_keyword">in</span> <span class="sh_string">'tuned.service'</span><span class="sh_symbol">.</span></li><li>Select<span class="sh_symbol">:</span> <span class="sh_symbol">(</span>p<span class="sh_symbol">)</span> postpone<span class="sh_symbol">,</span> <span class="sh_symbol">(</span>df<span class="sh_symbol">)</span> diff<span class="sh_symbol">-</span>full<span class="sh_symbol">,</span> <span class="sh_symbol">(</span>e<span class="sh_symbol">)</span> edit<span class="sh_symbol">,</span></li><li>        <span class="sh_symbol">(</span>mc<span class="sh_symbol">)</span> mine<span class="sh_symbol">-</span>conflict<span class="sh_symbol">,</span> <span class="sh_symbol">(</span>tc<span class="sh_symbol">)</span> theirs<span class="sh_symbol">-</span>conflict<span class="sh_symbol">,</span></li><li>        <span class="sh_symbol">(</span>s<span class="sh_symbol">)</span> show all options<span class="sh_symbol">:</span>p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//选择先标记p，随后解决</span></li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># ls</li><li>tuned<span class="sh_symbol">.</span>service   tuned<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span>mine&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tuned<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span>r10&nbsp;&nbsp;&nbsp;&nbsp;tuned<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span>r9</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># mv tuned<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span>mine tuned<span class="sh_symbol">.</span>service</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># rm  <span class="sh_symbol">-</span>rf  tuned<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span>r10 tuned<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span>r9</li><li><span class="sh_symbol">[</span>root@web2 mycode<span class="sh_symbol">]</span># svn ci <span class="sh_symbol">-</span>m <span class="sh_string">"modified"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//解决冲突</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 mycode]# sed  -i  '1c [UNIT]' tuned.service
+[root@web1 mycode]# svn ci -m "modified"
+[root@web2 mycode]# sed  -i  '1c [unit]' tuned.service
+[root@web2 mycode]# svn ci -m "modified"
+Sending        tuned.service
+Transmitting file data .svn: Commit failed (details follow):
+svn: File '/tuned.service' is out of date(过期)
+[root@web2 mycode]# svn update					//出现冲突，需要解决
+Conflict(冲突) discovered in 'tuned.service'.
+Select: (p) postpone, (df) diff-full, (e) edit,
+        (mc) mine-conflict, (tc) theirs-conflict,
+        (s) show all options:p					//选择先标记p，随后解决
+[root@web2 mycode]# ls
+tuned.service   tuned.service.mine		tuned.service.r10	tuned.service.r9
+[root@web2 mycode]# mv tuned.service.mine tuned.service
+[root@web2 mycode]# rm  -rf  tuned.service.r10 tuned.service.r9
+[root@web2 mycode]# svn ci -m "modified"	//解决冲突
+</pre></div></div>
+      <p class="number">步骤二：使用dump指令备份版本库数据</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svnadmin <span class="sh_normal">dump </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span>project <span class="sh_symbol">&gt;</span> project<span class="sh_symbol">.</span>bak  <span class="sh_comment">//备份</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">0</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">1</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">2</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">3</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">4</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">5</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">6</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">7</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">8</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">9</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">10</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">*</span> Dumped revision <span class="sh_number">11</span><span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svnadmin <span class="sh_normal">create </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span>project2               <span class="sh_comment">//新建空仓库</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># svnadmin <span class="sh_normal">load </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/svn/</span>project2 <span class="sh_symbol">&lt;</span> project<span class="sh_symbol">.</span>bak&nbsp;&nbsp;&nbsp;&nbsp;  <span class="sh_comment">//还原</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# svnadmin dump /var/svn/project &gt; project.bak  //备份
+* Dumped revision 0.
+* Dumped revision 1.
+* Dumped revision 2.
+* Dumped revision 3.
+* Dumped revision 4.
+* Dumped revision 5.
+* Dumped revision 6.
+* Dumped revision 7.
+* Dumped revision 8.
+* Dumped revision 9.
+* Dumped revision 10.
+* Dumped revision 11.
+[root@web1 ~]# svnadmin create /var/svn/project2               //新建空仓库
+[root@web1 ~]# svnadmin load /var/svn/project2 &lt; project.bak	  //还原
+</pre></div></div>
+      <p class="number">步骤三：注册使用Github</p>
+      <p>1.登陆网站https://github.com，点击Sign up（注册），如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>2.填写注册信息（用户名，邮箱，密码），如图-2所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>3. 初始化操作，如图-3和图-4所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>注意，初始化完成后，到邮箱中去激活Github账户。</p>
+      <p>4. 创建仓库、使用仓库</p>
+      <p>点击Start a project（如图-5所示），</p>
+      <div class="image">
+        <img src="./CASE_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p>填写项目名称（项目名称任意），如图-6所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>往仓库中上传文件或新建文件，如图-7所示</p>
+      <div class="image">
+        <img src="./CASE_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <p>下载仓库中的代码，如图-8所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p>5. 命令行操作（需要联网的主机，如真实机）</p>
+      <p>[root@pc001 ~]# yum -y install git</p>
+      <p>[root@pc001 ~]# git  clone  https://github.com/账户名称/仓库名称</p>
+      <p>#clone指令用于将服务器仓库中的资料打包下载到本地</p>
+      <p>[root@pc001 ~]# cd 仓库名称</p>
+      <p>[root@pc001 ~]# 任意修改文件，或新建文件</p>
+      <p>[root@pc001 ~]# git add .</p>
+      <p>#add添加新文件</p>
+      <p>[root@pc001 ~]# git commit -m "test"</p>
+      <p>[root@pc001 ~]# git push</p>
+      <p>#commit和push实现提交代码的功能</p>
+      <p>[root@pc001 ~]# git pull</p>
+      <p>#pull更新，类似于svn update</p>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：制作nginx的RPM包</h2>
+      <h3>3.1 问题</h3>
+      <p>本案例使用nginx-1.12.2版本的源码软件，生成对应的RPM包软件，具体要求如下：</p>
+      <ul class="list">
+        <li>软件名称为nginx
+</li>
+        <li>软件版本为1.12.2
+</li>
+        <li>RPM软件包可以查询描述信息
+</li>
+        <li>RPM软件包可以安装及卸载
+</li>
+      </ul>
+      <h3>3.2 方案</h3>
+      <p>安装rpm-build软件包，编写SPEC配置文件，创建新的RPM软件包。</p>
+      <p>配置文件中的描述信息如表-2：</p>
+      <div class="table">
+        <p>表－2 SPEC描述信息</p>
+        <img src="./CASE_files/table002.png">
+      </div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装rpm-build软件</p>
+      <p>1）安装rpm-build软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  rpm<span class="sh_symbol">-</span>build</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install  rpm-build
+</pre></div></div>
+      <p>2）生成rpmbuild目录结构</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpmbuild <span class="sh_symbol">-</span>ba nginx<span class="sh_symbol">.</span>spec&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//会报错，没有文件或目录</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>rpmbuild&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//自动生成的目录结构</span></li><li>BUILD  BUILDROOT  RPMS  SOURCES  SPECS  SRPMS</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# rpmbuild -ba nginx.spec				//会报错，没有文件或目录
+[root@web1 ~]# ls /root/rpmbuild					//自动生成的目录结构
+BUILD  BUILDROOT  RPMS  SOURCES  SPECS  SRPMS
+</pre></div></div>
+      <p>3）准备工作，将源码软件复制到SOURCES目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cp nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span><span class="sh_normal">gz </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">rpmbuild</span><span class="sh_symbol">/</span><span class="sh_normal">SOURCES</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# cp nginx-1.12.2.tar.gz /root/rpmbuild/SOURCES/
+</pre></div></div>
+      <p>4）创建并修改SPEC配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">rpmbuild</span><span class="sh_symbol">/</span><span class="sh_normal">SPECS</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>spec </li><li>Name<span class="sh_symbol">:</span>nginx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>Version<span class="sh_symbol">:</span><span class="sh_number">1.12.2</span></li><li>Release<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">10</span></li><li>Summary<span class="sh_symbol">:</span> Nginx is a web server software<span class="sh_symbol">.</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span style="display:none;">&nbsp;</span></li><li>License<span class="sh_symbol">:</span>GPL&nbsp;&nbsp;&nbsp;&nbsp;</li><li>URL<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;www<span class="sh_symbol">.</span>test<span class="sh_symbol">.</span>com&nbsp;&nbsp;&nbsp;&nbsp;</li><li>Source0<span class="sh_symbol">:</span>nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span style="display:none;">&nbsp;</span></li><li>#BuildRequires<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#Requires<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">%</span>description</li><li>nginx <span class="sh_symbol">[</span>engine x<span class="sh_symbol">]</span> is an HTTP and reverse proxy server<span class="sh_symbol">.</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">%</span>post</li><li>useradd nginx                       <span class="sh_comment">//非必需操作：安装后脚本(创建账户)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">%</span>prep</li><li><span class="sh_symbol">%</span>setup –q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//自动解压源码包，并cd进入目录</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">%</span>build</li><li><span class="sh_symbol">./</span>configure</li><li>make <span class="sh_symbol">%</span><span class="sh_cbracket">{</span><span class="sh_symbol">?</span>_smp_mflags<span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">%</span>install</li><li>make install DESTDIR<span class="sh_symbol">=%</span><span class="sh_cbracket">{</span>buildroot<span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">%</span>files</li><li><span class="sh_symbol">%</span>doc</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>nginx<span class="sh_comment">/*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//对哪些文件与目录打包</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_comment">%changelog</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim /root/rpmbuild/SPECS/nginx.spec 
+Name:nginx		
+Version:1.12.2
+Release:	10
+Summary: Nginx is a web server software.	
+
+License:GPL	
+URL:	www.test.com	
+Source0:nginx-1.12.2.tar.gz
+
+#BuildRequires:	
+#Requires:	
+
+%description
+nginx [engine x] is an HTTP and reverse proxy server.
+
+%post
+useradd nginx                       //非必需操作：安装后脚本(创建账户)
+
+%prep
+%setup –q							//自动解压源码包，并cd进入目录
+
+%build
+./configure
+make %{?_smp_mflags}
+
+
+%install
+make install DESTDIR=%{buildroot}
+
+
+%files
+%doc
+/usr/local/nginx/*			//对哪些文件与目录打包
+
+%changelog
+</pre></div></div>
+      <p class="number">步骤二：使用配置文件创建RPM包</p>
+      <p>1）安装依赖软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  gcc  pcre<span class="sh_symbol">-</span>devel openssl<span class="sh_symbol">-</span>devel</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install  gcc  pcre-devel openssl-devel
+</pre></div></div>
+      <p>2）rpmbuild创建RPM软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpmbuild <span class="sh_symbol">-</span><span class="sh_normal">ba </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">rpmbuild</span><span class="sh_symbol">/</span><span class="sh_normal">SPECS</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>spec</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">rpmbuild</span><span class="sh_symbol">/</span><span class="sh_normal">RPMS</span><span class="sh_symbol">/</span><span class="sh_normal">x86_64</span><span class="sh_symbol">/</span>nginx<span class="sh_number">-1.12.2-10</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>qpi <span class="sh_normal">RPMS</span><span class="sh_symbol">/</span><span class="sh_normal">x86_64</span><span class="sh_symbol">/</span>nginx<span class="sh_number">-1.12.2-10</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm </li><li>Name        <span class="sh_symbol">:</span> nginx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Relocations<span class="sh_symbol">:</span> <span class="sh_symbol">(</span>not relocatable<span class="sh_symbol">)</span></li><li>Version     <span class="sh_symbol">:</span> <span class="sh_number">1.12.2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vendor<span class="sh_symbol">:</span> <span class="sh_symbol">(</span>none<span class="sh_symbol">)</span></li><li>Release     <span class="sh_symbol">:</span> <span class="sh_number">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build <span class="sh_predef_func">Date</span><span class="sh_symbol">:</span> Mon <span class="sh_number">02</span> May <span class="sh_number">2016</span> <span class="sh_number">02</span><span class="sh_symbol">:</span><span class="sh_number">30</span><span class="sh_symbol">:</span><span class="sh_number">53</span> AM PDT</li><li>Install <span class="sh_predef_func">Date</span><span class="sh_symbol">:</span> <span class="sh_symbol">(</span>not installed<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build Host<span class="sh_symbol">:</span> localhost</li><li>Group       <span class="sh_symbol">:</span> <span class="sh_normal">Applications</span><span class="sh_symbol">/</span>Internet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Source RPM<span class="sh_symbol">:</span> nginx<span class="sh_number">-1.8.0-1</span><span class="sh_symbol">.</span>src<span class="sh_symbol">.</span>rpm</li><li>Size        <span class="sh_symbol">:</span> <span class="sh_number">721243</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;License<span class="sh_symbol">:</span> GPL</li><li>Signature   <span class="sh_symbol">:</span> <span class="sh_symbol">(</span>none<span class="sh_symbol">)</span></li><li>URL         <span class="sh_symbol">:</span> www<span class="sh_symbol">.</span>nginx<span class="sh_symbol">.</span>org</li><li>Summary     <span class="sh_symbol">:</span> Nginx is a web server software<span class="sh_symbol">.</span></li><li>Description <span class="sh_symbol">:</span></li><li>nginx <span class="sh_symbol">[</span>engine x<span class="sh_symbol">]</span> is an HTTP and reverse proxy server<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>qpl nginx<span class="sh_number">-1.12.2-10</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm </li><li><span class="sh_symbol">/</span>usr</li><li><span class="sh_regexp">/usr/</span>local</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>nginx</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>conf</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>fastcgi<span class="sh_symbol">.</span>conf</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>fastcgi<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span><span class="sh_keyword">default</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>fastcgi_params</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>fastcgi_params<span class="sh_symbol">.</span><span class="sh_keyword">default</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>koi<span class="sh_symbol">-</span>utf</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>koi<span class="sh_symbol">-</span>win</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>mime<span class="sh_symbol">.</span>types</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>mime<span class="sh_symbol">.</span>types<span class="sh_symbol">.</span><span class="sh_keyword">default</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span><span class="sh_keyword">default</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>scgi_params</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>scgi_params<span class="sh_symbol">.</span><span class="sh_keyword">default</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>uwsgi_params</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>uwsgi_params<span class="sh_symbol">.</span><span class="sh_keyword">default</span></li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>win<span class="sh_symbol">-</span>utf</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>html</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>50x<span class="sh_symbol">.</span>html</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>logs</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span>sbin</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# rpmbuild -ba /root/rpmbuild/SPECS/nginx.spec
+[root@web1 ~]# ls /root/rpmbuild/RPMS/x86_64/nginx-1.12.2-10.x86_64.rpm
+[root@web1 ~]# rpm -qpi RPMS/x86_64/nginx-1.12.2-10.x86_64.rpm 
+Name        : nginx		Relocations: (not relocatable)
+Version     : 1.12.2		Vendor: (none)
+Release     : 10			Build Date: Mon 02 May 2016 02:30:53 AM PDT
+Install Date: (not installed)			Build Host: localhost
+Group       : Applications/Internet		Source RPM: nginx-1.8.0-1.src.rpm
+Size        : 721243					License: GPL
+Signature   : (none)
+URL         : www.nginx.org
+Summary     : Nginx is a web server software.
+Description :
+nginx [engine x] is an HTTP and reverse proxy server.
+[root@web1 ~]# rpm -qpl nginx-1.12.2-10.x86_64.rpm 
+/usr
+/usr/local
+/usr/local/nginx
+/usr/local/nginx/conf
+/usr/local/nginx/conf/fastcgi.conf
+/usr/local/nginx/conf/fastcgi.conf.default
+/usr/local/nginx/conf/fastcgi_params
+/usr/local/nginx/conf/fastcgi_params.default
+/usr/local/nginx/conf/koi-utf
+/usr/local/nginx/conf/koi-win
+/usr/local/nginx/conf/mime.types
+/usr/local/nginx/conf/mime.types.default
+/usr/local/nginx/conf/nginx.conf
+/usr/local/nginx/conf/nginx.conf.default
+/usr/local/nginx/conf/scgi_params
+/usr/local/nginx/conf/scgi_params.default
+/usr/local/nginx/conf/uwsgi_params
+/usr/local/nginx/conf/uwsgi_params.default
+/usr/local/nginx/conf/win-utf
+/usr/local/nginx/html
+/usr/local/nginx/html/50x.html
+/usr/local/nginx/html/index.html
+/usr/local/nginx/logs
+/usr/local/nginx/sbin
+/usr/local/nginx/sbin/nginx
+</pre></div></div>
+      <p class="number">步骤三：安装、卸载软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>ivh <span class="sh_normal">RPMS</span><span class="sh_symbol">/</span><span class="sh_normal">x86_64</span><span class="sh_symbol">/</span>nginx<span class="sh_number">-1.12.2-10</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm </li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>qa <span class="sh_symbol">|</span>grep nginx</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># curl http<span class="sh_symbol">:</span><span class="sh_comment">//127.0.0.1/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# rpm -ivh RPMS/x86_64/nginx-1.12.2-10.x86_64.rpm 
+[root@web1 ~]# rpm -qa |grep nginx
+[root@web1 ~]# /usr/local/nginx/sbin/nginx
+[root@web1 ~]# curl http://127.0.0.1/
+</pre></div></div>
+    </div>
+  
+</body></html>

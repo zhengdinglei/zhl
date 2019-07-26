@@ -1,0 +1,468 @@
+
+<!-- saved from url=(0083)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ARCHITECTURE DAY06</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#case1">案例1：安装与部署</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#case2">案例2：Hadoop词频统计</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#case3">案例3：节点管理</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#case4">案例4：NFS配置</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：安装与部署</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求：</p>
+      <ul class="list">
+        <li>对mapred和yarn文件进行配置
+</li>
+        <li>验证访问Hadoop
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>在day05准备好的环境下给master （nn01）主机添加ResourceManager的角色，在node1，node2，node3上面添加NodeManager的角色，如表-1所示：</p>
+      <div class="table">
+        <p>表-1</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装与部署hadoop</p>
+      <p>1）配置mapred-site（nn01上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># mv mapred<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml<span class="sh_symbol">.</span>template mapred<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># vim mapred<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml</li><li><span class="sh_symbol">&lt;</span>configuration<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>mapreduce<span class="sh_symbol">.</span>framework<span class="sh_symbol">.</span>name<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;</span>yarn<span class="sh_symbol">&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>configuration<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 ~]# cd /usr/local/hadoop/etc/hadoop/
+[root@nn01 hadoop]# mv mapred-site.xml.template mapred-site.xml
+[root@nn01 hadoop]# vim mapred-site.xml
+&lt;configuration&gt;
+&lt;property&gt;
+        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
+        &lt;value&gt;yarn&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</pre></div></div>
+      <p>2）配置yarn-site（nn01上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># vim yarn<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml</li><li><span class="sh_symbol">&lt;</span>configuration<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&lt;!--</span> Site specific YARN configuration properties <span class="sh_symbol">--&gt;</span></li><li><span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>yarn<span class="sh_symbol">.</span>resourcemanager<span class="sh_symbol">.</span>hostname<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;</span>nn01<span class="sh_symbol">&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>yarn<span class="sh_symbol">.</span>nodemanager<span class="sh_symbol">.</span>aux<span class="sh_symbol">-</span>services<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;</span>mapreduce_shuffle<span class="sh_symbol">&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>configuration<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# vim yarn-site.xml
+&lt;configuration&gt;
+
+&lt;!-- Site specific YARN configuration properties --&gt;
+&lt;property&gt;
+        &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;
+        &lt;value&gt;nn01&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
+        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</pre></div></div>
+      <p>3）同步配置（nn01上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">22</span><span class="sh_symbol">..</span><span class="sh_number">24</span><span class="sh_cbracket">}</span><span class="sh_symbol">;</span> <span class="sh_keyword">do</span> rsync <span class="sh_symbol">-</span>aSH <span class="sh_symbol">--</span><span class="sh_keyword">delete</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span> <span class="sh_number">192.168.1</span><span class="sh_symbol">.</span>$i<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>e <span class="sh_string">'ssh'</span> <span class="sh_symbol">&amp;</span> done</li><li><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]</span> <span class="sh_number">712</span></li><li><span class="sh_symbol">[</span><span class="sh_number">2</span><span class="sh_symbol">]</span> <span class="sh_number">713</span></li><li><span class="sh_symbol">[</span><span class="sh_number">3</span><span class="sh_symbol">]</span> <span class="sh_number">714</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# for i in {22..24}; do rsync -aSH --delete /usr/local/hadoop/ 192.168.1.$i:/usr/local/hadoop/  -e 'ssh' &amp; done
+[1] 712
+[2] 713
+[3] 714
+
+</pre></div></div>
+      <p>4）验证配置（nn01上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>hadoop</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>start<span class="sh_symbol">-</span>dfs<span class="sh_symbol">.</span>sh</li><li>Starting namenodes on <span class="sh_symbol">[</span>nn01<span class="sh_symbol">]</span></li><li>nn01<span class="sh_symbol">:</span> namenode running as process <span class="sh_number">23408</span><span class="sh_symbol">.</span> Stop it first<span class="sh_symbol">.</span></li><li>node1<span class="sh_symbol">:</span> datanode running as process <span class="sh_number">22409</span><span class="sh_symbol">.</span> Stop it first<span class="sh_symbol">.</span></li><li>node2<span class="sh_symbol">:</span> datanode running as process <span class="sh_number">22367</span><span class="sh_symbol">.</span> Stop it first<span class="sh_symbol">.</span></li><li>node3<span class="sh_symbol">:</span> datanode running as process <span class="sh_number">22356</span><span class="sh_symbol">.</span> Stop it first<span class="sh_symbol">.</span></li><li>Starting secondary namenodes <span class="sh_symbol">[</span>nn01<span class="sh_symbol">]</span></li><li>nn01<span class="sh_symbol">:</span> secondarynamenode running as process <span class="sh_number">23591</span><span class="sh_symbol">.</span> Stop it first<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>start<span class="sh_symbol">-</span>yarn<span class="sh_symbol">.</span>sh</li><li>starting yarn daemons</li><li>starting resourcemanager<span class="sh_symbol">,</span> logging <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>yarn<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>resourcemanager<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>out</li><li>node2<span class="sh_symbol">:</span> starting nodemanager<span class="sh_symbol">,</span> logging <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>yarn<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>nodemanager<span class="sh_symbol">-</span>node2<span class="sh_symbol">.</span>out</li><li>node3<span class="sh_symbol">:</span> starting nodemanager<span class="sh_symbol">,</span> logging <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>yarn<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>nodemanager<span class="sh_symbol">-</span>node3<span class="sh_symbol">.</span>out</li><li>node1<span class="sh_symbol">:</span> starting nodemanager<span class="sh_symbol">,</span> logging <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>yarn<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>nodemanager<span class="sh_symbol">-</span>node1<span class="sh_symbol">.</span>out</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># jps    <span class="sh_comment">//nn01查看有ResourceManager</span></li><li><span class="sh_number">23408</span> NameNode</li><li><span class="sh_number">1043</span> ResourceManager</li><li><span class="sh_number">1302</span> Jps</li><li><span class="sh_number">23591</span> SecondaryNameNode</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># ssh node1 jps&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//node1查看有NodeManager</span></li><li><span class="sh_number">25777</span> Jps</li><li><span class="sh_number">22409</span> DataNode</li><li><span class="sh_number">25673</span> NodeManager</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># ssh node2 jps&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//node1查看有NodeManager</span></li><li><span class="sh_number">25729</span> Jps</li><li><span class="sh_number">25625</span> NodeManager</li><li><span class="sh_number">22367</span> DataNode</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># ssh node3 jps&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//node1查看有NodeManager</span></li><li><span class="sh_number">22356</span> DataNode</li><li><span class="sh_number">25620</span> NodeManager</li><li><span class="sh_number">25724</span> Jps</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# cd /usr/local/hadoop
+[root@nn01 hadoop]# ./sbin/start-dfs.sh
+Starting namenodes on [nn01]
+nn01: namenode running as process 23408. Stop it first.
+node1: datanode running as process 22409. Stop it first.
+node2: datanode running as process 22367. Stop it first.
+node3: datanode running as process 22356. Stop it first.
+Starting secondary namenodes [nn01]
+nn01: secondarynamenode running as process 23591. Stop it first.
+[root@nn01 hadoop]# ./sbin/start-yarn.sh
+starting yarn daemons
+starting resourcemanager, logging to /usr/local/hadoop/logs/yarn-root-resourcemanager-nn01.out
+node2: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-node2.out
+node3: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-node3.out
+node1: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-node1.out
+[root@nn01 hadoop]# jps    //nn01查看有ResourceManager
+23408 NameNode
+1043 ResourceManager
+1302 Jps
+23591 SecondaryNameNode
+[root@nn01 hadoop]# ssh node1 jps		//node1查看有NodeManager
+25777 Jps
+22409 DataNode
+25673 NodeManager
+[root@nn01 hadoop]# ssh node2 jps		//node1查看有NodeManager
+25729 Jps
+25625 NodeManager
+22367 DataNode
+[root@nn01 hadoop]# ssh node3 jps		//node1查看有NodeManager
+22356 DataNode
+25620 NodeManager
+25724 Jps
+</pre></div></div>
+      <p>5）web访问hadoop</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.21:50070/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//--namenode web页面（nn01）</span></li><li>http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.21:50090/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//--secondory namenode web页面（nn01）</span></li><li>http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.22:50075/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//--datanode web页面（node1,node2,node3）</span></li><li>http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.21:8088/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//--resourcemanager web页面（nn01）</span></li><li>http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.22:8042/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//--nodemanager web页面（node1,node2,node3）</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">http://192.168.1.21:50070/			//--namenode web页面（nn01）
+http://192.168.1.21:50090/		//--secondory namenode web页面（nn01）
+http://192.168.1.22:50075/		//--datanode web页面（node1,node2,node3）
+http://192.168.1.21:8088/		//--resourcemanager web页面（nn01）
+http://192.168.1.22:8042/		//--nodemanager web页面（node1,node2,node3）
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：Hadoop词频统计</h2>
+      <h3>2.1 问题</h3>
+      <p>本案例要求：</p>
+      <ul class="list">
+        <li>在集群文件系统里创建文件夹
+</li>
+        <li>上传要分析的文件到目录中
+</li>
+        <li>分析上传文件
+</li>
+        <li>展示结果
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：词频统计</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">ls </span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看集群文件系统的根，没有内容</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span>aaa&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//在集群文件系统下创建aaa目录</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">ls </span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//再次查看，有刚创建的aaa目录</span></li><li>Found <span class="sh_number">1</span> items</li><li>drwxr<span class="sh_symbol">-</span>xr<span class="sh_symbol">-</span>x   <span class="sh_symbol">-</span> root supergroup          <span class="sh_number">0</span> <span class="sh_number">2018-09-10</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">56</span><span class="sh_normal"> </span><span class="sh_symbol">/</span>aaa</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span>#  <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">touchz  </span><span class="sh_symbol">/</span>fa&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//在集群文件系统下创建fa文件</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span>put <span class="sh_symbol">*.</span><span class="sh_normal">txt </span><span class="sh_symbol">/</span>aaa &nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//上传*.txt到集群文件系统下的aaa目录</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span>#  <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">ls </span><span class="sh_symbol">/</span>aaa    <span class="sh_comment">//查看</span></li><li>Found <span class="sh_number">3</span> items</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--</span>   <span class="sh_number">2</span> root supergroup      <span class="sh_number">86424</span> <span class="sh_number">2018-09-10</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">58</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">aaa</span><span class="sh_symbol">/</span>LICENSE<span class="sh_symbol">.</span>txt</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--</span>   <span class="sh_number">2</span> root supergroup      <span class="sh_number">14978</span> <span class="sh_number">2018-09-10</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">58</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">aaa</span><span class="sh_symbol">/</span>NOTICE<span class="sh_symbol">.</span>txt</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--</span>   <span class="sh_number">2</span> root supergroup       <span class="sh_number">1366</span> <span class="sh_number">2018-09-10</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">58</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">aaa</span><span class="sh_symbol">/</span>README<span class="sh_symbol">.</span>txt</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">get  </span><span class="sh_symbol">/</span>aaa  <span class="sh_comment">//下载集群文件系统的aaa目录</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop jar  <span class="sh_symbol">\</span></li><li> <span class="sh_normal">share</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">mapreduce</span><span class="sh_symbol">/</span>hadoop<span class="sh_symbol">-</span>mapreduce<span class="sh_symbol">-</span>examples<span class="sh_number">-2.7.6</span><span class="sh_symbol">.</span>jar  <span class="sh_normal">wordcount </span><span class="sh_symbol">/</span><span class="sh_normal">aaa </span><span class="sh_symbol">/</span>bbb&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//hadoop集群分析大数据，hadoop集群/aaa里的数据存到hadoop集群/bbb下</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hadoop fs <span class="sh_symbol">-</span><span class="sh_normal">cat </span><span class="sh_symbol">/</span>bbb<span class="sh_comment">/*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//查看集群里的数据</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# ./bin/hadoop fs -ls /		//查看集群文件系统的根，没有内容
+[root@nn01 hadoop]# ./bin/hadoop fs -mkdir  /aaa		
+//在集群文件系统下创建aaa目录
+[root@nn01 hadoop]# ./bin/hadoop fs -ls /		//再次查看，有刚创建的aaa目录
+Found 1 items
+drwxr-xr-x   - root supergroup          0 2018-09-10 09:56 /aaa
+[root@nn01 hadoop]#  ./bin/hadoop fs -touchz  /fa	//在集群文件系统下创建fa文件
+[root@nn01 hadoop]# ./bin/hadoop fs -put *.txt /aaa 	
+//上传*.txt到集群文件系统下的aaa目录
+[root@nn01 hadoop]#  ./bin/hadoop fs -ls /aaa    //查看
+Found 3 items
+-rw-r--r--   2 root supergroup      86424 2018-09-10 09:58 /aaa/LICENSE.txt
+-rw-r--r--   2 root supergroup      14978 2018-09-10 09:58 /aaa/NOTICE.txt
+-rw-r--r--   2 root supergroup       1366 2018-09-10 09:58 /aaa/README.txt
+[root@nn01 hadoop]# ./bin/hadoop fs -get  /aaa  //下载集群文件系统的aaa目录
+[root@nn01 hadoop]# ./bin/hadoop jar  \
+ share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar  wordcount /aaa /bbb	//hadoop集群分析大数据，hadoop集群/aaa里的数据存到hadoop集群/bbb下
+[root@nn01 hadoop]# ./bin/hadoop fs -cat /bbb/*		//查看集群里的数据
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：节点管理</h2>
+      <h3>3.1 问题</h3>
+      <p>本案例要求：</p>
+      <ul class="list">
+        <li>增加一个新的节点
+</li>
+        <li>查看状态
+</li>
+        <li>删除节点
+</li>
+      </ul>
+      <h3>3.2 方案：</h3>
+      <p>另外准备两台主机，node4和nfsgw，作为新添加的节点和网关，具体要求如表-2所示：</p>
+      <div class="table">
+        <p>表-2</p>
+        <img src="./CASE_files/table002.png">
+      </div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：增加节点</p>
+      <p>1）增加一个新的节点node4</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@hadoop5 <span class="sh_symbol">~]</span># echo node4 <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/etc/</span>hostname &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//更改主机名为node4</span></li><li><span class="sh_symbol">[</span>root@hadoop5 <span class="sh_symbol">~]</span># hostname node4</li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install rsync</li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install java<span class="sh_number">-1.8.0</span><span class="sh_symbol">-</span>openjdk<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_symbol">/</span>hadoop</li><li><span class="sh_symbol">[</span>root@nn01 <span class="sh_symbol">.</span>ssh<span class="sh_symbol">]</span># ssh<span class="sh_symbol">-</span>copy<span class="sh_symbol">-</span>id <span class="sh_number">192.168.1.25</span></li><li><span class="sh_symbol">[</span>root@nn01 <span class="sh_symbol">.</span>ssh<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts</li><li><span class="sh_number">192.168.1.21</span>  nn01</li><li><span class="sh_number">192.168.1.22</span>  node1</li><li><span class="sh_number">192.168.1.23</span>  node2</li><li><span class="sh_number">192.168.1.24</span>  node3</li><li><span class="sh_number">192.168.1.25</span>  node4</li><li><span class="sh_symbol">[</span>root@nn01 <span class="sh_symbol">.</span>ssh<span class="sh_symbol">]</span># <span class="sh_normal">scp </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts <span class="sh_number">192.168.1.25</span><span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span></li><li><span class="sh_symbol">[</span>root@nn01 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># vim <span class="sh_symbol">.</span><span class="sh_regexp">/etc/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>slaves</li><li>node1</li><li>node2</li><li>node3</li><li>node4</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">22</span><span class="sh_symbol">..</span><span class="sh_number">25</span><span class="sh_cbracket">}</span><span class="sh_symbol">;</span> <span class="sh_keyword">do</span> rsync <span class="sh_symbol">-</span>aSH <span class="sh_symbol">--</span><span class="sh_keyword">delete</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">\</span> <span class="sh_number">192.168.1</span><span class="sh_symbol">.</span>$i<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>e <span class="sh_string">'ssh'</span> <span class="sh_symbol">&amp;</span> done&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//同步配置</span></li><li><span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]</span> <span class="sh_number">1841</span></li><li><span class="sh_symbol">[</span><span class="sh_number">2</span><span class="sh_symbol">]</span> <span class="sh_number">1842</span></li><li><span class="sh_symbol">[</span><span class="sh_number">3</span><span class="sh_symbol">]</span> <span class="sh_number">1843</span></li><li><span class="sh_symbol">[</span><span class="sh_number">4</span><span class="sh_symbol">]</span> <span class="sh_number">1844</span></li><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>hadoop<span class="sh_symbol">-</span>daemon<span class="sh_symbol">.</span>sh start datanode  <span class="sh_comment">//启动</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@hadoop5 ~]# echo node4 &gt; /etc/hostname 	//更改主机名为node4
+[root@hadoop5 ~]# hostname node4
+[root@node4 ~]# yum -y install rsync
+[root@node4 ~]# yum -y install java-1.8.0-openjdk-devel
+[root@node4 ~]# mkdir /var/hadoop
+[root@nn01 .ssh]# ssh-copy-id 192.168.1.25
+[root@nn01 .ssh]# vim /etc/hosts
+192.168.1.21  nn01
+192.168.1.22  node1
+192.168.1.23  node2
+192.168.1.24  node3
+192.168.1.25  node4
+[root@nn01 .ssh]# scp /etc/hosts 192.168.1.25:/etc/
+[root@nn01 ~]# cd /usr/local/hadoop/
+[root@nn01 hadoop]# vim ./etc/hadoop/slaves
+node1
+node2
+node3
+node4
+[root@nn01 hadoop]# for i in {22..25}; do rsync -aSH --delete /usr/local/hadoop/
+\ 192.168.1.$i:/usr/local/hadoop/  -e 'ssh' &amp; done		//同步配置
+[1] 1841
+[2] 1842
+[3] 1843
+[4] 1844
+[root@node4 hadoop]# ./sbin/hadoop-daemon.sh start datanode  //启动
+</pre></div></div>
+      <p>2）查看状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># jps</li><li><span class="sh_number">24439</span> Jps</li><li><span class="sh_number">24351</span> DataNode</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node4 hadoop]# jps
+24439 Jps
+24351 DataNode
+</pre></div></div>
+      <p>3）设置同步带宽</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hdfs dfsadmin <span class="sh_symbol">-</span>setBalancerBandwidth <span class="sh_number">60000000</span></li><li>Balancer bandwidth is set to <span class="sh_number">60000000</span></li><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>start<span class="sh_symbol">-</span>balancer<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node4 hadoop]# ./bin/hdfs dfsadmin -setBalancerBandwidth 60000000
+Balancer bandwidth is set to 60000000
+[root@node4 hadoop]# ./sbin/start-balancer.sh
+
+</pre></div></div>
+      <p>4）删除节点</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>slaves&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//去掉之前添加的node4</span></li><li>node1</li><li>node2</li><li>node3</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>hdfs<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//在此配置文件里面加入下面四行</span></li><li><span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span>                                      </li><li>    <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>dfs<span class="sh_symbol">.</span>hosts<span class="sh_symbol">.</span>exclude<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>exclude<span class="sh_symbol">&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>exclude</li><li>node4</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# vim /usr/local/hadoop/etc/hadoop/slaves		
+//去掉之前添加的node4
+node1
+node2
+node3
+[root@nn01 hadoop]# vim /usr/local/hadoop/etc/hadoop/hdfs-site.xml		
+//在此配置文件里面加入下面四行
+&lt;property&gt;                                      
+    &lt;name&gt;dfs.hosts.exclude&lt;/name&gt;
+    &lt;value&gt;/usr/local/hadoop/etc/hadoop/exclude&lt;/value&gt;
+&lt;/property&gt;
+
+[root@nn01 hadoop]# vim /usr/local/hadoop/etc/hadoop/exclude
+node4
+</pre></div></div>
+      <p>5）导出数据</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hdfs dfsadmin <span class="sh_symbol">-</span>refreshNodes</li><li>Refresh nodes successful</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hdfs dfsadmin <span class="sh_symbol">-</span>report  <span class="sh_comment">//查看node4显示Decommissioned</span></li><li>Dead <span class="sh_function">datanodes</span> <span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">):</span></li><li><span style="display:none;">&nbsp;</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.1.25</span><span class="sh_symbol">:</span><span class="sh_number">50010</span> <span class="sh_symbol">(</span>node4<span class="sh_symbol">)</span></li><li>Hostname<span class="sh_symbol">:</span> node4</li><li>Decommission Status <span class="sh_symbol">:</span> Decommissioned</li><li>Configured Capacity<span class="sh_symbol">:</span> <span class="sh_number">17168314368</span> <span class="sh_symbol">(</span><span class="sh_number">15.99</span> GB<span class="sh_symbol">)</span></li><li>DFS Used<span class="sh_symbol">:</span> <span class="sh_number">12288</span> <span class="sh_symbol">(</span><span class="sh_number">12</span> KB<span class="sh_symbol">)</span></li><li>Non DFS Used<span class="sh_symbol">:</span> <span class="sh_number">1656664064</span> <span class="sh_symbol">(</span><span class="sh_number">1.54</span> GB<span class="sh_symbol">)</span></li><li>DFS Remaining<span class="sh_symbol">:</span> <span class="sh_number">15511638016</span> <span class="sh_symbol">(</span><span class="sh_number">14.45</span> GB<span class="sh_symbol">)</span></li><li>DFS Used<span class="sh_symbol">%:</span> <span class="sh_number">0.00</span><span class="sh_symbol">%</span></li><li>DFS Remaining<span class="sh_symbol">%:</span> <span class="sh_number">90.35</span><span class="sh_symbol">%</span></li><li>Configured Cache Capacity<span class="sh_symbol">:</span> <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> B<span class="sh_symbol">)</span></li><li>Cache Used<span class="sh_symbol">:</span> <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> B<span class="sh_symbol">)</span></li><li>Cache Remaining<span class="sh_symbol">:</span> <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0</span> B<span class="sh_symbol">)</span></li><li>Cache Used<span class="sh_symbol">%:</span> <span class="sh_number">100.00</span><span class="sh_symbol">%</span></li><li>Cache Remaining<span class="sh_symbol">%:</span> <span class="sh_number">0.00</span><span class="sh_symbol">%</span></li><li>Xceivers<span class="sh_symbol">:</span> <span class="sh_number">1</span></li><li>Last contact<span class="sh_symbol">:</span> Mon Sep <span class="sh_number">10</span> <span class="sh_number">10</span><span class="sh_symbol">:</span><span class="sh_number">59</span><span class="sh_symbol">:</span><span class="sh_number">58</span> CST <span class="sh_number">2018</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>hadoop<span class="sh_symbol">-</span>daemon<span class="sh_symbol">.</span>sh stop datanode&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//停止datanode</span></li><li>stopping datanode</li><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>yarn<span class="sh_symbol">-</span>daemon<span class="sh_symbol">.</span>sh start nodemanager&nbsp;&nbsp;&nbsp;&nbsp;         </li><li><span class="sh_comment">//yarn 增加 nodemanager</span></li><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>yarn<span class="sh_symbol">-</span>daemon<span class="sh_symbol">.</span>sh stop  nodemanager  <span class="sh_comment">//停止nodemanager</span></li><li>stopping nodemanager</li><li><span class="sh_symbol">[</span>root@node4 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>yarn node <span class="sh_symbol">-</span>list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//yarn 查看节点状态，还是有node4节点，要过一段时间才会消失</span></li><li><span class="sh_number">18</span><span class="sh_symbol">/</span><span class="sh_number">09</span><span class="sh_symbol">/</span><span class="sh_number">10</span> <span class="sh_number">11</span><span class="sh_symbol">:</span><span class="sh_number">04</span><span class="sh_symbol">:</span><span class="sh_number">50</span> INFO client<span class="sh_symbol">.</span>RMProxy<span class="sh_symbol">:</span> Connecting to ResourceManager at <span class="sh_normal">nn01</span><span class="sh_symbol">/</span><span class="sh_number">192.168.1.21</span><span class="sh_symbol">:</span><span class="sh_number">8032</span></li><li>Total Nodes<span class="sh_symbol">:</span><span class="sh_number">4</span></li><li>         Node<span class="sh_symbol">-</span>Id&nbsp;&nbsp;&nbsp;&nbsp;     Node<span class="sh_symbol">-</span>State&nbsp;&nbsp;&nbsp;&nbsp;Node<span class="sh_symbol">-</span>Http<span class="sh_symbol">-</span>Address&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_predef_func">Number</span><span class="sh_symbol">-</span>of<span class="sh_symbol">-</span>Running<span class="sh_symbol">-</span>Containers</li><li>     node3<span class="sh_symbol">:</span><span class="sh_number">34628</span>&nbsp;&nbsp;&nbsp;&nbsp;        RUNNING&nbsp;&nbsp;&nbsp;&nbsp;       node3<span class="sh_symbol">:</span><span class="sh_number">8042</span>&nbsp;&nbsp;&nbsp;&nbsp;                           <span class="sh_number">0</span></li><li>     node2<span class="sh_symbol">:</span><span class="sh_number">36300</span>&nbsp;&nbsp;&nbsp;&nbsp;        RUNNING&nbsp;&nbsp;&nbsp;&nbsp;       node2<span class="sh_symbol">:</span><span class="sh_number">8042</span>&nbsp;&nbsp;&nbsp;&nbsp;                           <span class="sh_number">0</span></li><li>     node4<span class="sh_symbol">:</span><span class="sh_number">42459</span>&nbsp;&nbsp;&nbsp;&nbsp;        RUNNING&nbsp;&nbsp;&nbsp;&nbsp;       node4<span class="sh_symbol">:</span><span class="sh_number">8042</span>&nbsp;&nbsp;&nbsp;&nbsp;                           <span class="sh_number">0</span></li><li>     node1<span class="sh_symbol">:</span><span class="sh_number">39196</span>&nbsp;&nbsp;&nbsp;&nbsp;        RUNNING&nbsp;&nbsp;&nbsp;&nbsp;       node1<span class="sh_symbol">:</span><span class="sh_number">8042</span>&nbsp;&nbsp;&nbsp;&nbsp;                           <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# ./bin/hdfs dfsadmin -refreshNodes
+Refresh nodes successful
+[root@nn01 hadoop]# ./bin/hdfs dfsadmin -report  //查看node4显示Decommissioned
+Dead datanodes (1):
+
+Name: 192.168.1.25:50010 (node4)
+Hostname: node4
+Decommission Status : Decommissioned
+Configured Capacity: 17168314368 (15.99 GB)
+DFS Used: 12288 (12 KB)
+Non DFS Used: 1656664064 (1.54 GB)
+DFS Remaining: 15511638016 (14.45 GB)
+DFS Used%: 0.00%
+DFS Remaining%: 90.35%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Mon Sep 10 10:59:58 CST 2018
+
+[root@node4 hadoop]# ./sbin/hadoop-daemon.sh stop datanode	//停止datanode
+stopping datanode
+[root@node4 hadoop]# ./sbin/yarn-daemon.sh start nodemanager	         
+//yarn 增加 nodemanager
+[root@node4 hadoop]# ./sbin/yarn-daemon.sh stop  nodemanager  //停止nodemanager
+stopping nodemanager
+[root@node4 hadoop]# ./bin/yarn node -list		
+//yarn 查看节点状态，还是有node4节点，要过一段时间才会消失
+18/09/10 11:04:50 INFO client.RMProxy: Connecting to ResourceManager at nn01/192.168.1.21:8032
+Total Nodes:4
+         Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers
+     node3:34628	        RUNNING	       node3:8042	                           0
+     node2:36300	        RUNNING	       node2:8042	                           0
+     node4:42459	        RUNNING	       node4:8042	                           0
+     node1:39196	        RUNNING	       node1:8042	                           0
+
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：NFS配置</h2>
+      <h3>4.1 问题</h3>
+      <p>本案例要求：</p>
+      <ul class="list">
+        <li>创建代理用户
+</li>
+        <li>启动一个新系统，禁用Selinux和firewalld
+</li>
+        <li>配置NFSWG
+</li>
+        <li>启动服务
+</li>
+        <li>挂载NFS并实现开机自启
+</li>
+      </ul>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：基础准备</p>
+      <p>1）更改主机名，配置/etc/hosts（/etc/hosts在nn01和nfsgw上面配置）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># echo nfsgw <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/etc/</span>hostname </li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># hostname nfsgw</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts</li><li><span class="sh_number">192.168.1.21</span>  nn01</li><li><span class="sh_number">192.168.1.22</span>  node1</li><li><span class="sh_number">192.168.1.23</span>  node2</li><li><span class="sh_number">192.168.1.24</span>  node3</li><li><span class="sh_number">192.168.1.25</span>  node4</li><li><span class="sh_number">192.168.1.26</span>  nfsgw</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# echo nfsgw &gt; /etc/hostname 
+[root@localhost ~]# hostname nfsgw
+[root@nn01 hadoop]# vim /etc/hosts
+192.168.1.21  nn01
+192.168.1.22  node1
+192.168.1.23  node2
+192.168.1.24  node3
+192.168.1.25  node4
+192.168.1.26  nfsgw
+</pre></div></div>
+      <p>2）创建代理用户（nn01和nfsgw上面操作），以nn01为例子</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># groupadd <span class="sh_symbol">-</span>g <span class="sh_number">200</span> nfs</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># useradd <span class="sh_symbol">-</span>u <span class="sh_number">200</span> <span class="sh_symbol">-</span>g nfs nfs</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# groupadd -g 200 nfs
+[root@nn01 hadoop]# useradd -u 200 -g nfs nfs
+</pre></div></div>
+      <p>3）配置core-site.xml</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>stop<span class="sh_symbol">-</span>all<span class="sh_symbol">.</span>sh   <span class="sh_comment">//停止所有服务</span></li><li>This script is Deprecated<span class="sh_symbol">.</span> Instead use stop<span class="sh_symbol">-</span>dfs<span class="sh_symbol">.</span>sh and stop<span class="sh_symbol">-</span>yarn<span class="sh_symbol">.</span>sh</li><li>Stopping namenodes on <span class="sh_symbol">[</span>nn01<span class="sh_symbol">]</span></li><li>nn01<span class="sh_symbol">:</span> stopping namenode</li><li>node2<span class="sh_symbol">:</span> stopping datanode</li><li>node4<span class="sh_symbol">:</span> no datanode to stop</li><li>node3<span class="sh_symbol">:</span> stopping datanode</li><li>node1<span class="sh_symbol">:</span> stopping datanode</li><li>Stopping secondary namenodes <span class="sh_symbol">[</span>nn01<span class="sh_symbol">]</span></li><li>nn01<span class="sh_symbol">:</span> stopping secondarynamenode</li><li>stopping yarn daemons</li><li>stopping resourcemanager</li><li>node2<span class="sh_symbol">:</span> stopping nodemanager</li><li>node3<span class="sh_symbol">:</span> stopping nodemanager</li><li>node4<span class="sh_symbol">:</span> no nodemanager to stop</li><li>node1<span class="sh_symbol">:</span> stopping nodemanager</li><li><span class="sh_symbol">...</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># cd <span class="sh_normal">etc</span><span class="sh_symbol">/</span>hadoop</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_symbol">&gt;</span>exclude</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># vim core<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml</li><li>    <span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>hadoop<span class="sh_symbol">.</span>proxyuser<span class="sh_symbol">.</span>nfs<span class="sh_symbol">.</span>groups<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;*&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>hadoop<span class="sh_symbol">.</span>proxyuser<span class="sh_symbol">.</span>nfs<span class="sh_symbol">.</span>hosts<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;*&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# ./sbin/stop-all.sh   //停止所有服务
+This script is Deprecated. Instead use stop-dfs.sh and stop-yarn.sh
+Stopping namenodes on [nn01]
+nn01: stopping namenode
+node2: stopping datanode
+node4: no datanode to stop
+node3: stopping datanode
+node1: stopping datanode
+Stopping secondary namenodes [nn01]
+nn01: stopping secondarynamenode
+stopping yarn daemons
+stopping resourcemanager
+node2: stopping nodemanager
+node3: stopping nodemanager
+node4: no nodemanager to stop
+node1: stopping nodemanager
+...
+
+[root@nn01 hadoop]# cd etc/hadoop
+[root@nn01 hadoop]# &gt;exclude
+[root@nn01 hadoop]# vim core-site.xml
+    &lt;property&gt;
+        &lt;name&gt;hadoop.proxyuser.nfs.groups&lt;/name&gt;
+        &lt;value&gt;*&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;hadoop.proxyuser.nfs.hosts&lt;/name&gt;
+        &lt;value&gt;*&lt;/value&gt;
+    &lt;/property&gt;
+
+</pre></div></div>
+      <p>4）同步配置到node1，node2，node3</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">22</span><span class="sh_symbol">..</span><span class="sh_number">24</span><span class="sh_cbracket">}</span><span class="sh_symbol">;</span> <span class="sh_keyword">do</span> rsync <span class="sh_symbol">-</span>aSH <span class="sh_symbol">--</span><span class="sh_keyword">delete</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span> <span class="sh_number">192.168.1</span><span class="sh_symbol">.</span>$i<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>e <span class="sh_string">'ssh'</span> <span class="sh_symbol">&amp;</span> done</li><li><span class="sh_symbol">[</span><span class="sh_number">4</span><span class="sh_symbol">]</span> <span class="sh_number">2722</span></li><li><span class="sh_symbol">[</span><span class="sh_number">5</span><span class="sh_symbol">]</span> <span class="sh_number">2723</span></li><li><span class="sh_symbol">[</span><span class="sh_number">6</span><span class="sh_symbol">]</span> <span class="sh_number">2724</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# for i in {22..24}; do rsync -aSH --delete /usr/local/hadoop/ 192.168.1.$i:/usr/local/hadoop/  -e 'ssh' &amp; done
+[4] 2722
+[5] 2723
+[6] 2724
+
+</pre></div></div>
+      <p>5）启动集群</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>start<span class="sh_symbol">-</span>dfs<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# /usr/local/hadoop/sbin/start-dfs.sh
+</pre></div></div>
+      <p>6）查看状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>hdfs  dfsadmin <span class="sh_symbol">-</span>report</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nn01 hadoop]# /usr/local/hadoop/bin/hdfs  dfsadmin -report
+
+</pre></div></div>
+      <p class="number">步骤二：NFSGW配置</p>
+      <p>1）安装java-1.8.0-openjdk-devel和rsync</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install java<span class="sh_number">-1.8.0</span><span class="sh_symbol">-</span>openjdk<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install rsync</li><li><span class="sh_symbol">[</span>root@nn01 hadoop<span class="sh_symbol">]</span># rsync <span class="sh_symbol">-</span>avSH <span class="sh_symbol">--</span><span class="sh_keyword">delete</span> <span class="sh_symbol">\</span> </li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span> <span class="sh_number">192.168.1.26</span><span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>e <span class="sh_string">'ssh'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nfsgw ~]# yum -y install java-1.8.0-openjdk-devel
+[root@nfsgw ~]# yum -y install rsync
+[root@nn01 hadoop]# rsync -avSH --delete \ 
+/usr/local/hadoop/ 192.168.1.26:/usr/local/hadoop/  -e 'ssh'
+
+</pre></div></div>
+      <p>2）创建数据根目录 /var/hadoop（在NFSGW主机上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_symbol">/</span>hadoop</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nfsgw ~]# mkdir /var/hadoop
+</pre></div></div>
+      <p>3）创建转储目录，并给用户nfs 赋权</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_symbol">/</span>nfstmp</li><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># chown nfs<span class="sh_symbol">:</span><span class="sh_normal">nfs </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_symbol">/</span>nfstmp</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nfsgw ~]# mkdir /var/nfstmp
+[root@nfsgw ~]# chown nfs:nfs /var/nfstmp
+</pre></div></div>
+      <p>4）给/usr/local/hadoop/logs赋权（在NFSGW主机上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># setfacl <span class="sh_symbol">-</span>m u<span class="sh_symbol">:</span>nfs<span class="sh_symbol">:</span><span class="sh_normal">rwx </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>logs</li><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span>hdfs<span class="sh_symbol">-</span>site<span class="sh_symbol">.</span>xml</li><li>    <span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>nfs<span class="sh_symbol">.</span>exports<span class="sh_symbol">.</span>allowed<span class="sh_symbol">.</span>hosts<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;*</span> rw<span class="sh_symbol">&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>property<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>name<span class="sh_symbol">&gt;</span>nfs<span class="sh_symbol">.</span>dump<span class="sh_symbol">.</span>dir<span class="sh_symbol">&lt;/</span>name<span class="sh_symbol">&gt;</span></li><li>        <span class="sh_symbol">&lt;</span>value<span class="sh_symbol">&gt;</span><span class="sh_regexp">/var/</span>nfstmp<span class="sh_symbol">&lt;/</span>value<span class="sh_symbol">&gt;</span></li><li>    <span class="sh_symbol">&lt;/</span>property<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nfsgw ~]# setfacl -m u:nfs:rwx /usr/local/hadoop/logs
+[root@nfsgw ~]# vim /usr/local/hadoop/etc/hadoop/hdfs-site.xml
+    &lt;property&gt;
+        &lt;name&gt;nfs.exports.allowed.hosts&lt;/name&gt;
+        &lt;value&gt;* rw&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;nfs.dump.dir&lt;/name&gt;
+        &lt;value&gt;/var/nfstmp&lt;/value&gt;
+    &lt;/property&gt;
+</pre></div></div>
+      <p>5）可以创建和删除即可</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># su <span class="sh_symbol">-</span> nfs</li><li><span class="sh_symbol">[</span>nfs@nfsgw <span class="sh_symbol">~]</span>$ <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/nfstmp/</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw nfstmp<span class="sh_symbol">]</span>$ touch <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw nfstmp<span class="sh_symbol">]</span>$ ls</li><li><span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw nfstmp<span class="sh_symbol">]</span>$ rm <span class="sh_symbol">-</span>rf <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw nfstmp<span class="sh_symbol">]</span>$ ls</li><li><span class="sh_symbol">[</span>nfs@nfsgw nfstmp<span class="sh_symbol">]</span>$ <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw logs<span class="sh_symbol">]</span>$ touch <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw logs<span class="sh_symbol">]</span>$ ls</li><li><span class="sh_number">1</span> hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>secondarynamenode<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>log    yarn<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>resourcemanager<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>log</li><li>hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>namenode<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>log hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>secondarynamenode<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>out    yarn<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>resourcemanager<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>out</li><li>hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>namenode<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>out    hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>secondarynamenode<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>out<span class="sh_number">.1</span></li><li>hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>namenode<span class="sh_symbol">-</span>nn01<span class="sh_symbol">.</span>out<span class="sh_number">.1</span>  SecurityAuth<span class="sh_symbol">-</span>root<span class="sh_symbol">.</span>audit</li><li><span class="sh_symbol">[</span>nfs@nfsgw logs<span class="sh_symbol">]</span>$ rm <span class="sh_symbol">-</span>rf <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw logs<span class="sh_symbol">]</span>$ ls</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nfsgw ~]# su - nfs
+[nfs@nfsgw ~]$ cd /var/nfstmp/
+[nfs@nfsgw nfstmp]$ touch 1
+[nfs@nfsgw nfstmp]$ ls
+1
+[nfs@nfsgw nfstmp]$ rm -rf 1
+[nfs@nfsgw nfstmp]$ ls
+[nfs@nfsgw nfstmp]$ cd /usr/local/hadoop/logs/
+[nfs@nfsgw logs]$ touch 1
+[nfs@nfsgw logs]$ ls
+1 hadoop-root-secondarynamenode-nn01.log    yarn-root-resourcemanager-nn01.log
+hadoop-root-namenode-nn01.log hadoop-root-secondarynamenode-nn01.out    yarn-root-resourcemanager-nn01.out
+hadoop-root-namenode-nn01.out    hadoop-root-secondarynamenode-nn01.out.1
+hadoop-root-namenode-nn01.out.1  SecurityAuth-root.audit
+[nfs@nfsgw logs]$ rm -rf 1
+[nfs@nfsgw logs]$ ls
+
+</pre></div></div>
+      <p>6）启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>hadoop<span class="sh_symbol">-</span>daemon<span class="sh_symbol">.</span>sh <span class="sh_symbol">--</span>script <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hdfs start portmap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//portmap服务只能用root用户启动</span></li><li>starting portmap<span class="sh_symbol">,</span> logging <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>hadoop<span class="sh_symbol">-</span>root<span class="sh_symbol">-</span>portmap<span class="sh_symbol">-</span>nfsgw<span class="sh_symbol">.</span>out</li><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># jps</li><li><span class="sh_number">23714</span> Jps</li><li><span class="sh_number">23670</span> Portmap</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@nfsgw <span class="sh_symbol">~]</span># su <span class="sh_symbol">-</span> nfs</li><li>Last login<span class="sh_symbol">:</span> Mon Sep <span class="sh_number">10</span> <span class="sh_number">12</span><span class="sh_symbol">:</span><span class="sh_number">31</span><span class="sh_symbol">:</span><span class="sh_number">58</span> CST <span class="sh_number">2018</span> on <span class="sh_normal">pts</span><span class="sh_symbol">/</span><span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw <span class="sh_symbol">~]</span>$ <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>nfs@nfsgw hadoop<span class="sh_symbol">]</span>$ <span class="sh_symbol">.</span><span class="sh_regexp">/sbin/</span>hadoop<span class="sh_symbol">-</span>daemon<span class="sh_symbol">.</span>sh  <span class="sh_symbol">--</span>script <span class="sh_symbol">.</span><span class="sh_regexp">/bin/</span>hdfs start nfs3  </li><li><span class="sh_comment">//nfs3只能用代理用户启动</span></li><li>starting nfs3<span class="sh_symbol">,</span> logging <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">hadoop</span><span class="sh_symbol">/</span><span class="sh_normal">logs</span><span class="sh_symbol">/</span>hadoop<span class="sh_symbol">-</span>nfs<span class="sh_symbol">-</span>nfs3<span class="sh_symbol">-</span>nfsgw<span class="sh_symbol">.</span>out</li><li><span class="sh_symbol">[</span>nfs@nfsgw hadoop<span class="sh_symbol">]</span>$ jps&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_number">1362</span> Jps</li><li><span class="sh_number">1309</span> Nfs3 </li><li><span class="sh_symbol">[</span>root@nfsgw hadoop<span class="sh_symbol">]</span># jps&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//root用户执行可以看到portmap和nfs3</span></li><li><span class="sh_number">1216</span> Portmap</li><li><span class="sh_number">1309</span> Nfs3</li><li><span class="sh_number">1374</span> Jps</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nfsgw ~]# /usr/local/hadoop/sbin/hadoop-daemon.sh --script ./bin/hdfs start portmap		//portmap服务只能用root用户启动
+starting portmap, logging to /usr/local/hadoop/logs/hadoop-root-portmap-nfsgw.out
+[root@nfsgw ~]# jps
+23714 Jps
+23670 Portmap
+
+[root@nfsgw ~]# su - nfs
+Last login: Mon Sep 10 12:31:58 CST 2018 on pts/0
+[nfs@nfsgw ~]$ cd /usr/local/hadoop/
+[nfs@nfsgw hadoop]$ ./sbin/hadoop-daemon.sh  --script ./bin/hdfs start nfs3  
+//nfs3只能用代理用户启动
+starting nfs3, logging to /usr/local/hadoop/logs/hadoop-nfs-nfs3-nfsgw.out
+[nfs@nfsgw hadoop]$ jps					
+1362 Jps
+1309 Nfs3 
+[root@nfsgw hadoop]# jps			//root用户执行可以看到portmap和nfs3
+1216 Portmap
+1309 Nfs3
+1374 Jps
+</pre></div></div>
+      <p>7）实现客户端挂载（客户端可以用node4这台主机）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># rm <span class="sh_symbol">-</span><span class="sh_normal">rf </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>hadoop</li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install nfs<span class="sh_symbol">-</span>utils</li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># mount <span class="sh_symbol">-</span>t nfs <span class="sh_symbol">-</span>o <span class="sh_symbol">\</span></li><li>vers<span class="sh_symbol">=</span><span class="sh_number">3</span><span class="sh_symbol">,</span>proto<span class="sh_symbol">=</span>tcp<span class="sh_symbol">,</span>nolock<span class="sh_symbol">,</span>noatime<span class="sh_symbol">,</span>sync<span class="sh_symbol">,</span>noacl <span class="sh_number">192.168.1.26</span><span class="sh_symbol">:</span><span class="sh_regexp">/  /m</span><span class="sh_normal">nt</span><span class="sh_symbol">/</span>  <span class="sh_comment">//挂载</span></li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@node4 mnt<span class="sh_symbol">]</span># ls</li><li>aaa  bbb  fa  system  tmp</li><li><span class="sh_symbol">[</span>root@node4 mnt<span class="sh_symbol">]</span># touch a</li><li><span class="sh_symbol">[</span>root@node4 mnt<span class="sh_symbol">]</span># ls</li><li>a  aaa  bbb  fa  system  tmp</li><li><span class="sh_symbol">[</span>root@node4 mnt<span class="sh_symbol">]</span># rm <span class="sh_symbol">-</span>rf a</li><li><span class="sh_symbol">[</span>root@node4 mnt<span class="sh_symbol">]</span># ls</li><li>aaa  bbb  fa  system  tmp</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node4 ~]# rm -rf /usr/local/hadoop
+[root@node4 ~]# yum -y install nfs-utils
+[root@node4 ~]# mount -t nfs -o \
+vers=3,proto=tcp,nolock,noatime,sync,noacl 192.168.1.26:/  /mnt/  //挂载
+[root@node4 ~]# cd /mnt/
+[root@node4 mnt]# ls
+aaa  bbb  fa  system  tmp
+[root@node4 mnt]# touch a
+[root@node4 mnt]# ls
+a  aaa  bbb  fa  system  tmp
+[root@node4 mnt]# rm -rf a
+[root@node4 mnt]# ls
+aaa  bbb  fa  system  tmp
+
+</pre></div></div>
+      <p>8）实现开机自动挂载</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ARCHITECTURE/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>fstab</li><li><span class="sh_number">192.168.1.26</span><span class="sh_symbol">:</span><span class="sh_regexp">/  /m</span><span class="sh_normal">nt</span><span class="sh_symbol">/</span> nfs  vers<span class="sh_symbol">=</span><span class="sh_number">3</span><span class="sh_symbol">,</span>proto<span class="sh_symbol">=</span>tcp<span class="sh_symbol">,</span>nolock<span class="sh_symbol">,</span>noatime<span class="sh_symbol">,</span>sync<span class="sh_symbol">,</span>noacl<span class="sh_symbol">,</span>_netdev <span class="sh_number">0</span> <span class="sh_number">0</span> </li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># mount <span class="sh_symbol">-</span>a</li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># df <span class="sh_symbol">-</span>h</li><li><span class="sh_number">192.168.1.26</span><span class="sh_symbol">:</span><span class="sh_regexp">/   64G  6.2G   58G  10% /m</span>nt</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@node4 <span class="sh_symbol">~]</span># rpcinfo <span class="sh_symbol">-</span>p <span class="sh_number">192.168.1.26</span></li><li>   program vers proto   port  service</li><li>    <span class="sh_number">100005</span>    <span class="sh_number">3</span>   udp   <span class="sh_number">4242</span>  mountd</li><li>    <span class="sh_number">100005</span>    <span class="sh_number">1</span>   tcp   <span class="sh_number">4242</span>  mountd</li><li>    <span class="sh_number">100000</span>    <span class="sh_number">2</span>   udp    <span class="sh_number">111</span>  portmapper</li><li>    <span class="sh_number">100000</span>    <span class="sh_number">2</span>   tcp    <span class="sh_number">111</span>  portmapper</li><li>    <span class="sh_number">100005</span>    <span class="sh_number">3</span>   tcp   <span class="sh_number">4242</span>  mountd</li><li>    <span class="sh_number">100005</span>    <span class="sh_number">2</span>   tcp   <span class="sh_number">4242</span>  mountd</li><li>    <span class="sh_number">100003</span>    <span class="sh_number">3</span>   tcp   <span class="sh_number">2049</span>  nfs</li><li>    <span class="sh_number">100005</span>    <span class="sh_number">2</span>   udp   <span class="sh_number">4242</span>  mountd</li><li>    <span class="sh_number">100005</span>    <span class="sh_number">1</span>   udp   <span class="sh_number">4242</span>  mountd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node4 ~]# vim /etc/fstab
+192.168.1.26:/  /mnt/ nfs  vers=3,proto=tcp,nolock,noatime,sync,noacl,_netdev 0 0 
+[root@node4 ~]# mount -a
+[root@node4 ~]# df -h
+192.168.1.26:/   64G  6.2G   58G  10% /mnt
+
+[root@node4 ~]# rpcinfo -p 192.168.1.26
+   program vers proto   port  service
+    100005    3   udp   4242  mountd
+    100005    1   tcp   4242  mountd
+    100000    2   udp    111  portmapper
+    100000    2   tcp    111  portmapper
+    100005    3   tcp   4242  mountd
+    100005    2   tcp   4242  mountd
+    100003    3   tcp   2049  nfs
+    100005    2   udp   4242  mountd
+    100005    1   udp   4242  mountd
+
+</pre></div></div>
+    </div>
+  
+</body></html>

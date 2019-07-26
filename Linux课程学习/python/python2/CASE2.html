@@ -1,0 +1,407 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE2_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE2_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE2_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE2_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE2_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Python2 DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#case1">案例1：简单的加减法数学游戏</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#case2">案例2：简单GUI程序</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#case3">案例3：快速排序</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#case4">案例4：测试程序运行效率</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：简单的加减法数学游戏</h2>
+      <h3>1.1 问题</h3>
+      <p>编写math_game.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>随机生成两个100以内的数字
+</li>
+        <li>随机选择加法或是减法
+</li>
+        <li>总是使用大的数字减去小的数字
+</li>
+        <li>如果用户答错三次，程序给出正确答案 
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>创建4个函数，分别实现返回两数之和、返回两数之差、判断表达式正确性、是否继续计算四种方法：</p>
+      <p>1.首先调用main()函数（是否继续计算功能），main函数利用循环无限次调用exam()函数进行计算，计算结束，用户选择是否继续（此过程利用try语句捕获索引错误、ctrl+c（中断）错误、ctrl+d错误），如果选择n即结束循环，不再调用exam()函数，否则循环继续</p>
+      <p>2.调用exam()函数：</p>
+      <p>a)输出运算公式：利用列表切片将随机生成的两个数打印（这两个数利用random模块及列表生成式随机生成，并利用sort()方法进行降序排序，确保相减时一直是大的数字减小的数字），利用random模块随机生成“+”“-”号，输出在两数之间</p>
+      <p>b)用户输入值，利用for循环进行三次判断，如果运算公式结果与用户输入值相同，循环结束，系统输出“你赢了”，exam()函数执行结束，否则系统输出“你答错了”，循环继续，3次都回答错误，利用循环的else分支输出运算公式及结果</p>
+      <p>c)上诉运算公式结果：利用random模块随机生成“+”“-”值对关系调用（其中“+”“-”号作为字典键，返回和函数add()及返回差函数sub()作为值，调用时将随机生成的两个数字作为参数传递给add()函数及sub()函数）</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># vim math_game<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">add</span><span class="sh_symbol">(</span>x<span class="sh_symbol">,</span> y<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> x <span class="sh_symbol">+</span> y</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">sub</span><span class="sh_symbol">(</span>x<span class="sh_symbol">,</span> y<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> x <span class="sh_symbol">-</span> y</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">exam</span><span class="sh_symbol">():</span></li><li>    cmds <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'+'</span><span class="sh_symbol">:</span> add<span class="sh_symbol">,</span> <span class="sh_string">'-'</span><span class="sh_symbol">:</span> sub<span class="sh_cbracket">}</span>  # 将函数存入字典</li><li>    nums <span class="sh_symbol">=</span> <span class="sh_symbol">[</span>random<span class="sh_symbol">.</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">100</span><span class="sh_symbol">)</span> <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)]</span> # 生成两个数</li><li>    nums<span class="sh_symbol">.</span><span class="sh_function">sort</span><span class="sh_symbol">(</span>reverse<span class="sh_symbol">=</span>True<span class="sh_symbol">)</span>  # 降序排列</li><li>    op <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">choice</span><span class="sh_symbol">(</span><span class="sh_string">'+-'</span><span class="sh_symbol">)</span></li><li>    result <span class="sh_symbol">=</span> cmds<span class="sh_symbol">[</span>op<span class="sh_symbol">](*</span>nums<span class="sh_symbol">)</span>  # 调用存入字典的函数，把nums列表拆开，作为参数传入</li><li>    prompt <span class="sh_symbol">=</span> <span class="sh_string">"%s %s %s = "</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>nums<span class="sh_symbol">[</span><span class="sh_number">0</span><span class="sh_symbol">],</span> op<span class="sh_symbol">,</span> nums<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">])</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">3</span><span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">try</span><span class="sh_symbol">:</span></li><li>            answer <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span>prompt<span class="sh_symbol">))</span></li><li>        except<span class="sh_symbol">:</span></li><li>            <span class="sh_keyword">continue</span></li><li><span style="display:none;">&nbsp;</span></li><li>        <span class="sh_keyword">if</span> answer <span class="sh_symbol">==</span> result<span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'你真棒，答对了！'</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">break</span>  # 答对了就不要再回答了，结束循环</li><li>        <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'答错了'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"%s%s"</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>prompt<span class="sh_symbol">,</span> result<span class="sh_symbol">))</span>   # 只有循环不被<span class="sh_keyword">break</span>才执行</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">main</span><span class="sh_symbol">():</span></li><li>    <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>        <span class="sh_function">exam</span><span class="sh_symbol">()</span></li><li>        <span class="sh_keyword">try</span><span class="sh_symbol">:</span></li><li>            go_on <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'Continue(y/n)? '</span><span class="sh_symbol">).</span><span class="sh_function">strip</span><span class="sh_symbol">()[</span><span class="sh_number">0</span><span class="sh_symbol">]</span></li><li>        except IndexError<span class="sh_symbol">:</span></li><li>            <span class="sh_keyword">continue</span></li><li>        <span class="sh_function">except</span> <span class="sh_symbol">(</span>KeyboardInterrupt<span class="sh_symbol">,</span> EOFError<span class="sh_symbol">):</span></li><li>            go_on <span class="sh_symbol">=</span> <span class="sh_string">'n'</span></li><li><span style="display:none;">&nbsp;</span></li><li>        <span class="sh_keyword">if</span> go_on <span class="sh_keyword">in</span> <span class="sh_string">'nN'</span><span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\n</span><span class="sh_string">Bye-bye.'</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">break</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">main</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# vim math_game.py
+#!/usr/bin/env python3
+
+import random
+
+def add(x, y):
+    return x + y
+
+def sub(x, y):
+    return x - y
+
+def exam():
+    cmds = {'+': add, '-': sub}  # 将函数存入字典
+    nums = [random.randint(1, 100) for i in range(2)] # 生成两个数
+    nums.sort(reverse=True)  # 降序排列
+    op = random.choice('+-')
+    result = cmds[op](*nums)  # 调用存入字典的函数，把nums列表拆开，作为参数传入
+    prompt = "%s %s %s = " % (nums[0], op, nums[1])
+
+    for i in range(3):
+        try:
+            answer = int(input(prompt))
+        except:
+            continue
+
+        if answer == result:
+            print('你真棒，答对了！')
+            break  # 答对了就不要再回答了，结束循环
+        else:
+            print('答错了')
+    else:
+        print("%s%s" % (prompt, result))   # 只有循环不被break才执行
+
+
+def main():
+    while True:
+        exam()
+        try:
+            go_on = input('Continue(y/n)? ').strip()[0]
+        except IndexError:
+            continue
+        except (KeyboardInterrupt, EOFError):
+            go_on = 'n'
+
+        if go_on in 'nN':
+            print('\nBye-bye.')
+            break
+
+
+if __name__ == '__main__':
+    main()
+</pre></div></div>
+      <p>实现此案例还可利用while循环：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># vim mygui<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import random</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">add</span><span class="sh_symbol">(</span>x<span class="sh_symbol">,</span> y<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> x <span class="sh_symbol">+</span> y</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">sub</span><span class="sh_symbol">(</span>x<span class="sh_symbol">,</span> y<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> x <span class="sh_symbol">-</span> y</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">exam</span><span class="sh_symbol">():</span></li><li>    cmds <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'+'</span><span class="sh_symbol">:</span> add<span class="sh_symbol">,</span> <span class="sh_string">'-'</span><span class="sh_symbol">:</span> sub<span class="sh_cbracket">}</span>  # 将函数存入字典</li><li>    nums <span class="sh_symbol">=</span> <span class="sh_symbol">[</span>random<span class="sh_symbol">.</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">100</span><span class="sh_symbol">)</span> <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)]</span> # 生成两个数</li><li>    nums<span class="sh_symbol">.</span><span class="sh_function">sort</span><span class="sh_symbol">(</span>reverse<span class="sh_symbol">=</span>True<span class="sh_symbol">)</span>  # 降序排列</li><li>    op <span class="sh_symbol">=</span> random<span class="sh_symbol">.</span><span class="sh_function">choice</span><span class="sh_symbol">(</span><span class="sh_string">'+-'</span><span class="sh_symbol">)</span></li><li>    result <span class="sh_symbol">=</span> cmds<span class="sh_symbol">[</span>op<span class="sh_symbol">](*</span>nums<span class="sh_symbol">)</span>  # 调用存入字典的函数，把nums列表拆开，作为参数传入</li><li>    prompt <span class="sh_symbol">=</span> <span class="sh_string">"%s %s %s = "</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>nums<span class="sh_symbol">[</span><span class="sh_number">0</span><span class="sh_symbol">],</span> op<span class="sh_symbol">,</span> nums<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">])</span></li><li>    tries <span class="sh_symbol">=</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">while</span> tries <span class="sh_symbol">&lt;</span> <span class="sh_number">3</span><span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">try</span><span class="sh_symbol">:</span></li><li>            answer <span class="sh_symbol">=</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_function">input</span><span class="sh_symbol">(</span>prompt<span class="sh_symbol">))</span></li><li>        except<span class="sh_symbol">:</span></li><li>            <span class="sh_keyword">continue</span></li><li><span style="display:none;">&nbsp;</span></li><li>        <span class="sh_keyword">if</span> answer <span class="sh_symbol">==</span> result<span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'你真棒，答对了！'</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">break</span>  # 答对了就不要再回答了，结束循环</li><li>        <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'答错了'</span><span class="sh_symbol">)</span></li><li>            tries <span class="sh_symbol">+=</span> <span class="sh_number">1</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"%s%s"</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>prompt<span class="sh_symbol">,</span> result<span class="sh_symbol">))</span>   # 只有循环不被<span class="sh_keyword">break</span>才执行</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">main</span><span class="sh_symbol">():</span></li><li>    <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>        <span class="sh_function">exam</span><span class="sh_symbol">()</span></li><li>        <span class="sh_keyword">try</span><span class="sh_symbol">:</span></li><li>            go_on <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'Continue(y/n)? '</span><span class="sh_symbol">).</span><span class="sh_function">strip</span><span class="sh_symbol">()[</span><span class="sh_number">0</span><span class="sh_symbol">]</span></li><li>        except IndexError<span class="sh_symbol">:</span></li><li>            <span class="sh_keyword">continue</span></li><li>        <span class="sh_function">except</span> <span class="sh_symbol">(</span>KeyboardInterrupt<span class="sh_symbol">,</span> EOFError<span class="sh_symbol">):</span></li><li>            go_on <span class="sh_symbol">=</span> <span class="sh_string">'n'</span></li><li><span style="display:none;">&nbsp;</span></li><li>        <span class="sh_keyword">if</span> go_on <span class="sh_keyword">in</span> <span class="sh_string">'nN'</span><span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'</span><span class="sh_specialchar">\n</span><span class="sh_string">Bye-bye.'</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">break</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">main</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# vim mygui.py
+
+#!/usr/bin/env python3
+
+import random
+
+def add(x, y):
+    return x + y
+
+def sub(x, y):
+    return x - y
+
+def exam():
+    cmds = {'+': add, '-': sub}  # 将函数存入字典
+    nums = [random.randint(1, 100) for i in range(2)] # 生成两个数
+    nums.sort(reverse=True)  # 降序排列
+    op = random.choice('+-')
+    result = cmds[op](*nums)  # 调用存入字典的函数，把nums列表拆开，作为参数传入
+    prompt = "%s %s %s = " % (nums[0], op, nums[1])
+    tries = 0
+
+    while tries &lt; 3:
+        try:
+            answer = int(input(prompt))
+        except:
+            continue
+
+        if answer == result:
+            print('你真棒，答对了！')
+            break  # 答对了就不要再回答了，结束循环
+        else:
+            print('答错了')
+            tries += 1
+    else:
+        print("%s%s" % (prompt, result))   # 只有循环不被break才执行
+
+
+def main():
+    while True:
+        exam()
+        try:
+            go_on = input('Continue(y/n)? ').strip()[0]
+        except IndexError:
+            continue
+        except (KeyboardInterrupt, EOFError):
+            go_on = 'n'
+
+        if go_on in 'nN':
+            print('\nBye-bye.')
+            break
+
+
+if __name__ == '__main__':
+    main()
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># python3 math_game<span class="sh_symbol">.</span>py </li><li><span class="sh_number">54</span> <span class="sh_symbol">+</span> <span class="sh_number">19</span> <span class="sh_symbol">=</span> </li><li><span class="sh_number">54</span> <span class="sh_symbol">+</span> <span class="sh_number">19</span> <span class="sh_symbol">=</span> </li><li><span class="sh_number">54</span> <span class="sh_symbol">+</span> <span class="sh_number">19</span> <span class="sh_symbol">=</span> <span class="sh_number">73</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">60</span> <span class="sh_symbol">+</span> <span class="sh_number">39</span> <span class="sh_symbol">=</span> <span class="sh_number">99</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">18</span> <span class="sh_symbol">+</span> <span class="sh_number">15</span> <span class="sh_symbol">=</span> <span class="sh_number">33</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">35</span> <span class="sh_symbol">+</span> <span class="sh_number">20</span> <span class="sh_symbol">=</span> <span class="sh_number">55</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">37</span> <span class="sh_symbol">+</span> <span class="sh_number">35</span> <span class="sh_symbol">=</span> <span class="sh_number">72</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">77</span> <span class="sh_symbol">-</span> <span class="sh_number">57</span> <span class="sh_symbol">=</span> <span class="sh_number">20</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">35</span> <span class="sh_symbol">+</span> <span class="sh_number">23</span> <span class="sh_symbol">=</span> <span class="sh_number">5</span></li><li>答错了</li><li><span class="sh_number">35</span> <span class="sh_symbol">+</span> <span class="sh_number">23</span> <span class="sh_symbol">=</span> <span class="sh_number">6</span></li><li>答错了</li><li><span class="sh_number">35</span> <span class="sh_symbol">+</span> <span class="sh_number">23</span> <span class="sh_symbol">=</span> <span class="sh_number">7</span></li><li>答错了</li><li><span class="sh_number">35</span> <span class="sh_symbol">+</span> <span class="sh_number">23</span> <span class="sh_symbol">=</span> <span class="sh_number">58</span></li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> y</li><li><span class="sh_number">75</span> <span class="sh_symbol">+</span> <span class="sh_number">47</span> <span class="sh_symbol">=</span> <span class="sh_number">122</span></li><li>你真棒，答对了！</li><li><span class="sh_function">Continue</span><span class="sh_symbol">(</span><span class="sh_normal">y</span><span class="sh_symbol">/</span>n<span class="sh_symbol">)?</span> <span class="sh_symbol">^</span>C</li><li>Bye<span class="sh_symbol">-</span>bye<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# python3 math_game.py 
+54 + 19 = 
+54 + 19 = 
+54 + 19 = 73
+你真棒，答对了！
+Continue(y/n)? y
+60 + 39 = 99
+你真棒，答对了！
+Continue(y/n)? y
+18 + 15 = 33
+你真棒，答对了！
+Continue(y/n)? y
+35 + 20 = 55
+你真棒，答对了！
+Continue(y/n)? y
+37 + 35 = 72
+你真棒，答对了！
+Continue(y/n)? y
+77 - 57 = 20
+你真棒，答对了！
+Continue(y/n)? y
+35 + 23 = 5
+答错了
+35 + 23 = 6
+答错了
+35 + 23 = 7
+答错了
+35 + 23 = 58
+Continue(y/n)? y
+75 + 47 = 122
+你真棒，答对了！
+Continue(y/n)? ^C
+Bye-bye.
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：简单GUI程序</h2>
+      <h3>2.1 问题</h3>
+      <p>创建mygui.py脚本，要求如下：</p>
+      <ol class="list">
+        <li>窗口程序提供三个按钮
+</li>
+        <li>其中两个按钮的前景色均为白色，背景色为蓝色
+</li>
+        <li>第三个按钮前景色为红色，背景色为红色
+</li>
+        <li>按下第三个按钮后，程序退出 
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>1.导入tkinter模块、创建顶层窗口，顶层窗口只应该创建一次</p>
+      <p>2.添加窗口部件：用Label控件创建标签、用Butten控件来创建按钮</p>
+      <p>3.引入偏函数partial把tkinter.Button的某些参数给固定住（也就是设置默认值），返回一个新的函数，调用这个新函数重复创建按钮会更简单。对于有很多可调用对象，并且许多调用都反复使用相同参数的情况，使用偏函数比较合适。</p>
+      <p>4.创建第三个按钮需command绑定退出命令</p>
+      <p>5.最后将按钮及标签填充到界面</p>
+      <p>6.运行这个GUI应用</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># vim mygui<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import tkinter</li><li>from functools import partial</li><li><span style="display:none;">&nbsp;</span></li><li>root <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Tk</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;#创建顶层窗口</li><li>lb1 <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Label</span><span class="sh_symbol">(</span>root<span class="sh_symbol">,</span> text<span class="sh_symbol">=</span><span class="sh_string">"hello world!"</span><span class="sh_symbol">,</span> font <span class="sh_symbol">=</span> <span class="sh_string">"Aria 16 bold"</span><span class="sh_symbol">)</span>#创建标签</li><li>b1 <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Button</span><span class="sh_symbol">(</span>root<span class="sh_symbol">,</span> bg<span class="sh_symbol">=</span><span class="sh_string">'blue'</span><span class="sh_symbol">,</span> fg<span class="sh_symbol">=</span><span class="sh_string">'white'</span><span class="sh_symbol">,</span> text<span class="sh_symbol">=</span><span class="sh_string">"Button 1"</span><span class="sh_symbol">)</span>#创建按钮</li><li>mybutton <span class="sh_symbol">=</span> <span class="sh_function">partial</span><span class="sh_symbol">(</span>tkinter<span class="sh_symbol">.</span>Button<span class="sh_symbol">,</span> root<span class="sh_symbol">,</span> bg<span class="sh_symbol">=</span><span class="sh_string">'blue'</span><span class="sh_symbol">,</span> fg<span class="sh_symbol">=</span><span class="sh_string">'white'</span><span class="sh_symbol">)</span></li><li>#调用新的函数时，给出改变的参数即可</li><li>b2 <span class="sh_symbol">=</span> <span class="sh_function">mybutton</span><span class="sh_symbol">(</span>text<span class="sh_symbol">=</span><span class="sh_string">'Button 2'</span><span class="sh_symbol">)</span></li><li>b3 <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Button</span><span class="sh_symbol">(</span>root<span class="sh_symbol">,</span> bg<span class="sh_symbol">=</span><span class="sh_string">'red'</span><span class="sh_symbol">,</span> fg<span class="sh_symbol">=</span><span class="sh_string">'red'</span><span class="sh_symbol">,</span> text<span class="sh_symbol">=</span><span class="sh_string">'QUIT'</span><span class="sh_symbol">,</span> command<span class="sh_symbol">=</span>root<span class="sh_symbol">.</span>quit<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#创建按钮，绑定了root<span class="sh_symbol">.</span>quit命令</li><li>lb1<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;#填充到界面</li><li>b1<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>b2<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>b3<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>root<span class="sh_symbol">.</span><span class="sh_function">mainloop</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;#运行这个GUI应用</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# vim mygui.py
+
+#!/usr/bin/env python3
+
+import tkinter
+from functools import partial
+
+root = tkinter.Tk()	#创建顶层窗口
+lb1 = tkinter.Label(root, text="hello world!", font = "Aria 16 bold")#创建标签
+b1 = tkinter.Button(root, bg='blue', fg='white', text="Button 1")#创建按钮
+mybutton = partial(tkinter.Button, root, bg='blue', fg='white')
+#调用新的函数时，给出改变的参数即可
+b2 = mybutton(text='Button 2')
+b3 = tkinter.Button(root, bg='red', fg='red', text='QUIT', command=root.quit)	#创建按钮，绑定了root.quit命令
+lb1.pack()	#填充到界面
+b1.pack()
+b2.pack()
+b3.pack()
+root.mainloop()	#运行这个GUI应用
+</pre></div></div>
+      <p>实现此案例还可用以下方法，需要注意的是：</p>
+      <p>Command绑定闭包函数返回函数块，上传多个参数调用闭包函数时，内层函数利用config方法替换标签内容</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># vim mygui<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import tkinter</li><li>from functools import partial</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">say_hi</span><span class="sh_symbol">(</span>word<span class="sh_symbol">):</span></li><li>    def <span class="sh_function">welcome</span><span class="sh_symbol">():</span></li><li>        lb1<span class="sh_symbol">.</span><span class="sh_function">config</span><span class="sh_symbol">(</span>text<span class="sh_symbol">=</span><span class="sh_string">'hello %s!'</span> <span class="sh_symbol">%</span> word<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> welcome</li><li><span style="display:none;">&nbsp;</span></li><li>root <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Tk</span><span class="sh_symbol">()</span></li><li>lb1 <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Label</span><span class="sh_symbol">(</span>root<span class="sh_symbol">,</span> text<span class="sh_symbol">=</span><span class="sh_string">"hello world!"</span><span class="sh_symbol">,</span> font <span class="sh_symbol">=</span> <span class="sh_string">"Aria 16 bold"</span><span class="sh_symbol">)</span></li><li>mybutton <span class="sh_symbol">=</span> <span class="sh_function">partial</span><span class="sh_symbol">(</span>tkinter<span class="sh_symbol">.</span>Button<span class="sh_symbol">,</span> root<span class="sh_symbol">,</span> bg<span class="sh_symbol">=</span><span class="sh_string">'blue'</span><span class="sh_symbol">,</span> fg<span class="sh_symbol">=</span><span class="sh_string">'white'</span><span class="sh_symbol">)</span></li><li>b1 <span class="sh_symbol">=</span> <span class="sh_function">mybutton</span><span class="sh_symbol">(</span>text<span class="sh_symbol">=</span><span class="sh_string">'Button 1'</span><span class="sh_symbol">,</span> command<span class="sh_symbol">=</span><span class="sh_function">say_hi</span><span class="sh_symbol">(</span><span class="sh_string">'tedu'</span><span class="sh_symbol">))</span></li><li>b2 <span class="sh_symbol">=</span> <span class="sh_function">mybutton</span><span class="sh_symbol">(</span>text<span class="sh_symbol">=</span><span class="sh_string">'Button 2'</span><span class="sh_symbol">,</span> command<span class="sh_symbol">=</span><span class="sh_function">say_hi</span><span class="sh_symbol">(</span><span class="sh_string">'达内'</span><span class="sh_symbol">))</span></li><li>b3 <span class="sh_symbol">=</span> tkinter<span class="sh_symbol">.</span><span class="sh_function">Button</span><span class="sh_symbol">(</span>root<span class="sh_symbol">,</span> bg<span class="sh_symbol">=</span><span class="sh_string">'red'</span><span class="sh_symbol">,</span> fg<span class="sh_symbol">=</span><span class="sh_string">'red'</span><span class="sh_symbol">,</span> text<span class="sh_symbol">=</span><span class="sh_string">'QUIT'</span><span class="sh_symbol">,</span> command<span class="sh_symbol">=</span>root<span class="sh_symbol">.</span>quit<span class="sh_symbol">)</span></li><li>lb1<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>b1<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>b2<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>b3<span class="sh_symbol">.</span><span class="sh_function">pack</span><span class="sh_symbol">()</span></li><li>root<span class="sh_symbol">.</span><span class="sh_function">mainloop</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# vim mygui.py
+
+#!/usr/bin/env python3
+
+import tkinter
+from functools import partial
+
+def say_hi(word):
+    def welcome():
+        lb1.config(text='hello %s!' % word)
+    return welcome
+
+root = tkinter.Tk()
+lb1 = tkinter.Label(root, text="hello world!", font = "Aria 16 bold")
+mybutton = partial(tkinter.Button, root, bg='blue', fg='white')
+b1 = mybutton(text='Button 1', command=say_hi('tedu'))
+b2 = mybutton(text='Button 2', command=say_hi('达内'))
+b3 = tkinter.Button(root, bg='red', fg='red', text='QUIT', command=root.quit)
+lb1.pack()
+b1.pack()
+b2.pack()
+b3.pack()
+root.mainloop()
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行，结果如图-1、图-2、图-3所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day05<span class="sh_symbol">]</span># python3  mygui<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day05]# python3  mygui.py
+</pre></div></div>
+      <div class="image">
+        <img src="./CASE2_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># python3 mygui2<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# python3 mygui2.py
+</pre></div></div>
+      <div class="image">
+        <img src="./CASE2_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <div class="image">
+        <img src="./CASE2_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：快速排序</h2>
+      <h3>3.1 问题</h3>
+      <p>创建qsort.py文件，实现以下目标：</p>
+      <ol class="list">
+        <li>随机生成10个数字
+</li>
+        <li>利用递归，实现快速排序 
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>将要排序的数据分割成独立的三部分，任意选取一个数据作为关键数据，然后将所有比它小的数都放到它前面，所有比它大的数都放到它后面，这个过程称为一趟快速排序，整个排序过程通过递归进行，以此达到整个数据变成有序序列。</p>
+      <p>一趟快速排序的算法是：</p>
+      <p>1.创建两个空列表分别用于存放比关键数小的数据和比关键数大的数据smaller和larger</p>
+      <p>2.For循环遍历将要排序的数据，将数据与关键数对比，比关键数小的放入smaller列表中，比关键数大的放入larger列表中</p>
+      <p>3.函数返回值为，以smaller列表为参数调用自身函数、关键数、以larger列表为参数调用自身函数：此时，函数每一次调用都会基于上一次的调用进行，会持续调用自身函数，参数列表数据会越来越少，我们规定，参数列表长度为0或1，递归结束，输出最终数据</p>
+      <p>4.注意：在调用qsort函数时，根据上传数据类型不同，一定要注意数据类型转化</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day05<span class="sh_symbol">]</span> # vim qsort<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>from random import randint</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">qsort</span><span class="sh_symbol">(</span>data<span class="sh_symbol">):</span></li><li>    data <span class="sh_symbol">=</span> <span class="sh_function">list</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">if</span> <span class="sh_function">len</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span> <span class="sh_symbol">==</span> <span class="sh_number">0</span> or <span class="sh_function">len</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span> <span class="sh_symbol">==</span> <span class="sh_number">1</span><span class="sh_symbol">:</span>  # 长度为<span class="sh_number">0</span>或<span class="sh_number">1</span>，直接返回</li><li>        <span class="sh_keyword">return</span> data</li><li><span style="display:none;">&nbsp;</span></li><li>    middle <span class="sh_symbol">=</span> data<span class="sh_symbol">.</span><span class="sh_function">pop</span><span class="sh_symbol">()</span>  # 假设最后一项是中间值</li><li>    smaller <span class="sh_symbol">=</span> <span class="sh_symbol">[]</span></li><li>    larger <span class="sh_symbol">=</span> <span class="sh_symbol">[]</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">for</span> item <span class="sh_keyword">in</span> data<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">if</span> item <span class="sh_symbol">&gt;</span> middle<span class="sh_symbol">:</span>  # 比middle大的放到larger，否则放到smaller</li><li>            larger<span class="sh_symbol">.</span><span class="sh_function">append</span><span class="sh_symbol">(</span>item<span class="sh_symbol">)</span></li><li>        <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>            smaller<span class="sh_symbol">.</span><span class="sh_function">append</span><span class="sh_symbol">(</span>item<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">qsort</span><span class="sh_symbol">(</span>smaller<span class="sh_symbol">)</span> <span class="sh_symbol">+</span> <span class="sh_symbol">[</span>middle<span class="sh_symbol">]</span> <span class="sh_symbol">+</span> <span class="sh_function">qsort</span><span class="sh_symbol">(</span>larger<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    nums <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_function">randint</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">100</span><span class="sh_symbol">)</span> <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">10</span><span class="sh_symbol">)]</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span>nums<span class="sh_symbol">)</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_function">qsort</span><span class="sh_symbol">(</span>nums<span class="sh_symbol">))</span></li><li>    astr <span class="sh_symbol">=</span> <span class="sh_string">'qwertyuio'</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">''</span><span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span><span class="sh_function">qsort</span><span class="sh_symbol">(</span>astr<span class="sh_symbol">)))</span></li><li>    atuple <span class="sh_symbol">=</span> <span class="sh_symbol">(</span><span class="sh_number">10</span><span class="sh_symbol">,</span> <span class="sh_number">2</span><span class="sh_symbol">,</span> <span class="sh_number">34</span><span class="sh_symbol">,</span> <span class="sh_number">234</span><span class="sh_symbol">,</span> <span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">66</span><span class="sh_symbol">,</span> <span class="sh_number">88</span><span class="sh_symbol">,</span> <span class="sh_number">77</span><span class="sh_symbol">)</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_function">tuple</span><span class="sh_symbol">(</span><span class="sh_function">qsort</span><span class="sh_symbol">(</span>atuple<span class="sh_symbol">)))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day05] # vim qsort.py
+#!/usr/bin/env python3
+
+from random import randint
+
+def qsort(data):
+    data = list(data)
+    if len(data) == 0 or len(data) == 1:  # 长度为0或1，直接返回
+        return data
+
+    middle = data.pop()  # 假设最后一项是中间值
+    smaller = []
+    larger = []
+
+    for item in data:
+        if item &gt; middle:  # 比middle大的放到larger，否则放到smaller
+            larger.append(item)
+        else:
+            smaller.append(item)
+
+    return qsort(smaller) + [middle] + qsort(larger)
+
+
+if __name__ == '__main__':
+    nums = [randint(1, 100) for i in range(10)]
+    print(nums)
+    print(qsort(nums))
+    astr = 'qwertyuio'
+    print(''.join(qsort(astr)))
+    atuple = (10, 2, 34, 234, 1, 66, 88, 77)
+    print(tuple(qsort(atuple)))
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># python3 qsort<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">[</span><span class="sh_number">31</span><span class="sh_symbol">,</span> <span class="sh_number">87</span><span class="sh_symbol">,</span> <span class="sh_number">88</span><span class="sh_symbol">,</span> <span class="sh_number">22</span><span class="sh_symbol">,</span> <span class="sh_number">26</span><span class="sh_symbol">,</span> <span class="sh_number">91</span><span class="sh_symbol">,</span> <span class="sh_number">99</span><span class="sh_symbol">,</span> <span class="sh_number">6</span><span class="sh_symbol">,</span> <span class="sh_number">7</span><span class="sh_symbol">,</span> <span class="sh_number">44</span><span class="sh_symbol">]</span></li><li><span class="sh_symbol">[</span><span class="sh_number">6</span><span class="sh_symbol">,</span> <span class="sh_number">7</span><span class="sh_symbol">,</span> <span class="sh_number">22</span><span class="sh_symbol">,</span> <span class="sh_number">26</span><span class="sh_symbol">,</span> <span class="sh_number">31</span><span class="sh_symbol">,</span> <span class="sh_number">44</span><span class="sh_symbol">,</span> <span class="sh_number">87</span><span class="sh_symbol">,</span> <span class="sh_number">88</span><span class="sh_symbol">,</span> <span class="sh_number">91</span><span class="sh_symbol">,</span> <span class="sh_number">99</span><span class="sh_symbol">]</span></li><li>eioqrtuwy</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">2</span><span class="sh_symbol">,</span> <span class="sh_number">10</span><span class="sh_symbol">,</span> <span class="sh_number">34</span><span class="sh_symbol">,</span> <span class="sh_number">66</span><span class="sh_symbol">,</span> <span class="sh_number">77</span><span class="sh_symbol">,</span> <span class="sh_number">88</span><span class="sh_symbol">,</span> <span class="sh_number">234</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# python3 qsort.py 
+[31, 87, 88, 22, 26, 91, 99, 6, 7, 44]
+[6, 7, 22, 26, 31, 44, 87, 88, 91, 99]
+eioqrtuwy
+(1, 2, 10, 34, 66, 77, 88, 234)
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：测试程序运行效率</h2>
+      <h3>4.1 问题</h3>
+      <p>创建deco.py脚本，要求如下：</p>
+      <ol class="list">
+        <li>有个程序包含多个函数 
+</li>
+        <li>程序运行耗时较长 
+</li>
+        <li>为了确定哪个函数是瓶颈，需要计算出每个函数运行时间 
+</li>
+        <li>要求使用装饰器实现
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>如果一个程序有多个函数，查看每个函数运行耗时时长，这时如果修改每个函数，为它加上计时的功能，我们需要耗时去了解每个函数的功能，思考如何修改去增加计时功能，这样会相当繁琐，为避免这种现象出现，我们利用装饰器函数在不变动其他函数基础上，新增计时功能，在每个函数前添加语法糖（调用装饰器函数）即可，实施方法如下：</p>
+      <p>1.首先，定义一个函数loop()，该函数可以拥有任何功能，这里将for循环输出的数字添加到空列表中，并让进程挂起0.3s的时间</p>
+      <p>2.定义装饰器函数计算loop()函数运行耗时时长，装饰器函数deco，该函数的传入参数是loop （即被装饰函数），返回参数是内层函数。这里的内层函数-timeit，其实就相当于闭包函数，它起到装饰给定函数的作用</p>
+      <p>3.@ deco这个语法相当于执行loop = deco(loop)，为loop函数装饰并返回</p>
+      <p>4.装饰器函数在调用loop函数前后各返回一个当前时间，返回两个时间差即计算出运行耗时。</p>
+      <p>5.装饰器函数参数是你要装饰的函数名，装饰器函数返回是装饰完的函数名</p>
+      <p>需要要注意的是：为了不破坏原函数的逻辑，我们要保证内层函数timeit和被装饰函数loop的传入参数和返回值类型必须保持一致。</p>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day05<span class="sh_symbol">]</span># vim deco<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import time</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">deco</span><span class="sh_symbol">(</span>func<span class="sh_symbol">):</span></li><li>    def <span class="sh_function">timeit</span><span class="sh_symbol">():</span></li><li>        start <span class="sh_symbol">=</span> time<span class="sh_symbol">.</span><span class="sh_function">time</span><span class="sh_symbol">()</span></li><li>        result <span class="sh_symbol">=</span> <span class="sh_function">func</span><span class="sh_symbol">()</span></li><li>        end <span class="sh_symbol">=</span> time<span class="sh_symbol">.</span><span class="sh_function">time</span><span class="sh_symbol">()</span></li><li>        <span class="sh_keyword">return</span> end <span class="sh_symbol">-</span> start<span class="sh_symbol">,</span> result   # 将会返回元组</li><li>    <span class="sh_keyword">return</span> timeit</li><li><span style="display:none;">&nbsp;</span></li><li>@deco</li><li>def <span class="sh_function">loop</span><span class="sh_symbol">():</span></li><li>    result <span class="sh_symbol">=</span> <span class="sh_symbol">[]</span></li><li>    <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">6</span><span class="sh_symbol">):</span></li><li>        result<span class="sh_symbol">.</span><span class="sh_function">append</span><span class="sh_symbol">(</span>i<span class="sh_symbol">)</span></li><li>        time<span class="sh_symbol">.</span><span class="sh_function">sleep</span><span class="sh_symbol">(</span><span class="sh_number">0.3</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> result</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    # loop <span class="sh_symbol">=</span> <span class="sh_function">deco</span><span class="sh_symbol">(</span>loop<span class="sh_symbol">)</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_function">loop</span><span class="sh_symbol">())</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day05]# vim deco.py
+#!/usr/bin/env python3
+
+import time
+
+def deco(func):
+    def timeit():
+        start = time.time()
+        result = func()
+        end = time.time()
+        return end - start, result   # 将会返回元组
+    return timeit
+
+@deco
+def loop():
+    result = []
+    for i in range(1, 6):
+        result.append(i)
+        time.sleep(0.3)
+    return result
+
+if __name__ == '__main__':
+    # loop = deco(loop)
+    print(loop()) 
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># python3 deco<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">(</span><span class="sh_number">1.50368070602417</span><span class="sh_symbol">,</span> <span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">2</span><span class="sh_symbol">,</span> <span class="sh_number">3</span><span class="sh_symbol">,</span> <span class="sh_number">4</span><span class="sh_symbol">,</span> <span class="sh_number">5</span><span class="sh_symbol">])</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# python3 deco.py 
+(1.50368070602417, [1, 2, 3, 4, 5])
+</pre></div></div>
+    </div>
+  
+</body></html>

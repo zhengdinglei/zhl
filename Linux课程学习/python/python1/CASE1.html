@@ -1,0 +1,411 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Python1 DAY01</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#case1">案例1：准备python开发环境</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#case2">案例2：配置git</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#case3">案例3：git本地操作</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#case4">案例4：使用自建gitlab服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#case5">案例5：模拟用户登陆</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：准备python开发环境</h2>
+      <h3>1.1 问题</h3>
+      <ol class="list">
+        <li>下载最新版本的python3
+</li>
+        <li>下载pycharm社区版 
+</li>
+        <li>安装python3，使其支持Tab键补全 
+</li>
+        <li>配置pycharm，使其符合自己的习惯
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：下载最新版python3</p>
+      <p>首先去python官网下载python3的源码包，网址：https://www.python.org/</p>
+      <p>进去之后点击导航栏的Downloads，也可以鼠标放到Downloads上弹出菜单选择Source code，表示源码包，这里选择最新版本3.6.4，这里选择第一个下载即可，下载的就是源码包：Python-3.6.4.tar.gz，下载好之后上传到linux系统，准备安装，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p class="number">步骤二：Linux下安装python3</p>
+      <p>1)python安装之前需要一些必要的模块，如果没有这些模块后来使用会出现一些问题，输入以下命令提前预装依赖包：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style=""><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y gcc gcc<span class="sh_symbol">-</span>c<span class="sh_symbol">++</span> zlib<span class="sh_symbol">-</span>devel openssl<span class="sh_symbol">-</span>devel readline<span class="sh_symbol">-</span>devel libffi<span class="sh_symbol">-</span>devel sqlite<span class="sh_symbol">-</span>devel tcl<span class="sh_symbol">-</span>devel tk<span class="sh_symbol">-</span>devel</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# yum install -y gcc gcc-c++ zlib-devel openssl-devel readline-devel libffi-devel sqlite-devel tcl-devel tk-devel
+</pre></div></div>
+      <p>释放文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style=""><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost python<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xzf Python<span class="sh_number">-3.6.4</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost python]# tar -xzf Python-3.6.4.tar.gz
+</pre></div></div>
+      <p>2)进入Python-3.6.4目录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost python<span class="sh_symbol">]</span># cd Python<span class="sh_number">-3.6.4</span></li><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.4</span><span class="sh_symbol">]</span>#ls&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#此时Python<span class="sh_number">-3.6.4</span>文件夹中没有makefile文件</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost python]# cd Python-3.6.4
+[root@localhost Python-3.6.4]#ls		#此时Python-3.6.4文件夹中没有makefile文件
+</pre></div></div>
+      <p>3)配置安装目录：</p>
+      <p>configure是用来进行用户个性配置的工具，--prefix是说软件安装目录设置在哪里， =/usr/local就是你给出的安装目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.4</span><span class="sh_symbol">]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/configure --prefix=/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span>local</li><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.4</span><span class="sh_symbol">]</span># ls&nbsp;&nbsp;&nbsp;&nbsp;    #此时Python<span class="sh_number">-3.6.4</span>文件夹中生成了makefile文件</li><li>aclocal<span class="sh_symbol">.</span>m4     Doc              Makefile         PCbuild         python<span class="sh_symbol">-</span>config<span class="sh_symbol">.</span>py</li><li>build          Grammar          Makefile<span class="sh_symbol">.</span>pre     Programs        python<span class="sh_symbol">-</span>gdb<span class="sh_symbol">.</span>py</li><li>config<span class="sh_symbol">.</span>guess   Include          Makefile<span class="sh_symbol">.</span>pre<span class="sh_symbol">.</span><span class="sh_keyword">in</span>  pybuilddir<span class="sh_symbol">.</span>txt  README<span class="sh_symbol">.</span>rst</li><li>config<span class="sh_symbol">.</span>log     install<span class="sh_symbol">-</span>sh       Misc             pyconfig<span class="sh_symbol">.</span>h      setup<span class="sh_symbol">.</span>py</li><li>config<span class="sh_symbol">.</span>status  Lib              Modules          pyconfig<span class="sh_symbol">.</span>h<span class="sh_symbol">.</span><span class="sh_keyword">in</span>   Tools</li><li>config<span class="sh_symbol">.</span>sub     libpython3<span class="sh_symbol">.</span>6m<span class="sh_symbol">.</span>a  Objects          python</li><li>configure      LICENSE          Parser           Python</li><li>configure<span class="sh_symbol">.</span>ac   Mac              PC               python<span class="sh_symbol">-</span>config</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost Python-3.6.4]# ./configure --prefix=/usr/local
+[root@localhost Python-3.6.4]# ls	    #此时Python-3.6.4文件夹中生成了makefile文件
+aclocal.m4     Doc              Makefile         PCbuild         python-config.py
+build          Grammar          Makefile.pre     Programs        python-gdb.py
+config.guess   Include          Makefile.pre.in  pybuilddir.txt  README.rst
+config.log     install-sh       Misc             pyconfig.h      setup.py
+config.status  Lib              Modules          pyconfig.h.in   Tools
+config.sub     libpython3.6m.a  Objects          python
+configure      LICENSE          Parser           Python
+configure.ac   Mac              PC               python-config
+
+</pre></div></div>
+      <p>4)接下来编译源码：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.4</span><span class="sh_symbol">]</span># make</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost Python-3.6.4]# make
+</pre></div></div>
+      <p>5)执行安装：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost Python<span class="sh_number">-3.6.4</span><span class="sh_symbol">]</span># make install</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost Python-3.6.4]# make install
+</pre></div></div>
+      <p>整个过程大约5-10分钟，安装成功</p>
+      <p class="number">步骤三：下载并安装Pycharm社区版</p>
+      <p>网址：https://www.jetbrains.com/pycharm/download，这里选择下图红框下载即可，下载好之后上传到linux系统，准备安装，如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>2)释放文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xzf pycharm<span class="sh_symbol">-</span>community<span class="sh_number">-2018.1.1</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# tar -xzf pycharm-community-2018.1.1.tar.gz
+</pre></div></div>
+      <p>3)运行下面的命令进入PyCharm 目录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost pycharm<span class="sh_symbol">-</span>community<span class="sh_number">-2018.1.1</span><span class="sh_symbol">]</span># cd pycharm<span class="sh_symbol">-</span>community<span class="sh_number">-2018.1.1</span><span class="sh_symbol">/</span>bin</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost pycharm-community-2018.1.1]# cd pycharm-community-2018.1.1/bin
+</pre></div></div>
+      <p>4)通过运行下面的命令来运行PyCharm进入图形化安装界面：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost bin<span class="sh_symbol">]</span># sh pycharm<span class="sh_symbol">.</span>sh <span class="sh_symbol">&amp;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost bin]# sh pycharm.sh &amp;
+</pre></div></div>
+      <p>5)Pycharm打开后，如果你需要导入之前安装版本的设置的话，可以选择第一个选项，如果没有的话，选择(Do not import settings)默认不导入设置，点击/同意，就可以进入pycharm进行配置，如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>6)激活Pycharm：在弹出的激活窗口中，选择“License serveer”输入激活服务器地址“http://127.0.0.1:1017”，之后点击‘Activate’，完成pycharm激活，如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>7)启动完成进入欢迎界面，如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：配置git</h2>
+      <h3>2.1 问题</h3>
+      <ol class="list">
+        <li>安装git版本控制软件 
+</li>
+        <li>设置用户信息，如用户名、email等 
+</li>
+        <li>设置默认编辑器为vim
+</li>
+        <li>查看用户配置 
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装git版本控制软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y git</li><li>已安装<span class="sh_symbol">:</span></li><li>  git<span class="sh_symbol">.</span>x86_64 <span class="sh_number">0</span><span class="sh_symbol">:</span><span class="sh_number">1.8.3.1-11</span><span class="sh_symbol">.</span>el7                                                          </li><li><span style="display:none;">&nbsp;</span></li><li>作为依赖被安装<span class="sh_symbol">:</span></li><li>  perl<span class="sh_symbol">-</span><span class="sh_predef_func">Error</span><span class="sh_symbol">.</span>noarch <span class="sh_number">1</span><span class="sh_symbol">:</span><span class="sh_number">0.17020-2</span><span class="sh_symbol">.</span>el7            perl<span class="sh_symbol">-</span>Git<span class="sh_symbol">.</span>noarch <span class="sh_number">0</span><span class="sh_symbol">:</span><span class="sh_number">1.8.3.1-11</span><span class="sh_symbol">.</span>el7       </li><li>  perl<span class="sh_symbol">-</span>TermReadKey<span class="sh_symbol">.</span>x86_64 <span class="sh_number">0</span><span class="sh_symbol">:</span><span class="sh_number">2.30-20</span><span class="sh_symbol">.</span>el7       </li><li><span style="display:none;">&nbsp;</span></li><li>完毕！</li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># git –version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#查看版本</li><li>git version <span class="sh_number">1.8.3.1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# yum install -y git
+已安装:
+  git.x86_64 0:1.8.3.1-11.el7                                                          
+
+作为依赖被安装:
+  perl-Error.noarch 1:0.17020-2.el7            perl-Git.noarch 0:1.8.3.1-11.el7       
+  perl-TermReadKey.x86_64 0:2.30-20.el7       
+
+完毕！
+[root@localhost ~]# git –version		#查看版本
+git version 1.8.3.1
+
+</pre></div></div>
+      <p class="number">步骤二：设置用户信息</p>
+      <p>Git 提供了一个叫做 git config 的工具，专门用来配置或读取相应的工作环境变量。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># git config <span class="sh_symbol">--</span>global user<span class="sh_symbol">.</span>name <span class="sh_string">"Mr.Zhang"</span></li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># git config <span class="sh_symbol">--</span>global user<span class="sh_symbol">.</span>email zhangzg@tedu<span class="sh_symbol">.</span>cn</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# git config --global user.name "Mr.Zhang"
+[root@localhost ~]# git config --global user.email zhangzg@tedu.cn
+</pre></div></div>
+      <p class="number">步骤三：设置默认编译器为vim</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># git config <span class="sh_symbol">--</span>global core<span class="sh_symbol">.</span>editor vim </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# git config --global core.editor vim 
+</pre></div></div>
+      <p class="number">步骤四：查看配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># git config <span class="sh_symbol">--</span>list</li><li>user<span class="sh_symbol">.</span>name<span class="sh_symbol">=</span>Mr<span class="sh_symbol">.</span>Zhang</li><li>user<span class="sh_symbol">.</span>email<span class="sh_symbol">=</span>zhangzg@tedu<span class="sh_symbol">.</span>cn</li><li>core<span class="sh_symbol">.</span>editor<span class="sh_symbol">=</span>vim</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# git config --list
+user.name=Mr.Zhang
+user.email=zhangzg@tedu.cn
+core.editor=vim
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：git本地操作</h2>
+      <h3>3.1 问题</h3>
+      <ol class="list">
+        <li>创建devops目录 
+</li>
+        <li>为devops创建git仓库 
+</li>
+        <li>新建文件hello.py，并将文件初始化到仓库中 
+</li>
+        <li>修改hello.py并将其更新到仓库 
+</li>
+        <li>从他库中删除hello.py 
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>Git 使用 git init 命令来初始化一个 Git 仓库，Git 的很多命令都需要在 Git 的仓库中运行，所以git init是使用 Git 的第一个命令。添加文件第一步使用git add是将文件添加进暂存区，第二部git commit提交更改，实际上将暂存区的所有内容提交到仓库。</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建目录初始化</p>
+      <p>此时创建了一个空仓库，可以发现当前目录下有一个隐藏的目录.git，此目录为Git来跟踪管理版本库，建议不要修改内部文件，以免Git仓库遭到破坏。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># mkdir devops</li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># cd <span class="sh_normal">devops</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git init&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#通过命令把目录变成Git可以管理的仓库</li><li>初始化空的 Git 版本库于 <span class="sh_regexp">/root/</span><span class="sh_normal">devops</span><span class="sh_symbol">/.</span><span class="sh_normal">git</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git init devops</li><li>初始化空的 Git 版本库于 <span class="sh_regexp">/root/</span><span class="sh_normal">devops</span><span class="sh_symbol">/</span><span class="sh_normal">devops</span><span class="sh_symbol">/.</span><span class="sh_normal">git</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># ls <span class="sh_symbol">-</span>a</li><li><span class="sh_symbol">.</span>  <span class="sh_symbol">..</span>  devops  <span class="sh_symbol">.</span>git</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# mkdir devops
+[root@localhost ~]# cd devops/
+[root@localhost devops]# git init		#通过命令把目录变成Git可以管理的仓库
+初始化空的 Git 版本库于 /root/devops/.git/
+[root@localhost devops]# git init devops
+初始化空的 Git 版本库于 /root/devops/devops/.git/
+[root@localhost devops]# ls -a
+.  ..  devops  .git
+</pre></div></div>
+      <p class="number">步骤二：新建文件hello.py，并将文件初始化到仓库中</p>
+      <p>1)添加指定文件hello.py到暂存区</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># echo <span class="sh_string">'print("hello world!")'</span> <span class="sh_symbol">&gt;</span> hello<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git add hello<span class="sh_symbol">.</span>py&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#将文件添加到暂存区</li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#查看状态</li><li># 位于分支 master</li><li>#</li><li># 初始提交</li><li>#</li><li># 要提交的变更：</li><li>#   （使用 <span class="sh_string">"git rm --cached &lt;file&gt;..."</span> 撤出暂存区）</li><li>#</li><li>#&nbsp;&nbsp;&nbsp;&nbsp;新文件：    hello<span class="sh_symbol">.</span>py </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost devops]# echo 'print("hello world!")' &gt; hello.py
+[root@localhost devops]# git add hello.py		#将文件添加到暂存区
+[root@localhost devops]# git status		#查看状态
+# 位于分支 master
+#
+# 初始提交
+#
+# 要提交的变更：
+#   （使用 "git rm --cached &lt;file&gt;..." 撤出暂存区）
+#
+#	新文件：    hello.py 
+</pre></div></div>
+      <p>2)将暂存区文件初始化到仓库中</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git commit <span class="sh_symbol">-</span>m <span class="sh_string">"初始化仓库"</span>&nbsp;&nbsp;&nbsp;&nbsp;   #把暂存区所有内容提交到分支</li><li><span class="sh_symbol">[</span>master 8e6e22a<span class="sh_symbol">]</span> 初始化仓库</li><li> <span class="sh_number">1</span> file changed<span class="sh_symbol">,</span> <span class="sh_number">1</span> <span class="sh_function">insertion</span><span class="sh_symbol">(+)</span></li><li> create mode <span class="sh_number">100644</span> hello<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git status</li><li># 位于分支 master</li><li>无文件要提交，干净的工作区</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost devops]# git commit -m "初始化仓库"	   #把暂存区所有内容提交到分支
+[master 8e6e22a] 初始化仓库
+ 1 file changed, 1 insertion(+)
+ create mode 100644 hello.py
+[root@localhost devops]# git status
+# 位于分支 master
+无文件要提交，干净的工作区
+</pre></div></div>
+      <p class="number">步骤三：修改hello.py并将其更新到仓库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># echo <span class="sh_string">'print("done.")'</span> <span class="sh_symbol">&gt;&gt;</span> hello<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git commit <span class="sh_symbol">-</span>am <span class="sh_string">"向hello.py添加新行"</span></li><li><span class="sh_symbol">[</span>master 1ca03d5<span class="sh_symbol">]</span> 向hello<span class="sh_symbol">.</span>py添加新行</li><li> <span class="sh_number">1</span> file changed<span class="sh_symbol">,</span> <span class="sh_number">1</span> <span class="sh_function">insertion</span><span class="sh_symbol">(+)</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost devops]# echo 'print("done.")' &gt;&gt; hello.py 
+[root@localhost devops]# git commit -am "向hello.py添加新行"
+[master 1ca03d5] 向hello.py添加新行
+ 1 file changed, 1 insertion(+) 
+</pre></div></div>
+      <p class="number">步骤四：从库中删除hello.py文件</p>
+      <p>要从 Git 中移除某个文件，就必须要从已跟踪文件清单中移除</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git ls<span class="sh_symbol">-</span>files&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #查看版本库中文件</li><li>hello<span class="sh_symbol">.</span>py</li><li>niha<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git rm hello<span class="sh_symbol">.</span>py</li><li>rm <span class="sh_string">'hello.py'</span></li><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># git commit <span class="sh_symbol">-</span>m <span class="sh_string">'删除hello.py'</span></li><li><span class="sh_symbol">[</span>master a37ff34<span class="sh_symbol">]</span> 删除hello<span class="sh_symbol">.</span>py</li><li> <span class="sh_number">1</span> file changed<span class="sh_symbol">,</span> <span class="sh_number">2</span> <span class="sh_function">deletions</span><span class="sh_symbol">(-)</span></li><li> <span class="sh_keyword">delete</span> mode <span class="sh_number">100644</span> hello<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost devops]# git ls-files		 #查看版本库中文件
+hello.py
+niha.py
+[root@localhost devops]# git rm hello.py
+rm 'hello.py'
+[root@localhost devops]# git commit -m '删除hello.py'
+[master a37ff34] 删除hello.py
+ 1 file changed, 2 deletions(-)
+ delete mode 100644 hello.py
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：使用自建gitlab服务器</h2>
+      <h3>4.1 问题</h3>
+      <ol class="list">
+        <li>通过docker搭建gitlab服务器
+</li>
+        <li>新建群组devops 
+</li>
+        <li>新建项目core_py 
+</li>
+        <li>新建用户，他/她在devops组中是主程序员
+</li>
+        <li>新用户上传版本库到gitlab 
+</li>
+        <li>熟悉git远程操作方法 
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：通过docker搭建gitlab服务器</p>
+      <p>1)从ftp://172.40.50.116/pub/docker/images/处获取gitlab_zh.tar镜像文件，导入中文版gitlab镜像</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># docker load <span class="sh_symbol">&lt;</span> <span class="sh_regexp">/path/</span><span class="sh_normal">to</span><span class="sh_symbol">/</span>gitlab_zh<span class="sh_symbol">.</span>tar </li><li>a94e0d5a7c40<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">116</span><span class="sh_symbol">.</span>5<span class="sh_normal">MB</span><span class="sh_symbol">/</span><span class="sh_number">116</span><span class="sh_symbol">.</span>5MB</li><li>88888b9b1b5b<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">15</span><span class="sh_symbol">.</span>87<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">15</span><span class="sh_symbol">.</span>87kB</li><li>52f389ea437e<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">14</span><span class="sh_symbol">.</span>85<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">14</span><span class="sh_symbol">.</span>85kB</li><li>52a7ea2bb533<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">5</span><span class="sh_symbol">.</span>632<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">5</span><span class="sh_symbol">.</span>632kB</li><li>db584c622b50<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">3</span><span class="sh_symbol">.</span>072<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">3</span><span class="sh_symbol">.</span>072kB</li><li>62786ff6a243<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">75</span><span class="sh_symbol">.</span>85<span class="sh_normal">MB</span><span class="sh_symbol">/</span><span class="sh_number">75</span><span class="sh_symbol">.</span>85MB</li><li>71bc04f4b7c7<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">2</span><span class="sh_symbol">.</span>048<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">.</span>048kB</li><li>26e083d332d8<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">2</span><span class="sh_symbol">.</span>048<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">.</span>048kB</li><li>2c02e58e96b8<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">2</span><span class="sh_symbol">.</span>048<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">2</span><span class="sh_symbol">.</span>048kB</li><li>589c7a23de2a<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">15</span><span class="sh_symbol">.</span>87<span class="sh_normal">kB</span><span class="sh_symbol">/</span><span class="sh_number">15</span><span class="sh_symbol">.</span>87kB</li><li>44474d2cdcd1<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">1</span><span class="sh_symbol">.</span>359<span class="sh_normal">GB</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">.</span>359GB</li><li>41c94e16b901<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>  <span class="sh_number">16</span><span class="sh_symbol">.</span>78<span class="sh_normal">MB</span><span class="sh_symbol">/</span><span class="sh_number">16</span><span class="sh_symbol">.</span>78MB</li><li>04cafa6a1534<span class="sh_symbol">:</span> Loading layer <span class="sh_symbol">[==================================================&gt;]</span>    160<span class="sh_normal">MB</span><span class="sh_symbol">/</span>160MB</li><li>Loaded image<span class="sh_symbol">:</span> gitlab_zh<span class="sh_symbol">:</span>latest</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost devops]# docker load &lt; /path/to/gitlab_zh.tar 
+a94e0d5a7c40: Loading layer [==================================================&gt;]  116.5MB/116.5MB
+88888b9b1b5b: Loading layer [==================================================&gt;]  15.87kB/15.87kB
+52f389ea437e: Loading layer [==================================================&gt;]  14.85kB/14.85kB
+52a7ea2bb533: Loading layer [==================================================&gt;]  5.632kB/5.632kB
+db584c622b50: Loading layer [==================================================&gt;]  3.072kB/3.072kB
+62786ff6a243: Loading layer [==================================================&gt;]  75.85MB/75.85MB
+71bc04f4b7c7: Loading layer [==================================================&gt;]  2.048kB/2.048kB
+26e083d332d8: Loading layer [==================================================&gt;]  2.048kB/2.048kB
+2c02e58e96b8: Loading layer [==================================================&gt;]  2.048kB/2.048kB
+589c7a23de2a: Loading layer [==================================================&gt;]  15.87kB/15.87kB
+44474d2cdcd1: Loading layer [==================================================&gt;]  1.359GB/1.359GB
+41c94e16b901: Loading layer [==================================================&gt;]  16.78MB/16.78MB
+04cafa6a1534: Loading layer [==================================================&gt;]    160MB/160MB
+Loaded image: gitlab_zh:latest
+</pre></div></div>
+      <p>2)将物理主机ssh端口改为2022后，输入如下命令起动容器：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost devops<span class="sh_symbol">]</span># docker run <span class="sh_symbol">-</span>d <span class="sh_symbol">-</span>h gitlab <span class="sh_symbol">--</span>name gitlab <span class="sh_symbol">-</span>p <span class="sh_number">443</span><span class="sh_symbol">:</span><span class="sh_number">443</span> <span class="sh_symbol">-</span>p <span class="sh_number">80</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>p <span class="sh_number">22</span><span class="sh_symbol">:</span><span class="sh_number">22</span> <span class="sh_symbol">--</span>restart always <span class="sh_symbol">-</span><span class="sh_normal">v </span><span class="sh_symbol">/</span><span class="sh_normal">srv</span><span class="sh_symbol">/</span><span class="sh_normal">gitlab</span><span class="sh_symbol">/</span>config<span class="sh_symbol">:</span><span class="sh_regexp">/etc/gi</span>tlab <span class="sh_symbol">-</span><span class="sh_normal">v </span><span class="sh_symbol">/</span><span class="sh_normal">srv</span><span class="sh_symbol">/</span><span class="sh_normal">gitlab</span><span class="sh_symbol">/</span>logs<span class="sh_symbol">:</span><span class="sh_regexp">/var/</span><span class="sh_normal">log</span><span class="sh_symbol">/</span>gitlab <span class="sh_symbol">-</span><span class="sh_normal">v </span><span class="sh_symbol">/</span><span class="sh_normal">srv</span><span class="sh_symbol">/</span><span class="sh_normal">gitlab</span><span class="sh_symbol">/</span>data gitlab_zh<span class="sh_symbol">:</span>latest </li><li>b9dc65e0def51a4d09d2a597b2b929490e972a34f3de993439d2f7cc22039b77 </li><li>此时端口成功启动</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost devops]# docker run -d -h gitlab --name gitlab -p 443:443 -p 80:80 -p 22:22 --restart always -v /srv/gitlab/config:/etc/gitlab -v /srv/gitlab/logs:/var/log/gitlab -v /srv/gitlab/data gitlab_zh:latest 
+b9dc65e0def51a4d09d2a597b2b929490e972a34f3de993439d2f7cc22039b77 
+此时端口成功启动
+</pre></div></div>
+      <p class="number">步骤二：新建群组</p>
+      <p>1)在浏览器地址栏中输入启动容器ip地址即可登录GitLab的界面，第一次登录使用的用户名为root，首次登录会强制用户修改密码。密码修改成功后，输入新密码进行登录，如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>2)进入网站后点击菜单栏-工具图标打开管理区域，创建群组，使用群组管理项目和成员，如图-7、图-8所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p class="number">步骤三：在Gitlab主页中新建一个项目</p>
+      <p>显示如图-9所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image009.png">
+        <p>图-9</p>
+      </div>
+      <p class="number">步骤四：在Gitlab主页中新建一个用户</p>
+      <p>1)在Gitlab主页中新建一个用户，如图-10所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image010.png">
+        <p>图-10</p>
+      </div>
+      <p>2)设置账号基本信息，其他均可为默认，如图-11所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image011.png">
+        <p>图-11</p>
+      </div>
+      <p>3)创建用户后，再次编辑可设置密码，如图-12所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image012.png">
+        <p>图-12</p>
+      </div>
+      <p>4)root用户将新用户加入组中，点击devops进入群组，设置管理权限，在群组中添加成员并设置新成员为“主程序员”，如图-13、图-14、图-15所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image013.png">
+        <p>图-13</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image014.png">
+        <p>图-14</p>
+      </div>
+      <div class="image">
+        <img src="./CASE_files/image015.png">
+        <p>图-15</p>
+      </div>
+      <p>5)在终端中输入ssh-keygen命令，一路enter，可以生成缺省的rsa方式的sshkey，将/root/.ssh/id_rsa.pub中生成的rsa公钥内容拷到gitlab中，如图-16所示，进入设置页面对ssh进行配置：</p>
+      <div class="image">
+        <img src="./CASE_files/image016.png">
+        <p>图-16</p>
+      </div>
+      <ol class="list">
+        <li>SSH是一种安全协议，在你的电脑与GitLab服务器进行通信时，我们使用SSH密钥（SSH Keys）认证的方式来保证通信安全。你可以在网络上搜索到关于SSH密钥的更多介绍；下面我们重点讲解如何创建 SSH密钥，并将密钥中的公钥添加到GitLab，以便我们通过SSH协议来访问Git仓库。
+</li>
+        <li>显示如图-17所示：
+</li>
+      </ol>
+      <div class="image">
+        <img src="./CASE_files/image017.png">
+        <p>图-17</p>
+      </div>
+      <p class="number">步骤五：简单远程操作及新用户上传版本库到gitlab</p>
+      <p>1)克隆远程库代码到本地</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li># git clone git@<span class="sh_number">192.168.113.249</span><span class="sh_symbol">:</span><span class="sh_normal">devops</span><span class="sh_symbol">/</span>core_py<span class="sh_symbol">.</span>git </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"># git clone git@192.168.113.249:devops/core_py.git 
+</pre></div></div>
+      <p>2)创建一个文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">whsir</span><span class="sh_symbol">/</span>whsir</li><li># echo <span class="sh_string">"Hello"</span> <span class="sh_symbol">&gt;</span> hello<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"># cd /root/whsir/whsir
+# echo "Hello" &gt; hello.py
+</pre></div></div>
+      <p>3)将文件添加到仓库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> # git add hello<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> # git add hello.py
+</pre></div></div>
+      <p>4)提交文件到仓库，输出信息如图-18所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li># git commit <span class="sh_symbol">-</span>m <span class="sh_string">"hello文件"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"># git commit -m "hello文件"
+</pre></div></div>
+      <div class="image">
+        <img src="./CASE_files/image018.png">
+        <p>图-18</p>
+      </div>
+      <p>5)关联远程库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> # git remote add origin git@<span class="sh_number">192.168.113.249</span><span class="sh_symbol">:</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>whsir<span class="sh_symbol">.</span>git</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> # git remote add origin git@192.168.113.249:root/whsir.git
+</pre></div></div>
+      <p>6)最后推送到gitlab上，输出信息如图-19所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li># git push origin master</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"># git push origin master
+</pre></div></div>
+      <div class="image">
+        <img src="./CASE_files/image019.png">
+        <p>图-19</p>
+      </div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：模拟用户登陆</h2>
+      <h3>5.1 问题</h3>
+      <p>编写login.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>创建名为login.py的程序文件
+</li>
+        <li>程序提示用户输入用户名
+</li>
+        <li>用户输入用户名后，打印欢迎用户 
+</li>
+      </ol>
+      <h3>5.2 方案</h3>
+      <p>编写程序时，很多情况下都需要程序与用户交互。在python3中，主要通过input()获取用户输入信息，使用print()打印信息。</p>
+      <p>通常当想看变量内容时，会在代码中使用print()语句输出。不过在交互式解释器中，可以用print语句显示变量的字符串表示，或者仅使用变量名查看该变量的原始值。</p>
+      <p>从用户那里得到数据输入的最容易的方法是使用input()内建函数。它读取标准输入，并将读取到的数据赋值给指定的变量。需要注意的是，input()函数读入的数据全部是以字符串的方式存储的。如果用户输的是数字，那么python也将其保存为字符串，当将字符串与数字做数学运算是将会出现TypeError的错误。</p>
+      <p>初学者在需要显示信息或得到用户输入时，很容易想到使用print()语句和input()内建函数。不过在此建议函数应该保持其清晰性，也就是它只应该接受参数，返回结果。从用户那里得到需要的数据， 然后调用函数处理， 从函数得到返回值，然后显示结果给用户。这样你就能够在其它地方也可以使用你的函数而不必担心自定义输出的问题。这个规则的一个例外是，如果函数的基本功能就是为了得到用户输出，或者就是为了输出信息，这时在函数体使用print()语句或input()也未尝不可。更重要的，将函数分为两大类，一类只做事，不需要返回值（比如与用户交互或设置变量的值）， 另一类则执行一些运算，最后返回结果。如果输出就是函数的目的，那么在函数体内使用 print()语句也是可以接受的选择。</p>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <p>本次练习的脚本文件是/root/bin/login.py。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day01<span class="sh_symbol">]</span># vim login<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>username <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span><span class="sh_string">'username: '</span><span class="sh_symbol">)</span>       #使用变量username接收用户输入的字符</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Welcome'</span><span class="sh_symbol">,</span> username<span class="sh_symbol">)</span>                 #输出欢迎信息，字符串和变量名之间用逗号</li><li>                                            #隔开，两者之间自动会加上空格</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day01]# vim login.py
+#!/usr/bin/env python3
+
+username = input('username: ')       #使用变量username接收用户输入的字符
+
+print('Welcome', username)                 #输出欢迎信息，字符串和变量名之间用逗号
+                                            #隔开，两者之间自动会加上空格
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON1/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day01<span class="sh_symbol">]</span># python3 login<span class="sh_symbol">.</span>py</li><li>username<span class="sh_symbol">:</span> bob                              #输入用户名</li><li>Welcome bob</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day01]# python3 login.py
+username: bob                              #输入用户名
+Welcome bob
+</pre></div></div>
+    </div>
+  
+</body></html>

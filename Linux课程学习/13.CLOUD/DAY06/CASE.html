@@ -1,0 +1,378 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD CLOUD DAY06</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#case1">案例1：制作自定义镜像</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#case2">案例2：创建私有镜像仓库</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#case3">案例3：NFS共享存储</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#case4">案例4：创建自定义网桥</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：制作自定义镜像</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求制作自定义镜像：</p>
+      <ul class="list">
+        <li>基于centos镜像使用commit创建新的镜像文件
+</li>
+        <li>基于centos镜像使用Dockerfile文件创建一个新的镜像文件
+</li>
+      </ul>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：使用镜像启动容器</p>
+      <p>1）在该容器基础上修改yum源</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 docker_images<span class="sh_symbol">]</span># docker run <span class="sh_symbol">-</span>it centos</li><li><span class="sh_symbol">[</span>root@8<span class="sh_normal">d07ecd7e345 </span><span class="sh_symbol">/]</span># rm <span class="sh_symbol">-</span><span class="sh_normal">rf </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span>d<span class="sh_comment">/*  </span></li><li><span class="sh_comment">[</span><a class="sh_url" href="mailto:root@8d07ecd7e345">root@8d07ecd7e345</a><span class="sh_comment"> /]# vi /etc/yum.repos.d/dvd.repo</span></li><li><span class="sh_comment">[dvd]</span></li><li><span class="sh_comment">name=dvd</span></li><li><span class="sh_comment">baseurl=</span><a class="sh_url" href="ftp://192.168.1.254/system">ftp://192.168.1.254/system</a></li><li><span class="sh_comment">enabled=1</span></li><li><span class="sh_comment">gpgcheck=0</span></li><li><span class="sh_comment">[</span><a class="sh_url" href="mailto:root@8d07ecd7e345">root@8d07ecd7e345</a><span class="sh_comment"> /]# yum clean all</span></li><li><span class="sh_comment">[</span><a class="sh_url" href="mailto:root@8d07ecd7e345">root@8d07ecd7e345</a><span class="sh_comment"> /]# yum repolist</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 docker_images]# docker run -it centos
+[root@8d07ecd7e345 /]# rm -rf /etc/yum.repos.d/*  
+[root@8d07ecd7e345 /]# vi /etc/yum.repos.d/dvd.repo
+[dvd]
+name=dvd
+baseurl=ftp://192.168.1.254/system
+enabled=1
+gpgcheck=0
+[root@8d07ecd7e345 /]# yum clean all
+[root@8d07ecd7e345 /]# yum repolist
+</pre></div></div>
+      <p>2）安装测试软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@8<span class="sh_normal">d07ecd7e345 </span><span class="sh_symbol">/]</span># yum <span class="sh_symbol">-</span>y install net<span class="sh_symbol">-</span>tools iproute psmisc vim<span class="sh_symbol">-</span>enhanced</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@8d07ecd7e345 /]# yum -y install net-tools iproute psmisc vim-enhanced
+</pre></div></div>
+      <p>3）ifconfig查看</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@8<span class="sh_normal">d07ecd7e345 </span><span class="sh_symbol">/]</span># ifconfig </li><li>eth0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.17.0.3</span>  netmask <span class="sh_number">255.255.0.0</span>  broadcast <span class="sh_number">0.0.0.0</span></li><li>        inet6 fe80<span class="sh_symbol">::</span><span class="sh_number">42</span><span class="sh_symbol">:</span>acff<span class="sh_symbol">:</span>fe11<span class="sh_symbol">:</span><span class="sh_number">3</span>  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether <span class="sh_number">02</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">:</span>ac<span class="sh_symbol">:</span><span class="sh_number">11</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">03</span>  txqueuelen <span class="sh_number">0</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">2488</span>  bytes <span class="sh_number">28317945</span> <span class="sh_symbol">(</span><span class="sh_number">27.0</span> MiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">1858</span>  bytes <span class="sh_number">130264</span> <span class="sh_symbol">(</span><span class="sh_number">127.2</span> KiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@8<span class="sh_normal">d07ecd7e345 </span><span class="sh_symbol">/]</span># exit</li><li>exit</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@8d07ecd7e345 /]# ifconfig 
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.17.0.3  netmask 255.255.0.0  broadcast 0.0.0.0
+        inet6 fe80::42:acff:fe11:3  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 02:42:ac:11:00:03  txqueuelen 0  (Ethernet)
+        RX packets 2488  bytes 28317945 (27.0 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 1858  bytes 130264 (127.2 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+[root@8d07ecd7e345 /]# exit
+exit
+</pre></div></div>
+      <p class="number">步骤二：另存为另外一个镜像</p>
+      <p>1）创建新建镜像</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 docker_images<span class="sh_symbol">]</span># docker start 8d07ecd7e345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//可以简写为8d，要保证唯一性</span></li><li>8d07ecd7e345</li><li><span class="sh_symbol">[</span>root@docker1 docker_images<span class="sh_symbol">]</span># docker commit 8d07ecd7e345 myos<span class="sh_symbol">:</span>v1 </li><li>sha256<span class="sh_symbol">:</span>ac3f9c2e8c7e13db183636821783f997890029d687b694f5ce590a473ad82c5f</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 docker_images]# docker start 8d07ecd7e345		
+//可以简写为8d，要保证唯一性
+8d07ecd7e345
+[root@docker1 docker_images]# docker commit 8d07ecd7e345 myos:v1 
+sha256:ac3f9c2e8c7e13db183636821783f997890029d687b694f5ce590a473ad82c5f
+</pre></div></div>
+      <p>2）查看新建的镜像，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>3）验证新建镜像</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 docker_images<span class="sh_symbol">]</span># docker run <span class="sh_symbol">-</span>it myos<span class="sh_symbol">:</span>v1</li><li><span class="sh_symbol">[</span>root@497<span class="sh_normal">c7b4664bf </span><span class="sh_symbol">/]</span># ifconfig </li><li>eth0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.17.0.6</span>  netmask <span class="sh_number">255.255.0.0</span>  broadcast <span class="sh_number">0.0.0.0</span></li><li>        inet6 fe80<span class="sh_symbol">::</span><span class="sh_number">42</span><span class="sh_symbol">:</span>acff<span class="sh_symbol">:</span>fe11<span class="sh_symbol">:</span><span class="sh_number">6</span>  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether <span class="sh_number">02</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">:</span>ac<span class="sh_symbol">:</span><span class="sh_number">11</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">06</span>  txqueuelen <span class="sh_number">0</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">7</span>  bytes <span class="sh_number">578</span> <span class="sh_symbol">(</span><span class="sh_number">578.0</span> B<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 docker_images]# docker run -it myos:v1
+[root@497c7b4664bf /]# ifconfig 
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.17.0.6  netmask 255.255.0.0  broadcast 0.0.0.0
+        inet6 fe80::42:acff:fe11:6  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 02:42:ac:11:00:06  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 7  bytes 578 (578.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></div></div>
+      <p class="number">步骤三：使用Dockerfile文件创建一个新的镜像文件</p>
+      <p>Dockerfile语法格式：</p>
+      <p>– FROM:基础镜像</p>
+      <p>– MAINTAINER:镜像创建者信息(说明)</p>
+      <p>– EXPOSE:开放的端口</p>
+      <p>– ENV:设置环境变量</p>
+      <p>– ADD:复制文件到镜像</p>
+      <p>– RUN:制作镜像时执行的命令,可以有多个</p>
+      <p>– WORKDIR:定义容器默认工作目录</p>
+      <p>– CMD:容器启动时执行的命令,仅可以有一条CMD</p>
+      <p>1）创建一个Apache的镜像文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># mkdir oo</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># cd oo</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># touch Dockerfile&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//Dockerfile文件第一个字母要大写</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># <span class="sh_normal">cp </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>local<span class="sh_symbol">.</span>repo  <span class="sh_symbol">./</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># vi Dockerfile</li><li>FROM  myos<span class="sh_symbol">:</span>v1</li><li>RUN yum <span class="sh_symbol">-</span>y install httpd</li><li>ENV EnvironmentFile<span class="sh_symbol">=</span><span class="sh_regexp">/etc/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>httpd</li><li><span class="sh_normal">WORKDIR </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义容器默认工作目录</span></li><li>RUN echo <span class="sh_string">"test"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li>EXPOSE <span class="sh_number">80</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置开放端口号</span></li><li>CMD <span class="sh_symbol">[</span><span class="sh_string">"/usr/sbin/httpd"</span><span class="sh_symbol">,</span> <span class="sh_string">"-DFOREGROUND"</span><span class="sh_symbol">]</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker build <span class="sh_symbol">-</span>t myos<span class="sh_symbol">:</span>http <span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker run <span class="sh_symbol">-</span>d  myos<span class="sh_symbol">:</span>http </li><li>d9a5402709b26b42cd304c77be442559a5329dc784ec4f6c90e4abac1c88e206</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker inspect d9</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># curl <span class="sh_number">172.17.0.7</span></li><li>test</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 ~]# mkdir oo
+[root@docker1 ~]# cd oo
+[root@docker1 oo]# touch Dockerfile	//Dockerfile文件第一个字母要大写
+[root@docker1 oo]# cp /etc/yum.repos.d/local.repo  ./
+[root@docker1 oo]# vi Dockerfile
+FROM  myos:v1
+RUN yum -y install httpd
+ENV EnvironmentFile=/etc/sysconfig/httpd
+WORKDIR /var/www/html/			//定义容器默认工作目录
+RUN echo "test" &gt; /var/www/html/index.html
+EXPOSE 80				//设置开放端口号
+CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
+[root@docker1 oo]# docker build -t myos:http .
+[root@docker1 oo]# docker run -d  myos:http 
+d9a5402709b26b42cd304c77be442559a5329dc784ec4f6c90e4abac1c88e206
+[root@docker1 oo]# docker inspect d9
+[root@docker1 oo]# curl 172.17.0.7
+test
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：创建私有镜像仓库</h2>
+      <h3>2.1 问题</h3>
+      <p>本案例要求创建私有的镜像仓库：</p>
+      <ul class="list">
+        <li>Docker主机：192.168.1.20
+</li>
+        <li>镜像仓库服务器：192.168.1.10
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：自定义私有仓库</p>
+      <p>1）定义一个私有仓库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">docker</span><span class="sh_symbol">/</span>daemon<span class="sh_symbol">.</span>json&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//不写这个文件会报错</span></li><li><span class="sh_cbracket">{</span></li><li><span class="sh_string">"insecure-registries"</span> <span class="sh_symbol">:</span> <span class="sh_symbol">[</span><span class="sh_string">"192.168.1.10:5000"</span><span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//使用私有仓库运行容器</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># systemctl restart docker</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker run <span class="sh_symbol">-</span>d <span class="sh_symbol">-</span>p <span class="sh_number">5000</span><span class="sh_symbol">:</span><span class="sh_number">5000</span> registry</li><li>273be3d1f3280b392cf382f4b74fea53aed58968122eff69fd016f638505ee0e</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># curl <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span><span class="sh_normal">v2</span><span class="sh_symbol">/</span></li><li><span class="sh_cbracket">{}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//出现括号</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker tag busybox<span class="sh_symbol">:</span>latest <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span>busybox<span class="sh_symbol">:</span>latest  </li><li><span class="sh_comment">//打标签</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker push <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span>busybox<span class="sh_symbol">:</span>latest  <span class="sh_comment">//上传</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker tag myos<span class="sh_symbol">:</span>http <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span>myos<span class="sh_symbol">:</span>http</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># docker push  <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span>myos<span class="sh_symbol">:</span>http</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 oo]# vim /etc/docker/daemon.json	//不写这个文件会报错
+{
+"insecure-registries" : ["192.168.1.10:5000"]	//使用私有仓库运行容器
+}
+[root@docker1 oo]# systemctl restart docker
+[root@docker1 oo]# docker run -d -p 5000:5000 registry
+273be3d1f3280b392cf382f4b74fea53aed58968122eff69fd016f638505ee0e
+[root@docker1 oo]# curl 192.168.1.10:5000/v2/
+{}	//出现括号
+[root@docker1 oo]# docker tag busybox:latest 192.168.1.10:5000/busybox:latest  
+//打标签
+[root@docker1 oo]# docker push 192.168.1.10:5000/busybox:latest  //上传
+[root@docker1 oo]# docker tag myos:http 192.168.1.10:5000/myos:http
+[root@docker1 oo]# docker push  192.168.1.10:5000/myos:http
+</pre></div></div>
+      <p>2）在docker2上面启动</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># scp <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span><span class="sh_normal">docker</span><span class="sh_symbol">/</span>daemon<span class="sh_symbol">.</span><span class="sh_normal">json  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">docker</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># systemctl restart docker</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># docker images</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># docker run <span class="sh_symbol">-</span>it <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span>myos<span class="sh_symbol">:</span><span class="sh_normal">http </span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>bash&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//直接启动</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker2 ~]# scp 192.168.1.10:/etc/docker/daemon.json  /etc/docker/
+[root@docker2 ~]# systemctl restart docker
+[root@docker2 ~]# docker images
+[root@docker2 ~]# docker run -it 192.168.1.10:5000/myos:http /bin/bash	
+//直接启动
+</pre></div></div>
+      <p class="number">步骤二：查看私有仓库</p>
+      <p>1）查看里面有什么镜像</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># curl  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.10:5000/v2/_catalog</span></li><li><span class="sh_cbracket">{</span><span class="sh_string">"repositories"</span><span class="sh_symbol">:[</span><span class="sh_string">"busybox"</span><span class="sh_symbol">,</span><span class="sh_string">"myos"</span><span class="sh_symbol">]</span><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 oo]# curl  http://192.168.1.10:5000/v2/_catalog
+{"repositories":["busybox","myos"]}
+</pre></div></div>
+      <p>2）查看里面的镜像标签</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># curl  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.10:5000/v2/busybox/tags/list </span></li><li><span class="sh_cbracket">{</span><span class="sh_string">"name"</span><span class="sh_symbol">:</span><span class="sh_string">"busybox"</span><span class="sh_symbol">,</span><span class="sh_string">"tags"</span><span class="sh_symbol">:[</span><span class="sh_string">"latest"</span><span class="sh_symbol">]</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># curl  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.10:5000/v2/myos/tags/list </span></li><li><span class="sh_cbracket">{</span><span class="sh_string">"name"</span><span class="sh_symbol">:</span><span class="sh_string">"myos"</span><span class="sh_symbol">,</span><span class="sh_string">"tags"</span><span class="sh_symbol">:[</span><span class="sh_string">"http"</span><span class="sh_symbol">]</span><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 oo]# curl  http://192.168.1.10:5000/v2/busybox/tags/list 
+{"name":"busybox","tags":["latest"]}
+[root@docker1 oo]# curl  http://192.168.1.10:5000/v2/myos/tags/list 
+{"name":"myos","tags":["http"]}
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：NFS共享存储</h2>
+      <h3>3.1 问题</h3>
+      <p>本案例要求创建NFS共享，能映射到容器里：</p>
+      <ul class="list">
+        <li>服务器创建NFS共享存储，共享目录为/content，权限为rw
+</li>
+        <li>客户端挂载共享，并将共享目录映射到容器中
+</li>
+      </ul>
+      <h3>3.2 方案</h3>
+      <p>本方案要求需要一台NFS服务器（NFS用真机代替），ip为192.168.1.254，一台客户端docker1主机，ip为192.168.1.10，一台户端docker2主机，ip为192.168.1.20，实现客户端挂载共享，并将共享目录映射到容器中，docker1更新文件时，docker2实现同步更新，方案如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置NFS服务器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install nfs<span class="sh_symbol">-</span>utils</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span>content</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>exports</li><li><span class="sh_symbol">/</span>content     <span class="sh_symbol">*(</span>rw，no_root_squash<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># systemctl restart nfs<span class="sh_symbol">-</span>server<span class="sh_symbol">.</span>service</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># systemctl restart nfs<span class="sh_symbol">-</span>secure<span class="sh_symbol">.</span>service</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># exportfs  <span class="sh_symbol">-</span>rv</li><li>exporting <span class="sh_symbol">*:/</span>content</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># chmod <span class="sh_number">777</span><span class="sh_normal"> </span><span class="sh_symbol">/</span>content</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># echo <span class="sh_number">11</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/content/i</span>ndex<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# yum -y install nfs-utils
+[root@room9pc01 ~]# mkdir /content
+[root@room9pc01 ~]# vim /etc/exports
+/content     *(rw，no_root_squash)
+[root@room9pc01 ~]# systemctl restart nfs-server.service
+[root@room9pc01 ~]# systemctl restart nfs-secure.service
+[root@room9pc01 ~]# exportfs  -rv
+exporting *:/content
+[root@room9pc01 ~]# chmod 777 /content
+[root@room9pc01 ~]# echo 11 &gt; /content/index.html
+</pre></div></div>
+      <p class="number">步骤二：配置客户端</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># yum <span class="sh_symbol">-</span>y install nfs<span class="sh_symbol">-</span>utils</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># systemctl restart nfs<span class="sh_symbol">-</span>server<span class="sh_symbol">.</span>service</li><li><span class="sh_symbol">[</span>root@docker1 oo<span class="sh_symbol">]</span># showmount <span class="sh_symbol">-</span>e <span class="sh_number">192.168.1.254</span></li><li>Export list <span class="sh_keyword">for</span> <span class="sh_number">192.168.1.254</span><span class="sh_symbol">:</span></li><li><span class="sh_symbol">/</span>content <span class="sh_symbol">*</span></li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>qq</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># mount <span class="sh_symbol">-</span>t nfs <span class="sh_number">192.168.1.254</span><span class="sh_symbol">:</span><span class="sh_regexp">/content /m</span><span class="sh_normal">nt</span><span class="sh_symbol">/</span>qq</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>qq</li><li>index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># <span class="sh_normal">cat  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span><span class="sh_normal">qq</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html </li><li><span class="sh_number">11</span></li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker run  <span class="sh_symbol">-</span>d <span class="sh_symbol">-</span>p <span class="sh_number">80</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span><span class="sh_normal">v </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>qq<span class="sh_symbol">:</span><span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span>html <span class="sh_symbol">-</span>it myos<span class="sh_symbol">:</span>http</li><li>224248f0df5d795457c43c2a7dad0b7e5ec86abdc3f31d577e72f7929f020e01</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># curl <span class="sh_number">192.168.1.10</span></li><li><span class="sh_number">11</span></li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install nfs<span class="sh_symbol">-</span>utils</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># showmount <span class="sh_symbol">-</span>e <span class="sh_number">192.168.1.254</span></li><li>Export list <span class="sh_keyword">for</span> <span class="sh_number">192.168.1.254</span><span class="sh_symbol">:</span></li><li><span class="sh_symbol">/</span>content <span class="sh_symbol">*</span></li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>qq</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># mount <span class="sh_symbol">-</span>t nfs <span class="sh_number">192.168.1.254</span><span class="sh_symbol">:</span><span class="sh_regexp">/content /m</span><span class="sh_normal">nt</span><span class="sh_symbol">/</span>qq</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># docker run  <span class="sh_symbol">-</span>d <span class="sh_symbol">-</span>p <span class="sh_number">80</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span><span class="sh_normal">v </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>qq<span class="sh_symbol">:</span><span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span>html <span class="sh_symbol">-</span>it <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">5000</span><span class="sh_symbol">/</span>myos<span class="sh_symbol">:</span>http</li><li>00346dabec2c7a12958da4b7fee6551020249cdcb111ad6a1058352d2838742a</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># curl <span class="sh_number">192.168.1.20</span></li><li><span class="sh_number">11</span></li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># <span class="sh_normal">touch </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span><span class="sh_normal">qq</span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># echo <span class="sh_number">22</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/mnt/</span><span class="sh_normal">qq</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span>#<span class="sh_normal">ls  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span><span class="sh_normal">qq</span><span class="sh_symbol">/</span></li><li>a<span class="sh_symbol">.</span>sh  index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span><span class="sh_normal">qq</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html </li><li><span class="sh_number">22</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 oo]# yum -y install nfs-utils
+[root@docker1 oo]# systemctl restart nfs-server.service
+[root@docker1 oo]# showmount -e 192.168.1.254
+Export list for 192.168.1.254:
+/content *
+[root@docker1 ~]# mkdir /mnt/qq
+[root@docker1 ~]# mount -t nfs 192.168.1.254:/content /mnt/qq
+[root@docker1 ~]# ls /mnt/qq
+index.html
+[root@docker1 ~]# cat  /mnt/qq/index.html 
+11
+[root@docker1 ~]# docker run  -d -p 80:80 -v /mnt/qq:/var/www/html -it myos:http
+224248f0df5d795457c43c2a7dad0b7e5ec86abdc3f31d577e72f7929f020e01
+[root@docker1 ~]# curl 192.168.1.10
+11
+[root@docker2 ~]# yum -y install nfs-utils
+[root@docker2 ~]# showmount -e 192.168.1.254
+Export list for 192.168.1.254:
+/content *
+[root@docker2 ~]# mkdir /mnt/qq
+[root@docker2 ~]# mount -t nfs 192.168.1.254:/content /mnt/qq
+[root@docker2 ~]# docker run  -d -p 80:80 -v /mnt/qq:/var/www/html -it 192.168.1.10:5000/myos:http
+00346dabec2c7a12958da4b7fee6551020249cdcb111ad6a1058352d2838742a
+[root@docker2 ~]# curl 192.168.1.20
+11
+[root@docker1 ~]# touch /mnt/qq/a.sh
+[root@docker1 ~]# echo 22 &gt; /mnt/qq/index.html
+[root@docker2 ~]#ls  /mnt/qq/
+a.sh  index.html
+[root@docker2 ~]# cat /mnt/qq/index.html 
+22
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：创建自定义网桥</h2>
+      <h3>4.1 问题</h3>
+      <p>本案例要求：</p>
+      <ul class="list">
+        <li>创建网桥设备docker01
+</li>
+        <li>设定网段为172.30.0.0/16
+</li>
+        <li>启动nginx容器，nginx容器桥接docker01设备
+</li>
+        <li>映射真实机8080端口与容器的80端口
+</li>
+      </ul>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：新建Docker网络模型</p>
+      <p>1）新建docker1网络模型</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  network  create  <span class="sh_symbol">--</span>subnet<span class="sh_symbol">=</span><span class="sh_number">172.30.0.0</span><span class="sh_symbol">/</span><span class="sh_number">16</span> docker01</li><li>c9cf26f911ef2dccb1fd1f670a6c51491e72b49133246f6428dd732c44109462</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  network  list</li><li>NETWORK ID          NAME                DRIVER              SCOPE</li><li>bc189673f959        bridge              bridge              local               </li><li>6622752788ea        docker01             bridge             local               </li><li>53bf43bdd584        host                host                local                </li><li>ac52d3151ba8        none                <span class="sh_keyword">null</span>                local                </li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># ip  a   s</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  network   inspect   docker01</li><li><span class="sh_symbol">[</span></li><li>    <span class="sh_cbracket">{</span></li><li>        <span class="sh_string">"Name"</span><span class="sh_symbol">:</span> <span class="sh_string">"docker01"</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Id"</span><span class="sh_symbol">:</span> <span class="sh_string">"c9cf26f911ef2dccb1fd1f670a6c51491e72b49133246f6428dd732c44109462"</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Scope"</span><span class="sh_symbol">:</span> <span class="sh_string">"local"</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Driver"</span><span class="sh_symbol">:</span> <span class="sh_string">"bridge"</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"EnableIPv6"</span><span class="sh_symbol">:</span> <span class="sh_keyword">false</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"IPAM"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{</span></li><li>            <span class="sh_string">"Driver"</span><span class="sh_symbol">:</span> <span class="sh_string">"default"</span><span class="sh_symbol">,</span></li><li>            <span class="sh_string">"Options"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{}</span><span class="sh_symbol">,</span></li><li>            <span class="sh_string">"Config"</span><span class="sh_symbol">:</span> <span class="sh_symbol">[</span></li><li>                <span class="sh_cbracket">{</span></li><li>                    <span class="sh_string">"Subnet"</span><span class="sh_symbol">:</span> <span class="sh_string">"172.30.0.0/16"</span></li><li>                <span class="sh_cbracket">}</span></li><li>            <span class="sh_symbol">]</span></li><li>        <span class="sh_cbracket">}</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Internal"</span><span class="sh_symbol">:</span> <span class="sh_keyword">false</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Containers"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{}</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Options"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{}</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"Labels"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{}</span></li><li>    <span class="sh_cbracket">}</span></li><li><span class="sh_symbol">]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 ~]# docker  network  create  --subnet=172.30.0.0/16 docker01
+c9cf26f911ef2dccb1fd1f670a6c51491e72b49133246f6428dd732c44109462
+[root@docker1 ~]# docker  network  list
+NETWORK ID          NAME                DRIVER              SCOPE
+bc189673f959        bridge              bridge              local               
+6622752788ea        docker01             bridge             local               
+53bf43bdd584        host                host                local                
+ac52d3151ba8        none                null                local                
+[root@docker1 ~]# ip  a   s
+[root@docker1 ~]# docker  network   inspect   docker01
+[
+    {
+        "Name": "docker01",
+        "Id": "c9cf26f911ef2dccb1fd1f670a6c51491e72b49133246f6428dd732c44109462",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.30.0.0/16"
+                }
+            ]
+        },
+        "Internal": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+
+</pre></div></div>
+      <p>2）使用自定义网桥启动容器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  run  <span class="sh_symbol">--</span>network<span class="sh_symbol">=</span>docker01   <span class="sh_symbol">-</span>id   nginx</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 ~]# docker  run  --network=docker01   -id   nginx
+
+</pre></div></div>
+      <p>3）端口映射</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  run  <span class="sh_symbol">-</span>p  <span class="sh_number">8080</span><span class="sh_symbol">:</span><span class="sh_number">80</span>  <span class="sh_symbol">-</span>id  nginx</li><li>e523b386f9d6194e53d0a5b6b8f5ab4984d062896bab10639e41aef657cb2a53</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># curl <span class="sh_number">192.168.1.10</span><span class="sh_symbol">:</span><span class="sh_number">8080</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 ~]# docker  run  -p  8080:80  -id  nginx
+e523b386f9d6194e53d0a5b6b8f5ab4984d062896bab10639e41aef657cb2a53
+[root@docker1 ~]# curl 192.168.1.10:8080
+
+</pre></div></div>
+      <p class="number">步骤二：扩展实验</p>
+      <p>1）新建一个网络模型docker02</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  network   create   <span class="sh_symbol">--</span>driver  bridge  docker02   </li><li><span class="sh_comment">//新建一个 名为docker02的网络模型</span></li><li>5496835bd3f53ac220ce3d8be71ce6afc919674711ab3f94e6263b9492c7d2cc</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># ifconfig &nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//但是在用ifconfig命令查看的时候，显示的名字并不是docker02，而是br-5496835bd3f5</span></li><li>br<span class="sh_symbol">-</span>5496835bd3f5<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4099</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.18.0.1</span>  netmask <span class="sh_number">255.255.0.0</span>  broadcast <span class="sh_number">0.0.0.0</span></li><li>        ether <span class="sh_number">02</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">:</span><span class="sh_number">89</span><span class="sh_symbol">:</span>6a<span class="sh_symbol">:</span>a2<span class="sh_symbol">:</span><span class="sh_number">72</span>  txqueuelen <span class="sh_number">0</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">8</span>  bytes <span class="sh_number">496</span> <span class="sh_symbol">(</span><span class="sh_number">496.0</span> B<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">8</span>  bytes <span class="sh_number">496</span> <span class="sh_symbol">(</span><span class="sh_number">496.0</span> B<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker  network  list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看显示docker02（查看加粗字样）</span></li><li>NETWORK ID          NAME                DRIVER              SCOPE</li><li>bc189673f959        bridge              bridge              local               </li><li>5496835bd3f5        docker02             bridge             local               </li><li>53bf43bdd584        host                host                local               </li><li>ac52d3151ba8        none                <span class="sh_keyword">null</span>                local</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@docker1 ~]# docker  network   create   --driver  bridge  docker02   
+//新建一个 名为docker02的网络模型
+5496835bd3f53ac220ce3d8be71ce6afc919674711ab3f94e6263b9492c7d2cc
+[root@docker1 ~]# ifconfig 	
+//但是在用ifconfig命令查看的时候，显示的名字并不是docker02，而是br-5496835bd3f5
+br-5496835bd3f5: flags=4099&lt;UP,BROADCAST,MULTICAST&gt;  mtu 1500
+        inet 172.18.0.1  netmask 255.255.0.0  broadcast 0.0.0.0
+        ether 02:42:89:6a:a2:72  txqueuelen 0  (Ethernet)
+        RX packets 8  bytes 496 (496.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 8  bytes 496 (496.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[root@docker1 ~]# docker  network  list			//查看显示docker02（查看加粗字样）
+NETWORK ID          NAME                DRIVER              SCOPE
+bc189673f959        bridge              bridge              local               
+5496835bd3f5        docker02             bridge             local               
+53bf43bdd584        host                host                local               
+ac52d3151ba8        none                null                local
+
+</pre></div></div>
+      <p>2）若要解决使用ifconfig命令可以看到docker02的问题，可以执行以下几步命令</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker network list   <span class="sh_comment">//查看docker0的NETWORK ID（加粗字样）</span></li><li>NETWORK ID          NAME                DRIVER              SCOPE</li><li>bc189673f959        bridge              bridge              local               </li><li>5496835bd3f5        docker02             bridge             local               </li><li>53bf43bdd584        host                host                local               </li><li>ac52d3151ba8        none                <span class="sh_keyword">null</span>                local               </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@docker1 ~]# docker network list   //查看docker0的NETWORK ID（加粗字样）
+NETWORK ID          NAME                DRIVER              SCOPE
+bc189673f959        bridge              bridge              local               
+5496835bd3f5        docker02             bridge             local               
+53bf43bdd584        host                host                local               
+ac52d3151ba8        none                null                local               
+
+</pre></div></div>
+      <p>3）查看16dc92e55023的信息，如图-3所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker2 <span class="sh_symbol">~]</span># docker network inspect bc189673f959 </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker2 ~]# docker network inspect bc189673f959 
+</pre></div></div>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+        <p>
+        </p>
+      </div>
+      <p>4）查看图片的倒数第六行有"com.docker.network.bridge.name": "docker0"字样</p>
+      <p>5）把刚刚创建的docker02网桥删掉</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker network rm docker02     <span class="sh_comment">//删除docker02</span></li><li>docker02</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker network create  <span class="sh_symbol">\</span> </li><li>docker02  <span class="sh_symbol">-</span>o com<span class="sh_symbol">.</span>docker<span class="sh_symbol">.</span>network<span class="sh_symbol">.</span>bridge<span class="sh_symbol">.</span>name<span class="sh_symbol">=</span>docker02   </li><li><span class="sh_comment">//创建docker02网桥</span></li><li>648bd5da03606d5a1a395c098662b5f820b9400c6878e2582a7ce754c8c05a3a</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># ifconfig &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//ifconfig查看有docker02</span></li><li>docker02<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4099</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.18.0.1</span>  netmask <span class="sh_number">255.255.0.0</span>  broadcast <span class="sh_number">0.0.0.0</span></li><li>        ether <span class="sh_number">02</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">:</span><span class="sh_number">94</span><span class="sh_symbol">:</span><span class="sh_number">27</span><span class="sh_symbol">:</span>a0<span class="sh_symbol">:</span><span class="sh_number">43</span>  txqueuelen <span class="sh_number">0</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 ~]# docker network rm docker02     //删除docker02
+docker02
+[root@docker1 ~]# docker network create  \ 
+docker02  -o com.docker.network.bridge.name=docker02   
+//创建docker02网桥
+648bd5da03606d5a1a395c098662b5f820b9400c6878e2582a7ce754c8c05a3a
+[root@docker1 ~]# ifconfig 	//ifconfig查看有docker02
+docker02: flags=4099&lt;UP,BROADCAST,MULTICAST&gt;  mtu 1500
+        inet 172.18.0.1  netmask 255.255.0.0  broadcast 0.0.0.0
+        ether 02:42:94:27:a0:43  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></div></div>
+      <p>6）若想在创建docker03的时候自定义网段（之前已经创建过docker01和02，这里用docker03），执行以下命令</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># docker network create docker03 <span class="sh_symbol">--</span>subnet<span class="sh_symbol">=</span><span class="sh_number">172.30.0.0</span><span class="sh_symbol">/</span><span class="sh_number">16</span> <span class="sh_symbol">-</span>o com<span class="sh_symbol">.</span>docker<span class="sh_symbol">.</span>network<span class="sh_symbol">.</span>bridge<span class="sh_symbol">.</span>name<span class="sh_symbol">=</span>docker03</li><li>f003aa1c0fa20c81e4f73c12dcc79262f1f1d67589d7440175ea01dc0be4d03c</li><li><span class="sh_symbol">[</span>root@docker1 <span class="sh_symbol">~]</span># ifconfig    <span class="sh_comment">//ifconfig查看，显示的是自己定义的网段</span></li><li>docker03<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4099</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.30.0.1</span>  netmask <span class="sh_number">255.255.0.0</span>  broadcast <span class="sh_number">0.0.0.0</span></li><li>        ether <span class="sh_number">02</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">:</span><span class="sh_number">27</span><span class="sh_symbol">:</span>9b<span class="sh_symbol">:</span><span class="sh_number">95</span><span class="sh_symbol">:</span>b3  txqueuelen <span class="sh_number">0</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@docker1 ~]# docker network create docker03 --subnet=172.30.0.0/16 -o com.docker.network.bridge.name=docker03
+f003aa1c0fa20c81e4f73c12dcc79262f1f1d67589d7440175ea01dc0be4d03c
+[root@docker1 ~]# ifconfig    //ifconfig查看，显示的是自己定义的网段
+docker03: flags=4099&lt;UP,BROADCAST,MULTICAST&gt;  mtu 1500
+        inet 172.30.0.1  netmask 255.255.0.0  broadcast 0.0.0.0
+        ether 02:42:27:9b:95:b3  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></div></div>
+    </div>
+  
+</body></html>

@@ -1,0 +1,365 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD CLUSTER DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#case1">案例1：ipvsadm命令用法</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#case2">案例2：部署LVS-NAT集群</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#case3">案例3：部署LVS-DR集群</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：ipvsadm命令用法</h2>
+      <h3>1.1 问题</h3>
+      <p>准备一台Linux服务器，安装ipvsadm软件包，练习使用ipvsadm命令，实现如下功能：</p>
+      <ul class="list">
+        <li>使用命令添加基于TCP一些的集群服务
+</li>
+        <li>在集群中添加若干台后端真实服务器
+</li>
+        <li>实现同一客户端访问，调度器分配固定服务器
+</li>
+        <li>会使用ipvsadm实现规则的增、删、改
+</li>
+        <li>保存ipvsadm规则
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>安装ipvsadm软件包，关于ipvsadm的用法可以参考man ipvsadm资料。</p>
+      <p>常用ipvsadm命令语法格式如表-1及表-2所示。</p>
+      <div class="table">
+        <p>表－1 ipvsadm命令选项</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <div class="table">
+        <p>表－2 ipvsadm语法案例</p>
+        <img src="./CASE_files/table002.png">
+      </div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：使用命令增、删、改LVS集群规则</p>
+      <p>1）创建LVS虚拟集群服务器（算法为加权轮询：wrr）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install ipvsadm</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>A <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>s wrr</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln</li><li>IP Virtual Server version <span class="sh_number">1.2.1</span> <span class="sh_symbol">(</span>size<span class="sh_symbol">=</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>Prot LocalAddress<span class="sh_symbol">:</span>Port Scheduler Flags</li><li>  <span class="sh_symbol">-&gt;</span> RemoteAddress<span class="sh_symbol">:</span>Port           Forward Weight ActiveConn InActConn</li><li>TCP  <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> wrr</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install ipvsadm
+[root@proxy ~]# ipvsadm -A -t 192.168.4.5:80 -s wrr
+[root@proxy ~]# ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.4.5:80 wrr
+</pre></div></div>
+      <p>2）为集群添加若干real server</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.100</span> <span class="sh_symbol">-</span>m <span class="sh_symbol">-</span>w <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln</li><li>IP Virtual Server version <span class="sh_number">1.2.1</span> <span class="sh_symbol">(</span>size<span class="sh_symbol">=</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>Prot LocalAddress<span class="sh_symbol">:</span>Port Scheduler Flags</li><li>  <span class="sh_symbol">-&gt;</span> RemoteAddress<span class="sh_symbol">:</span>Port           Forward Weight ActiveConn InActConn</li><li>TCP  <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> wrr</li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.2.100</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Masq    <span class="sh_number">1</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.200</span> <span class="sh_symbol">-</span>m <span class="sh_symbol">-</span>w <span class="sh_number">2</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm –a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.201</span> <span class="sh_symbol">-</span>m <span class="sh_symbol">-</span>w <span class="sh_number">3</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm –a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.202</span> <span class="sh_symbol">-</span>m <span class="sh_symbol">-</span>w <span class="sh_number">4</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -a -t 192.168.4.5:80 -r 192.168.2.100 -m -w 1
+[root@proxy ~]# ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.4.5:80 wrr
+  -&gt; 192.168.2.100:80             Masq    1      0          0
+[root@proxy ~]# ipvsadm -a -t 192.168.4.5:80 -r 192.168.2.200 -m -w 2
+[root@proxy ~]# ipvsadm –a -t 192.168.4.5:80 -r 192.168.2.201 -m -w 3
+[root@proxy ~]# ipvsadm –a -t 192.168.4.5:80 -r 192.168.2.202 -m -w 4
+</pre></div></div>
+      <p>3）修改集群服务器设置(修改调度器算法，将加权轮询修改为轮询)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>E <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>s rr</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln</li><li>IP Virtual Server version <span class="sh_number">1.2.1</span> <span class="sh_symbol">(</span>size<span class="sh_symbol">=</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>Prot LocalAddress<span class="sh_symbol">:</span>Port Scheduler Flags</li><li>  <span class="sh_symbol">-&gt;</span> RemoteAddress<span class="sh_symbol">:</span>Port           Forward Weight ActiveConn InActConn</li><li>TCP  <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> rr</li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.2.100</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Masq    <span class="sh_number">1</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span>         </li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.2.200</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Masq    <span class="sh_number">2</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span>         </li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.2.201</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Masq    <span class="sh_number">2</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span>         </li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.2.202</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Masq    <span class="sh_number">1</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -E -t 192.168.4.5:80 -s rr
+[root@proxy ~]# ipvsadm -Ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.4.5:80 rr
+  -&gt; 192.168.2.100:80             Masq    1      0          0         
+  -&gt; 192.168.2.200:80             Masq    2      0          0         
+  -&gt; 192.168.2.201:80             Masq    2      0          0         
+  -&gt; 192.168.2.202:80             Masq    1      0          0
+</pre></div></div>
+      <p>4）修改read server（使用-g选项，将模式改为DR模式）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>e <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.202</span> <span class="sh_symbol">-</span>g</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -e -t 192.168.4.5:80 -r 192.168.2.202 -g
+</pre></div></div>
+      <p>5）查看LVS状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -Ln
+</pre></div></div>
+      <p>6）创建另一个集群（算法为最少连接算法；使用-m选项，设置工作模式为NAT模式）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>A <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">3306</span> <span class="sh_symbol">-</span>s lc</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">3306</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.100</span> <span class="sh_symbol">-</span>m</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">3306</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.200</span> <span class="sh_symbol">-</span>m</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -A -t 192.168.4.5:3306 -s lc
+[root@proxy ~]# ipvsadm -a -t 192.168.4.5:3306 -r 192.168.2.100 -m
+[root@proxy ~]# ipvsadm -a -t 192.168.4.5:3306 -r 192.168.2.200 -m
+</pre></div></div>
+      <p>6）永久保存所有规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm<span class="sh_symbol">-</span>save <span class="sh_symbol">-</span>n <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>ipvsadm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm-save -n &gt; /etc/sysconfig/ipvsadm
+</pre></div></div>
+      <p>7）清空所有规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>C</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -C
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：部署LVS-NAT集群</h2>
+      <h3>2.1 问题</h3>
+      <p>使用LVS实现NAT模式的集群调度服务器，为用户提供Web服务：</p>
+      <ul class="list">
+        <li>集群对外公网IP地址为192.168.4.5
+</li>
+        <li>调度器内网IP地址为192.168.2.5
+</li>
+        <li>真实Web服务器地址分别为192.168.2.100、192.168.2.200
+</li>
+        <li>使用加权轮询调度算法，真实服务器权重分别为1和2
+</li>
+      </ul>
+      <h3>2.2 方案</h3>
+      <p>实验拓扑结构主机配置细节如表-3所示。</p>
+      <div class="table">
+        <p>表-3</p>
+        <img src="./CASE_files/table003.png">
+      </div>
+      <p>使用4台虚拟机，1台作为Director调度器、2台作为Real Server、1台客户端，拓扑结构如图-1所示，注意：web1和web2必须配置网关地址。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置基础环境</p>
+      <p>1）设置Web服务器（以web1为例）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.2.100"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install httpd
+[root@web1 ~]# echo "192.168.2.100" &gt; /var/www/html/index.html
+</pre></div></div>
+      <p>2）启动Web服务器软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl restart httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl restart httpd
+</pre></div></div>
+      <p>3)关闭防火墙与SELinux</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systmctl stop firewalld</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systmctl stop firewalld
+[root@web1 ~]# setenforce 0
+</pre></div></div>
+      <p class="number">步骤三：部署LVS-NAT模式调度器</p>
+      <p>1)确认调度器的路由转发功能(如果已经开启，可以忽略)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># echo <span class="sh_number">1</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/proc/</span><span class="sh_normal">sys</span><span class="sh_symbol">/</span><span class="sh_normal">net</span><span class="sh_symbol">/</span><span class="sh_normal">ipv4</span><span class="sh_symbol">/</span>ip_forward</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">proc</span><span class="sh_symbol">/</span><span class="sh_normal">sys</span><span class="sh_symbol">/</span><span class="sh_normal">net</span><span class="sh_symbol">/</span><span class="sh_normal">ipv4</span><span class="sh_symbol">/</span>ip_forward</li><li><span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># echo <span class="sh_string">"net.ipv4.ip_forward = 1"</span> <span class="sh_symbol">&gt;&gt;</span> <span class="sh_regexp">/etc/</span>sysctl<span class="sh_symbol">.</span>conf</li><li>#修改配置文件，设置永久规则</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+[root@proxy ~]# cat /proc/sys/net/ipv4/ip_forward
+1
+[root@proxy ~]# echo "net.ipv4.ip_forward = 1" &gt;&gt; /etc/sysctl.conf
+#修改配置文件，设置永久规则
+</pre></div></div>
+      <p>2）创建集群服务器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install ipvsadm</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>A <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>s wrr</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install ipvsadm
+[root@proxy ~]# ipvsadm -A -t 192.168.4.5:80 -s wrr
+</pre></div></div>
+      <p>2）添加真实服务器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.100</span> <span class="sh_symbol">-</span>w <span class="sh_number">1</span> <span class="sh_symbol">-</span>m</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.5</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.2.200</span> <span class="sh_symbol">-</span>w <span class="sh_number">1</span> <span class="sh_symbol">-</span>m</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -a -t 192.168.4.5:80 -r 192.168.2.100 -w 1 -m
+[root@proxy ~]# ipvsadm -a -t 192.168.4.5:80 -r 192.168.2.200 -w 1 -m
+</pre></div></div>
+      <p>3）查看规则列表，并保存规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm<span class="sh_symbol">-</span>save <span class="sh_symbol">-</span>n <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>ipvsadm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -Ln
+[root@proxy ~]# ipvsadm-save -n &gt; /etc/sysconfig/ipvsadm
+</pre></div></div>
+      <p class="number">步骤四：客户端测试</p>
+      <p>客户端使用curl命令反复连接http://192.168.4.5，查看访问的页面是否会轮询到不同的后端真实服务器。</p>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：部署LVS-DR集群</h2>
+      <h3>3.1 问题</h3>
+      <p>使用LVS实现DR模式的集群调度服务器，为用户提供Web服务：</p>
+      <ul class="list">
+        <li>客户端IP地址为192.168.4.10
+</li>
+        <li>LVS调度器VIP地址为192.168.4.15
+</li>
+        <li>LVS调度器DIP地址设置为192.168.4.5
+</li>
+        <li>真实Web服务器地址分别为192.168.4.100、192.168.4.200
+</li>
+        <li>使用加权轮询调度算法，web1的权重为1，web2的权重为2
+</li>
+      </ul>
+      <p>说明：</p>
+      <p>CIP是客户端的IP地址；</p>
+      <p>VIP是对客户端提供服务的IP地址；</p>
+      <p>RIP是后端服务器的真实IP地址；</p>
+      <p>DIP是调度器与后端服务器通信的IP地址（VIP必须配置在虚拟接口）。</p>
+      <h3>3.2 方案</h3>
+      <p>使用4台虚拟机，1台作为客户端、1台作为Director调度器、2台作为Real Server，拓扑结构如图-2所示。实验拓扑结构主机配置细节如表-4所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <div class="table">
+        <p>表-4</p>
+        <img src="./CASE_files/table004.png">
+      </div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p>说明：</p>
+      <p>CIP是客户端的IP地址；</p>
+      <p>VIP是对客户端提供服务的IP地址；</p>
+      <p>RIP是后端服务器的真实IP地址；</p>
+      <p>DIP是调度器与后端服务器通信的IP地址（VIP必须配置在虚拟接口）。</p>
+      <p class="number">步骤一：配置实验网络环境</p>
+      <p class="number">1）设置Proxy代理服务器的VIP和DIP</p>
+      <p class="number">注意：为了防止冲突，VIP必须要配置在网卡的虚拟接口！！！</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># cp ifcfg<span class="sh_symbol">-</span>eth0<span class="sh_cbracket">{</span><span class="sh_symbol">,:</span><span class="sh_number">0</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># vim ifcfg<span class="sh_symbol">-</span>eth0</li><li>TYPE<span class="sh_symbol">=</span>Ethernet</li><li>BOOTPROTO<span class="sh_symbol">=</span>none</li><li>NAME<span class="sh_symbol">=</span>eth0</li><li>DEVICE<span class="sh_symbol">=</span>eth0</li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_number">192.168.4.5</span></li><li>PREFIX<span class="sh_symbol">=</span><span class="sh_number">24</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># vim ifcfg<span class="sh_symbol">-</span>eth0<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>TYPE<span class="sh_symbol">=</span>Ethernet</li><li>BOOTPROTO<span class="sh_symbol">=</span>none</li><li>DEFROUTE<span class="sh_symbol">=</span>yes</li><li>NAME<span class="sh_symbol">=</span>eth0<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>DEVICE<span class="sh_symbol">=</span>eth0<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>PREFIX<span class="sh_symbol">=</span><span class="sh_number">24</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl restart network</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@proxy ~]# cd /etc/sysconfig/network-scripts/
+[root@proxy ~]# cp ifcfg-eth0{,:0}
+[root@proxy ~]# vim ifcfg-eth0
+TYPE=Ethernet
+BOOTPROTO=none
+NAME=eth0
+DEVICE=eth0
+ONBOOT=yes
+IPADDR=192.168.4.5
+PREFIX=24
+[root@proxy ~]# vim ifcfg-eth0:0
+TYPE=Ethernet
+BOOTPROTO=none
+DEFROUTE=yes
+NAME=eth0:0
+DEVICE=eth0:0
+ONBOOT=yes
+IPADDR=192.168.4.15
+PREFIX=24
+[root@proxy ~]# systemctl restart network
+</pre></div></div>
+      <p>2）设置Web1服务器网络参数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.100</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.100/24 connection.autoconnect yes
+[root@web1 ~]# nmcli connection up eth0
+</pre></div></div>
+      <p>接下来给web1配置VIP地址。</p>
+      <p>注意：这里的子网掩码必须是32（也就是全255），网络地址与IP地址一样，广播地址与IP地址也一样。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cp ifcfg<span class="sh_symbol">-</span>lo<span class="sh_cbracket">{</span><span class="sh_symbol">,:</span><span class="sh_number">0</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># vim ifcfg<span class="sh_symbol">-</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>DEVICE<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>NETMASK<span class="sh_symbol">=</span><span class="sh_number">255.255.255.255</span></li><li>NETWORK<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>BROADCAST<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>NAME<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# cd /etc/sysconfig/network-scripts/
+[root@web1 ~]# cp ifcfg-lo{,:0}
+[root@web1 ~]# vim ifcfg-lo:0
+DEVICE=lo:0
+IPADDR=192.168.4.15
+NETMASK=255.255.255.255
+NETWORK=192.168.4.15
+BROADCAST=192.168.4.15
+ONBOOT=yes
+NAME=lo:0
+</pre></div></div>
+      <p>防止地址冲突的问题：</p>
+      <p>这里因为web1也配置与代理一样的VIP地址，默认肯定会出现地址冲突；</p>
+      <p>sysctl.conf文件写入这下面四行的主要目的就是访问192.168.4.15的数据包，只有调度器会响应，其他主机都不做任何响应，这样防止地址冲突的问题。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>sysctl<span class="sh_symbol">.</span>conf</li><li>#手动写入如下<span class="sh_number">4</span>行内容</li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>#当有arp广播问谁是<span class="sh_number">192.168.4.15</span>时，本机忽略该ARP广播，不做任何回应</li><li>#本机不要向外宣告自己的lo回环地址是<span class="sh_number">192.168.4.15</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># sysctl <span class="sh_symbol">-</span>p</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim /etc/sysctl.conf
+#手动写入如下4行内容
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_announce = 2
+#当有arp广播问谁是192.168.4.15时，本机忽略该ARP广播，不做任何回应
+#本机不要向外宣告自己的lo回环地址是192.168.4.15
+[root@web1 ~]# sysctl -p
+</pre></div></div>
+      <p>重启网络服务，设置防火墙与SELinux</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl restart network</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># ifconfig</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl stop firewalld</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl restart network
+[root@web1 ~]# ifconfig
+[root@web1 ~]# systemctl stop firewalld
+[root@web1 ~]# setenforce 0
+</pre></div></div>
+      <p>3）设置Web2服务器网络参数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection modify eth0 ipv4<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>ipv4<span class="sh_symbol">.</span>addresses <span class="sh_number">192.168.4.200</span><span class="sh_symbol">/</span><span class="sh_number">24</span> connection<span class="sh_symbol">.</span>autoconnect yes</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># nmcli connection up eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# nmcli connection modify eth0 ipv4.method manual \
+ipv4.addresses 192.168.4.200/24 connection.autoconnect yes
+[root@web2 ~]# nmcli connection up eth0
+</pre></div></div>
+      <p>接下来给web2配置VIP地址</p>
+      <p>注意：这里的子网掩码必须是32（也就是全255），网络地址与IP地址一样，广播地址与IP地址也一样。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># cp ifcfg<span class="sh_symbol">-</span>lo<span class="sh_cbracket">{</span><span class="sh_symbol">,:</span><span class="sh_number">0</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># vim ifcfg<span class="sh_symbol">-</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>DEVICE<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>NETMASK<span class="sh_symbol">=</span><span class="sh_number">255.255.255.255</span></li><li>NETWORK<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>BROADCAST<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span></li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>NAME<span class="sh_symbol">=</span>lo<span class="sh_symbol">:</span><span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# cd /etc/sysconfig/network-scripts/
+[root@web2 ~]# cp ifcfg-lo{,:0}
+[root@web2 ~]# vim ifcfg-lo:0
+DEVICE=lo:0
+IPADDR=192.168.4.15
+NETMASK=255.255.255.255
+NETWORK=192.168.4.15
+BROADCAST=192.168.4.15
+ONBOOT=yes
+NAME=lo:0
+</pre></div></div>
+      <p>防止地址冲突的问题：</p>
+      <p>这里因为web1也配置与代理一样的VIP地址，默认肯定会出现地址冲突；</p>
+      <p>sysctl.conf文件写入这下面四行的主要目的就是访问192.168.4.15的数据包，只有调度器会响应，其他主机都不做任何响应，这样防止地址冲突的问题。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>sysctl<span class="sh_symbol">.</span>conf</li><li>#手动写入如下<span class="sh_number">4</span>行内容</li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_ignore <span class="sh_symbol">=</span> <span class="sh_number">1</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>lo<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>net<span class="sh_symbol">.</span>ipv4<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>all<span class="sh_symbol">.</span>arp_announce <span class="sh_symbol">=</span> <span class="sh_number">2</span></li><li>#当有arp广播问谁是<span class="sh_number">192.168.4.15</span>时，本机忽略该ARP广播，不做任何回应</li><li>#本机不要向外宣告自己的lo回环地址是<span class="sh_number">192.168.4.15</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># sysctl <span class="sh_symbol">-</span>p</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# vim /etc/sysctl.conf
+#手动写入如下4行内容
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_announce = 2
+#当有arp广播问谁是192.168.4.15时，本机忽略该ARP广播，不做任何回应
+#本机不要向外宣告自己的lo回环地址是192.168.4.15
+[root@web2 ~]# sysctl -p
+</pre></div></div>
+      <p>重启网络服务，设置防火墙与SELinux</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl restart network</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># ifconfig</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl stop firewalld</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# systemctl restart network
+[root@web2 ~]# ifconfig
+[root@web2 ~]# systemctl stop firewalld
+[root@web2 ~]# setenforce 0
+</pre></div></div>
+      <p class="number">步骤二：配置后端Web服务器</p>
+      <p>1）自定义Web页面</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.4.100"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># echo <span class="sh_string">"192.168.4.200"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install httpd
+[root@web1 ~]# echo "192.168.4.100" &gt; /var/www/html/index.html
+[root@web2 ~]# yum -y install httpd
+[root@web2 ~]# echo "192.168.4.200" &gt; /var/www/html/index.html
+</pre></div></div>
+      <p>2）启动Web服务器软件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl restart httpd</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl restart httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl restart httpd
+[root@web2 ~]# systemctl restart httpd
+</pre></div></div>
+      <p class="number">步骤三：proxy调度器安装软件并部署LVS-DR模式调度器</p>
+      <p>1）安装软件（如果已经安装，此步骤可以忽略）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install ipvsadm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install ipvsadm
+</pre></div></div>
+      <p>2）清理之前实验的规则，创建新的集群服务器规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>C                                #清空所有规则</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>A <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.15</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>s wrr</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -C                                #清空所有规则
+[root@proxy ~]# ipvsadm -A -t 192.168.4.15:80 -s wrr
+</pre></div></div>
+      <p>3）添加真实服务器(-g参数设置LVS工作模式为DR模式，-w设置权重)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.15</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.4.100</span> <span class="sh_symbol">-</span>g <span class="sh_symbol">-</span>w <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t <span class="sh_number">192.168.4.15</span><span class="sh_symbol">:</span><span class="sh_number">80</span> <span class="sh_symbol">-</span>r <span class="sh_number">192.168.4.200</span> <span class="sh_symbol">-</span>g <span class="sh_symbol">-</span>w <span class="sh_number">1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -a -t 192.168.4.15:80 -r 192.168.4.100 -g -w 1
+[root@proxy ~]# ipvsadm -a -t 192.168.4.15:80 -r 192.168.4.200 -g -w 1
+</pre></div></div>
+      <p>4）查看规则列表，并保存规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm <span class="sh_symbol">-</span>Ln</li><li>TCP  <span class="sh_number">192.168.4.15</span><span class="sh_symbol">:</span><span class="sh_number">80</span> wrr</li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.4.100</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Route   <span class="sh_number">1</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span>         </li><li>  <span class="sh_symbol">-&gt;</span> <span class="sh_number">192.168.4.200</span><span class="sh_symbol">:</span><span class="sh_number">80</span>             Route   <span class="sh_number">2</span>      <span class="sh_number">0</span>          <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># ipvsadm<span class="sh_symbol">-</span>save <span class="sh_symbol">-</span>n <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/etc/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>ipvsadm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# ipvsadm -Ln
+TCP  192.168.4.15:80 wrr
+  -&gt; 192.168.4.100:80             Route   1      0          0         
+  -&gt; 192.168.4.200:80             Route   2      0          0
+[root@proxy ~]# ipvsadm-save -n &gt; /etc/sysconfig/ipvsadm
+</pre></div></div>
+      <p class="number">步骤四：客户端测试</p>
+      <p>客户端使用curl命令反复连接http://192.168.4.15，查看访问的页面是否会轮询到不同的后端真实服务器。</p>
+      <p>扩展知识：默认LVS不带健康检查功能，需要自己手动编写动态检测脚本，实现该功能：(参考脚本如下，仅供参考)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLUSTER/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># vim check<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>VIP<span class="sh_symbol">=</span><span class="sh_number">192.168.4.15</span><span class="sh_symbol">:</span><span class="sh_number">80</span></li><li>RIP1<span class="sh_symbol">=</span><span class="sh_number">192.168.4.100</span></li><li>RIP2<span class="sh_symbol">=</span><span class="sh_number">192.168.4.200</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">:</span></li><li><span class="sh_keyword">do</span></li><li>   <span class="sh_keyword">for</span> IP <span class="sh_keyword">in</span> $RIP1 $RIP2</li><li>   <span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;       curl <span class="sh_symbol">-</span>s http<span class="sh_symbol">:</span><span class="sh_comment">//$IP &amp;&gt;/dev/vnull</span></li><li><span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $<span class="sh_symbol">?</span> <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">];</span>then</li><li>            ipvsadm <span class="sh_symbol">-</span>Ln <span class="sh_symbol">|</span>grep <span class="sh_symbol">-</span>q $IP <span class="sh_symbol">||</span> ipvsadm <span class="sh_symbol">-</span>a <span class="sh_symbol">-</span>t $VIP <span class="sh_symbol">-</span>r $IP</li><li>        <span class="sh_keyword">else</span></li><li>             ipvsadm <span class="sh_symbol">-</span>Ln <span class="sh_symbol">|</span>grep <span class="sh_symbol">-</span>q $IP <span class="sh_symbol">&amp;&amp;</span> ipvsadm <span class="sh_symbol">-</span>d <span class="sh_symbol">-</span>t $VIP <span class="sh_symbol">-</span>r $IP</li><li>        fi</li><li>   done</li><li>sleep <span class="sh_number">1</span></li><li>done</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim check.sh
+#!/bin/bash
+VIP=192.168.4.15:80
+RIP1=192.168.4.100
+RIP2=192.168.4.200
+while :
+do
+   for IP in $RIP1 $RIP2
+   do
+	       curl -s http://$IP &amp;&gt;/dev/vnull
+if [ $? -eq 0 ];then
+            ipvsadm -Ln |grep -q $IP || ipvsadm -a -t $VIP -r $IP
+        else
+             ipvsadm -Ln |grep -q $IP &amp;&amp; ipvsadm -d -t $VIP -r $IP
+        fi
+   done
+sleep 1
+done
+</pre></div></div>
+    </div>
+  
+</body></html>

@@ -1,0 +1,457 @@
+
+<!-- saved from url=(0080)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD OPERATION DAY04</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#case1">案例1：构建memcached服务</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#case2">案例2：LNMP+memcached</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#case3">案例3：PHP的本地Session信息</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#case4">案例4：PHP实现session共享</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：构建memcached服务</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求先快速搭建好一台memcached服务器，并对memcached进行简单的增、删、改、查操作：</p>
+      <ul class="list">
+        <li>安装memcached软件，并启动服务
+</li>
+        <li>使用telnet测试memcached服务
+</li>
+        <li>对memcached进行增、删、改、查等操作
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>memcached是高性能的分布式缓存服务器，用来集中缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的响应速度。访问拓扑如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>使用1台RHEL7虚拟机作为memcached服务器（192.168.4.5）。</p>
+      <p>在RHEL7系统光盘中包含有memcached，因此需要提前配置yum源，即可直接使用yum安装，客户端测试时需要提前安装telnet远程工具。</p>
+      <p>验证时需要客户端主机安装telnet，远程memcached来验证服务器的功能：</p>
+      <ul class="list">
+        <li>add name 0 180 10			//变量不存在则添加			
+</li>
+        <li>set name 0 180 10			//添加或替换变量
+</li>
+        <li>replace name 0 180 10		//替换
+</li>
+        <li>get name					//读取变量
+</li>
+        <li>append name 0 180 10		//向变量中追加数据
+</li>
+        <li>delete name					//删除变量
+</li>
+        <li>stats						//查看状态
+</li>
+        <li>flush_all						//清空所有
+</li>
+        <li>提示：0表示不压缩，180为数据缓存时间，10为需要存储的数据字节数量。
+</li>
+      </ul>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：构建memcached服务</p>
+      <p>1）使用yum安装软件包memcached</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y  install   memcached</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># rpm <span class="sh_symbol">-</span>qa memcached</li><li>memcached<span class="sh_number">-1.4.15-10</span><span class="sh_symbol">.</span>el7_3<span class="sh_number">.1</span><span class="sh_symbol">.</span>x86_64</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y  install   memcached
+[root@proxy ~]# rpm -qa memcached
+memcached-1.4.15-10.el7_3.1.x86_64
+</pre></div></div>
+      <p>2) memcached配置文件（查看即可，不需要修改）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>memcached<span class="sh_symbol">.</span>service</li><li>ExecStart<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>memcached <span class="sh_symbol">-</span>u $USER <span class="sh_symbol">-</span>p $PORT <span class="sh_symbol">-</span>m $CACHESIZE <span class="sh_symbol">-</span>c $MAXCONN $OPTIONS</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>memcached</li><li>PORT<span class="sh_symbol">=</span><span class="sh_string">"11211"</span></li><li>USER<span class="sh_symbol">=</span><span class="sh_string">"memcached"</span></li><li>MAXCONN<span class="sh_symbol">=</span><span class="sh_string">"1024"</span></li><li>CACHESIZE<span class="sh_symbol">=</span><span class="sh_string">"64"</span></li><li>OPTIONS<span class="sh_symbol">=</span><span class="sh_string">""</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/lib/systemd/system/memcached.service
+ExecStart=/usr/bin/memcached -u $USER -p $PORT -m $CACHESIZE -c $MAXCONN $OPTIONS
+
+[root@proxy ~]# vim /etc/sysconfig/memcached
+PORT="11211"
+USER="memcached"
+MAXCONN="1024"
+CACHESIZE="64"
+OPTIONS=""
+</pre></div></div>
+      <p>3）启动服务并查看网络连接状态验证是否开启成功：</p>
+      <p>netstat命令可以查看系统中启动的端口信息，该命令常用选项如下：</p>
+      <p>-a显示所有端口的信息</p>
+      <p>-n以数字格式显示端口号</p>
+      <p>-t显示TCP连接的端口</p>
+      <p>-u显示UDP连接的端口</p>
+      <p>-l显示服务正在监听的端口信息，如httpd启动后，会一直监听80端口</p>
+      <p>-p显示监听端口的服务名称是什么（也就是程序名称）</p>
+      <p>注意：在RHEL7系统中，使用ss命令可以替代netstat，功能与选项一样。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl  start  memcached</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl  status  memcached</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>anptu  <span class="sh_symbol">|</span>  grep memcached</li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached      </li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">:::*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached      </li><li>udp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached      </li><li>udp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">:::*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# systemctl  start  memcached
+[root@proxy ~]# systemctl  status  memcached
+[root@proxy ~]# netstat  -anptu  |  grep memcached
+tcp	0	0 0.0.0.0:11211		0.0.0.0:*		LISTEN		2839/memcached      
+tcp	0	0 :::11211			:::*				LISTEN		2839/memcached      
+udp	0	0 0.0.0.0:11211		0.0.0.0:*					2839/memcached      
+udp	0	0 :::11211			:::*							2839/memcached
+[root@proxy ~]# setenforce 0
+[root@proxy ~]# firewall-cmd --set-default-zone=trusted
+</pre></div></div>
+      <p class="number">步骤二：使用telnet访问memcached服务器</p>
+      <p>1）使用yum安装telnet</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install telnet</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install telnet
+</pre></div></div>
+      <p>2)使用telnet连接服务器测试memcached服务器功能，包括增、删、改、查等操作。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># telnet  <span class="sh_number">192.168.4.5</span>  <span class="sh_number">11211</span></li><li>Trying <span class="sh_number">192.168.4.5</span><span class="sh_symbol">...</span></li><li>……</li><li>##提示：<span class="sh_number">0</span>表示不压缩，<span class="sh_number">180</span>为数据缓存时间，<span class="sh_number">3</span>为需要存储的数据字节数量。</li><li>set name <span class="sh_number">0</span> <span class="sh_number">180</span> <span class="sh_number">3</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义变量，变量名称为name</span></li><li>plj&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//输入变量的值，值为plj                </span></li><li>STORED</li><li>get name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//获取变量的值</span></li><li>VALUE name <span class="sh_number">0</span> <span class="sh_number">3</span>     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//输出结果</span></li><li>plj</li><li>END</li><li>##提示：<span class="sh_number">0</span>表示不压缩，<span class="sh_number">180</span>为数据缓存时间，<span class="sh_number">3</span>为需要存储的数据字节数量。</li><li>add myname <span class="sh_number">0</span> <span class="sh_number">180</span> <span class="sh_number">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//新建，myname不存在则添加，存在则报错</span></li><li>set myname <span class="sh_number">0</span> <span class="sh_number">180</span> <span class="sh_number">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加或替换变量</span></li><li>replace myname <span class="sh_number">0</span> <span class="sh_number">180</span> <span class="sh_number">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//替换，如果myname不存在则报错</span></li><li>get myname&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//读取变量</span></li><li>append myname <span class="sh_number">0</span> <span class="sh_number">180</span> <span class="sh_number">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//向变量中追加数据</span></li><li><span class="sh_keyword">delete</span> myname&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//删除变量</span></li><li>stats&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看状态</span></li><li>flush_all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//清空所有</span></li><li>quit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//退出登录  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# telnet  192.168.4.5  11211
+Trying 192.168.4.5...
+……
+##提示：0表示不压缩，180为数据缓存时间，3为需要存储的数据字节数量。
+set name 0 180 3				//定义变量，变量名称为name
+plj							//输入变量的值，值为plj                
+STORED
+get name						//获取变量的值
+VALUE name 0 3     			//输出结果
+plj
+END
+##提示：0表示不压缩，180为数据缓存时间，3为需要存储的数据字节数量。
+add myname 0 180 10			//新建，myname不存在则添加，存在则报错
+set myname 0 180 10			//添加或替换变量
+replace myname 0 180 10		//替换，如果myname不存在则报错
+get myname					//读取变量
+append myname 0 180 10		//向变量中追加数据
+delete myname					//删除变量
+stats						//查看状态
+flush_all						//清空所有
+quit							//退出登录  								
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：LNMP+memcached</h2>
+      <h3>2.1 问题</h3>
+      <p>沿用练习一，部署LNMP+memcached网站平台,通过PHP页面实现对memcached服务器的数据操作，实现以下目标：</p>
+      <ol class="list">
+        <li>部署LNMP实现PHP动态网站架构
+</li>
+        <li>为PHP安装memcache扩展
+</li>
+        <li>创建PHP页面，并编写PHP代码，实现对memcached的数据操作
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>使用2台RHEL7虚拟机，其中一台作为memcached及LNMP服务器（192.168.4.5）、另外一台作为测试用的Linux客户机（192.168.4.10），如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-1</p>
+      </div>
+      <p>在RHEL7系统光盘中包含有我们需要的MariaDB、PHP，我们需要使用源码安装Nginx，使用RPM包安装FPM。另外如果希望使用PHP来操作memcached，注意必须要为PHP安装memcache扩展（php-pecl-memcache），否则PHP无法解析连接memcached的指令。客户端测试时需要提前安装telnet远程工具。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署LNMP环境（如果环境中已经存在LNMP环境本步骤可以忽略）</p>
+      <p>1）使用yum安装基础依赖包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc openssl<span class="sh_symbol">-</span>devel pcre<span class="sh_symbol">-</span>devel zlib<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install gcc openssl-devel pcre-devel zlib-devel
+.. ..
+</pre></div></div>
+      <p>2）源码安装Nginx</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">[</span>root@web1 nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span>#  <span class="sh_symbol">./</span>configure   <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module </li><li><span class="sh_symbol">[</span>root@web1 nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# tar -xf nginx-1.12.2.tar.gz
+[root@web1 ~]# cd nginx-1.12.2
+[root@web1 nginx-1.12.2]#  ./configure   \
+&gt; --with-http_ssl_module 
+[root@web1 nginx-1.12.2]# make &amp;&amp; make install
+</pre></div></div>
+      <p>3）安装MariaDB数据库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  mariadb  mariadb<span class="sh_symbol">-</span>server  mariadb<span class="sh_symbol">-</span>devel</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install  mariadb  mariadb-server  mariadb-devel
+</pre></div></div>
+      <p>4）安装PHP</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php  php<span class="sh_symbol">-</span>mysql</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php<span class="sh_symbol">-</span>fpm<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install  php  php-mysql
+[root@web1 ~]# yum -y install  php-fpm-5.4.16-42.el7.x86_64.rpm
+</pre></div></div>
+      <p>5）修改Nginx配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>            root   html<span class="sh_symbol">;</span></li><li>            index  index<span class="sh_symbol">.</span>php  index<span class="sh_symbol">.</span>html   index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li> location  <span class="sh_symbol">~</span>  <span class="sh_symbol">\.</span>php$  <span class="sh_cbracket">{</span></li><li>            root           html<span class="sh_symbol">;</span></li><li>            fastcgi_pass   <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">9000</span><span class="sh_symbol">;</span></li><li>            fastcgi_index  index<span class="sh_symbol">.</span>php<span class="sh_symbol">;</span></li><li>           # fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name<span class="sh_symbol">;</span></li><li>            include        fastcgi<span class="sh_symbol">.</span>conf<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim /usr/local/nginx/conf/nginx.conf
+location / {
+            root   html;
+            index  index.php  index.html   index.htm;
+        }
+ location  ~  \.php$  {
+            root           html;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+           # fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi.conf;
+        }
+
+</pre></div></div>
+      <p class="number">步骤二：启动服务（如果所有服务已经启动，也可以忽略这一步骤）</p>
+      <p>1）启动Nginx服务</p>
+      <p>这里需要注意的是，如果服务器上已经启动了其他监听80端口的服务软件（如httpd），则需要先关闭该服务，否则会出现冲突。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl stop  httpd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//如果该服务存在，则关闭该服务</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># netstat <span class="sh_symbol">-</span>utnlp <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">80</span></li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">80</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">32428</span><span class="sh_symbol">/</span>nginx         </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl stop  httpd				//如果该服务存在，则关闭该服务
+[root@web1 ~]# /usr/local/nginx/sbin/nginx
+[root@web1 ~]# netstat -utnlp | grep :80
+tcp	0	0 0.0.0.0:80		0.0.0.0:*		LISTEN		32428/nginx         
+</pre></div></div>
+      <p>2）启动MySQL服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl start mariadb</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl status mariadb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl start mariadb
+[root@web1 ~]# systemctl status mariadb
+</pre></div></div>
+      <p>3）启动PHP-FPM服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl start php<span class="sh_symbol">-</span>fpm</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl status php<span class="sh_symbol">-</span>fpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# systemctl start php-fpm
+[root@web1 ~]# systemctl status php-fpm
+</pre></div></div>
+      <p>4）关闭SELinux、防火墙</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# setenforce 0
+[root@web1 ~]# firewall-cmd --set-default-zone=trusted
+</pre></div></div>
+      <p class="number">步骤三：创建PHP页面，使用PHP语言测试memcached服务</p>
+      <p>1）部署测试页面</p>
+      <p>创建PHP首页文档/usr/local/nginx/html/index.php，测试页面可以参考lnmp_soft/php_scripts/mem.php。</p>
+      <p>注意：192.168.2.5是memcached数据库。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>test<span class="sh_symbol">.</span>php</li><li><span class="sh_symbol">&lt;?</span>php</li><li>$memcache<span class="sh_symbol">=</span><span class="sh_keyword">new</span> Memcache<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建memcache对象</span></li><li>$memcache<span class="sh_symbol">-&gt;</span><span class="sh_function">connect</span><span class="sh_symbol">(</span><span class="sh_string">'192.168.2.5'</span><span class="sh_symbol">,</span><span class="sh_number">11211</span><span class="sh_symbol">)</span> or <span class="sh_function">die</span> <span class="sh_symbol">(</span><span class="sh_string">'could not connect!!'</span><span class="sh_symbol">);</span></li><li>$memcache<span class="sh_symbol">-&gt;</span><span class="sh_function">set</span><span class="sh_symbol">(</span><span class="sh_string">'key'</span><span class="sh_symbol">,</span><span class="sh_string">'test'</span><span class="sh_symbol">);</span>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="sh_comment">//定义变量</span></li><li>$get_values<span class="sh_symbol">=</span>$memcache<span class="sh_symbol">-&gt;</span><span class="sh_function">get</span><span class="sh_symbol">(</span><span class="sh_string">'key'</span><span class="sh_symbol">);</span>    &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//获取变量值</span></li><li>echo $get_values<span class="sh_symbol">;</span></li><li><span class="sh_symbol">?&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@web1 ~]# vim /usr/local/nginx/html/test.php
+&lt;?php
+$memcache=new Memcache;				//创建memcache对象
+$memcache-&gt;connect('192.168.2.5',11211) or die ('could not connect!!');
+$memcache-&gt;set('key','test');    		 //定义变量
+$get_values=$memcache-&gt;get('key');    	//获取变量值
+echo $get_values;
+?&gt;
+</pre></div></div>
+      <p>2）客户端测试（结果会失败）</p>
+      <p>客户端使用浏览器访问服务器PHP首页文档，检验对memcached的操作是否成功：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100/test.php</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# firefox http://192.168.2.100/test.php
+</pre></div></div>
+      <p>注意：这里因为没有给PHP安装扩展包，默认PHP无法连接memcached数据库，需要给PHP安装扩展模块才可以连接memcached数据库。</p>
+      <p>3）为PHP添加memcache扩展</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php<span class="sh_symbol">-</span>pecl<span class="sh_symbol">-</span>memcache</li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl restart php<span class="sh_symbol">-</span>fpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install  php-pecl-memcache
+[root@web1 ~]# systemctl restart php-fpm
+</pre></div></div>
+      <p>4）客户端再次测试（结果会成功显示数据结果）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100/test.php</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# firefox http://192.168.2.100/test.php
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：PHP的本地Session信息</h2>
+      <h3>3.1 问题</h3>
+      <p>通过Nginx调度器负载后端两台Web服务器，实现以下目标：</p>
+      <ol class="list">
+        <li>部署Nginx为前台调度服务器
+</li>
+        <li>调度算法设置为轮询
+</li>
+        <li>后端为两台LNMP服务器
+</li>
+        <li>部署测试页面，查看PHP本地的Session信息
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>使用4台RHEL7虚拟机，其中一台作为Nginx前端调度器服务器（eth0:192.168.4.5,eth1:192.168.2.5）、两台虚拟机部署为LNMP服务器，分别为Web1服务器（192.168.2.100）和Web2服务器（192.168.2.200），另外一台作为测试用的Linux客户机（192.168.4.10），拓扑如图-2所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-2</p>
+      </div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署后端LNMP服务器相关软件（如果已经安装完成，则忽略此步骤）</p>
+      <p class="emphasiz">注意:以下部署LNMP服务器的操作，需要在两台后端服务器做相同的操作，下面我们以一台Web2服务器（192.168.2.200）为例，对Web1服务器执行相同操作即可。</p>
+      <p>1）使用yum安装基础依赖包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc openssl<span class="sh_symbol">-</span>devel pcre<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# yum -y install gcc openssl-devel pcre-devel
+.. ..
+</pre></div></div>
+      <p>2）源码安装Nginx</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">[</span>root@web2 nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span>#  <span class="sh_symbol">./</span>configure   <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module </li><li><span class="sh_symbol">[</span>root@web2 nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# tar -xf nginx-1.12.2.tar.gz
+[root@web2 ~]# cd nginx-1.12.2
+[root@web2 nginx-1.12.2]#  ./configure   \
+&gt; --with-http_ssl_module 
+[root@web2 nginx-1.12.2]# make &amp;&amp; make install
+</pre></div></div>
+      <p>3）安装MariaDB数据库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  mariadb  mariadb<span class="sh_symbol">-</span>server  mariadb<span class="sh_symbol">-</span>devel</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# yum -y install  mariadb  mariadb-server  mariadb-devel
+</pre></div></div>
+      <p>4）安装PHP（php-fpm软件包在lnmp_soft中有提供）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php  php<span class="sh_symbol">-</span>mysql</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php<span class="sh_symbol">-</span>fpm<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# yum -y install  php  php-mysql
+[root@web2 ~]# yum -y install  php-fpm-5.4.16-42.el7.x86_64.rpm
+</pre></div></div>
+      <p>5）修改Nginx配置文件（修改默认首页与动静分离）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>            root   html<span class="sh_symbol">;</span></li><li>            index  index<span class="sh_symbol">.</span>php  index<span class="sh_symbol">.</span>html   index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li> location  <span class="sh_symbol">~</span>  <span class="sh_symbol">\.</span>php$  <span class="sh_cbracket">{</span></li><li>            root           html<span class="sh_symbol">;</span></li><li>            fastcgi_pass   <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">9000</span><span class="sh_symbol">;</span></li><li>            fastcgi_index  index<span class="sh_symbol">.</span>php<span class="sh_symbol">;</span></li><li>           # fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name<span class="sh_symbol">;</span></li><li>            include        fastcgi<span class="sh_symbol">.</span>conf<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# vim /usr/local/nginx/conf/nginx.conf
+location / {
+            root   html;
+            index  index.php  index.html   index.htm;
+        }
+ location  ~  \.php$  {
+            root           html;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+           # fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi.conf;
+        }
+</pre></div></div>
+      <p class="number">步骤二：启动LNMP服务器相关的服务</p>
+      <p>1）启动Nginx服务</p>
+      <p>这里需要注意的是，如果服务器上已经启动了其他监听80端口的服务软件（如httpd），则需要先关闭该服务，否则会出现冲突。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl stop  httpd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//如果该服务存在，则关闭该服务</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># netstat <span class="sh_symbol">-</span>utnlp <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">80</span></li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">80</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">32428</span><span class="sh_symbol">/</span>nginx         </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# systemctl stop  httpd				//如果该服务存在，则关闭该服务
+[root@web2 ~]# /usr/local/nginx/sbin/nginx
+[root@web2 ~]# netstat -utnlp | grep :80
+tcp	0	0 0.0.0.0:80		0.0.0.0:*		LISTEN		32428/nginx         
+</pre></div></div>
+      <p>2）启动MySQL服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl start mariadb</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl status mariadb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# systemctl start mariadb
+[root@web2 ~]# systemctl status mariadb
+</pre></div></div>
+      <p>3）启动PHP-FPM服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl start  php<span class="sh_symbol">-</span>fpm</li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># systemctl status php<span class="sh_symbol">-</span>fpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# systemctl start  php-fpm
+[root@web2 ~]# systemctl status php-fpm
+</pre></div></div>
+      <p>4）关闭SELinux、防火墙</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# setenforce 0
+[root@web2 ~]# firewall-cmd --set-default-zone=trusted
+</pre></div></div>
+      <p class="number">步骤三：部署前端Nginx调度服务器</p>
+      <p>1）使用源码安装nginx软件（如果Nginx软件包已存在可以忽略此步骤）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install   gcc pcre<span class="sh_symbol">-</span>devel openssl<span class="sh_symbol">-</span>devel</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure</li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum  -y  install   gcc pcre-devel openssl-devel
+[root@proxy ~]# tar -xf nginx-1.12.2.tar.gz
+[root@proxy ~]# cd nginx-1.12.2
+[root@proxy nginx-1.12.2]# ./configure
+[root@proxy nginx-1.12.2]# make &amp;&amp; make install
+</pre></div></div>
+      <p>2）修改Nginx配置文件</p>
+      <p>Nginx配置文件中，通过upstream定义后端服务器地址池，默认调度策略为轮询，使用proxy_pass调用upstream定义的服务器地址池：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>upstream webs  <span class="sh_cbracket">{</span></li><li>        server <span class="sh_number">192.168.2.100</span><span class="sh_symbol">:</span><span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server <span class="sh_number">192.168.2.200</span><span class="sh_symbol">:</span><span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>  <span class="sh_cbracket">}</span></li><li> server  <span class="sh_cbracket">{</span></li><li>          listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>          server_name  localhost<span class="sh_symbol">;</span></li><li>          <span class="sh_normal">location  </span><span class="sh_symbol">/</span>  <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  proxy_pass http<span class="sh_symbol">:</span><span class="sh_comment">//webs;</span></li><li>            root   html<span class="sh_symbol">;</span></li><li>            index  index<span class="sh_symbol">.</span>php index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>          <span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+upstream webs  {
+        server 192.168.2.100:80;
+        server 192.168.2.200:80;
+  }
+ server  {
+          listen       80;
+          server_name  localhost;
+          location  /  {
+			  proxy_pass http://webs;
+            root   html;
+            index  index.php index.html index.htm;
+          }
+}
+</pre></div></div>
+      <p class="number">3）重新加载配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li><span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx -s reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p>4）关闭SELinux、防火墙</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# setenforce 0
+[root@proxy ~]# firewall-cmd --set-default-zone=trusted
+</pre></div></div>
+      <p class="number">步骤四：测试环境是否配置成功</p>
+      <p>1）浏览器访问测试页面验证。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># curl  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/index.html&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//查看是否有数据</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# curl  http://192.168.4.5/index.html		//查看是否有数据
+</pre></div></div>
+      <p class="number">步骤五：部署测试页面</p>
+      <p>1）部署测试页面(Web1服务器）。</p>
+      <p>测试页面可以参考lnmp_soft/php_scripts/php-memcached-demo.tar.gz。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cd <span class="sh_normal">lnmp_soft</span><span class="sh_symbol">/</span><span class="sh_normal">php_scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@web1 php_scripts<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xf php<span class="sh_symbol">-</span>memcached<span class="sh_symbol">-</span>demo<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@web1 php_scripts<span class="sh_symbol">]</span># cd php<span class="sh_symbol">-</span>memcached<span class="sh_symbol">-</span>demo</li><li><span class="sh_symbol">[</span>root@web1 php<span class="sh_symbol">-</span>memcached<span class="sh_symbol">-</span>demo<span class="sh_symbol">]</span># cp <span class="sh_symbol">-</span>a  <span class="sh_symbol">*</span>  <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# cd lnmp_soft/php_scripts/
+[root@web1 php_scripts]# tar -xf php-memcached-demo.tar.gz
+[root@web1 php_scripts]# cd php-memcached-demo
+[root@web1 php-memcached-demo]# cp -a  *  /usr/local/nginx/html/
+</pre></div></div>
+      <p>2）浏览器直接访问后端服务器的测试页面（Web1服务器）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//填写账户信息</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/</span><span class="sh_normal">php</span><span class="sh_symbol">/</span><span class="sh_normal">session</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看服务器本地的Session信息</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># ls</li><li>sess_ahilcq9bguot0vqsjtd84k7244&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//注意这里的ID是随机的</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># cat sess_ahilcq9bguot0vqsjtd84k7244</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# firefox http://192.168.2.100			//填写账户信息
+[root@web1 ~]# cd /var/lib/php/session/			//查看服务器本地的Session信息
+[root@web1 ~]# ls
+sess_ahilcq9bguot0vqsjtd84k7244						//注意这里的ID是随机的
+[root@web1 ~]# cat sess_ahilcq9bguot0vqsjtd84k7244
+</pre></div></div>
+      <p>注意：可用修改index.php和home.php两个文件的内容，添加页面颜色属性，以区别后端两台不同的服务器:&lt;body bgcolor=blue&gt;。</p>
+      <p>3）部署测试页面(Web2服务器）。</p>
+      <p>测试页面可以参考lnmp_soft/php_scripts/php-memcached-demo.tar.gz。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># cd <span class="sh_normal">lnmp_soft</span><span class="sh_symbol">/</span><span class="sh_normal">php_scripts</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@web2 php_scripts<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xf php<span class="sh_symbol">-</span>memcached<span class="sh_symbol">-</span>demo<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@web2 php_scripts<span class="sh_symbol">]</span># cd php<span class="sh_symbol">-</span>memcached<span class="sh_symbol">-</span>demo</li><li><span class="sh_symbol">[</span>root@web2 php<span class="sh_symbol">-</span>memcached<span class="sh_symbol">-</span>demo<span class="sh_symbol">]</span># cp <span class="sh_symbol">-</span>a  <span class="sh_symbol">*</span>  <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# cd lnmp_soft/php_scripts/
+[root@web2 php_scripts]# tar -xf php-memcached-demo.tar.gz
+[root@web2 php_scripts]# cd php-memcached-demo
+[root@web2 php-memcached-demo]# cp -a  *  /usr/local/nginx/html/
+</pre></div></div>
+      <p>4）浏览器直接访问后端服务器的测试页面（Web2服务器）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.2.100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     //填写账户信息</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/</span><span class="sh_normal">php</span><span class="sh_symbol">/</span><span class="sh_normal">session</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看服务器本地的Session信息</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># ls</li><li>sess_qqek1tmel07br8f63d6v9ch401&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//注意这里的ID是随机的</span></li><li><span class="sh_symbol">[</span>root@web2 <span class="sh_symbol">~]</span># cat sess_qqek1tmel07br8f63d6v9ch401&nbsp;&nbsp;&nbsp;&nbsp;</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web2 ~]# firefox http://192.168.2.100		     //填写账户信息
+[root@web2 ~]# cd /var/lib/php/session/			//查看服务器本地的Session信息
+[root@web2 ~]# ls
+sess_qqek1tmel07br8f63d6v9ch401						//注意这里的ID是随机的
+[root@web2 ~]# cat sess_qqek1tmel07br8f63d6v9ch401	
+</pre></div></div>
+      <p>注意：可用修改index.php和home.php两个文件的内容，添加页面颜色属性，以区别后端两台不同的服务器:&lt;body bgcolor=green&gt;。</p>
+      <p>5）浏览器访问前端调度器测试（不同后端服务器Session不一致）。</p>
+      <p>推荐使用google浏览器测试。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># google<span class="sh_symbol">-</span>chrome http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5</span></li><li><span class="sh_comment">//填写注册信息后，刷新，还需要再次注册，说明两台计算机使用的是本地Session</span></li><li><span class="sh_comment">//第二台主机并不知道你再第一台主机已经登录，第一台主机的登录信息也没有传递给第二台主机</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# google-chrome http://192.168.4.5
+//填写注册信息后，刷新，还需要再次注册，说明两台计算机使用的是本地Session
+//第二台主机并不知道你再第一台主机已经登录，第一台主机的登录信息也没有传递给第二台主机
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：PHP实现session共享</h2>
+      <h3>4.1 问题</h3>
+      <p>沿用练习三，通过修改PHP-FPM配置文件，实现session会话共享，本案例需要在练习三的基础上实现：</p>
+      <ul class="list">
+        <li>配置PHP使用memcached服务器共享Session信息
+</li>
+        <li>客户端访问两台不同的后端Web服务器时，Session 信息一致
+</li>
+      </ul>
+      <h3>4.2 方案</h3>
+      <p>在练习三拓扑的基础上，Nginx服务器除了承担调度器外，还需要担任memcached数据库的角色，并在两台后端LNMP服务器上实现PHP的session会话共享。拓扑结构如图-4所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：构建memcached服务</p>
+      <p>1）安装Memcached服务（如果192.168.4.5上已经有本软件包，此步骤可以忽略）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install memcached</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install memcached
+</pre></div></div>
+      <p>2）启动服务并查看网络连接状态验证是否开启成功：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl restart memcached</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>anptu  <span class="sh_symbol">|</span>  grep memcached</li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached      </li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">:::*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached      </li><li>udp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached      </li><li>udp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">11211</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">:::*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">2839</span><span class="sh_symbol">/</span>memcached</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# systemctl restart memcached
+[root@proxy ~]# netstat  -anptu  |  grep memcached
+tcp	0	0 0.0.0.0:11211		0.0.0.0:*		LISTEN		2839/memcached      
+tcp	0	0 :::11211			:::*				LISTEN		2839/memcached      
+udp	0	0 0.0.0.0:11211		0.0.0.0:*					2839/memcached      
+udp	0	0 :::11211			:::*							2839/memcached
+</pre></div></div>
+      <p>3）关闭SELinux、防火墙</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# setenforce 0
+[root@proxy ~]# firewall-cmd --set-default-zone=trusted
+</pre></div></div>
+      <p class="number">步骤二：在后端LNMP服务器上部署Session共享</p>
+      <p class="emphasiz">注意：这些操作在两台后端Web服务器上均需要执行，以下操作以Web1（192.168.2.100）服务器为例。</p>
+      <p>1）为PHP添加memcache扩展</p>
+      <p>注意，因为后端两台web服务器(web1,web2)都需要连接memcached数据库，所以两台主机都需要安装PHP扩展模块(下面也web1为例)。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install  php<span class="sh_symbol">-</span>pecl<span class="sh_symbol">-</span>memcache</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# yum -y install  php-pecl-memcache
+</pre></div></div>
+      <p>2）修改PHP-FPM配置文件，并重启服务</p>
+      <p>注意，因为后端两台web服务器(web1,web2)都需要修改配置文件(下面也web1为例)。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>php<span class="sh_symbol">-</span>fpm<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>www<span class="sh_symbol">.</span>conf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改该配置文件的两个参数</span></li><li><span class="sh_comment">//文件的最后2行</span></li><li>修改前效果如下<span class="sh_symbol">:</span></li><li>php_value<span class="sh_symbol">[</span>session<span class="sh_symbol">.</span>save_handler<span class="sh_symbol">]</span> <span class="sh_symbol">=</span> files</li><li>php_value<span class="sh_symbol">[</span>session<span class="sh_symbol">.</span>save_path<span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">php</span><span class="sh_symbol">/</span>session</li><li><span class="sh_comment">//原始文件，默认定义Sessoin会话信息本地计算机（默认在/var/lib/php/session）</span></li><li><span class="sh_symbol">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span></li><li>修改后效果如下<span class="sh_symbol">:</span></li><li>php_value<span class="sh_symbol">[</span>session<span class="sh_symbol">.</span>save_handler<span class="sh_symbol">]</span> <span class="sh_symbol">=</span> memcache</li><li>php_value<span class="sh_symbol">[</span>session<span class="sh_symbol">.</span>save_path<span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_string">"tcp://192.168.2.5:11211"</span></li><li><span class="sh_comment">//定义Session信息存储在公共的memcached服务器上，主机参数中为memcache（没有d）</span></li><li><span class="sh_comment">//通过path参数定义公共的memcached服务器在哪（服务器的IP和端口）</span></li><li><span class="sh_symbol">[</span>root@web1 <span class="sh_symbol">~]</span># systemctl  restart  php<span class="sh_symbol">-</span>fpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@web1 ~]# vim  /etc/php-fpm.d/www.conf			//修改该配置文件的两个参数
+//文件的最后2行
+修改前效果如下:
+php_value[session.save_handler] = files
+php_value[session.save_path] = /var/lib/php/session
+//原始文件，默认定义Sessoin会话信息本地计算机（默认在/var/lib/php/session）
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+修改后效果如下:
+php_value[session.save_handler] = memcache
+php_value[session.save_path] = "tcp://192.168.2.5:11211"
+//定义Session信息存储在公共的memcached服务器上，主机参数中为memcache（没有d）
+//通过path参数定义公共的memcached服务器在哪（服务器的IP和端口）
+[root@web1 ~]# systemctl  restart  php-fpm
+</pre></div></div>
+      <p class="number">步骤三：客户端测试</p>
+      <p>客户端使用浏览器访问两台不同的Web服务器。</p>
+      <p>操作步骤与练习三一致，最终可以获得相关的Session ID信息。</p>
+    </div>
+  
+</body></html>

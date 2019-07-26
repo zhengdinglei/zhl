@@ -1,0 +1,324 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ADMIN DAY07</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#case1">案例1：查找并提取文件内容</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#case2">案例2：查找并处理文件</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#case3">案例1：Linux管理员 综合测试</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：查找并提取文件内容</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求在文件/usr/share/dict/words中查找到所有包含字符串seismic的行，并满足下列要求：</p>
+      <ol class="list">
+        <li>将找到的行按原文顺序拷贝到 /root/wordlist 文件中
+</li>
+        <li>文件 /root/wordlist 不要包含空行，并且其中所有行的内容必须是 /usr/share/dict/words 文件中原始行的准确副本
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p>1）使用grep命令查找指定的关键词，并通过重定向输出保存到指定的文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style=""><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@serverX <span class="sh_symbol">~]</span># grep  <span class="sh_string">'seismic'</span>  <span class="sh_regexp">/usr/</span><span class="sh_normal">share</span><span class="sh_symbol">/</span><span class="sh_normal">dict</span><span class="sh_symbol">/</span>words  <span class="sh_symbol">&gt;</span>  <span class="sh_regexp">/root/</span>wordlist</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@serverX ~]# grep  'seismic'  /usr/share/dict/words  &gt;  /root/wordlist
+</pre></div></div>
+      <p>2）确认提取结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>wordlist </li><li>anaseismic</li><li>antiseismic</li><li>aseismic</li><li>aseismicity</li><li>bradyseismic</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cat /root/wordlist 
+anaseismic
+antiseismic
+aseismic
+aseismicity
+bradyseismic
+.. ..
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：查找并处理文件</h2>
+      <h3>2.1 问题</h3>
+      <p>本例要求采用不少于两种方法完成以下任务：</p>
+      <ol class="list">
+        <li>找出所有用户 student 拥有的文件
+</li>
+        <li>把它们拷贝到 /root/findfiles/ 文件夹中
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：确认能找到指定的文件</p>
+      <p>1）确认新版内核的下载地址</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">find  </span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>user  student  <span class="sh_symbol">-</span>type f  </li><li>find<span class="sh_symbol">:</span> ‘<span class="sh_regexp">/proc/</span><span class="sh_number">1853</span><span class="sh_symbol">/</span><span class="sh_normal">task</span><span class="sh_symbol">/</span><span class="sh_number">1853</span><span class="sh_symbol">/</span><span class="sh_normal">fdinfo</span><span class="sh_symbol">/</span><span class="sh_number">6</span>’<span class="sh_symbol">:</span> 没有那个文件或目录</li><li>find<span class="sh_symbol">:</span> ‘<span class="sh_regexp">/proc/</span><span class="sh_number">1853</span><span class="sh_symbol">/</span><span class="sh_normal">fdinfo</span><span class="sh_symbol">/</span><span class="sh_number">6</span>’<span class="sh_symbol">:</span> 没有那个文件或目录</li><li><span class="sh_regexp">/var/</span><span class="sh_normal">spool</span><span class="sh_symbol">/</span><span class="sh_normal">mail</span><span class="sh_symbol">/</span>student</li><li><span class="sh_regexp">/home/</span><span class="sh_normal">student</span><span class="sh_symbol">/.</span>bash_logout</li><li><span class="sh_regexp">/home/</span><span class="sh_normal">student</span><span class="sh_symbol">/.</span>bash_profile</li><li><span class="sh_regexp">/home/</span><span class="sh_normal">student</span><span class="sh_symbol">/.</span>bashrc</li><li><span class="sh_regexp">/home/</span><span class="sh_normal">student</span><span class="sh_symbol">/.</span><span class="sh_normal">ssh</span><span class="sh_symbol">/</span>authorized_keys</li><li><span class="sh_regexp">/home/</span><span class="sh_normal">student</span><span class="sh_symbol">/.</span><span class="sh_normal">config</span><span class="sh_symbol">/</span>gnome<span class="sh_symbol">-</span>initial<span class="sh_symbol">-</span>setup<span class="sh_symbol">-</span>done</li><li><span class="sh_regexp">/home/</span><span class="sh_normal">student</span><span class="sh_symbol">/.</span><span class="sh_normal">config</span><span class="sh_symbol">/</span>monitors<span class="sh_symbol">.</span>xml</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# find  /  -user  student  -type f  
+find: ‘/proc/1853/task/1853/fdinfo/6’: 没有那个文件或目录
+find: ‘/proc/1853/fdinfo/6’: 没有那个文件或目录
+/var/spool/mail/student
+/home/student/.bash_logout
+/home/student/.bash_profile
+/home/student/.bashrc
+/home/student/.ssh/authorized_keys
+/home/student/.config/gnome-initial-setup-done
+/home/student/.config/monitors.xml
+</pre></div></div>
+      <p>对于上述操作中出现的/proc信息忽略即可。</p>
+      <p class="number">步骤二：处理找到的文件</p>
+      <p>1）创建目标文件夹</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>findfiles</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /root/findfiles
+</pre></div></div>
+      <p>2）拷贝找到的文件到目标文件夹</p>
+      <p>以下两种方法任选一种：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">find  </span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>user  student  <span class="sh_symbol">-</span>type f  <span class="sh_symbol">-</span>exec  cp  <span class="sh_symbol">-</span>p  <span class="sh_cbracket">{}</span>  <span class="sh_regexp">/root/</span><span class="sh_normal">findfiles</span><span class="sh_symbol">/</span>  <span class="sh_symbol">\;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>或者</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_symbol">\</span>cp  <span class="sh_symbol">-</span>p  $<span class="sh_symbol">(</span><span class="sh_normal">find  </span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>user  student  <span class="sh_symbol">-</span>type f<span class="sh_symbol">)</span><span class="sh_normal">  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">findfiles</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# find  /  -user  student  -type f  -exec  cp  -p  {}  /root/findfiles/  \;
+.. ..
+或者
+[root@server0 ~]# \cp  -p  $(find  /  -user  student  -type f)  /root/findfiles/
+.. ..
+</pre></div></div>
+      <p>3）确认拷贝结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">lhA  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span><span class="sh_normal">findfiles</span><span class="sh_symbol">/</span></li><li>总用量 24K</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-------.</span> <span class="sh_number">1</span> student student <span class="sh_number">1</span><span class="sh_symbol">.</span>7K <span class="sh_number">7</span>月  <span class="sh_number">11</span> <span class="sh_number">2014</span> authorized_keys</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> student student   <span class="sh_number">18</span> <span class="sh_number">1</span>月  <span class="sh_number">29</span> <span class="sh_number">2014</span> <span class="sh_symbol">.</span>bash_logout</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> student student  <span class="sh_number">193</span> <span class="sh_number">1</span>月  <span class="sh_number">29</span> <span class="sh_number">2014</span> <span class="sh_symbol">.</span>bash_profile</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> student student  <span class="sh_number">231</span> <span class="sh_number">1</span>月  <span class="sh_number">29</span> <span class="sh_number">2014</span> <span class="sh_symbol">.</span>bashrc</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> student student    <span class="sh_number">4</span> <span class="sh_number">7</span>月  <span class="sh_number">11</span> <span class="sh_number">2014</span> gnome<span class="sh_symbol">-</span>initial<span class="sh_symbol">-</span>setup<span class="sh_symbol">-</span>done</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> student student <span class="sh_number">1</span><span class="sh_symbol">.</span>5K <span class="sh_number">7</span>月  <span class="sh_number">11</span> <span class="sh_number">2014</span> monitors<span class="sh_symbol">.</span>xml</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>rw<span class="sh_symbol">----.</span> <span class="sh_number">1</span> student mail       <span class="sh_number">0</span> <span class="sh_number">7</span>月  <span class="sh_number">11</span> <span class="sh_number">2014</span> student</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ls  -lhA  /root/findfiles/
+总用量 24K
+-rw-------. 1 student student 1.7K 7月  11 2014 authorized_keys
+-rw-r--r--. 1 student student   18 1月  29 2014 .bash_logout
+-rw-r--r--. 1 student student  193 1月  29 2014 .bash_profile
+-rw-r--r--. 1 student student  231 1月  29 2014 .bashrc
+-rw-r--r--. 1 student student    4 7月  11 2014 gnome-initial-setup-done
+-rw-r--r--. 1 student student 1.5K 7月  11 2014 monitors.xml
+-rw-rw----. 1 student mail       0 7月  11 2014 student
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例1：Linux管理员 综合测试</h2>
+      <h3>3.1 问题</h3>
+      <p>根据本文提供的练习步骤完成所有练习案例。</p>
+      <h3>3.2 方案</h3>
+      <p>开始练习之前，先依次重置虚拟机环境。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  classroom</li><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  server</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc13 ~]# rht-vmctl  reset  classroom
+[root@room9pc13 ~]# rht-vmctl  reset  server
+</pre></div></div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤01：配置一个用户</p>
+      <p>案例概述：</p>
+      <p>创建一个名为alex的用户，用户ID是 3456。密码是flectrag</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  <span class="sh_symbol">-</span>u  <span class="sh_number">3456</span>  alex</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># echo  flectrag  <span class="sh_symbol">|</span>  passwd  <span class="sh_symbol">--</span>stdin  alex</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# useradd  -u  3456  alex
+[root@server0 ~]# echo  flectrag  |  passwd  --stdin  alex
+</pre></div></div>
+      <p class="number">步骤02：创建用户账号和组</p>
+      <p>案例概述：</p>
+      <p>创建下列用户、组以及和组的成员关系：</p>
+      <ul class="list">
+        <li>一个名为adminuser的组
+</li>
+        <li>一个名为natasha的用户，其属于adminuser，这个组是该用户的从属组
+</li>
+        <li>一个名为harry的用户，属于adminuser，这个组是该用户的从属组
+</li>
+        <li>一个名为sarah的用户，其在系统中没有可交互的shell，并且不是adminuser组的成员用户
+</li>
+        <li>natasha、harry、和sarah的密码都要设置为flectrag
+</li>
+      </ul>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># groupadd  adminuser  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加组</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  <span class="sh_symbol">-</span>G  adminuser  natasha  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加用户</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  <span class="sh_symbol">-</span>G  adminuser  harry</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  <span class="sh_symbol">-</span><span class="sh_normal">s  </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin  sarah</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># echo  flectrag  <span class="sh_symbol">|</span>  passwd  <span class="sh_symbol">--</span>stdin  natasha  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置密码</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># echo  flectrag  <span class="sh_symbol">|</span>  passwd  <span class="sh_symbol">--</span>stdin  harry</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># echo  flectrag  <span class="sh_symbol">|</span>  passwd  <span class="sh_symbol">--</span>stdin  sarah</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# groupadd  adminuser  							//添加组
+
+[root@server0 ~]# useradd  -G  adminuser  natasha  				//添加用户
+[root@server0 ~]# useradd  -G  adminuser  harry
+[root@server0 ~]# useradd  -s  /sbin/nologin  sarah
+
+[root@server0 ~]# echo  flectrag  |  passwd  --stdin  natasha  	//设置密码
+[root@server0 ~]# echo  flectrag  |  passwd  --stdin  harry
+[root@server0 ~]# echo  flectrag  |  passwd  --stdin  sarah
+</pre></div></div>
+      <p class="number">步骤03：配置文件 /var/tmp/fstab 的权限</p>
+      <p>案例概述：</p>
+      <p>拷贝文件/etc/fstab到/var/tmp/fstab，配置文件/var/tmp/fstab的权限：</p>
+      <ul class="list">
+        <li>文件/var/tmp/fstab的拥有者是root用户
+</li>
+        <li>文件/var/tmp/fstab属于root组
+</li>
+        <li>文件/var/tmp/fstab对任何人都不可执行
+</li>
+        <li>用户natasha 能够对文件/var/tmp/fstab执行读和写操作
+</li>
+        <li>用户harry 对文件/var/tmp/fstab既不能读，也不能写
+</li>
+        <li>所有其他用户（当前的和将来的）能够对文件/var/tmp/fstab进行读操作
+</li>
+      </ul>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cp  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">fstab  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//复制文件</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setfacl  <span class="sh_symbol">-</span>m  u<span class="sh_symbol">:</span>natasha<span class="sh_symbol">:</span><span class="sh_normal">rw  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加个别用户权限</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setfacl  <span class="sh_symbol">-</span>m  u<span class="sh_symbol">:</span>harry<span class="sh_symbol">:-</span>  <span class="sh_regexp">/var/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>fstab</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cp  /etc/fstab  /var/tmp/fstab  					//复制文件
+[root@server0 ~]# setfacl  -m  u:natasha:rw  /var/tmp/fstab 		//添加个别用户权限
+[root@server0 ~]# setfacl  -m  u:harry:-  /var/tmp/fstab
+</pre></div></div>
+      <p class="number">步骤04：配置一个 cron 任务</p>
+      <p>案例概述：</p>
+      <p>为用户natasha配置一个定时任务，每天在本地时间14:23时执行以下命令：</p>
+      <p>/bin/echo hiya</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  crond</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  crond</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># crontab  <span class="sh_symbol">-</span>e  <span class="sh_symbol">-</span>u  natasha</li><li><span class="sh_number">23</span>  <span class="sh_number">14</span>  <span class="sh_symbol">*</span>  <span class="sh_symbol">*</span>  <span class="sh_symbol">*</span>   <span class="sh_regexp">/bin/</span>echo  hiya</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  crond
+[root@server0 ~]# systemctl  enable  crond
+
+[root@server0 ~]# crontab  -e  -u  natasha
+23  14  *  *  *   /bin/echo  hiya
+</pre></div></div>
+      <p class="number">步骤05：创建一个共享目录</p>
+      <p>案例概述：</p>
+      <p>创建一个共享目录/home/admins ，特性如下：</p>
+      <ul class="list">
+        <li>/home/admins目录的组所有权是adminuser
+</li>
+        <li>adminuser组的成员对目录有读写和执行的权限。除此之外的其他所有用户没有任何权限（root 用户能够访问系统中的所有文件和目录）
+</li>
+        <li>在/home/admins目录中创建的文件，其组所有权会自动设置为属于adminuser组
+</li>
+        <li>[注]此处所谓的共享目录并不是指网络共享，只是某个组成员共用
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chown  <span class="sh_symbol">:</span><span class="sh_normal">adminuser </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chmod  ug<span class="sh_symbol">+</span>rwx<span class="sh_symbol">,</span>o<span class="sh_symbol">-</span><span class="sh_normal">rwx  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调整权限</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chmod  g<span class="sh_symbol">+</span><span class="sh_normal">s  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置Set UID权限</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /home/admins
+[root@server0 ~]# chown  :adminuser /home/admins
+[root@server0 ~]# chmod  ug+rwx,o-rwx  /home/admins 		//调整权限
+[root@server0 ~]# chmod  g+s  /home/admins 					//设置Set UID权限
+</pre></div></div>
+      <p class="number">步骤06：安装内核的升级</p>
+      <p>案例概述：</p>
+      <p>新版内核文件从以下地址获取：</p>
+      <p>http://classroom.example.com/content/rhel7.0/x86_64/errata/Packages/</p>
+      <ul class="list">
+        <li>升级你的系统的内核版本，同时要满足下列要求：
+</li>
+        <li>当系统重新启动之后升级的内核要作为默认的内核
+</li>
+        <li>原来的内核要被保留，并且仍然可以正常启动
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firefox <span class="sh_symbol">\</span></li><li>   http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/content/rhel7.0/x86_64/errata/Packages/ </span></li><li>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//根据所给地址找到内核文件，复制其下载地址</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># wget <span class="sh_symbol">\</span></li><li>   http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/content/rhel7.0/x86_64/errata/Packages/kernel-3.10.0-123.1.2.el7.x86_64.rpm </span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># rpm  <span class="sh_symbol">-</span>ivh  kernel<span class="sh_number">-3.10</span><span class="sh_symbol">*.</span>rpm  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装新内核（耐心等...）</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># reboot  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重启以使新内核生效</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># uname  <span class="sh_symbol">-</span>r </li><li><span class="sh_number">3.10.0-123.1.2</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认新内核版本</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# firefox \
+   http://classroom.example.com/content/rhel7.0/x86_64/errata/Packages/ 
+  								//根据所给地址找到内核文件，复制其下载地址
+[root@server0 ~]# wget \
+   http://classroom.example.com/content/rhel7.0/x86_64/errata/Packages/kernel-3.10.0-123.1.2.el7.x86_64.rpm 
+[root@server0 ~]# rpm  -ivh  kernel-3.10*.rpm  			//安装新内核（耐心等...）
+[root@server0 ~]# reboot  								//重启以使新内核生效
+[root@server0 ~]# uname  -r 
+3.10.0-123.1.2.el7.x86_64 								//确认新内核版本
+</pre></div></div>
+      <p class="number">步骤07：绑定到外部验证服务</p>
+      <p>案例概述：</p>
+      <p>系统 classroom.example.com 提供了一个 LDAP 验证服务。您的系统需要按照以下要求绑定到这个服务上：</p>
+      <ul class="list">
+        <li>验证服务器的基本 DN 是：dc=example,dc=com
+</li>
+        <li>帐户信息和验证信息都是由 LDAP 提供的
+</li>
+        <li>连接要使用证书进行加密，证书可以在下面的链接中下载 ：
+</li>
+        <li>http://classroom.example.com/pub/example-ca.crt 
+</li>
+        <li>当正确完成配置后，用户 ldapuser0 应该能够登录到您的系统中，但是没有主目录。当您完成 autofs的题目之后，才能生成主目录
+</li>
+        <li>用户ldapuser0的密码是password
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  sssd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># authconfig<span class="sh_symbol">-</span>tui  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//使用简易配置工具</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  sssd
+[root@server0 ~]# authconfig-tui  							//使用简易配置工具
+</pre></div></div>
+      <p>根据提示完成用户和认证方式设置 ——</p>
+      <p>User Information：[*] Use LDAP</p>
+      <p>Authentication Method：[*] Use LDAP Authentication</p>
+      <p>根据提示选中 [*] Use TLS，并设置下列参数 ——</p>
+      <p>Server：classroom.example.com</p>
+      <p>Base DN：dc=example,dc=com</p>
+      <p>提示下载证书到 /etc/openldap/cacerts 目录时，另开一终端执行：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">openldap</span><span class="sh_symbol">/</span><span class="sh_normal">cacerts</span><span class="sh_symbol">/</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//进入CA机构证书目录</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/example-ca.crt </span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd  /etc/openldap/cacerts/  			//进入CA机构证书目录
+[root@server0 ~]# wget  http://classroom.example.com/pub/example-ca.crt 
+</pre></div></div>
+      <p>然后回到 authconfig-tui 工具确认，稍等片刻即可。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  sssd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  sssd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># id  ldapuser0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//验证LDAP用户可用</span></li><li>uid<span class="sh_symbol">=</span><span class="sh_number">1700</span><span class="sh_symbol">(</span>ldapuser0<span class="sh_symbol">)</span> gid<span class="sh_symbol">=</span><span class="sh_number">1700</span><span class="sh_symbol">(</span>ldapuser0<span class="sh_symbol">)</span> groups<span class="sh_symbol">=</span><span class="sh_number">1700</span><span class="sh_symbol">(</span>ldapuser0<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  sssd
+[root@server0 ~]# systemctl  enable  sssd
+[root@server0 ~]# id  ldapuser0  						//验证LDAP用户可用
+uid=1700(ldapuser0) gid=1700(ldapuser0) groups=1700(ldapuser0)
+</pre></div></div>
+      <p class="number">步骤08：家目录漫游</p>
+      <p>案例概述：</p>
+      <p>按照下述要求配置手动挂载 LDAP 用户的主目录：</p>
+      <ul class="list">
+        <li>classroom.example.com（172.25.254.254）通过 NFS 输出 /home/guests 目录到您的系统，这个文件系统包含了用户ldapuser0的主目录，并且已经预先配置好了
+</li>
+        <li>ldapuser0用户的主目录是 classroom.example.com:/home/guests/ldapuser0
+</li>
+        <li>ldapuser0的主目录应该挂载到本地的/home/guests/ldapuser0 目录下
+</li>
+        <li>用户对其主目录必须是可写的
+</li>
+        <li>ldapuser0用户的密码是password
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guest</span><span class="sh_symbol">/</span>ldapuser0</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mount  classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">:</span><span class="sh_regexp">/home/g</span><span class="sh_normal">uests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span>ldapuser0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//挂载LDAP家目录</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># su  <span class="sh_symbol">-</span>  ldapuser0  <span class="sh_symbol">-</span>c  <span class="sh_string">'pwd'</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//验证结果</span></li><li><span class="sh_regexp">/home/g</span><span class="sh_normal">uests</span><span class="sh_symbol">/</span>ldapuser0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /home/guest/ldapuser0
+[root@server0 ~]# mount  classroom.example.com:/home/guests/ldapuser0  /home/guests/ldapuser0  		//挂载LDAP家目录
+
+[root@server0 ~]# su  -  ldapuser0  -c  'pwd'  			//验证结果
+/home/guests/ldapuser0
+</pre></div></div>
+      <p class="number">步骤09：配置NTP网络时间客户端</p>
+      <p>案例概述：</p>
+      <p>配置您的系统，让其作为一个 classroom.example.com 的 NTP 客户端</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  chrony</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>chrony<span class="sh_symbol">.</span>conf</li><li>#server <span class="sh_number">0</span><span class="sh_symbol">.</span>rhel<span class="sh_symbol">.</span>pool<span class="sh_symbol">.</span>ntp<span class="sh_symbol">.</span>org iburst  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//注释掉不可用server配置，</span></li><li>#server <span class="sh_number">1</span><span class="sh_symbol">.</span>rhel<span class="sh_symbol">.</span>pool<span class="sh_symbol">.</span>ntp<span class="sh_symbol">.</span>org iburst</li><li>#server <span class="sh_number">2</span><span class="sh_symbol">.</span>rhel<span class="sh_symbol">.</span>pool<span class="sh_symbol">.</span>ntp<span class="sh_symbol">.</span>org iburst</li><li>#server <span class="sh_number">3</span><span class="sh_symbol">.</span>rhel<span class="sh_symbol">.</span>pool<span class="sh_symbol">.</span>ntp<span class="sh_symbol">.</span>org iburst</li><li>server  classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com  iburst &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加新的配置</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  chronyd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  chronyd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  chrony
+[root@server0 ~]# vim  /etc/chrony.conf
+#server 0.rhel.pool.ntp.org iburst  					//注释掉不可用server配置，
+#server 1.rhel.pool.ntp.org iburst
+#server 2.rhel.pool.ntp.org iburst
+#server 3.rhel.pool.ntp.org iburst
+server  classroom.example.com  iburst 					//添加新的配置
+.. ..
+[root@server0 ~]# systemctl  restart  chronyd
+[root@server0 ~]# systemctl  enable  chronyd
+</pre></div></div>
+      <p class="number">步骤10：查找文件</p>
+      <p>案例概述：</p>
+      <p>找出所有用户student拥有的文件，并且把它们拷贝到/root/findfiles 目录中</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>findfiles</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">find  </span><span class="sh_symbol">/</span>  <span class="sh_symbol">-</span>user  student  <span class="sh_symbol">-</span>type f  <span class="sh_symbol">-</span>exec  cp  <span class="sh_symbol">-</span>p  <span class="sh_cbracket">{}</span>  <span class="sh_regexp">/root/</span><span class="sh_normal">findfiles</span><span class="sh_symbol">/</span>  <span class="sh_symbol">\;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /root/findfiles
+[root@server0 ~]# find  /  -user  student  -type f  -exec  cp  -p  {}  /root/findfiles/  \;
+</pre></div></div>
+      <p class="number">步骤11：查找一个字符串</p>
+      <p>案例概述：</p>
+      <p>在文件/usr/share/dict/words中查找到所有包含字符串seismic的行：</p>
+      <ul class="list">
+        <li>将找出的行按照原文的先后顺序拷贝到/root/wordlist文件中
+</li>
+        <li>/root/wordlist文件不要包含空行，并且其中的所有行的内容都必须是 /usr/share/dict/words文件中原始行的准确副本
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># grep  <span class="sh_string">'seismic'</span>  <span class="sh_regexp">/usr/</span><span class="sh_normal">share</span><span class="sh_symbol">/</span><span class="sh_normal">dict</span><span class="sh_symbol">/</span>words  <span class="sh_symbol">&gt;</span>  <span class="sh_regexp">/root/</span>wordlist</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# grep  'seismic'  /usr/share/dict/words  &gt;  /root/wordlist
+</pre></div></div>
+      <p class="number">步骤12：创建一个归档</p>
+      <p>案例概述：</p>
+      <p>创建一个名为 /root/backup.tar.bz2 的归档文件，其中包含 /usr/local 目录中的内容，tar 归档必须使用 bzip2 进行压缩</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># tar  <span class="sh_symbol">-</span><span class="sh_normal">jcPf  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>backup<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span><span class="sh_normal">bz2  </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# tar  -jcPf  /root/backup.tar.bz2  /usr/local/
+</pre></div></div>
+    </div>
+  
+</body></html>

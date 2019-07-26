@@ -1,0 +1,742 @@
+
+<!-- saved from url=(0075)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD DBA2 DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#case1">案例1：实现MySQL读写分离</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#case2">案例2：配置MySQL多实例</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#case3">案例3：MySQL性能优化</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：实现MySQL读写分离</h2>
+      <h3>1.1 问题</h3>
+      <ul class="list">
+        <li>搭建一主一从结构
+</li>
+        <li>配置maxscale代理服务器
+</li>
+        <li>测试分离配置
+</li>
+      </ul>
+      <ol class="list">
+        <li>
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>使用4台RHEL 7虚拟机，如图-1所示。其中192.168.4.10和192.168.4.20，分别提供读、写服务，均衡流量，通过主从复制保持数据一致性，由MySQL代理192.168.4.100面向客户端，收到SQL写请求时，交给服务器A处理，收到SQL读请求时，交给服务器B处理。linux客户机用于测试配置，可以使用真机代替</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图－1</p>
+      </div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：搭建主从</p>
+      <p>1）搭建一主一从结构，主库192.168.4.10上面操作</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@master10 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>my<span class="sh_symbol">.</span>cnf</li><li><span class="sh_symbol">[</span>mysqld<span class="sh_symbol">]</span></li><li>server_id<span class="sh_symbol">=</span><span class="sh_number">10</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定服务器ID号 </span></li><li>log<span class="sh_symbol">-</span>bin<span class="sh_symbol">=</span>master10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启用binlog日志，并指定文件名前缀</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@master10 <span class="sh_symbol">~]</span># systemctl restart mysqld&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重启mysqld</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@master10 ~]# vim /etc/my.cnf
+[mysqld]
+server_id=10	//指定服务器ID号 
+log-bin=master10		//启用binlog日志，并指定文件名前缀
+...
+[root@master10 ~]# systemctl restart mysqld		//重启mysqld
+</pre></div></div>
+      <p>2）从库192.168.4.20上面操作</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>mysqld<span class="sh_symbol">]</span></li><li>server_id<span class="sh_symbol">=</span><span class="sh_number">20</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定服务器ID号，不要与Master的相同</span></li><li>log<span class="sh_symbol">-</span>bin<span class="sh_symbol">=</span>slave20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动SQL日志，并指定文件名前缀</span></li><li>read_only<span class="sh_symbol">=</span><span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//只读模式</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@slave20 <span class="sh_symbol">~]</span># systemctl restart  mysqld</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[mysqld]
+server_id=20			//指定服务器ID号，不要与Master的相同
+log-bin=slave20		//启动SQL日志，并指定文件名前缀
+read_only=1			//只读模式
+...
+[root@slave20 ~]# systemctl restart  mysqld
+</pre></div></div>
+      <p>3）主库授权一个用户并查看master的状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@master10 <span class="sh_symbol">~]</span># mysql <span class="sh_symbol">-</span>u root <span class="sh_symbol">-</span>p123456</li><li>mysql<span class="sh_symbol">&gt;</span> grant all on <span class="sh_symbol">*.*</span> to <span class="sh_string">'replicater'</span>@<span class="sh_string">'%'</span> identified by <span class="sh_string">'123456'</span><span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows affected<span class="sh_symbol">,</span> <span class="sh_number">1</span> <span class="sh_function">warning</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> show master status<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-----------------+----------+--------------+------------------+-------------------+</span></li><li><span class="sh_symbol">|</span> File            <span class="sh_symbol">|</span> Position <span class="sh_symbol">|</span> Binlog_Do_DB <span class="sh_symbol">|</span> Binlog_Ignore_DB <span class="sh_symbol">|</span> Executed_Gtid_Set <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------+----------+--------------+------------------+-------------------+</span></li><li><span class="sh_symbol">|</span> master10<span class="sh_number">.000002</span> <span class="sh_symbol">|</span>      <span class="sh_number">449</span> <span class="sh_symbol">|</span>              <span class="sh_symbol">|</span>                  <span class="sh_symbol">|</span>                   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------+----------+--------------+------------------+-------------------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@master10 ~]# mysql -u root -p123456
+mysql&gt; grant all on *.* to 'replicater'@'%' identified by '123456';
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+mysql&gt; show master status;
++-----------------+----------+--------------+------------------+-------------------+
+| File            | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++-----------------+----------+--------------+------------------+-------------------+
+| master10.000002 |      449 |              |                  |                   |
++-----------------+----------+--------------+------------------+-------------------+
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p>4）从库通过CHANGE MASTER语句指定MASTER服务器的IP地址、同步用户名/密码、起始日志文件、偏移位置（参考MASTER上的状态输出）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@slave20 <span class="sh_symbol">~]</span># mysql <span class="sh_symbol">-</span>u root <span class="sh_symbol">-</span>p123456</li><li>mysql<span class="sh_symbol">&gt;</span> change master to master_host<span class="sh_symbol">=</span><span class="sh_string">'192.168.4.10'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_symbol">-&gt;</span> master_user<span class="sh_symbol">=</span><span class="sh_string">'replicater'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_symbol">-&gt;</span> master_password<span class="sh_symbol">=</span><span class="sh_string">'123456'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_symbol">-&gt;</span> master_log_file<span class="sh_symbol">=</span><span class="sh_string">'master10.000002'</span><span class="sh_symbol">,</span></li><li>    <span class="sh_symbol">-&gt;</span> master_log_pos<span class="sh_symbol">=</span><span class="sh_number">738</span><span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows affected<span class="sh_symbol">,</span> <span class="sh_number">2</span> <span class="sh_function">warnings</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> start slave<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> show  slave status<span class="sh_symbol">\</span>G<span class="sh_symbol">;</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">1</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>               Slave_IO_State<span class="sh_symbol">:</span> Waiting <span class="sh_keyword">for</span> master to send event</li><li>                  Master_Host<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.10</span></li><li>                  Master_User<span class="sh_symbol">:</span> replicater</li><li>                  Master_Port<span class="sh_symbol">:</span> <span class="sh_number">3306</span></li><li>                Connect_Retry<span class="sh_symbol">:</span> <span class="sh_number">60</span></li><li>              Master_Log_File<span class="sh_symbol">:</span> master10<span class="sh_number">.000002</span></li><li>          Read_Master_Log_Pos<span class="sh_symbol">:</span> <span class="sh_number">738</span></li><li>               Relay_Log_File<span class="sh_symbol">:</span> slave20<span class="sh_symbol">-</span>relay<span class="sh_symbol">-</span>bin<span class="sh_number">.000002</span></li><li>                Relay_Log_Pos<span class="sh_symbol">:</span> <span class="sh_number">319</span></li><li>        Relay_Master_Log_File<span class="sh_symbol">:</span> master10<span class="sh_number">.000002</span></li><li>             Slave_IO_Running<span class="sh_symbol">:</span> Yes</li><li>            Slave_SQL_Running<span class="sh_symbol">:</span> Yes</li><li>              Replicate_Do_DB<span class="sh_symbol">:</span> </li><li>          Replicate_Ignore_DB<span class="sh_symbol">:</span> </li><li>           Replicate_Do_Table<span class="sh_symbol">:</span> </li><li>       Replicate_Ignore_Table<span class="sh_symbol">:</span> </li><li>      Replicate_Wild_Do_Table<span class="sh_symbol">:</span> </li><li>  Replicate_Wild_Ignore_Table<span class="sh_symbol">:</span> </li><li>                   Last_Errno<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>                   Last_Error<span class="sh_symbol">:</span> </li><li>                 Skip_Counter<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>          Exec_Master_Log_Pos<span class="sh_symbol">:</span> <span class="sh_number">738</span></li><li>              Relay_Log_Space<span class="sh_symbol">:</span> <span class="sh_number">528</span></li><li>              Until_Condition<span class="sh_symbol">:</span> None</li><li>               Until_Log_File<span class="sh_symbol">:</span> </li><li>                Until_Log_Pos<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>           Master_SSL_Allowed<span class="sh_symbol">:</span> No</li><li>           Master_SSL_CA_File<span class="sh_symbol">:</span> </li><li>           Master_SSL_CA_Path<span class="sh_symbol">:</span> </li><li>              Master_SSL_Cert<span class="sh_symbol">:</span> </li><li>            Master_SSL_Cipher<span class="sh_symbol">:</span> </li><li>               Master_SSL_Key<span class="sh_symbol">:</span> </li><li>        Seconds_Behind_Master<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>Master_SSL_Verify_Server_Cert<span class="sh_symbol">:</span> No</li><li>                Last_IO_Errno<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>                Last_IO_Error<span class="sh_symbol">:</span> </li><li>               Last_SQL_Errno<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>               Last_SQL_Error<span class="sh_symbol">:</span> </li><li>  Replicate_Ignore_Server_Ids<span class="sh_symbol">:</span> </li><li>             Master_Server_Id<span class="sh_symbol">:</span> <span class="sh_number">10</span></li><li>                  Master_UUID<span class="sh_symbol">:</span> 95ada2c2<span class="sh_symbol">-</span>bb24<span class="sh_number">-11e8</span><span class="sh_symbol">-</span>abdb<span class="sh_symbol">-</span>525400131c0f</li><li>             Master_Info_File<span class="sh_symbol">:</span> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">mysql</span><span class="sh_symbol">/</span>master<span class="sh_symbol">.</span>info</li><li>                    SQL_Delay<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>          SQL_Remaining_Delay<span class="sh_symbol">:</span> NULL</li><li>      Slave_SQL_Running_State<span class="sh_symbol">:</span> Slave has read all relay log<span class="sh_symbol">;</span> waiting <span class="sh_keyword">for</span> more updates</li><li>           Master_Retry_Count<span class="sh_symbol">:</span> <span class="sh_number">86400</span></li><li>                  Master_Bind<span class="sh_symbol">:</span> </li><li>      Last_IO_Error_Timestamp<span class="sh_symbol">:</span> </li><li>     Last_SQL_Error_Timestamp<span class="sh_symbol">:</span> </li><li>               Master_SSL_Crl<span class="sh_symbol">:</span> </li><li>           Master_SSL_Crlpath<span class="sh_symbol">:</span> </li><li>           Retrieved_Gtid_Set<span class="sh_symbol">:</span> </li><li>            Executed_Gtid_Set<span class="sh_symbol">:</span> </li><li>                Auto_Position<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>         Replicate_Rewrite_DB<span class="sh_symbol">:</span> </li><li>                 Channel_Name<span class="sh_symbol">:</span> </li><li>           Master_TLS_Version<span class="sh_symbol">:</span> </li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@slave20 ~]# mysql -u root -p123456
+mysql&gt; change master to master_host='192.168.4.10',
+    -&gt; master_user='replicater',
+    -&gt; master_password='123456',
+    -&gt; master_log_file='master10.000002',
+    -&gt; master_log_pos=738;
+Query OK, 0 rows affected, 2 warnings (0.01 sec)
+
+mysql&gt; start slave;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql&gt; show  slave status\G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: 192.168.4.10
+                  Master_User: replicater
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: master10.000002
+          Read_Master_Log_Pos: 738
+               Relay_Log_File: slave20-relay-bin.000002
+                Relay_Log_Pos: 319
+        Relay_Master_Log_File: master10.000002
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB: 
+          Replicate_Ignore_DB: 
+           Replicate_Do_Table: 
+       Replicate_Ignore_Table: 
+      Replicate_Wild_Do_Table: 
+  Replicate_Wild_Ignore_Table: 
+                   Last_Errno: 0
+                   Last_Error: 
+                 Skip_Counter: 0
+          Exec_Master_Log_Pos: 738
+              Relay_Log_Space: 528
+              Until_Condition: None
+               Until_Log_File: 
+                Until_Log_Pos: 0
+           Master_SSL_Allowed: No
+           Master_SSL_CA_File: 
+           Master_SSL_CA_Path: 
+              Master_SSL_Cert: 
+            Master_SSL_Cipher: 
+               Master_SSL_Key: 
+        Seconds_Behind_Master: 0
+Master_SSL_Verify_Server_Cert: No
+                Last_IO_Errno: 0
+                Last_IO_Error: 
+               Last_SQL_Errno: 0
+               Last_SQL_Error: 
+  Replicate_Ignore_Server_Ids: 
+             Master_Server_Id: 10
+                  Master_UUID: 95ada2c2-bb24-11e8-abdb-525400131c0f
+             Master_Info_File: /var/lib/mysql/master.info
+                    SQL_Delay: 0
+          SQL_Remaining_Delay: NULL
+      Slave_SQL_Running_State: Slave has read all relay log; waiting for more updates
+           Master_Retry_Count: 86400
+                  Master_Bind: 
+      Last_IO_Error_Timestamp: 
+     Last_SQL_Error_Timestamp: 
+               Master_SSL_Crl: 
+           Master_SSL_Crlpath: 
+           Retrieved_Gtid_Set: 
+            Executed_Gtid_Set: 
+                Auto_Position: 0
+         Replicate_Rewrite_DB: 
+                 Channel_Name: 
+           Master_TLS_Version: 
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p>5）测试，主库创建aa库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> create database aa<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> show databases<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Database           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> information_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> aa                 <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> mysql              <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> performance_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> sys                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">5</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; create database aa;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| aa                 |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+</pre></div></div>
+      <p>6）从库上面查看，有aa库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show databases<span class="sh_symbol">;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Database           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> information_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> aa                 <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> mysql              <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> performance_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> sys                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">5</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show databases;
+
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| aa                 |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+</pre></div></div>
+      <p class="number">步骤二：实现mysql读写分离</p>
+      <p>1）配置数据读写分离服务器192.168.4.100</p>
+      <p>环境准备关闭防火墙和SElinux，保证yum源可以正常使用</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@maxscale <span class="sh_symbol">~]</span># cd <span class="sh_normal">mysql</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># ls</li><li>maxscale<span class="sh_number">-2.1.2-1</span><span class="sh_symbol">.</span>rhel<span class="sh_number">.7</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># rpm <span class="sh_symbol">-</span>ivh maxscale<span class="sh_number">-2.1.2-1</span><span class="sh_symbol">.</span>rhel<span class="sh_number">.7</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//安装maxscale</span></li><li>warning<span class="sh_symbol">:</span> maxscale<span class="sh_number">-2.1.2-1</span><span class="sh_symbol">.</span>rhel<span class="sh_number">.7</span><span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm<span class="sh_symbol">:</span> Header V4 <span class="sh_normal">RSA</span><span class="sh_symbol">/</span>SHA1 Signature<span class="sh_symbol">,</span> key ID 8167ee24<span class="sh_symbol">:</span> NOKEY</li><li>Preparing<span class="sh_symbol">...</span>                          ################################# <span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span></li><li><span class="sh_normal">Updating </span><span class="sh_symbol">/</span> installing<span class="sh_symbol">...</span></li><li>   <span class="sh_number">1</span><span class="sh_symbol">:</span>maxscale<span class="sh_number">-2.1.2-1</span>                 ################################# <span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@maxscale ~]# cd mysql/
+[root@maxscale mysql]# ls
+maxscale-2.1.2-1.rhel.7.x86_64.rpm
+[root@maxscale mysql]# rpm -ivh maxscale-2.1.2-1.rhel.7.x86_64.rpm 		
+//安装maxscale
+warning: maxscale-2.1.2-1.rhel.7.x86_64.rpm: Header V4 RSA/SHA1 Signature, key ID 8167ee24: NOKEY
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:maxscale-2.1.2-1                 ################################# [100%]
+
+</pre></div></div>
+      <p>2）配置maxscale</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>maxscale<span class="sh_symbol">.</span>cnf<span class="sh_symbol">.</span>template</li><li><span class="sh_symbol">[</span>maxscale<span class="sh_symbol">]</span></li><li>threads<span class="sh_symbol">=</span>auto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//运行的线程的数量</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>server1<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义数据库服务器</span></li><li>type<span class="sh_symbol">=</span>server</li><li>address<span class="sh_symbol">=</span><span class="sh_number">192.168.4.10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//数据库服务器的ip</span></li><li>port<span class="sh_symbol">=</span><span class="sh_number">3306</span></li><li>protocol<span class="sh_symbol">=</span>MySQLBackend&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//后端数据库</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>server2<span class="sh_symbol">]</span></li><li>type<span class="sh_symbol">=</span>server</li><li>address<span class="sh_symbol">=</span><span class="sh_number">192.168.4.20</span></li><li>port<span class="sh_symbol">=</span><span class="sh_number">3306</span></li><li>protocol<span class="sh_symbol">=</span>MySQLBackend</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>MySQL Monitor<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义监控的数据库服务器</span></li><li>type<span class="sh_symbol">=</span>monitor</li><li>module<span class="sh_symbol">=</span>mysqlmon</li><li>servers<span class="sh_symbol">=</span>server1<span class="sh_symbol">,</span> server2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//监控的数据库列表，不能写ip</span></li><li>user<span class="sh_symbol">=</span>scalemon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//监视数据库服务器时连接的用户名scalemon</span></li><li>passwd<span class="sh_symbol">=</span><span class="sh_number">123456</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//密码123456</span></li><li>monitor_interval<span class="sh_symbol">=</span><span class="sh_number">10000</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//监视的频率 单位为秒</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">[</span>Read<span class="sh_symbol">-</span>Only Service<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//不定义只读服务器</span></li><li>#type<span class="sh_symbol">=</span>service</li><li>#router<span class="sh_symbol">=</span>readconnroute</li><li>#servers<span class="sh_symbol">=</span>server1</li><li>#user<span class="sh_symbol">=</span>myuser</li><li>#passwd<span class="sh_symbol">=</span>mypwd</li><li>#router_options<span class="sh_symbol">=</span>slave</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>Read<span class="sh_symbol">-</span>Write Service<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义读写分离服务</span></li><li>type<span class="sh_symbol">=</span>service</li><li>router<span class="sh_symbol">=</span>readwritesplit</li><li>servers<span class="sh_symbol">=</span>server1<span class="sh_symbol">,</span> server2</li><li>user<span class="sh_symbol">=</span>maxscaled&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//用户名 验证连接代理服务时访问数据库服务器的用户是否存在</span></li><li>passwd<span class="sh_symbol">=</span><span class="sh_number">123456</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//密码</span></li><li>max_slave_connections<span class="sh_symbol">=</span><span class="sh_number">100</span><span class="sh_symbol">%</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>MaxAdmin Service<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义管理服务</span></li><li>type<span class="sh_symbol">=</span>service</li><li>router<span class="sh_symbol">=</span>cli</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">[</span>Read<span class="sh_symbol">-</span>Only Listener<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//不定义只读服务使用的端口号</span></li><li>#type<span class="sh_symbol">=</span>listener</li><li>#service<span class="sh_symbol">=</span>Read<span class="sh_symbol">-</span>Only Service</li><li>#protocol<span class="sh_symbol">=</span>MySQLClient</li><li>#port<span class="sh_symbol">=</span><span class="sh_number">4008</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>Read<span class="sh_symbol">-</span>Write Listener<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义读写服务使用的端口号</span></li><li>type<span class="sh_symbol">=</span>listener</li><li>service<span class="sh_symbol">=</span>Read<span class="sh_symbol">-</span>Write Service</li><li>protocol<span class="sh_symbol">=</span>MySQLClient</li><li>port<span class="sh_symbol">=</span><span class="sh_number">4006</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>MaxAdmin Listener<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//管理服务使用的端口号</span></li><li>type<span class="sh_symbol">=</span>listener</li><li>service<span class="sh_symbol">=</span>MaxAdmin Service</li><li>protocol<span class="sh_symbol">=</span>maxscaled</li><li>socket<span class="sh_symbol">=</span><span class="sh_keyword">default</span></li><li>port<span class="sh_symbol">=</span><span class="sh_number">4099</span>&nbsp;&nbsp;&nbsp;&nbsp; <span class="sh_comment">//手动添加，不指定时使用的是默认端口在启动服务以后可以知道默认端口是多少</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@maxscale mysql]# vim /etc/maxscale.cnf.template
+[maxscale]
+threads=auto			//运行的线程的数量
+
+[server1]			//定义数据库服务器
+type=server
+address=192.168.4.10		//数据库服务器的ip
+port=3306
+protocol=MySQLBackend		//后端数据库
+
+
+
+[server2]
+type=server
+address=192.168.4.20
+port=3306
+protocol=MySQLBackend
+
+
+
+[MySQL Monitor]				//定义监控的数据库服务器
+type=monitor
+module=mysqlmon
+servers=server1, server2		//监控的数据库列表，不能写ip
+user=scalemon					//监视数据库服务器时连接的用户名scalemon
+passwd=123456					//密码123456
+monitor_interval=10000		//监视的频率 单位为秒
+
+
+
+#[Read-Only Service]		//不定义只读服务器
+#type=service
+#router=readconnroute
+#servers=server1
+#user=myuser
+#passwd=mypwd
+#router_options=slave
+
+
+
+[Read-Write Service]			//定义读写分离服务
+type=service
+router=readwritesplit
+servers=server1, server2
+user=maxscaled			//用户名 验证连接代理服务时访问数据库服务器的用户是否存在
+passwd=123456				//密码
+max_slave_connections=100%
+
+
+
+[MaxAdmin Service]		//定义管理服务
+type=service
+router=cli
+
+
+
+#[Read-Only Listener]		//不定义只读服务使用的端口号
+#type=listener
+#service=Read-Only Service
+#protocol=MySQLClient
+#port=4008
+
+
+
+[Read-Write Listener]			//定义读写服务使用的端口号
+type=listener
+service=Read-Write Service
+protocol=MySQLClient
+port=4006
+
+
+
+[MaxAdmin Listener]		//管理服务使用的端口号
+type=listener
+service=MaxAdmin Service
+protocol=maxscaled
+socket=default
+port=4099	 //手动添加，不指定时使用的是默认端口在启动服务以后可以知道默认端口是多少
+</pre></div></div>
+      <p>3）根据配置文件的设置，在数据库服务器上添加授权用户（主库执行，从库查看）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> grant replication slave<span class="sh_symbol">,</span>replication client on <span class="sh_symbol">*.*</span> to  scalemon@<span class="sh_string">'%'</span> identified by <span class="sh_string">"123456"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//监控数据库服务器时，连接数据库服务器的用户</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows affected<span class="sh_symbol">,</span> <span class="sh_number">1</span> <span class="sh_function">warning</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> grant select on mysql<span class="sh_symbol">.*</span> to maxscaled@<span class="sh_string">"%"</span> identified by <span class="sh_string">"123456"</span><span class="sh_symbol">;</span> </li><li><span class="sh_comment">//验证 访问数据时，连接数据库服务器使用的用户，是否在数据库服务器上存在的，连接用户</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows affected<span class="sh_symbol">,</span> <span class="sh_number">1</span> <span class="sh_function">warning</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; grant replication slave,replication client on *.* to  scalemon@'%' identified by "123456";			//监控数据库服务器时，连接数据库服务器的用户
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql&gt; grant select on mysql.* to maxscaled@"%" identified by "123456"; 
+//验证 访问数据时，连接数据库服务器使用的用户，是否在数据库服务器上存在的，连接用户
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+</pre></div></div>
+      <p>4）查看授权用户</p>
+      <p>在主库上面查看</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> select user<span class="sh_symbol">,</span>host from mysql<span class="sh_symbol">.</span>user where user <span class="sh_keyword">in</span> <span class="sh_symbol">(</span><span class="sh_string">"scalemon"</span><span class="sh_symbol">,</span><span class="sh_string">"maxscaled"</span><span class="sh_symbol">);</span></li><li><span class="sh_symbol">+-----------+------+</span></li><li><span class="sh_symbol">|</span> user      <span class="sh_symbol">|</span> host <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+------+</span></li><li><span class="sh_symbol">|</span> maxscaled <span class="sh_symbol">|</span> <span class="sh_symbol">%</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> scalemon  <span class="sh_symbol">|</span> <span class="sh_symbol">%</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+------+</span></li><li><span class="sh_number">2</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; select user,host from mysql.user where user in ("scalemon","maxscaled");
++-----------+------+
+| user      | host |
++-----------+------+
+| maxscaled | %    |
+| scalemon  | %    |
++-----------+------+
+2 rows in set (0.00 sec)
+
+</pre></div></div>
+      <p>在从库上面查看</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> select user<span class="sh_symbol">,</span>host from mysql<span class="sh_symbol">.</span>user where user <span class="sh_keyword">in</span> <span class="sh_symbol">(</span><span class="sh_string">"scalemon"</span><span class="sh_symbol">,</span><span class="sh_string">"maxscaled"</span><span class="sh_symbol">);</span> </li><li><span class="sh_symbol">+-----------+------+</span></li><li><span class="sh_symbol">|</span> user      <span class="sh_symbol">|</span> host <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+------+</span></li><li><span class="sh_symbol">|</span> maxscaled <span class="sh_symbol">|</span> <span class="sh_symbol">%</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> scalemon  <span class="sh_symbol">|</span> <span class="sh_symbol">%</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+------+</span></li><li><span class="sh_number">2</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; select user,host from mysql.user where user in ("scalemon","maxscaled"); 
++-----------+------+
+| user      | host |
++-----------+------+
+| maxscaled | %    |
+| scalemon  | %    |
++-----------+------+
+2 rows in set (0.00 sec)
+</pre></div></div>
+      <p>测试授权用户</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.10</span> <span class="sh_symbol">-</span>u scalemon <span class="sh_symbol">-</span>p123456</li><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.20</span> <span class="sh_symbol">-</span>u scalemon <span class="sh_symbol">-</span>p123456</li><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.10</span> <span class="sh_symbol">-</span>u maxscaled <span class="sh_symbol">-</span>p123456</li><li><span class="sh_symbol">[</span>root@maxscale mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>h <span class="sh_number">192.168.4.20</span> <span class="sh_symbol">-</span>u maxscaled <span class="sh_symbol">-</span>p123456</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@maxscale mysql]# mysql -h 192.168.4.10 -u scalemon -p123456
+[root@maxscale mysql]# mysql -h 192.168.4.20 -u scalemon -p123456
+[root@maxscale mysql]# mysql -h 192.168.4.10 -u maxscaled -p123456
+[root@maxscale mysql]# mysql -h 192.168.4.20 -u maxscaled -p123456
+</pre></div></div>
+      <p>5）启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@maxscale <span class="sh_symbol">~]</span># maxscale <span class="sh_symbol">-</span><span class="sh_normal">f  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>maxscale<span class="sh_symbol">.</span>cnf   </li><li><span class="sh_symbol">[</span>root@maxscale <span class="sh_symbol">~]</span># ps <span class="sh_symbol">-</span>C  maxscale&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看进程</span></li><li>  PID TTY          TIME CMD</li><li><span class="sh_number">17930</span> <span class="sh_symbol">?</span>        <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span> maxscale   </li><li><span class="sh_symbol">[</span>root@maxscale <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>antup <span class="sh_symbol">|</span> grep maxscale      <span class="sh_comment">//查看端口</span></li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">4099</span>                 <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">17930</span><span class="sh_symbol">/</span>maxscale      </li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">4006</span>                 <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">17930</span><span class="sh_symbol">/</span>maxscale</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@maxscale ~]# maxscale -f  /etc/maxscale.cnf   
+[root@maxscale ~]# ps -C  maxscale		//查看进程
+  PID TTY          TIME CMD
+17930 ?        00:00:00 maxscale   
+[root@maxscale ~]# netstat  -antup | grep maxscale      //查看端口
+tcp6       0      0 :::4099                 :::*                    LISTEN      17930/maxscale      
+tcp6       0      0 :::4006                 :::*                    LISTEN      17930/maxscale
+</pre></div></div>
+      <p>6）测试，在本机访问管理端口查看监控状态</p>
+      <p>maxadmin  -P端口 -u用户名  -p密码</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@maxscale <span class="sh_symbol">~]</span># maxadmin <span class="sh_symbol">-</span>P4099 <span class="sh_symbol">-</span>uadmin   <span class="sh_symbol">-</span>pmariadb</li><li>MaxScale<span class="sh_symbol">&gt;</span> </li><li>MaxScale<span class="sh_symbol">&gt;</span> list servers</li><li>Servers<span class="sh_symbol">.</span></li><li><span class="sh_symbol">-------------------+-----------------+-------+-------------+--------------------</span></li><li>Server             <span class="sh_symbol">|</span> Address         <span class="sh_symbol">|</span> Port  <span class="sh_symbol">|</span> Connections <span class="sh_symbol">|</span> Status              </li><li><span class="sh_symbol">-------------------+-----------------+-------+-------------+--------------------</span></li><li>server1            <span class="sh_symbol">|</span> <span class="sh_number">192.168.4.10</span>    <span class="sh_symbol">|</span>  <span class="sh_number">3306</span> <span class="sh_symbol">|</span>           <span class="sh_number">0</span> <span class="sh_symbol">|</span> Master<span class="sh_symbol">,</span> Running</li><li>server2            <span class="sh_symbol">|</span> <span class="sh_number">192.168.4.20</span>    <span class="sh_symbol">|</span>  <span class="sh_number">3306</span> <span class="sh_symbol">|</span>           <span class="sh_number">0</span> <span class="sh_symbol">|</span> Slave<span class="sh_symbol">,</span> Running</li><li><span class="sh_symbol">-------------------+-----------------+-------+-------------+--------------------</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@maxscale ~]# maxadmin -P4099 -uadmin   -pmariadb
+MaxScale&gt; 
+MaxScale&gt; list servers
+Servers.
+-------------------+-----------------+-------+-------------+--------------------
+Server             | Address         | Port  | Connections | Status              
+-------------------+-----------------+-------+-------------+--------------------
+server1            | 192.168.4.10    |  3306 |           0 | Master, Running
+server2            | 192.168.4.20    |  3306 |           0 | Slave, Running
+-------------------+-----------------+-------+-------------+--------------------
+</pre></div></div>
+      <p>7）在客户端访问读写分离服务器（没有mysql命令可以安装）</p>
+      <p>mysql -h读写分离服务ip  -P4006 -u用户名 -p密码</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@slave53 <span class="sh_symbol">~]</span># mysql <span class="sh_symbol">-</span>h192<span class="sh_number">.168.4.100</span>  <span class="sh_symbol">-</span>P4006 <span class="sh_symbol">-</span>ureplicater <span class="sh_symbol">-</span>p123456</li><li>mysql<span class="sh_symbol">&gt;</span> select  @@hostname<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看当前主机名</span></li><li><span class="sh_symbol">+------------+</span></li><li><span class="sh_symbol">|</span> @@hostname <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------+</span></li><li><span class="sh_symbol">|</span> slave20    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span> </li><li>mysql<span class="sh_symbol">&gt;</span> create table <span class="sh_function">t2</span><span class="sh_symbol">(</span>id <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">4</span><span class="sh_symbol">)</span> <span class="sh_symbol">);</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.02</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> insert into aa<span class="sh_symbol">.</span>t2 <span class="sh_function">values</span><span class="sh_symbol">(</span><span class="sh_number">777</span><span class="sh_symbol">);</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@slave53 ~]# mysql -h192.168.4.100  -P4006 -ureplicater -p123456
+mysql&gt; select  @@hostname;			//查看当前主机名
++------------+
+| @@hostname |
++------------+
+| slave20    |
++------------+
+1 row in set (0.00 sec) 
+mysql&gt; create table t2(id int(4) );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql&gt; insert into aa.t2 values(777);
+Query OK, 1 row affected (0.01 sec)
+</pre></div></div>
+      <p>在主库上面查看</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> use aa</li><li>mysql<span class="sh_symbol">&gt;</span> select <span class="sh_symbol">*</span> from t2<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span> id   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">777</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; use aa
+mysql&gt; select * from t2;
++------+
+| id   |
++------+
+|  777 |
++------+
+1 row in set (0.00 sec)
+
+
+</pre></div></div>
+      <p>从库（主库同步到从库）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> use aa</li><li>mysql<span class="sh_symbol">&gt;</span> select <span class="sh_symbol">*</span> from t2<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span> id   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">777</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; use aa
+mysql&gt; select * from t2;
++------+
+| id   |
++------+
+|  777 |
++------+
+1 row in set (0.00 sec)
+
+
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：配置MySQL多实例</h2>
+      <h3>2.1 问题</h3>
+      <ul class="list">
+        <li>在主机192.168.4.56上，配置第1个MySQL实例
+</li>
+        <li>实例名称mysql1、端口3307
+</li>
+        <li>数据库目录/data3307、pid文件mysql1.pid
+</li>
+        <li>错误日志mysql1.err
+</li>
+        <li>在主机192.168.4.56上，配置第2个MySQL实例
+</li>
+        <li>实例名称mysql2、端口3308
+</li>
+        <li>数据库目录/data3308、pid文件mysql2.pid
+</li>
+        <li>错误日志mysql2.err
+</li>
+      </ul>
+      <p class="number">步骤一：配置多实例（192.168.4.56上面操作）</p>
+      <p>什么是多实例：</p>
+      <p>在一台物理主机上运行多个数据库服务，可以节约运维成本，提高硬件利用率</p>
+      <p>1）解压软件、修改目录名</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql <span class="sh_symbol">~]</span># cd <span class="sh_normal">mysql</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># ls</li><li>mysql<span class="sh_number">-5.7.20</span><span class="sh_symbol">-</span>linux<span class="sh_symbol">-</span>glibc2<span class="sh_number">.12</span><span class="sh_symbol">-</span>x86_64<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># tar <span class="sh_symbol">-</span>xf mysql<span class="sh_number">-5.7.20</span><span class="sh_symbol">-</span>linux<span class="sh_symbol">-</span>glibc2<span class="sh_number">.12</span><span class="sh_symbol">-</span>x86_64<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mv mysql<span class="sh_number">-5.7.20</span><span class="sh_symbol">-</span>linux<span class="sh_symbol">-</span>glibc2<span class="sh_number">.12</span><span class="sh_symbol">-</span><span class="sh_normal">x86_64 </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>mysql</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql ~]# cd mysql/
+[root@mysql mysql]# ls
+mysql-5.7.20-linux-glibc2.12-x86_64.tar.gz
+[root@mysql mysql]# tar -xf mysql-5.7.20-linux-glibc2.12-x86_64.tar.gz
+[root@mysql mysql]# mv mysql-5.7.20-linux-glibc2.12-x86_64 /usr/local/mysql
+
+</pre></div></div>
+      <p>2）调整PATH变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># echo  <span class="sh_string">"export  PATH=/usr/local/mysql/bin:$PATH"</span> <span class="sh_symbol">\</span> </li><li> <span class="sh_symbol">&gt;&gt;</span> <span class="sh_regexp">/etc/</span>profile</li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># <span class="sh_normal">source </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>profile</li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># echo $PATH</li><li><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">mysql</span><span class="sh_symbol">/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">mycat</span><span class="sh_symbol">/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">mycat</span><span class="sh_symbol">/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>sbin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span>sbin<span class="sh_symbol">:</span><span class="sh_regexp">/usr/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/root/</span>bin<span class="sh_symbol">:</span><span class="sh_regexp">/root/</span>bin</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]# echo  "export  PATH=/usr/local/mysql/bin:$PATH" \ 
+ &gt;&gt; /etc/profile
+[root@mysql mysql]# source /etc/profile
+[root@mysql mysql]# echo $PATH
+/usr/local/mysql/bin:/usr/local/mycat/bin:/usr/local/mycat/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
+</pre></div></div>
+      <p>3）编辑主配置文件/etc/my.cnf</p>
+      <p>每个实例要有独立的数据库目录、监听端口号、实例名称和独立的sock文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>mysqld_multi<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启用多实例</span></li><li>mysqld <span class="sh_symbol">=</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">mysql</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>mysqld_safe&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定进程文件路径</span></li><li>mysqladmin <span class="sh_symbol">=</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">mysql</span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>mysqladmin&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定管理命令路径</span></li><li>user <span class="sh_symbol">=</span> root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定进程用户</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>mysqld1<span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//实例进程名称</span></li><li>port<span class="sh_symbol">=</span><span class="sh_number">3307</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//端口号</span></li><li>datadir<span class="sh_symbol">=</span><span class="sh_regexp">/data3307&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</span><span class="sh_symbol">/</span>数据库目录 ，要手动创建</li><li>socket<span class="sh_symbol">=</span><span class="sh_regexp">/data3307/m</span>ysqld<span class="sh_symbol">.</span>sock&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定sock文件的路径和名称</span></li><li>pid<span class="sh_symbol">-</span>file<span class="sh_symbol">=</span><span class="sh_regexp">/data3307/m</span>ysql1<span class="sh_symbol">.</span>pid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//进程pid号文件位置</span></li><li>log<span class="sh_symbol">-</span>error<span class="sh_symbol">=</span><span class="sh_regexp">/data3307/m</span>ysql1<span class="sh_symbol">.</span>err&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//错误日志位置 </span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>mysqld2<span class="sh_symbol">]</span></li><li>port<span class="sh_symbol">=</span><span class="sh_number">3308</span></li><li>datadir<span class="sh_symbol">=/</span>data3308</li><li>socket<span class="sh_symbol">=</span><span class="sh_regexp">/data3308/m</span>ysqld<span class="sh_symbol">.</span>sock</li><li>pid<span class="sh_symbol">-</span>file<span class="sh_symbol">=</span><span class="sh_regexp">/data3308/m</span>ysql2<span class="sh_symbol">.</span>pid</li><li>log<span class="sh_symbol">-</span>error<span class="sh_symbol">=</span><span class="sh_regexp">/data3308/m</span>ysql2<span class="sh_symbol">.</span>err </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[mysqld_multi]		//启用多实例
+mysqld = /usr/local/mysql/bin/mysqld_safe		//指定进程文件路径
+mysqladmin = /usr/local/mysql/bin/mysqladmin	//指定管理命令路径
+user = root		//指定进程用户
+
+[mysqld1]		//实例进程名称
+port=3307		//端口号
+datadir=/data3307		//数据库目录 ，要手动创建
+socket=/data3307/mysqld.sock		//指定sock文件的路径和名称
+pid-file=/data3307/mysql1.pid		//进程pid号文件位置
+log-error=/data3307/mysql1.err		//错误日志位置 
+
+[mysqld2]
+port=3308
+datadir=/data3308
+socket=/data3308/mysqld.sock
+pid-file=/data3308/mysql2.pid
+log-error=/data3308/mysql2.err 
+
+</pre></div></div>
+      <p>4）创建数据库目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mkdir <span class="sh_symbol">-</span><span class="sh_normal">p </span><span class="sh_symbol">/</span>data3307</li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mkdir <span class="sh_symbol">-</span><span class="sh_normal">p </span><span class="sh_symbol">/</span>data3308</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]# mkdir -p /data3307
+[root@mysql mysql]# mkdir -p /data3308
+</pre></div></div>
+      <p>5）创建进程运行的所有者和组 mysql</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># useradd mysql</li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># chown  mysql<span class="sh_symbol">:</span><span class="sh_normal">mysql  </span><span class="sh_symbol">/</span>data<span class="sh_symbol">*</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]# useradd mysql
+[root@mysql mysql]# chown  mysql:mysql  /data*
+</pre></div></div>
+      <p>6）初始化授权库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mysqld <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>mysql <span class="sh_symbol">--</span>basedir<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>mysql </li><li><span class="sh_symbol">--</span>datadir<span class="sh_symbol">=/</span>data3307 <span class="sh_symbol">--</span>initialize</li><li><span class="sh_symbol">...</span></li><li><span class="sh_number">2018-09</span><span class="sh_symbol">-</span>26T07<span class="sh_symbol">:</span><span class="sh_number">07</span><span class="sh_symbol">:</span><span class="sh_number">33</span><span class="sh_symbol">.</span>443378Z <span class="sh_number">1</span> <span class="sh_symbol">[</span>Note<span class="sh_symbol">]</span> A temporary password is generated <span class="sh_keyword">for</span> root@localhost<span class="sh_symbol">:</span> <span class="sh_number">7L</span><span class="sh_symbol">?</span>Vi<span class="sh_symbol">!</span>dGKmgu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//root用户登录的初始化密码</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mysqld <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>mysql <span class="sh_symbol">--</span>basedir<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span>mysql</li><li> <span class="sh_symbol">--</span>datadir<span class="sh_symbol">=/</span>data3308 <span class="sh_symbol">--</span>initialize</li><li><span class="sh_symbol">...</span></li><li><span class="sh_number">2018-09</span><span class="sh_symbol">-</span>26T07<span class="sh_symbol">:</span><span class="sh_number">08</span><span class="sh_symbol">:</span><span class="sh_number">07</span><span class="sh_symbol">.</span>770289Z <span class="sh_number">1</span> <span class="sh_symbol">[</span>Note<span class="sh_symbol">]</span> A temporary password is generated <span class="sh_keyword">for</span> root@localhost<span class="sh_symbol">:</span> kC<span class="sh_symbol">)</span>BbyUp1a<span class="sh_symbol">-</span>b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//root用户登录的初始化密码</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]# mysqld --user=mysql --basedir=/usr/local/mysql 
+--datadir=/data3307 --initialize
+...
+2018-09-26T07:07:33.443378Z 1 [Note] A temporary password is generated for root@localhost: 7L?Vi!dGKmgu		//root用户登录的初始化密码
+[root@mysql mysql]# mysqld --user=mysql --basedir=/usr/local/mysql
+ --datadir=/data3308 --initialize
+...
+2018-09-26T07:08:07.770289Z 1 [Note] A temporary password is generated for root@localhost: kC)BbyUp1a-b		//root用户登录的初始化密码
+</pre></div></div>
+      <p>7）启动多实例</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mysqld_multi  start <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//1为实例编号</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mysqld_multi  start <span class="sh_number">2</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]# mysqld_multi  start 1		//1为实例编号
+[root@mysql mysql]# mysqld_multi  start 2
+</pre></div></div>
+      <p>8）查看端口</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># netstat <span class="sh_symbol">-</span>utnlp  <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">3307</span></li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">3307</span>                 <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">21009</span><span class="sh_symbol">/</span>mysqld        </li><li> <span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># netstat <span class="sh_symbol">-</span>utnlp  <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">3308</span></li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">3308</span>                 <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">21177</span><span class="sh_symbol">/</span>mysqld        </li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># ps <span class="sh_symbol">-</span>C mysqld</li><li>  PID TTY          TIME CMD</li><li><span class="sh_number">21009</span> <span class="sh_normal">pts</span><span class="sh_symbol">/</span><span class="sh_number">1</span>    <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span> mysqld</li><li><span class="sh_number">21177</span> <span class="sh_normal">pts</span><span class="sh_symbol">/</span><span class="sh_number">1</span>    <span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span> mysqld</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@mysql mysql]# netstat -utnlp  | grep :3307
+tcp6       0      0 :::3307                 :::*                    LISTEN      21009/mysqld        
+ [root@mysql mysql]# netstat -utnlp  | grep :3308
+tcp6       0      0 :::3308                 :::*                    LISTEN      21177/mysqld        
+[root@mysql mysql]# ps -C mysqld
+  PID TTY          TIME CMD
+21009 pts/1    00:00:00 mysqld
+21177 pts/1    00:00:00 mysqld
+</pre></div></div>
+      <p>9）访问多实例</p>
+      <p>使用初始化密码登录多实例1</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>u root <span class="sh_symbol">-</span>p<span class="sh_string">'7L?Vi!dGKmgu'</span> <span class="sh_symbol">-</span><span class="sh_normal">S </span><span class="sh_symbol">/</span><span class="sh_normal">data3307</span><span class="sh_symbol">/</span>mysqld<span class="sh_symbol">.</span>sock</li><li>mysql<span class="sh_symbol">&gt;</span> alter user root@<span class="sh_string">"localhost"</span>  identified by <span class="sh_string">'123456'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改密码</span></li><li>mysql<span class="sh_symbol">&gt;</span> show databases<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Database           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> information_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> mysql              <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> performance_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> sys                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">4</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]# mysql -u root -p'7L?Vi!dGKmgu' -S /data3307/mysqld.sock
+mysql&gt; alter user root@"localhost"  identified by '123456';		//修改密码
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+</pre></div></div>
+      <p>使用初始化密码登录多实例2</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql bin<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>u root <span class="sh_symbol">-</span>p<span class="sh_string">'kC)BbyUp1a-b'</span> <span class="sh_symbol">-</span><span class="sh_normal">S </span><span class="sh_symbol">/</span><span class="sh_normal">data3307</span><span class="sh_symbol">/</span>mysqld<span class="sh_symbol">.</span>sock</li><li>mysql<span class="sh_symbol">&gt;</span> alter user root@<span class="sh_string">"localhost"</span>  identified by <span class="sh_string">'123456'</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改密码</span></li><li>mysql<span class="sh_symbol">&gt;</span> show databases<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Database           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> information_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> mysql              <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> performance_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> sys                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">4</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql bin]# mysql -u root -p'kC)BbyUp1a-b' -S /data3307/mysqld.sock
+mysql&gt; alter user root@"localhost"  identified by '123456';		//修改密码
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+</pre></div></div>
+      <p>10）创建库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> create database db1<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> show databases<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> Database           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_symbol">|</span> information_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> db1                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> mysql              <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> performance_schema <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> sys                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+--------------------+</span></li><li><span class="sh_number">5</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; create database db1;
+Query OK, 1 row affected (0.00 sec)
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| db1                |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+</pre></div></div>
+      <p>11）停止启动的实例服务</p>
+      <p>mysqld_multi --user=root  --password=密码  stop  实例编号</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span>#  mysqld_multi  <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>root  <span class="sh_symbol">--</span>password<span class="sh_symbol">=</span><span class="sh_number">123456</span> stop <span class="sh_number">1</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># netstat <span class="sh_symbol">-</span>utnlp <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">3307</span>       <span class="sh_comment">//查看没有端口</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span>#  mysqld_multi  <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>root  <span class="sh_symbol">--</span>password<span class="sh_symbol">=</span><span class="sh_number">123456</span> stop <span class="sh_number">2</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># netstat <span class="sh_symbol">-</span>utnlp <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">3308</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看没有端口</span></li><li><span class="sh_symbol">[</span>root@mysql mysql<span class="sh_symbol">]</span># mysql <span class="sh_symbol">-</span>uroot   <span class="sh_symbol">-</span>p123456   <span class="sh_symbol">-</span><span class="sh_normal">S    </span><span class="sh_symbol">/</span><span class="sh_normal">data3307</span><span class="sh_symbol">/</span>mysqld<span class="sh_symbol">.</span>sock </li><li><span class="sh_comment">//拒绝连接</span></li><li>mysql<span class="sh_symbol">:</span> <span class="sh_symbol">[</span>Warning<span class="sh_symbol">]</span> Using a password on the command line <span class="sh_keyword">interface</span> can be insecure<span class="sh_symbol">.</span></li><li>ERROR <span class="sh_number">2002</span> <span class="sh_symbol">(</span>HY000<span class="sh_symbol">):</span> Can<span class="sh_string">'t connect to local MySQL server through socket '</span><span class="sh_regexp">/data3307/m</span>ysqld<span class="sh_symbol">.</span>sock<span class="sh_string">' (2)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql mysql]#  mysqld_multi  --user=root  --password=123456 stop 1
+[root@mysql mysql]# netstat -utnlp | grep :3307       //查看没有端口
+[root@mysql mysql]#  mysqld_multi  --user=root  --password=123456 stop 2
+[root@mysql mysql]# netstat -utnlp | grep :3308		//查看没有端口
+[root@mysql mysql]# mysql -uroot   -p123456   -S    /data3307/mysqld.sock 
+//拒绝连接
+mysql: [Warning] Using a password on the command line interface can be insecure.
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/data3307/mysqld.sock' (2)
+
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：MySQL性能优化</h2>
+      <h3>3.1 问题</h3>
+      <ul class="list">
+        <li>练习相关优化选项
+</li>
+        <li>启用慢查询日志
+</li>
+        <li>查看各种系统变量、状态变量 
+</li>
+      </ul>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：mysql性能优化</p>
+      <p>1）查看服务运行时的参数配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables<span class="sh_symbol">\</span>G<span class="sh_symbol">;</span></li><li><span class="sh_symbol">......</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">171</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_log_file_size</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">50331648</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">172</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_log_files_in_group</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">2</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">173</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_log_group_home_dir</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_symbol">./</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">174</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_log_write_ahead_size</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">8192</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">175</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_lru_scan_depth</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">1024</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">176</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_max_dirty_pages_pct</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">75.000000</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">177</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_max_dirty_pages_pct_lwm</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">0.000000</span></li><li><span class="sh_symbol">***************************</span> <span class="sh_number">178</span><span class="sh_symbol">.</span> row <span class="sh_symbol">***************************</span></li><li>Variable_name<span class="sh_symbol">:</span> innodb_max_purge_lag</li><li>        Value<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span class="sh_symbol">......</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"%innodb%"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------------------------------------------+------------------------+</span></li><li><span class="sh_symbol">|</span> Variable_name                            <span class="sh_symbol">|</span> Value                  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------------------------------+------------------------+</span></li><li><span class="sh_symbol">|</span> ignore_builtin_innodb                    <span class="sh_symbol">|</span> OFF                    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_adaptive_flushing                 <span class="sh_symbol">|</span> ON                     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_adaptive_flushing_lwm             <span class="sh_symbol">|</span> <span class="sh_number">10</span>                     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_adaptive_hash_index               <span class="sh_symbol">|</span> ON                     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_adaptive_hash_index_parts         <span class="sh_symbol">|</span> <span class="sh_number">8</span>                      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_adaptive_max_sleep_delay          <span class="sh_symbol">|</span> <span class="sh_number">150000</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">......</span></li><li><span class="sh_symbol">......</span></li><li><span class="sh_symbol">|</span> innodb_undo_log_truncate                 <span class="sh_symbol">|</span> OFF                    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_undo_logs                         <span class="sh_symbol">|</span> <span class="sh_number">128</span>                     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_undo_tablespaces                  <span class="sh_symbol">|</span> <span class="sh_number">0</span>                      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_use_native_aio                    <span class="sh_symbol">|</span> ON                     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_version                           <span class="sh_symbol">|</span> <span class="sh_number">5.7.17</span>                  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_write_io_threads                  <span class="sh_symbol">|</span> <span class="sh_number">4</span>                      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------------------------------+------------------------+</span></li><li><span class="sh_number">134</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables\G;
+......
+*************************** 171. row ***************************
+Variable_name: innodb_log_file_size
+        Value: 50331648
+*************************** 172. row ***************************
+Variable_name: innodb_log_files_in_group
+        Value: 2
+*************************** 173. row ***************************
+Variable_name: innodb_log_group_home_dir
+        Value: ./
+*************************** 174. row ***************************
+Variable_name: innodb_log_write_ahead_size
+        Value: 8192
+*************************** 175. row ***************************
+Variable_name: innodb_lru_scan_depth
+        Value: 1024
+*************************** 176. row ***************************
+Variable_name: innodb_max_dirty_pages_pct
+        Value: 75.000000
+*************************** 177. row ***************************
+Variable_name: innodb_max_dirty_pages_pct_lwm
+        Value: 0.000000
+*************************** 178. row ***************************
+Variable_name: innodb_max_purge_lag
+        Value: 0
+......
+
+mysql&gt; show variables like "%innodb%";
++------------------------------------------+------------------------+
+| Variable_name                            | Value                  |
++------------------------------------------+------------------------+
+| ignore_builtin_innodb                    | OFF                    |
+| innodb_adaptive_flushing                 | ON                     |
+| innodb_adaptive_flushing_lwm             | 10                     |
+| innodb_adaptive_hash_index               | ON                     |
+| innodb_adaptive_hash_index_parts         | 8                      |
+| innodb_adaptive_max_sleep_delay          | 150000                |
+......
+......
+| innodb_undo_log_truncate                 | OFF                    |
+| innodb_undo_logs                         | 128                     |
+| innodb_undo_tablespaces                  | 0                      |
+| innodb_use_native_aio                    | ON                     |
+| innodb_version                           | 5.7.17                  |
+| innodb_write_io_threads                  | 4                      |
++------------------------------------------+------------------------+
+134 rows in set (0.01 sec)
+</pre></div></div>
+      <p>2）并发连接数量</p>
+      <p>查看当前已经使用的连接数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> flush status<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> show global status like <span class="sh_string">"Max_used_connections"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+----------------------+-------+</span></li><li><span class="sh_symbol">|</span> Variable_name        <span class="sh_symbol">|</span> Value <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------------------+-------+</span></li><li><span class="sh_symbol">|</span> Max_used_connections <span class="sh_symbol">|</span> <span class="sh_number">3</span>     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------------------+-------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; flush status;
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt; show global status like "Max_used_connections";
++----------------------+-------+
+| Variable_name        | Value |
++----------------------+-------+
+| Max_used_connections | 3     |
++----------------------+-------+
+1 row in set (0.00 sec)
+
+</pre></div></div>
+      <p>查看默认的最大连接数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"max_connections%"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-----------------+-------+</span></li><li><span class="sh_symbol">|</span> Variable_name   <span class="sh_symbol">|</span> Value <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------+-------+</span></li><li><span class="sh_symbol">|</span> max_connections <span class="sh_symbol">|</span> <span class="sh_number">151</span>   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------+-------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "max_connections%";
++-----------------+-------+
+| Variable_name   | Value |
++-----------------+-------+
+| max_connections | 151   |
++-----------------+-------+
+1 row in set (0.00 sec)
+
+</pre></div></div>
+      <p>3）连接超时时间</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"%timeout%"</span><span class="sh_symbol">;</span> </li><li><span class="sh_symbol">+-----------------------------+----------+</span></li><li><span class="sh_symbol">|</span> Variable_name               <span class="sh_symbol">|</span> Value    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------------------+----------+</span></li><li><span class="sh_symbol">|</span> connect_timeout             <span class="sh_symbol">|</span> <span class="sh_number">10</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> delayed_insert_timeout      <span class="sh_symbol">|</span> <span class="sh_number">300</span>      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> have_statement_timeout      <span class="sh_symbol">|</span> YES      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_flush_log_at_timeout <span class="sh_symbol">|</span> <span class="sh_number">1</span>        <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_lock_wait_timeout    <span class="sh_symbol">|</span> <span class="sh_number">50</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> innodb_rollback_on_timeout  <span class="sh_symbol">|</span> OFF      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> interactive_timeout         <span class="sh_symbol">|</span> <span class="sh_number">28800</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> lock_wait_timeout           <span class="sh_symbol">|</span> <span class="sh_number">31536000</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> net_read_timeout            <span class="sh_symbol">|</span> <span class="sh_number">30</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> net_write_timeout           <span class="sh_symbol">|</span> <span class="sh_number">60</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> rpl_stop_slave_timeout      <span class="sh_symbol">|</span> <span class="sh_number">31536000</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> slave_net_timeout           <span class="sh_symbol">|</span> <span class="sh_number">60</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> wait_timeout                <span class="sh_symbol">|</span> <span class="sh_number">28800</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------------------+----------+</span></li><li><span class="sh_number">13</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "%timeout%"; 
++-----------------------------+----------+
+| Variable_name               | Value    |
++-----------------------------+----------+
+| connect_timeout             | 10       |
+| delayed_insert_timeout      | 300      |
+| have_statement_timeout      | YES      |
+| innodb_flush_log_at_timeout | 1        |
+| innodb_lock_wait_timeout    | 50       |
+| innodb_rollback_on_timeout  | OFF      |
+| interactive_timeout         | 28800    |
+| lock_wait_timeout           | 31536000 |
+| net_read_timeout            | 30       |
+| net_write_timeout           | 60       |
+| rpl_stop_slave_timeout      | 31536000 |
+| slave_net_timeout           | 60       |
+| wait_timeout                | 28800    |
++-----------------------------+----------+
+13 rows in set (0.00 sec)
+</pre></div></div>
+      <p>4）允许保存在缓存中被重用的线程数量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"thread_cache_size"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-------------------+-------+</span></li><li><span class="sh_symbol">|</span> Variable_name     <span class="sh_symbol">|</span> Value <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------------+-------+</span></li><li><span class="sh_symbol">|</span> thread_cache_size <span class="sh_symbol">|</span> <span class="sh_number">9</span>     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------------+-------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "thread_cache_size";
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| thread_cache_size | 9     |
++-------------------+-------+
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p>5）用于MyISAM引擎的关键索引缓存大小</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"key_buffer_size"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-----------------+---------+</span></li><li><span class="sh_symbol">|</span> Variable_name   <span class="sh_symbol">|</span> Value   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------+---------+</span></li><li><span class="sh_symbol">|</span> key_buffer_size <span class="sh_symbol">|</span> <span class="sh_number">8388608</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------------+---------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "key_buffer_size";
++-----------------+---------+
+| Variable_name   | Value   |
++-----------------+---------+
+| key_buffer_size | 8388608 |
++-----------------+---------+
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p>6）为每个要排序的线程分配此大小的缓存空间</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"sort_buffer_size"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------------------+--------+</span></li><li><span class="sh_symbol">|</span> Variable_name    <span class="sh_symbol">|</span> Value  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------+--------+</span></li><li><span class="sh_symbol">|</span> sort_buffer_size <span class="sh_symbol">|</span> <span class="sh_number">262144</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------+--------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "sort_buffer_size";
++------------------+--------+
+| Variable_name    | Value  |
++------------------+--------+
+| sort_buffer_size | 262144 |
++------------------+--------+
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p>7）为顺序读取表记录保留的缓存大小</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"read_buffer_size"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------------------+--------+</span></li><li><span class="sh_symbol">|</span> Variable_name    <span class="sh_symbol">|</span> Value  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------+--------+</span></li><li><span class="sh_symbol">|</span> read_buffer_size <span class="sh_symbol">|</span> <span class="sh_number">131072</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------+--------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "read_buffer_size";
++------------------+--------+
+| Variable_name    | Value  |
++------------------+--------+
+| read_buffer_size | 131072 |
++------------------+--------+
+1 row in set (0.01 sec)
+</pre></div></div>
+      <p>8）为所有线程缓存的打开的表的数量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"table_open_cache"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------------------+-------+</span></li><li><span class="sh_symbol">|</span> Variable_name    <span class="sh_symbol">|</span> Value <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------+-------+</span></li><li><span class="sh_symbol">|</span> table_open_cache <span class="sh_symbol">|</span> <span class="sh_number">2000</span>  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------+-------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "table_open_cache";
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| table_open_cache | 2000  |
++------------------+-------+
+1 row in set (0.00 sec)
+</pre></div></div>
+      <p class="number">步骤二：SQL查询优化</p>
+      <p>1）常用日志种类及选项，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-1</p>
+      </div>
+      <p>记录慢查询，图-2所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+      </div>
+      <p>启用慢查询日志</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@master10 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>my<span class="sh_symbol">.</span>cnf</li><li><span class="sh_symbol">...</span></li><li>slow_query_log<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>slow_query_log_file<span class="sh_symbol">=</span>mysql<span class="sh_symbol">-</span>slow<span class="sh_symbol">.</span>log</li><li>long_query_time<span class="sh_symbol">=</span><span class="sh_number">5</span></li><li>log_queries_not_using_indexes<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">[</span>root@master10 <span class="sh_symbol">~]</span># systemctl restart mysqld</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@master10 ~]# vim /etc/my.cnf
+...
+slow_query_log=1
+slow_query_log_file=mysql-slow.log
+long_query_time=5
+log_queries_not_using_indexes=1
+...
+[root@master10 ~]# systemctl restart mysqld
+</pre></div></div>
+      <p>2）查看慢查询日志</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@master10 <span class="sh_symbol">~]</span># <span class="sh_normal">mysqldumpslow  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/m</span><span class="sh_normal">ysql</span><span class="sh_symbol">/</span>mysql<span class="sh_symbol">-</span>slow<span class="sh_symbol">.</span>log</li><li><span style="display:none;">&nbsp;</span></li><li>Reading mysql slow query log <span class="sh_normal">from </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/m</span><span class="sh_normal">ysql</span><span class="sh_symbol">/</span>mysql<span class="sh_symbol">-</span>slow<span class="sh_symbol">.</span>log</li><li>Count<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Time<span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">.</span>00<span class="sh_function">s</span> <span class="sh_symbol">(</span>0s<span class="sh_symbol">)</span>  Lock<span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">.</span>00<span class="sh_function">s</span> <span class="sh_symbol">(</span>0s<span class="sh_symbol">)</span>  Rows<span class="sh_symbol">=</span><span class="sh_number">0.0</span> <span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">),</span> 0users@0hosts</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@master10 ~]# mysqldumpslow  /var/lib/mysql/mysql-slow.log
+
+Reading mysql slow query log from /var/lib/mysql/mysql-slow.log
+Count: 1  Time=0.00s (0s)  Lock=0.00s (0s)  Rows=0.0 (0), 0users@0hosts
+</pre></div></div>
+      <p>查看缓存的大小</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show variables like <span class="sh_string">"query_cache%"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+------------------------------+---------+</span></li><li><span class="sh_symbol">|</span> Variable_name                <span class="sh_symbol">|</span> Value   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------------------+---------+</span></li><li><span class="sh_symbol">|</span> query_cache_limit            <span class="sh_symbol">|</span> <span class="sh_number">1048576</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> query_cache_min_res_unit     <span class="sh_symbol">|</span> <span class="sh_number">4096</span>    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> query_cache_size             <span class="sh_symbol">|</span> <span class="sh_number">1048576</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> query_cache_type             <span class="sh_symbol">|</span> OFF     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> query_cache_wlock_invalidate <span class="sh_symbol">|</span> OFF     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------------------------------+---------+</span></li><li><span class="sh_number">5</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show variables like "query_cache%";
++------------------------------+---------+
+| Variable_name                | Value   |
++------------------------------+---------+
+| query_cache_limit            | 1048576 |
+| query_cache_min_res_unit     | 4096    |
+| query_cache_size             | 1048576 |
+| query_cache_type             | OFF     |
+| query_cache_wlock_invalidate | OFF     |
++------------------------------+---------+
+5 rows in set (0.00 sec)
+</pre></div></div>
+      <p>3）查看当前的查询缓存统计</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> show global status like <span class="sh_string">"qcache%"</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-------------------------+---------+</span></li><li><span class="sh_symbol">|</span> Variable_name           <span class="sh_symbol">|</span> Value   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------------------+---------+</span></li><li><span class="sh_symbol">|</span> Qcache_free_blocks      <span class="sh_symbol">|</span> <span class="sh_number">1</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_free_memory      <span class="sh_symbol">|</span> <span class="sh_number">1031832</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_hits             <span class="sh_symbol">|</span> <span class="sh_number">0</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_inserts          <span class="sh_symbol">|</span> <span class="sh_number">0</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_lowmem_prunes    <span class="sh_symbol">|</span> <span class="sh_number">0</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_not_cached       <span class="sh_symbol">|</span> <span class="sh_number">40</span>      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_queries_in_cache <span class="sh_symbol">|</span> <span class="sh_number">0</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> Qcache_total_blocks     <span class="sh_symbol">|</span> <span class="sh_number">1</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------------------+---------+</span></li><li><span class="sh_number">8</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; show global status like "qcache%";
++-------------------------+---------+
+| Variable_name           | Value   |
++-------------------------+---------+
+| Qcache_free_blocks      | 1       |
+| Qcache_free_memory      | 1031832 |
+| Qcache_hits             | 0       |
+| Qcache_inserts          | 0       |
+| Qcache_lowmem_prunes    | 0       |
+| Qcache_not_cached       | 40      |
+| Qcache_queries_in_cache | 0       |
+| Qcache_total_blocks     | 1       |
++-------------------------+---------+
+8 rows in set (0.00 sec)
+</pre></div></div>
+    </div>
+  
+</body></html>

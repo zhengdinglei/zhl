@@ -1,0 +1,245 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD PROJECT1 DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case1">案例1：配置静态路由</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case2">案例2：配置多路由环境网络</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case3">
+          </a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case4">案例3：三层交换机基本配置</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case5">案例4：三层交换机实现VLAN互通</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case6">案例5：搭建小型办公网络</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#case7">案例6：动态路由</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：配置静态路由</h2>
+      <h3>1.1 问题</h3>
+      <p>按照图-1的拓扑结构配置接口ip地址并通过静态路由实现全网互通</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <h3>1.2 步骤</h3>
+      <p>R1配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Router<span class="sh_symbol">&gt;</span>enable</li><li>Router#configure terminal </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.1.254</span> <span class="sh_number">255.255.255.0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//配置ip地址</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//开启接口</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.2.1</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.3.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.2.2</span>  <span class="sh_comment">//配置静态路由</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router&gt;enable
+Router#configure terminal 
+Router(config)#interface gigabitEthernet 0/0
+Router(config-if)#ip address 192.168.1.254 255.255.255.0	//配置ip地址
+Router(config-if)#no shutdown 								//开启接口
+Router(config-if)#exit
+Router(config)#interface gigabitEthernet 0/1
+Router(config-if)#ip address 192.168.2.1 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#ip route 192.168.3.0 255.255.255.0 192.168.2.2  //配置静态路由
+
+</pre></div></div>
+      <p>R2配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Router<span class="sh_symbol">&gt;</span>enable</li><li>Router#configure terminal </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.3.254</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.2.2</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.1.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.2.1</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router&gt;enable
+Router#configure terminal 
+Router(config)#interface gigabitEthernet 0/0
+Router(config-if)#ip address 192.168.3.254 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#interface gigabitEthernet 0/1
+Router(config-if)#ip address 192.168.2.2 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#ip route 192.168.1.0 255.255.255.0 192.168.2.1
+	
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：配置多路由环境网络</h2>
+      <h3>2.1 问题</h3>
+      <p>按照图-2拓扑结构配置接口ip地址并通过静态路由实现全网互通</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <h3>2.2 步骤</h3>
+      <p>注：以下配置需要在案例1的基础上完成</p>
+      <p>R1配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.4.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.2.2</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.5.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.2.2</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router(config)#ip route 192.168.4.0 255.255.255.0 192.168.2.2
+Router(config)#ip route 192.168.5.0 255.255.255.0 192.168.2.2
+</pre></div></div>
+      <p>R2配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">2</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.4.1</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.5.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.2</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router(config)#interface gigabitEthernet 0/2
+Router(config-if)#ip address 192.168.4.1 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config)#ip route 192.168.5.0 255.255.255.0 192.168.4.2
+</pre></div></div>
+      <p>R3配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Router<span class="sh_symbol">&gt;</span>enable</li><li>Router#configure terminal </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.5.254</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.4.2</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.1.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.2.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.3.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router&gt;enable
+Router#configure terminal 
+Router(config)#interface gigabitEthernet 0/0
+Router(config-if)#ip address 192.168.5.254 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#interface gigabitEthernet 0/1
+Router(config-if)#ip address 192.168.4.2 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#ip route 192.168.1.0 255.255.255.0 192.168.4.1
+Router(config)#ip route 192.168.2.0 255.255.255.0 192.168.4.1
+Router(config)#ip route 192.168.3.0 255.255.255.0 192.168.4.1
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 </h2>
+      <a name="case4">
+      </a>
+      <h2>4 案例3：三层交换机基本配置</h2>
+      <h3>4.1 问题</h3>
+      <p>按照图-3的拓扑结构配置ip地址并通过三层交换实现VLAN间通信</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <h3>4.2 步骤</h3>
+      <p>三层交换机配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> vlan <span class="sh_number">1</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.1.254</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#vlan <span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#vlan <span class="sh_number">3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> vlan <span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.2.254</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> vlan <span class="sh_number">3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.3.254</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip routing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//开启路由功能</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//将f0/2接口加入vlan2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">3</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#interface vlan 1
+Switch(config-if)#ip address 192.168.1.254 255.255.255.0
+Switch(config-if)#no shutdown
+
+Switch(config-if)#vlan 2
+Switch(config-vlan)#vlan 3
+Switch(config-vlan)#exit
+
+Switch(config)#interface vlan 2
+Switch(config-if)#ip address 192.168.2.254 255.255.255.0
+Switch(config-vlan)#exit
+
+Switch(config)#interface vlan 3
+Switch(config-if)#ip address 192.168.3.254 255.255.255.0
+Switch(config-vlan)#exit
+
+Switch(config)#ip routing							//开启路由功能
+Switch(config)#interface fastEthernet 0/2
+Switch(config-if)#switchport access vlan 2			//将f0/2接口加入vlan2
+Switch(config-if)#interface fastEthernet 0/3
+Switch(config-if)#switchport access vlan 3
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例4：三层交换机实现VLAN互通</h2>
+      <h3>5.1 问题</h3>
+      <p>按照图-5拓扑图配置ip地址并实现vlan间通信，二层交换机与三层交换机之间只有一条链路，为了在一条链路中传递不同VLAN的数据，需要将这条链路配置为TRUNK</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <h3>5.2 步骤</h3>
+      <p>注：以下配置需要在案例3的基础上完成</p>
+      <p>三层交换机配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">24</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport trunk encapsulation dot1q &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="sh_comment">//打封装</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport mode trunk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span class="sh_comment">//配置中继链路</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch(config)#interface fastEthernet 0/24
+Switch(config-if)#switchport trunk encapsulation dot1q 		  //打封装
+Switch(config-if)#switchport mode trunk					  //配置中继链路
+
+</pre></div></div>
+      <p>二层交换机配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">24</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport mode trunk</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#interface fastEthernet 0/2
+Switch(config-if-range)#switchport access vlan 2
+Switch(config-if-range)#exit
+Switch(config)#interface fastEthernet 0/3
+Switch(config-if-range)#switchport access vlan 3
+Switch(config)#interface fastEthernet 0/24
+Switch(config-if)#switchport mode trunk
+</pre></div></div>
+      <a name="case6">
+      </a>
+      <h2>6 案例5：搭建小型办公网络</h2>
+      <h3>6.1 问题</h3>
+      <p>按照图-5规划配置实现全网互通</p>
+      <p>这里的192.168.5.0网段模拟为外网网段，需要使用默认路由才能到达。</p>
+      <div class="image">
+        <img src="./CASE_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <h3>6.2 步骤</h3>
+      <p>注：以下配置需要在案例4的基础上完成</p>
+      <p>三层交换机配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">23</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no switchport </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.4.1</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">0.0.0.0</span> <span class="sh_number">0.0.0.0</span> <span class="sh_number">192.168.4.2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//配置默认路由前往外网</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch(config)#interface fastEthernet 0/23
+Switch(config-if)#no switchport 
+Switch(config-if)#ip address 192.168.4.1 255.255.255.0
+Switch(config-if)#exit
+Switch(config)#ip route 0.0.0.0 0.0.0.0 192.168.4.2		//配置默认路由前往外网
+</pre></div></div>
+      <p>路由器配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Router<span class="sh_symbol">&gt;</span>enable</li><li>Router#configure terminal </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.4.2</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> gigabitEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#ip address <span class="sh_number">192.168.5.254</span> <span class="sh_number">255.255.255.0</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#no shutdown </li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.1.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.2.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#ip route <span class="sh_number">192.168.3.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router&gt;enable
+Router#configure terminal 
+Router(config)#interface gigabitEthernet 0/0
+Router(config-if)#ip address 192.168.4.2 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#interface gigabitEthernet 0/1
+Router(config-if)#ip address 192.168.5.254 255.255.255.0
+Router(config-if)#no shutdown 
+Router(config-if)#exit
+Router(config)#ip route 192.168.1.0 255.255.255.0 192.168.4.1
+Router(config)#ip route 192.168.2.0 255.255.255.0 192.168.4.1
+Router(config)#ip route 192.168.3.0 255.255.255.0 192.168.4.1
+</pre></div></div>
+      <a name="case7">
+      </a>
+      <h2>7 案例6：动态路由</h2>
+      <h3>7.1 问题</h3>
+      <p>通过配置静态路由协议ospf实现全网互通，可以先将静态路由删除</p>
+      <div class="image">
+        <img src="./CASE_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <h3>7.2 步骤</h3>
+      <p>注：以下配置需要在案例5的基础上完成</p>
+      <p>三层交换机配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#router ospf <span class="sh_number">1</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>router<span class="sh_symbol">)</span>#network <span class="sh_number">192.168.1.0</span> <span class="sh_number">0.0.0.255</span> area <span class="sh_number">0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>router<span class="sh_symbol">)</span>#network <span class="sh_number">192.168.2.0</span> <span class="sh_number">0.0.0.255</span> area <span class="sh_number">0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>router<span class="sh_symbol">)</span>#network <span class="sh_number">192.168.3.0</span> <span class="sh_number">0.0.0.255</span> area <span class="sh_number">0</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>router<span class="sh_symbol">)</span>#network <span class="sh_number">192.168.4.0</span> <span class="sh_number">0.0.0.255</span> area <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch(config)#router ospf 1
+Switch(config-router)#network 192.168.1.0 0.0.0.255 area 0
+Switch(config-router)#network 192.168.2.0 0.0.0.255 area 0
+Switch(config-router)#network 192.168.3.0 0.0.0.255 area 0
+Switch(config-router)#network 192.168.4.0 0.0.0.255 area 0
+</pre></div></div>
+      <p>路由器配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#no ip route <span class="sh_number">192.168.1.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#no ip route <span class="sh_number">192.168.2.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#no ip route <span class="sh_number">192.168.3.0</span> <span class="sh_number">255.255.255.0</span> <span class="sh_number">192.168.4.1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#router ospf <span class="sh_number">1</span></li><li><span class="sh_function">Router</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>router<span class="sh_symbol">)</span>#network <span class="sh_number">192.168.4.0</span> <span class="sh_number">0.0.0.255</span> area <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Router(config)#no ip route 192.168.1.0 255.255.255.0 192.168.4.1
+Router(config)#no ip route 192.168.2.0 255.255.255.0 192.168.4.1
+Router(config)#no ip route 192.168.3.0 255.255.255.0 192.168.4.1
+Router(config)#router ospf 1
+Router(config-router)#network 192.168.4.0 0.0.0.255 area 0
+</pre></div></div>
+    </div>
+  
+</body></html>

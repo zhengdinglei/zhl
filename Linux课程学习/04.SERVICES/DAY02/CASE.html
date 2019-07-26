@@ -1,0 +1,452 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD SERVICES DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#case1">案例1：搭建单区域DNS服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#case2">案例2：特殊DNS解析</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#case3">案例3：配置DNS子域授权</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#case4">案例4：搭建并测试缓存DNS</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：搭建单区域DNS服务器</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求要求为DNS区域tedu.cn搭建一台DNS服务器，以便用户能通过域名的方式访问网站。测试阶段主要提供以下正向记录：</p>
+      <ol class="list">
+        <li>svr7.tedu.cn ---&gt; 192.168.4.7
+</li>
+        <li>pc207.tedu.cn ---&gt; 192.168.4.207
+</li>
+        <li>www.tedu.cn ---&gt; 192.168.4.100
+</li>
+      </ol>
+      <p>配置完成后在客户机上验证查询结果。</p>
+      <h3>1.2 方案</h3>
+      <p>快速构建DNS服务器的基本过程：</p>
+      <ol class="list">
+        <li>安装 bind、bind-chroot 包
+</li>
+        <li>建立主配置文件  /etc/named.conf
+</li>
+        <li>建立地址库文件  /var/named/.. ..
+</li>
+        <li>启动 named 服务
+</li>
+      </ol>
+      <p>配置及使用DNS客户端的基本过程：</p>
+      <ol class="list">
+        <li>修改配置文件/etc/resolv.conf，添加nameserver=DNS服务器地址
+</li>
+        <li>使用host命令查询，提供目标域名作为参数
+</li>
+      </ol>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置DNS服务器svr7</p>
+      <p>1）安装 bind、bind-chroot 包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  bind  bind<span class="sh_symbol">-</span>chroot</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# yum  -y  install  bind  bind-chroot
+.. ..
+</pre></div></div>
+      <p>2）建立主配置文件  /etc/named.conf</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">mv  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span><span class="sh_normal">conf  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>origin  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//备份默认配置</span></li><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//建立新配置</span></li><li>options <span class="sh_cbracket">{</span></li><li>    directory  <span class="sh_string">"/var/named"</span><span class="sh_symbol">;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//地址库默认存放位置</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li><li>zone  <span class="sh_string">"tedu.cn"</span> <span class="sh_cbracket">{</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义正向DNS区域</span></li><li>    type  master<span class="sh_symbol">;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//主区域</span></li><li>    file  <span class="sh_string">"tedu.cn.zone"</span><span class="sh_symbol">;</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//自定义地址库文件名</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# mv  /etc/named.conf  /etc/named.conf.origin  		//备份默认配置
+[root@svr7 ~]# vim  /etc/named.conf 							//建立新配置
+options {
+    directory  "/var/named";  						//地址库默认存放位置
+};
+zone  "tedu.cn" {  								//定义正向DNS区域
+    type  master; 									//主区域
+    file  "tedu.cn.zone"; 							//自定义地址库文件名
+};
+</pre></div></div>
+      <p>3）建立地址库文件  /var/named/tedu.cn.zone</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/named/</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//进地址库目录</span></li><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># cp  <span class="sh_symbol">-</span>p  named<span class="sh_symbol">.</span>localhost  tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//参考范本建地址库文件</span></li><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># vim  tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修订地址库记录</span></li><li>$TTL 1D  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//文件开头部分可保持不改</span></li><li>@   IN SOA  @ rname<span class="sh_symbol">.</span>invalid<span class="sh_symbol">.</span> <span class="sh_symbol">(</span></li><li>                    <span class="sh_number">0</span>   <span class="sh_symbol">;</span> serial</li><li>                    1D  <span class="sh_symbol">;</span> refresh</li><li>                    1H  <span class="sh_symbol">;</span> retry</li><li>                    1W  <span class="sh_symbol">;</span> expire</li><li>                    3H <span class="sh_symbol">)</span>    <span class="sh_symbol">;</span> minimum</li><li>@       NS  svr7<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//本区域DNS服务器的FQDN</span></li><li>svr7    A   <span class="sh_number">192.168.4.7</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//为NS主机提供A记录</span></li><li>pc207   A   <span class="sh_number">192.168.4.207</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//其他正向地址记录.. ..</span></li><li>www  A   <span class="sh_number">192.168.4.100</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# cd  /var/named/  							//进地址库目录
+[root@svr7 named]# cp  -p  named.localhost  tedu.cn.zone  	//参考范本建地址库文件
+[root@svr7 named]# vim  tedu.cn.zone  						//修订地址库记录
+$TTL 1D  										//文件开头部分可保持不改
+@   IN SOA  @ rname.invalid. (
+                    0   ; serial
+                    1D  ; refresh
+                    1H  ; retry
+                    1W  ; expire
+                    3H )    ; minimum
+@       NS  svr7.tedu.cn.  						//本区域DNS服务器的FQDN
+svr7    A   192.168.4.7 						//为NS主机提供A记录
+pc207   A   192.168.4.207 						//其他正向地址记录.. ..
+www  A   192.168.4.100
+</pre></div></div>
+      <p>4）启动 named 服务，并设置开机自启</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># systemctl  restart  named  </li><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># systemctl  enable  named</li><li>Created symlink <span class="sh_normal">from </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>multi<span class="sh_symbol">-</span>user<span class="sh_symbol">.</span>target<span class="sh_symbol">.</span><span class="sh_normal">wants</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>service <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 named]# systemctl  restart  named  
+[root@svr7 named]# systemctl  enable  named
+Created symlink from /etc/systemd/system/multi-user.target.wants/named.service to /usr/lib/systemd/system/named.service.
+</pre></div></div>
+      <p class="number">步骤二：配置DNS客户机pc207并测试</p>
+      <p>1）修改配置文件/etc/resolv.conf，指定默认使用哪一台DNS服务器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>resolv<span class="sh_symbol">.</span>conf </li><li>nameserver  <span class="sh_number">192.168.4.7</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# vim  /etc/resolv.conf 
+nameserver  192.168.4.7
+.. ..
+</pre></div></div>
+      <p>2）使用host命令查询，提供目标域名作为参数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  svr7<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>svr7<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.7</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  pc207<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>pc207<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.207</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.100</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  svr7.tedu.cn
+svr7.tedu.cn has address 192.168.4.7
+[root@pc207 ~]# host  pc207.tedu.cn
+pc207.tedu.cn has address 192.168.4.207
+[root@pc207 ~]# host  www.tedu.cn
+www.tedu.cn has address 192.168.4.100
+</pre></div></div>
+      <p>使用host测试DNS查询结果时，如果不方便修改/etc/resolv.conf文件，也可以采用“host  目标域名  DNS服务器地址”形式临时指定使用哪一台DNS服务器。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  pc207<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn  <span class="sh_number">192.168.4.7</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>pc207<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.207</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  pc207.tedu.cn  192.168.4.7
+Using domain server:
+Name: 192.168.4.7
+Address: 192.168.4.7#53
+Aliases: 
+
+pc207.tedu.cn has address 192.168.4.207
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：特殊DNS解析</h2>
+      <h3>2.1 问题</h3>
+      <p>沿用案例1，本例要求掌握DNS轮询、泛域名解析的配置，实现的目标如下：</p>
+      <ol class="list">
+        <li>为站点 www.tedu.cn 提供DNS轮询解析，三台Web服务器节点的IP地址分别为：192.168.4.100、192.168.4.110、192.168.4.120
+</li>
+        <li>配置泛域名解析实现以下解析记录：任意名称.tedu.cn ---&gt; 119.75.217.56
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>DNS轮询：FQDN ---&gt; IP地址1、IP地址2、.. ..</p>
+      <p>泛域名解析（站点名不确定）：多个FQDN ---&gt; 一个IP地址</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置DNS轮询</p>
+      <p>1）修改DNS服务器上tedu.cn区域的地址库文件，在末尾添加轮询地址记录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/named/</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone </li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>www&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.100</span></li><li>www&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.110</span></li><li>www&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.120</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# vim  /var/named/tedu.cn.zone 
+.. ..
+www		A	192.168.4.100
+www		A	192.168.4.110
+www		A	192.168.4.120
+</pre></div></div>
+      <p>2）重启系统服务named</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># systemctl  restart  named</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 named]# systemctl  restart  named
+</pre></div></div>
+      <p>3）在客户机pc207上测试轮询记录</p>
+      <p>针对目标www.tedu.cn执行多次查询，观察第1条结果的变化：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.100</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//第1个结果为192.168.4.100</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.110</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.120</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.120</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//第1个结果为192.168.4.120</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.110</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.100</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.110</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//第1个结果为192.168.4.110</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.120</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.100</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.tedu.cn
+www.tedu.cn has address 192.168.4.100  		//第1个结果为192.168.4.100
+www.tedu.cn has address 192.168.4.110
+www.tedu.cn has address 192.168.4.120
+
+[root@pc207 ~]# host  www.tedu.cn
+www.tedu.cn has address 192.168.4.120  		//第1个结果为192.168.4.120
+www.tedu.cn has address 192.168.4.110
+www.tedu.cn has address 192.168.4.100
+
+[root@pc207 ~]# host  www.tedu.cn
+www.tedu.cn has address 192.168.4.110  		//第1个结果为192.168.4.110
+www.tedu.cn has address 192.168.4.120
+www.tedu.cn has address 192.168.4.100
+</pre></div></div>
+      <p class="number">步骤二：配置多对一的泛域名解析</p>
+      <p>1）修改DNS服务器上指定区域的地址库文件，在末尾添加*通配地址记录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/named/</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone </li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">*</span>       A   <span class="sh_number">119.75.217.56</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# vim  /var/named/tedu.cn.zone 
+.. ..
+*       A   119.75.217.56
+</pre></div></div>
+      <p>2）重启系统服务named</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># systemctl  restart  named</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 named]# systemctl  restart  named
+</pre></div></div>
+      <p>3）在客户机pc207上测试多对一的泛域名解析记录</p>
+      <p>当查询未知站点（地址库中没有明确记录）时，以 * 对应的IP地址反馈：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  station123<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>station123<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">119.75.217.56</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  movie<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>movie<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">119.75.217.56</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  tts8<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>tts8<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">119.75.217.56</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  station123.tedu.cn
+station123.tedu.cn has address 119.75.217.56
+[root@pc207 ~]# host  movie.tedu.cn
+movie.tedu.cn has address 119.75.217.56
+[root@pc207 ~]# host  tts8.tedu.cn
+tts8.tedu.cn has address 119.75.217.56
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：配置DNS子域授权</h2>
+      <h3>3.1 问题</h3>
+      <p>沿用案例1，本例要求为上下级两个DNS区域建立父子关联，实现客户机向父DNS也可以查询到子域内的FQDN，基本要求如下：</p>
+      <ol class="list">
+        <li>构建父DNS（tedu.cn）服务器
+</li>
+        <li>构建子DNS（bj.tedu.cn）服务器
+</li>
+        <li>在父DNS上配置子域授权
+</li>
+        <li>测试子域授权查询
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>为一个DNS区域添加授权子域时，需要修改此区域的地址库，添加以下记录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>子域域名<span class="sh_symbol">.</span>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IN    NS  &nbsp;&nbsp;&nbsp;&nbsp;子DNS的FQDN<span class="sh_symbol">.</span></li><li>子DNS的FQDN<span class="sh_symbol">.</span>   &nbsp;&nbsp;&nbsp;&nbsp;IN    A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;子DNS的IP地址</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">子域域名.    		IN    NS  	子DNS的FQDN.
+子DNS的FQDN.   	IN    A		子DNS的IP地址
+</pre></div></div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：构建父DNS（tedu.cn）服务器</p>
+      <p>1）将svr7配置为父DNS服务器，确认配置</p>
+      <p>主配置文件/etc/named.conf：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">viim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf</li><li>options <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;   directory  <span class="sh_string">"/var/named"</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li><li>zone  <span class="sh_string">"tedu.cn"</span> <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;   type  master<span class="sh_symbol">;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;   file  <span class="sh_string">"tedu.cn.zone"</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# viim  /etc/named.conf
+options {
+	   directory  "/var/named";
+};
+zone  "tedu.cn" {
+	   type  master;
+	   file  "tedu.cn.zone";
+};
+.. ..
+</pre></div></div>
+      <p>正向地址库文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/named/</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone </li><li>$TTL 1D</li><li>@&nbsp;&nbsp;&nbsp;&nbsp;IN SOA&nbsp;&nbsp;&nbsp;&nbsp;@ rname<span class="sh_symbol">.</span>invalid<span class="sh_symbol">.</span> <span class="sh_symbol">(</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">;</span> serial</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1D&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">;</span> refresh</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1H&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">;</span> retry</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1W&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">;</span> expire</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3H <span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">;</span> minimum</li><li>@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NS&nbsp;&nbsp;&nbsp;&nbsp;svr7<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span></li><li>svr7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.7</span></li><li>pc207&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.207</span></li><li>www&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.100</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# vim  /var/named/tedu.cn.zone 
+$TTL 1D
+@	IN SOA	@ rname.invalid. (
+					0	; serial
+					1D	; refresh
+					1H	; retry
+					1W	; expire
+					3H )	; minimum
+@		NS	svr7.tedu.cn.
+svr7		A	192.168.4.7
+pc207	A	192.168.4.207
+www		A	192.168.4.100
+.. ..
+</pre></div></div>
+      <p>确保服务已启用：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># systemctl  restart  named</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# systemctl  restart  named
+</pre></div></div>
+      <p>2）测试 —— 向父DNS可成功查询到父区域中的站点</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn  <span class="sh_number">192.168.4.7</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">192.168.4.100</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.tedu.cn  192.168.4.7
+Using domain server:
+Name: 192.168.4.7
+Address: 192.168.4.7#53
+Aliases: 
+
+www.tedu.cn has address 192.168.4.100
+.. ..
+</pre></div></div>
+      <p class="number">步骤二：构建子DNS（bj.tedu.cn）服务器</p>
+      <p>1）将pc207配置为子DNS服务器，确认配置</p>
+      <p>安装软件包bind、bind-chroot：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  bind  bind<span class="sh_symbol">-</span>chroot</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# yum  -y  install  bind  bind-chroot
+.. ..
+</pre></div></div>
+      <p>建立主配置文件/etc/named.conf：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># <span class="sh_normal">mv  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span><span class="sh_normal">conf  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>origin  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//备份默认配置</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//建立新配置</span></li><li>options <span class="sh_cbracket">{</span></li><li>    directory  <span class="sh_string">"/var/named"</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li><li>zone  <span class="sh_string">"bj.tedu.cn"</span> <span class="sh_cbracket">{</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义子DNS的正向区域</span></li><li>    type  master<span class="sh_symbol">;</span></li><li>    file  <span class="sh_string">"bj.tedu.cn.zone"</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# mv  /etc/named.conf  /etc/named.conf.origin  	//备份默认配置
+[root@pc207 ~]# vim  /etc/named.conf  							//建立新配置
+options {
+    directory  "/var/named";
+};
+zone  "bj.tedu.cn" { 							//定义子DNS的正向区域
+    type  master;
+    file  "bj.tedu.cn.zone";
+};
+</pre></div></div>
+      <p>建立地址库配置文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/named/</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//进地址库目录</span></li><li><span class="sh_symbol">[</span>root@pc207 named<span class="sh_symbol">]</span># cp  <span class="sh_symbol">-</span>p  named<span class="sh_symbol">.</span>localhost  tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//参考范本建地址库文件</span></li><li><span class="sh_symbol">[</span>root@pc207 named<span class="sh_symbol">]</span># vim  bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修订地址库记录</span></li><li>$TTL 1D  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//文件开头部分可保持不改</span></li><li>@   IN SOA  @ rname<span class="sh_symbol">.</span>invalid<span class="sh_symbol">.</span> <span class="sh_symbol">(</span></li><li>                    <span class="sh_number">0</span>   <span class="sh_symbol">;</span> serial</li><li>                    1D  <span class="sh_symbol">;</span> refresh</li><li>                    1H  <span class="sh_symbol">;</span> retry</li><li>                    1W  <span class="sh_symbol">;</span> expire</li><li>                    3H <span class="sh_symbol">)</span>    <span class="sh_symbol">;</span> minimum</li><li>@       NS  pc207<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//本区域DNS服务器的FQDN</span></li><li>pc207   A   <span class="sh_number">192.168.4.207</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//为NS主机提供A记录</span></li><li>www     A   <span class="sh_number">1.2.3.4</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加测试记录 www.bj.tedu.cn</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# cd  /var/named/  							//进地址库目录
+[root@pc207 named]# cp  -p  named.localhost  tedu.cn.zone  	//参考范本建地址库文件
+[root@pc207 named]# vim  bj.tedu.cn.zone  					//修订地址库记录
+$TTL 1D  										//文件开头部分可保持不改
+@   IN SOA  @ rname.invalid. (
+                    0   ; serial
+                    1D  ; refresh
+                    1H  ; retry
+                    1W  ; expire
+                    3H )    ; minimum
+@       NS  pc207.bj.tedu.cn.  					//本区域DNS服务器的FQDN
+pc207   A   192.168.4.207  					//为NS主机提供A记录
+www     A   1.2.3.4  							//添加测试记录 www.bj.tedu.cn
+</pre></div></div>
+      <p>2）启动系统服务named，并设置开机自启</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 named<span class="sh_symbol">]</span># systemctl  restart  named</li><li><span class="sh_symbol">[</span>root@pc207 named<span class="sh_symbol">]</span># systemctl  enable  named</li><li>Created symlink <span class="sh_normal">from </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>multi<span class="sh_symbol">-</span>user<span class="sh_symbol">.</span>target<span class="sh_symbol">.</span><span class="sh_normal">wants</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>service <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>service<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 named]# systemctl  restart  named
+[root@pc207 named]# systemctl  enable  named
+Created symlink from /etc/systemd/system/multi-user.target.wants/named.service to /usr/lib/systemd/system/named.service.
+</pre></div></div>
+      <p>3）测试 —— 向子DNS可成功查询到子区域中的站点</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn  <span class="sh_number">192.168.4.207</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.207</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.207</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">1.2.3.4</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.bj.tedu.cn  192.168.4.207
+Using domain server:
+Name: 192.168.4.207
+Address: 192.168.4.207#53
+Aliases: 
+
+www.bj.tedu.cn has address 1.2.3.4
+</pre></div></div>
+      <p class="number">步骤三：在父DNS上配置子域授权</p>
+      <p>1）测试 —— 未配置子域授权时，向父DNS无法正确查询到子区域中的站点</p>
+      <p>若父DNS配置有 * 泛域名，则反馈的结果为对应的IP地址119.75.217.56，而不是子DNS中记录的1.2.3.4：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn  <span class="sh_number">192.168.4.7</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">119.75.217.56</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.bj.tedu.cn  192.168.4.7
+Using domain server:
+Name: 192.168.4.7
+Address: 192.168.4.7#53
+Aliases: 
+
+www.bj.tedu.cn has address 119.75.217.56
+</pre></div></div>
+      <p>若父DNS未配置有 * 泛域名，则找不到解析结果（not found）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn  <span class="sh_number">192.168.4.7</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>Host www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn not found<span class="sh_symbol">:</span> <span class="sh_number">3</span><span class="sh_symbol">(</span>NXDOMAIN<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.bj.tedu.cn  192.168.4.7
+Using domain server:
+Name: 192.168.4.7
+Address: 192.168.4.7#53
+Aliases: 
+
+Host www.bj.tedu.cn not found: 3(NXDOMAIN)
+</pre></div></div>
+      <p>2）修改父DNS区域tedu.cn的地址库，添加授权子域信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr7 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/named/</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>zone</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>         NS   &nbsp;&nbsp;&nbsp;&nbsp;pc207<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//子区域及子DNS主机名</span></li><li>pc207<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn<span class="sh_symbol">.</span>   A   &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">192.168.4.207</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//子DNS的IP地址</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@svr7 named<span class="sh_symbol">]</span># systemctl  restart  named  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重启服务</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr7 ~]# vim  /var/named/tedu.cn.zone
+.. ..
+bj.tedu.cn.         NS   	pc207.bj.tedu.cn.  			//子区域及子DNS主机名
+pc207.bj.tedu.cn.   A   	192.168.4.207  				//子DNS的IP地址
+
+[root@svr7 named]# systemctl  restart  named  			//重启服务
+</pre></div></div>
+      <p class="number">步骤四：测试子域授权查询</p>
+      <p>测试 —— 成功配置子域授权以后，向父DNS可以正确查询到子区域中的站点：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn  <span class="sh_number">192.168.4.7</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.7</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_symbol">.</span>bj<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn has address <span class="sh_number">1.2.3.4</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.bj.tedu.cn  192.168.4.7
+Using domain server:
+Name: 192.168.4.7
+Address: 192.168.4.7#53
+Aliases: 
+
+www.bj.tedu.cn has address 1.2.3.4
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：搭建并测试缓存DNS</h2>
+      <h3>4.1 问题</h3>
+      <p>本例要求熟悉缓存DNS的工作过程，准备一台可上网的RHEL7虚拟机，并完成下列任务：</p>
+      <ol class="list">
+        <li>安装 bind、bind-chroot 包
+</li>
+        <li>搭建并测试基于全局转发器的缓存DNS
+</li>
+      </ol>
+      <p class="emphasiz">注意：若所在机房不具备访问互联网DNS条件，此案例改由学员自行在家完成。</p>
+      <h3>4.2 方案</h3>
+      <p>权威/官方DNS服务器的特点：</p>
+      <ul class="list">
+        <li>至少管理一个DNS区域,，需要IANA等官方机构授权
+</li>
+        <li>典型应用：根域DNS、一级域DNS、二级域DNS、三级域DNS、.. ..
+</li>
+      </ul>
+      <p>缓存DNS服务器的特点：</p>
+      <ul class="list">
+        <li>不需要管理任何DNS区域，但是能够替客户机查询，而且通过缓存、复用查询结果来加快响应速度
+</li>
+        <li>典型应用：ISP服务商、企业局域网
+</li>
+      </ul>
+      <p>缓存DNS服务器的解析记录来源：</p>
+      <ul class="list">
+        <li>方式1：全局转发：将请求转发给指定的公共DNS（其他缓存DNS），请求递归服务
+</li>
+        <li>方式2：根域迭代：依次向根、一级、二级……域的DNS服务器迭代
+</li>
+      </ul>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：为虚拟机pc207提供上网条件</p>
+      <p>1）为虚拟机添加一块新的网卡，选择NAT或Bridge模式</p>
+      <p>若选择NAT模式（地址转换），则新加网卡的上网参数由虚拟化平台自动设置。</p>
+      <p>若选择Bridge模式（桥接），则新加网卡的上网参数需要参考真实网络的主机，必要时请网络管理员提供支持。</p>
+      <p>此处所列地址信息可帮助大家理解上网条件，但不作为练习的配置依据：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># ifconfig  eth1  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查新增网卡的IP地址</span></li><li>eth1<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">192.168.70.129</span>  netmask <span class="sh_number">255.255.255.0</span>  broadcast <span class="sh_number">192.168.70.255</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># route  <span class="sh_symbol">-</span>n  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认已配好默认网关</span></li><li>Kernel IP routing table</li><li>Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</li><li><span class="sh_number">0.0.0.0</span>         <span class="sh_number">192.168.70.2</span>    <span class="sh_number">0.0.0.0</span>         UG    <span class="sh_number">100</span>    <span class="sh_number">0</span>        <span class="sh_number">0</span> eth1</li><li><span class="sh_number">192.168.70.0</span>    <span class="sh_number">0.0.0.0</span>         <span class="sh_number">255.255.255.0</span>   U     <span class="sh_number">100</span>    <span class="sh_number">0</span>        <span class="sh_number">0</span> eth1</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># <span class="sh_normal">cat  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>resolv<span class="sh_symbol">.</span>conf  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认第一DNS为外部可用DNS地址</span></li><li>nameserver <span class="sh_number">192.168.70.2</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# ifconfig  eth1  					//检查新增网卡的IP地址
+eth1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.70.129  netmask 255.255.255.0  broadcast 192.168.70.255
+.. ..
+[root@pc207 ~]# route  -n  						//确认已配好默认网关
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.70.2    0.0.0.0         UG    100    0        0 eth1
+192.168.70.0    0.0.0.0         255.255.255.0   U     100    0        0 eth1
+.. ..
+[root@pc207 ~]# cat  /etc/resolv.conf  			//确认第一DNS为外部可用DNS地址
+nameserver 192.168.70.2
+.. ..
+</pre></div></div>
+      <p>2）确保从主机pc207可访问到外部DNS</p>
+      <p>访问默认DNS可用（本机正常连网需要）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com</li><li>www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com has address <span class="sh_number">111.30.132.101</span></li><li>www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com has IPv6 address 240e<span class="sh_symbol">:</span>e1<span class="sh_symbol">:</span><span class="sh_number">8100</span><span class="sh_symbol">:</span><span class="sh_number">28</span><span class="sh_symbol">::</span><span class="sh_number">2</span><span class="sh_symbol">:</span><span class="sh_number">16</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.qq.com
+www.qq.com has address 111.30.132.101
+www.qq.com has IPv6 address 240e:e1:8100:28::2:16
+</pre></div></div>
+      <p>访问指定DNS可用（全局转发的前提条件）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com  <span class="sh_number">202.106.0.20</span>  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//国内公共DNS服务器之一</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">202.106.0.20</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">202.106.0.20</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com has address <span class="sh_number">111.30.132.101</span></li><li>www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com is an alias <span class="sh_keyword">for</span> qq<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>edgesuite<span class="sh_symbol">.</span>net<span class="sh_symbol">.</span></li><li>qq<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>edgesuite<span class="sh_symbol">.</span>net is an alias <span class="sh_keyword">for</span> a1574<span class="sh_symbol">.</span>b<span class="sh_symbol">.</span>akamai<span class="sh_symbol">.</span>net<span class="sh_symbol">.</span></li><li>www<span class="sh_symbol">.</span>qq<span class="sh_symbol">.</span>com is an alias <span class="sh_keyword">for</span> qq<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>edgesuite<span class="sh_symbol">.</span>net<span class="sh_symbol">.</span></li><li>qq<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>edgesuite<span class="sh_symbol">.</span>net is an alias <span class="sh_keyword">for</span> a1574<span class="sh_symbol">.</span>b<span class="sh_symbol">.</span>akamai<span class="sh_symbol">.</span>net<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.qq.com  202.106.0.20  	//国内公共DNS服务器之一
+Using domain server:
+Name: 202.106.0.20
+Address: 202.106.0.20#53
+Aliases: 
+
+www.qq.com has address 111.30.132.101
+www.qq.com is an alias for qq.com.edgesuite.net.
+qq.com.edgesuite.net is an alias for a1574.b.akamai.net.
+www.qq.com is an alias for qq.com.edgesuite.net.
+qq.com.edgesuite.net is an alias for a1574.b.akamai.net.
+</pre></div></div>
+      <p class="number">步骤二：将pc207配置为缓存DNS（全局转发式）</p>
+      <p>1）安装bind、bind-chroot软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  bind  bind<span class="sh_symbol">-</span>chroot</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# yum  -y  install  bind  bind-chroot
+.. ..
+</pre></div></div>
+      <p>2）建立主配置文件/etc/named.conf</p>
+      <p>当收到来自客户机的DNS查询请求时，转发到外网的其他DNS服务器</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf</li><li>options <span class="sh_cbracket">{</span></li><li>    forwarders  <span class="sh_cbracket">{</span> <span class="sh_number">202.106.0.20</span><span class="sh_symbol">;</span> <span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# vim  /etc/named.conf
+options {
+    forwarders  { 202.106.0.20; };
+};
+</pre></div></div>
+      <p>3）启动系统服务named，并设置开机自启</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># systemctl  restart  named</li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># systemctl  enable  named</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# systemctl  restart  named
+[root@pc207 ~]# systemctl  enable  named
+</pre></div></div>
+      <p>4）可向缓存DNS服务器pc207查询到公共域名（百度、网易等站点）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SERVICES/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_symbol">.</span>baidu<span class="sh_symbol">.</span>com  <span class="sh_number">192.168.4.207</span>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查百度的站点IP</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.207</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.207</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_symbol">.</span>baidu<span class="sh_symbol">.</span>com is an alias <span class="sh_keyword">for</span> www<span class="sh_symbol">.</span>a<span class="sh_symbol">.</span>shifen<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span></li><li>www<span class="sh_symbol">.</span>a<span class="sh_symbol">.</span>shifen<span class="sh_symbol">.</span>com has address <span class="sh_number">111.13.100.92</span></li><li>www<span class="sh_symbol">.</span>a<span class="sh_symbol">.</span>shifen<span class="sh_symbol">.</span>com has address <span class="sh_number">111.13.100.91</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@pc207 <span class="sh_symbol">~]</span># host  www<span class="sh_number">.163</span><span class="sh_symbol">.</span>com  <span class="sh_number">192.168.4.207</span>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查网易的站点IP</span></li><li>Using domain server<span class="sh_symbol">:</span></li><li>Name<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.207</span></li><li>Address<span class="sh_symbol">:</span> <span class="sh_number">192.168.4.207</span>#<span class="sh_number">53</span></li><li>Aliases<span class="sh_symbol">:</span> </li><li><span style="display:none;">&nbsp;</span></li><li>www<span class="sh_number">.163</span><span class="sh_symbol">.</span>com is an alias <span class="sh_keyword">for</span> www<span class="sh_number">.163</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>lxdns<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span></li><li>www<span class="sh_number">.163</span><span class="sh_symbol">.</span>com<span class="sh_symbol">.</span>lxdns<span class="sh_symbol">.</span>com is an alias <span class="sh_keyword">for</span> <span class="sh_number">163</span><span class="sh_symbol">.</span>xdwscache<span class="sh_symbol">.</span>ourglb0<span class="sh_symbol">.</span>com<span class="sh_symbol">.</span></li><li><span class="sh_number">163</span><span class="sh_symbol">.</span>xdwscache<span class="sh_symbol">.</span>ourglb0<span class="sh_symbol">.</span>com has address <span class="sh_number">111.11.31.104</span></li><li><span class="sh_number">163</span><span class="sh_symbol">.</span>xdwscache<span class="sh_symbol">.</span>ourglb0<span class="sh_symbol">.</span>com has address <span class="sh_number">111.11.31.114</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@pc207 ~]# host  www.baidu.com  192.168.4.207   		//查百度的站点IP
+Using domain server:
+Name: 192.168.4.207
+Address: 192.168.4.207#53
+Aliases: 
+
+www.baidu.com is an alias for www.a.shifen.com.
+www.a.shifen.com has address 111.13.100.92
+www.a.shifen.com has address 111.13.100.91
+
+[root@pc207 ~]# host  www.163.com  192.168.4.207    			//查网易的站点IP
+Using domain server:
+Name: 192.168.4.207
+Address: 192.168.4.207#53
+Aliases: 
+
+www.163.com is an alias for www.163.com.lxdns.com.
+www.163.com.lxdns.com is an alias for 163.xdwscache.ourglb0.com.
+163.xdwscache.ourglb0.com has address 111.11.31.104
+163.xdwscache.ourglb0.com has address 111.11.31.114
+</pre></div></div>
+    </div>
+  
+</body></html>

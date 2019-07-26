@@ -1,0 +1,137 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD PROJECT1 DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#case1">1  案例1：划分VLAN</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#case2">2  案例2：多交换机VLAN的划分</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#case3">3  案例3：配置trunk中继链路</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#case4">4  案例4：以太网通道配置</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 1  案例1：划分VLAN</h2>
+      <h3>1.1 问题</h3>
+      <p>在交换机上创建以下VLAN，按照拓扑图-1将端口加入到指定的VLAN并配置服务器IP地址，实现同VLAN主机的通信</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <h3>1.2 步骤</h3>
+      <p>由于默认情况下所有接口都在VLAN1中，且VLAN1默认就存在，所以只需要配置VLAN2和VLAN3即可。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable</li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#vlan <span class="sh_number">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建VLAN2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#vlan <span class="sh_number">3</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建VLAN3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> range fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">3-4</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//同时进入3、4接口</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//将3、4接口加入VLAN2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> range fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">5-6</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">3</span></li><li>Switch#show vlan brief</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable
+Switch#configure terminal 
+Switch(config)#vlan 2									//创建VLAN2
+Switch(config-vlan)#vlan 3								//创建VLAN3
+Switch(config-vlan)#exit	
+Switch(config)#interface range fastEthernet 0/3-4		//同时进入3、4接口
+Switch(config-if-range)#switchport access vlan 2		//将3、4接口加入VLAN2
+Switch(config-vlan)#exit
+Switch(config)#interface range fastEthernet 0/5-6
+Switch(config-if-range)#switchport access vlan 3
+Switch#show vlan brief
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 2  案例2：多交换机VLAN的划分</h2>
+      <h3>2.1 问题</h3>
+      <p>通过配置交换机实现图-2中的同VLAN主机互通</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <h3>2.2 步骤</h3>
+      <p>注：以下配置需要在案例1的基础上完成</p>
+      <p>S1配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch#configure terminal</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastethernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">7</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">3</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch#configure terminal
+Switch(config)#interface fastethernet 0/7
+Switch(config-if)#switchport access vlan 3
+</pre></div></div>
+      <p>S2配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#vlan <span class="sh_number">3</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> range fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">5-7</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">3</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#vlan 3
+Switch(config-vlan)#exit
+Switch(config)#interface range fastEthernet 0/5-7
+Switch(config-if-range)#switchport access vlan 3
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 3  案例3：配置trunk中继链路</h2>
+      <h3>3.1 问题</h3>
+      <p>通过配置实现跨交换机的同VLAN通信，如图-3所示</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <h3>3.2 步骤</h3>
+      <p>注：以下配置需要在案例2的基础上完成</p>
+      <p>S1配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">7</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport mode trunk </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#interface fastEthernet 0/7
+Switch(config-if)#switchport mode trunk 
+</pre></div></div>
+      <p>S2配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#vlan <span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span>vlan<span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> range fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">3-4</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#switchport access vlan <span class="sh_number">2</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#exit</li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">7</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">)</span>#switchport mode trunk</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#vlan 2
+Switch(config-vlan)#exit
+Switch(config)#interface range fastEthernet 0/3-4
+Switch(config-if-range)#switchport access vlan 2
+Switch(config-if-range)#exit
+Switch(config)#interface fastEthernet 0/7
+Switch(config-if)#switchport mode trunk
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 4  案例4：以太网通道配置</h2>
+      <h3>4.1 问题</h3>
+      <p>参照图-4将交换机的f0/7-f0/9端口配置为以太网通道</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <h3>4.2 步骤</h3>
+      <p>S1配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> range fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">7-9</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#channel<span class="sh_symbol">-</span>group <span class="sh_number">1</span> mode on </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#end</li><li>Switch#show etherchannel summary</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#interface range fastEthernet 0/7-9
+Switch(config-if-range)#channel-group 1 mode on 
+Switch(config-if-range)#end
+Switch#show etherchannel summary
+</pre></div></div>
+      <p>S2配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PROJECT1/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>Switch<span class="sh_symbol">&gt;</span>enable </li><li>Switch#configure terminal </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">)</span>#<span class="sh_keyword">interface</span> range fastEthernet <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">7-9</span></li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#channel<span class="sh_symbol">-</span>group <span class="sh_number">1</span> mode on </li><li><span class="sh_function">Switch</span><span class="sh_symbol">(</span>config<span class="sh_symbol">-</span><span class="sh_keyword">if</span><span class="sh_symbol">-</span>range<span class="sh_symbol">)</span>#end</li><li>Switch#show etherchannel summary</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">Switch&gt;enable 
+Switch#configure terminal 
+Switch(config)#interface range fastEthernet 0/7-9
+Switch(config-if-range)#channel-group 1 mode on 
+Switch(config-if-range)#end
+Switch#show etherchannel summary
+</pre></div></div>
+    </div>
+  
+</body></html>

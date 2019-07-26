@@ -1,0 +1,536 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD CLOUD DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case1">案例1：配置yum仓库</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case2">案例2：配置DNS服务器：</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case3">案例3：配置NTP服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case4">案例4：环境准备</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case5">案例5：部署Openstack：</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case6">案例6：网络管理</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#case7">案例7：管理项目</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：配置yum仓库</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求把三个镜像配置yum源：</p>
+      <ul class="list">
+        <li>CentOS7-1708光盘内容作为仓库源
+</li>
+        <li>配置 RHEL7-extars内容加入仓库源
+</li>
+        <li>RHEL7OSP-10光盘中包含多个目录，每个目录都是仓库源（可以使用脚本生成）
+</li>
+      </ul>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置 yum仓库</p>
+      <p>警告：仅yum配置的第一个源（系统源）为gpgcheck=1需要导入公钥，其他的都是gpgcheck=0，否则安装会报错。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>system  </li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>extras </li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>HEL7OSP</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>fstab</li><li><span class="sh_regexp">/iso/</span>RHEL7OSP<span class="sh_number">-10</span><span class="sh_symbol">.</span><span class="sh_normal">iso  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>HEL7OSP iso9660 defaults <span class="sh_number">0</span> <span class="sh_number">0</span></li><li><span class="sh_regexp">/iso/</span>CentOS7<span class="sh_number">-1708</span><span class="sh_symbol">.</span><span class="sh_normal">iso  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>system iso9660 defaults <span class="sh_number">0</span> <span class="sh_number">0</span></li><li><span class="sh_regexp">/iso/</span>RHEL7<span class="sh_symbol">-</span>extras<span class="sh_symbol">.</span><span class="sh_normal">iso  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/ftp/</span>extras iso9660 defaults <span class="sh_number">0</span> <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># mount –a</li><li>mount<span class="sh_symbol">:</span> <span class="sh_regexp">/dev/</span>loop0 is write<span class="sh_symbol">-</span><span class="sh_keyword">protected</span><span class="sh_symbol">,</span> mounting read<span class="sh_symbol">-</span>only</li><li>mount<span class="sh_symbol">:</span> <span class="sh_regexp">/dev/</span>loop1 is write<span class="sh_symbol">-</span><span class="sh_keyword">protected</span><span class="sh_symbol">,</span> mounting read<span class="sh_symbol">-</span>only</li><li>mount<span class="sh_symbol">:</span> <span class="sh_regexp">/dev/</span>loop2 is write<span class="sh_symbol">-</span><span class="sh_keyword">protected</span><span class="sh_symbol">,</span> mounting read<span class="sh_symbol">-</span>only</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>local<span class="sh_symbol">.</span>repo</li><li><span class="sh_symbol">[</span>local_repo<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>CentOS<span class="sh_symbol">-</span>$releasever <span class="sh_symbol">-</span> Base</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/system"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>local_extras<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>extras</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/extras"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>1local_devtools<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>devtools<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-devtools-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>2local_optools<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>optools<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-optools-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>3local_rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>4local_tools<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>tools<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-tools-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>5local_mon<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>mon<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhceph-2-mon-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>6local_osd<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>osd<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhceph-2-osd-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>7local_rhceph<span class="sh_number">-2</span><span class="sh_symbol">-</span>tools<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>rhceph<span class="sh_number">-2</span><span class="sh_symbol">-</span>tools<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhceph-2-tools-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>8local_agent<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>agent<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhscon-2-agent-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>9local_installer<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>installer<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhscon-2-installer-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>10local_rhscon<span class="sh_number">-2</span><span class="sh_symbol">-</span>main<span class="sh_symbol">-</span>rpms<span class="sh_symbol">]</span></li><li>name<span class="sh_symbol">=</span>rhscon<span class="sh_number">-2</span><span class="sh_symbol">-</span>main<span class="sh_symbol">-</span>rpms</li><li>baseurl<span class="sh_symbol">=</span><span class="sh_string">"ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhscon-2-main-rpms"</span></li><li>enabled<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li>gpgcheck<span class="sh_symbol">=</span><span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# mkdir /var/ftp/system  
+[root@room9pc01 ~]# mkdir /var/ftp/extras 
+[root@room9pc01 ~]# mkdir /var/ftp/HEL7OSP
+[root@room9pc01 ~]# vim /etc/fstab
+/iso/RHEL7OSP-10.iso  /var/ftp/HEL7OSP iso9660 defaults 0 0
+/iso/CentOS7-1708.iso  /var/ftp/system iso9660 defaults 0 0
+/iso/RHEL7-extras.iso  /var/ftp/extras iso9660 defaults 0 0
+[root@room9pc01 ~]# mount –a
+mount: /dev/loop0 is write-protected, mounting read-only
+mount: /dev/loop1 is write-protected, mounting read-only
+mount: /dev/loop2 is write-protected, mounting read-only
+[root@room9pc01 ~]# vim /etc/yum.repos.d/local.repo
+[local_repo]
+name=CentOS-$releasever - Base
+baseurl="ftp://192.168.1.254/system"
+enabled=1
+gpgcheck=1
+
+[local_extras]
+name=extras
+baseurl="ftp://192.168.1.254/extras"
+enabled=1
+gpgcheck=0
+
+[1local_devtools-rpms]
+name=devtools-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-devtools-rpms"
+enabled=1
+gpgcheck=0
+
+[2local_optools-rpms]
+name=optools-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-optools-rpms"
+enabled=1
+gpgcheck=0
+
+[3local_rpms]
+name=rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-rpms"
+enabled=1
+gpgcheck=0
+
+[4local_tools-rpms]
+name=tools-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-openstack-10-tools-rpms"
+enabled=1
+gpgcheck=0
+
+[5local_mon-rpms]
+name=mon-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhceph-2-mon-rpms"
+enabled=1
+gpgcheck=0
+
+[6local_osd-rpms]
+name=osd-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhceph-2-osd-rpms"
+enabled=1
+gpgcheck=0
+
+[7local_rhceph-2-tools-rpms]
+name=rhceph-2-tools-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhceph-2-tools-rpms"
+enabled=1
+gpgcheck=0
+
+[8local_agent-rpms]
+name=agent-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhscon-2-agent-rpms"
+enabled=1
+gpgcheck=0
+
+[9local_installer-rpms]
+name=installer-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhscon-2-installer-rpms"
+enabled=1
+gpgcheck=0
+
+[10local_rhscon-2-main-rpms]
+name=rhscon-2-main-rpms
+baseurl="ftp://192.168.1.254/HEL7OSP/rhel-7-server-rhscon-2-main-rpms"
+enabled=1
+gpgcheck=0
+
+
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：配置DNS服务器：</h2>
+      <h3>2.1 问题</h3>
+      <p>本案例要求掌握DNS服务器的配置：</p>
+      <ul class="list">
+        <li>允许DNS服务器为所有的客户端提供服务
+</li>
+        <li>解析域名openstack.tedu.cn
+</li>
+        <li>解析域名nova.tedu.cn
+</li>
+      </ul>
+      <h3>2.2 方案</h3>
+      <p>此实验的整体方案需要三台机器，openstack作为主节点，nova作为额外节点，真机做为DNS和NTP的服务器(这里不再在表-1中体现，在真机上面直接配置即可)，提供域名解析和时间同步服务，具体情况如表-1所示：</p>
+      <div class="table">
+        <p>表-1</p>
+        <img src="./CASE_files/table001.png">
+      </div>
+      <ul class="list">
+        <li>
+</li>
+      </ul>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置DNS（真机操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install bind bind<span class="sh_symbol">-</span>chroot</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>named<span class="sh_symbol">.</span>conf</li><li>options <span class="sh_cbracket">{</span></li><li>        listen<span class="sh_symbol">-</span>on port <span class="sh_number">53</span> <span class="sh_cbracket">{</span> <span class="sh_number">192.168.1.3</span><span class="sh_symbol">;</span> <span class="sh_cbracket">}</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改ip</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;       allow<span class="sh_symbol">-</span>query     <span class="sh_cbracket">{</span> any<span class="sh_symbol">;</span> <span class="sh_cbracket">}</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//允许所有</span></li><li>        recursion yes<span class="sh_symbol">;</span></li><li>        forwarders <span class="sh_cbracket">{</span> <span class="sh_number">172.40.1.10</span><span class="sh_symbol">;</span> <span class="sh_cbracket">}</span><span class="sh_symbol">;</span>    <span class="sh_comment">//转发dns,真机的服务器地址</span></li><li><span style="display:none;">&nbsp;</span></li><li>        dnssec<span class="sh_symbol">-</span>enable no<span class="sh_symbol">;</span></li><li>        dnssec<span class="sh_symbol">-</span>validation no<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># systemctl restart named</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# yum -y install bind bind-chroot
+[root@room9pc01 ~]# vim /etc/named.conf
+options {
+        listen-on port 53 { 192.168.1.3; };		//修改ip
+	       allow-query     { any; };				//允许所有
+        recursion yes;
+        forwarders { 172.40.1.10; };    //转发dns,真机的服务器地址
+
+        dnssec-enable no;
+        dnssec-validation no;
+};
+[root@room9pc01 ~]# systemctl restart named
+</pre></div></div>
+      <p class="number">步骤二：两台虚拟机配置静态ip</p>
+      <p>注意：两台主机同样操作，改一下ip即可（以openstack.tedu.cn为例）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># echo openstack<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/etc/</span>hostname </li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># hostname openstack<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//另外一台主机改名为nova.tedu.cn</span></li><li> <span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span>ifcfg<span class="sh_symbol">-</span>eth0</li><li># Generated by dracut initrd</li><li>DEVICE<span class="sh_symbol">=</span><span class="sh_string">"eth0"</span></li><li>ONBOOT<span class="sh_symbol">=</span><span class="sh_string">"yes"</span></li><li>IPV6INIT<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>IPV4_FAILURE_FATAL<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>NM_CONTROLLED<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>TYPE<span class="sh_symbol">=</span><span class="sh_string">"Ethernet"</span></li><li>BOOTPROTO<span class="sh_symbol">=</span><span class="sh_string">"static"</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_string">"192.168.1.1"</span></li><li>PREFIX<span class="sh_symbol">=</span><span class="sh_number">24</span></li><li>GATEWAY<span class="sh_symbol">=</span><span class="sh_number">192.168.1.254</span></li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># systemctl restart network</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# echo openstack.tedu.cn &gt; /etc/hostname 
+[root@localhost ~]# hostname openstack.tedu.cn	//另外一台主机改名为nova.tedu.cn
+ [root@openstack ~]# vim /etc/sysconfig/network-scripts/ifcfg-eth0
+# Generated by dracut initrd
+DEVICE="eth0"
+ONBOOT="yes"
+IPV6INIT="no"
+IPV4_FAILURE_FATAL="no"
+NM_CONTROLLED="no"
+TYPE="Ethernet"
+BOOTPROTO="static"
+IPADDR="192.168.1.1"
+PREFIX=24
+GATEWAY=192.168.1.254
+[root@openstack ~]# systemctl restart network
+</pre></div></div>
+      <p class="number">步骤三：域名解析</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li> <span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hosts &nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//在openstack.tedu.cn和nova.tedu.cn主机上面操作</span></li><li><span class="sh_number">192.168.1.1</span> openstack<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li><span class="sh_number">192.168.1.2</span> nova<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;"> [root@openstack ~]# vim /etc/hosts 	
+//在openstack.tedu.cn和nova.tedu.cn主机上面操作
+192.168.1.1 openstack.tedu.cn
+192.168.1.2 nova.tedu.cn
+</pre></div></div>
+      <p>测试能否ping通，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：配置NTP服务器</h2>
+      <h3>3.1 问题</h3>
+      <p>本案例要求配置NTP时间同步服务器：</p>
+      <ul class="list">
+        <li>将NTP服务与DNS服务部署在同一台主机上
+</li>
+        <li>确认NTP服务器的时区是东八区
+</li>
+        <li>确认NTP服务器的时间准确
+</li>
+        <li>计划安装openstack的服务器与NTP服务器进行时间校正
+</li>
+      </ul>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置NTP时间同步（真机操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install chrony</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>chrony<span class="sh_symbol">.</span>conf</li><li>server ntp1<span class="sh_symbol">.</span>aliyun<span class="sh_symbol">.</span>com iburst</li><li>bindacqaddress <span class="sh_number">0.0.0.0</span></li><li>allow <span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//允许所有人使用我的时间服务器 </span></li><li>cmdallow <span class="sh_number">127.0.0.1</span>&nbsp;&nbsp;&nbsp;&nbsp;  <span class="sh_comment">//控制指令</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># systemctl restart chronyd</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># netstat <span class="sh_symbol">-</span>antup <span class="sh_symbol">|</span> grep chronyd</li><li>udp        <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">123</span>             <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>                           <span class="sh_number">23036</span><span class="sh_symbol">/</span>chronyd       </li><li>udp        <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">323</span>           <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>                           <span class="sh_number">23036</span><span class="sh_symbol">/</span>chronyd</li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># chronyc sources <span class="sh_symbol">-</span>v    <span class="sh_comment">//出现*号代表NTP时间可用</span></li><li><span class="sh_symbol">^*</span> <span class="sh_number">120.25.115.20</span>                 <span class="sh_number">2</span>   <span class="sh_number">6</span>    <span class="sh_number">17</span>    <span class="sh_number">62</span>   <span class="sh_symbol">-</span>753us<span class="sh_symbol">[-</span>7003us<span class="sh_symbol">]</span> <span class="sh_symbol">+/-</span>   24ms</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# yum -y install chrony
+[root@room9pc01 ~]# vim /etc/chrony.conf
+server ntp1.aliyun.com iburst
+bindacqaddress 0.0.0.0
+allow 0/0			//允许所有人使用我的时间服务器 
+cmdallow 127.0.0.1	  //控制指令
+[root@room9pc01 ~]# systemctl restart chronyd
+[root@room9pc01 ~]# netstat -antup | grep chronyd
+udp        0      0 0.0.0.0:123             0.0.0.0:*                           23036/chronyd       
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           23036/chronyd
+[root@room9pc01 ~]# chronyc sources -v    //出现*号代表NTP时间可用
+^* 120.25.115.20                 2   6    17    62   -753us[-7003us] +/-   24ms
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：环境准备</h2>
+      <h3>4.1 问题</h3>
+      <p>本案例要求准备基础环境，为安装openstack做准备：</p>
+      <ul class="list">
+        <li>准备openstack的基础环境
+</li>
+      </ul>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备基础环境</p>
+      <p>1）配置yum源</p>
+      <p>备注：只有系统源的gpgcheck=1，其他的都是gpgcheck=0）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">scp </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>local<span class="sh_symbol">.</span>repo <span class="sh_symbol">\</span></li><li> <span class="sh_number">192.168.1.1</span><span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//拷贝给openstack.tedu.cn这台主机</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># <span class="sh_normal">scp </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>local<span class="sh_symbol">.</span>repo <span class="sh_symbol">\</span></li><li> <span class="sh_number">192.168.1.2</span><span class="sh_symbol">:</span><span class="sh_regexp">/etc/</span>yum<span class="sh_symbol">.</span>repos<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>   <span class="sh_comment">//拷贝给nova.tedu.cn这台主机</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# scp /etc/yum.repos.d/local.repo \
+ 192.168.1.1:/etc/yum.repos.d/		//拷贝给openstack.tedu.cn这台主机
+[root@room9pc01 ~]# scp /etc/yum.repos.d/local.repo \
+ 192.168.1.2:/etc/yum.repos.d/   //拷贝给nova.tedu.cn这台主机
+</pre></div></div>
+      <p class="number">步骤二：配置ip</p>
+      <p>备注：  配置eth0为公共网络，网络地址192.168.1.0/24（已经配置过）</p>
+      <p>配置eth1为隧道接口，网络地址192.168.2.0/24</p>
+      <p>1）给openstack.tedu.cn主机添加eth1网卡</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 networks<span class="sh_symbol">]</span># virsh <span class="sh_symbol">-</span>c qemu<span class="sh_symbol">:</span><span class="sh_comment">///system attach-interface openstack bridge private2 --model virtio</span></li><li>Interface attached successfully    <span class="sh_comment">//添加成功</span></li><li> <span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span>scripts</li><li><span class="sh_symbol">[</span>root@openstack network<span class="sh_symbol">-</span>scripts<span class="sh_symbol">]</span># cp ifcfg<span class="sh_symbol">-</span>eth0 ifcfg<span class="sh_symbol">-</span>eth1</li><li><span class="sh_symbol">[</span>root@openstack network<span class="sh_symbol">-</span>scripts<span class="sh_symbol">]</span># vim ifcfg<span class="sh_symbol">-</span>eth1</li><li># Generated by dracut initrd</li><li>DEVICE<span class="sh_symbol">=</span><span class="sh_string">"eth1"</span></li><li>ONBOOT<span class="sh_symbol">=</span><span class="sh_string">"yes"</span></li><li>IPV6INIT<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>IPV4_FAILURE_FATAL<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>NM_CONTROLLED<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>TYPE<span class="sh_symbol">=</span><span class="sh_string">"Ethernet"</span></li><li>BOOTPROTO<span class="sh_symbol">=</span><span class="sh_string">"static"</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_string">"192.168.2.1"</span></li><li>PREFIX<span class="sh_symbol">=</span><span class="sh_number">24</span></li><li>GATEWAY<span class="sh_symbol">=</span><span class="sh_number">192.168.1.254</span></li><li><span class="sh_symbol">[</span>root@openstack network<span class="sh_symbol">-</span>scripts<span class="sh_symbol">]</span># systemctl restart network</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 networks]# virsh -c qemu:///system attach-interface openstack bridge private2 --model virtio
+Interface attached successfully    //添加成功
+ [root@openstack ~]# cd /etc/sysconfig/network-scripts
+[root@openstack network-scripts]# cp ifcfg-eth0 ifcfg-eth1
+[root@openstack network-scripts]# vim ifcfg-eth1
+# Generated by dracut initrd
+DEVICE="eth1"
+ONBOOT="yes"
+IPV6INIT="no"
+IPV4_FAILURE_FATAL="no"
+NM_CONTROLLED="no"
+TYPE="Ethernet"
+BOOTPROTO="static"
+IPADDR="192.168.2.1"
+PREFIX=24
+GATEWAY=192.168.1.254
+[root@openstack network-scripts]# systemctl restart network
+</pre></div></div>
+      <p>2）给nova.tedu.cn主机添加eth1网卡</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 networks<span class="sh_symbol">]</span># virsh <span class="sh_symbol">-</span>c qemu<span class="sh_symbol">:</span><span class="sh_comment">///system attach-interface nova bridge private2 --model virtio</span></li><li>Interface attached successfully&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加成功</span></li><li><span class="sh_symbol">[</span>root@nova <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span>scripts</li><li><span class="sh_symbol">[</span>root@nova network<span class="sh_symbol">-</span>scripts<span class="sh_symbol">]</span># cp ifcfg<span class="sh_symbol">-</span>eth0 ifcfg<span class="sh_symbol">-</span>eth1</li><li><span class="sh_symbol">[</span>root@nova network<span class="sh_symbol">-</span>scripts<span class="sh_symbol">]</span># vim ifcfg<span class="sh_symbol">-</span>eth1</li><li># Generated by dracut initrd</li><li>DEVICE<span class="sh_symbol">=</span><span class="sh_string">"eth1"</span></li><li>ONBOOT<span class="sh_symbol">=</span><span class="sh_string">"yes"</span></li><li>IPV6INIT<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>IPV4_FAILURE_FATAL<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>NM_CONTROLLED<span class="sh_symbol">=</span><span class="sh_string">"no"</span></li><li>TYPE<span class="sh_symbol">=</span><span class="sh_string">"Ethernet"</span></li><li>BOOTPROTO<span class="sh_symbol">=</span><span class="sh_string">"static"</span></li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_string">"192.168.2.2"</span></li><li>PREFIX<span class="sh_symbol">=</span><span class="sh_number">24</span></li><li>GATEWAY<span class="sh_symbol">=</span><span class="sh_number">192.168.1.254</span></li><li><span class="sh_symbol">[</span>root@openstack network<span class="sh_symbol">-</span>scripts<span class="sh_symbol">]</span># systemctl restart network</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 networks]# virsh -c qemu:///system attach-interface nova bridge private2 --model virtio
+Interface attached successfully	//添加成功
+[root@nova ~]# cd /etc/sysconfig/network-scripts
+[root@nova network-scripts]# cp ifcfg-eth0 ifcfg-eth1
+[root@nova network-scripts]# vim ifcfg-eth1
+# Generated by dracut initrd
+DEVICE="eth1"
+ONBOOT="yes"
+IPV6INIT="no"
+IPV4_FAILURE_FATAL="no"
+NM_CONTROLLED="no"
+TYPE="Ethernet"
+BOOTPROTO="static"
+IPADDR="192.168.2.2"
+PREFIX=24
+GATEWAY=192.168.1.254
+[root@openstack network-scripts]# systemctl restart network
+</pre></div></div>
+      <p>3）配置卷组（openstack主机上面操作）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 images<span class="sh_symbol">]</span># qemu<span class="sh_symbol">-</span>img  create <span class="sh_symbol">-</span>f qcow2 disk<span class="sh_symbol">.</span>img 50G</li><li>Formatting <span class="sh_string">'disk.img'</span><span class="sh_symbol">,</span> fmt<span class="sh_symbol">=</span>qcow2 size<span class="sh_symbol">=</span><span class="sh_number">53687091200</span> encryption<span class="sh_symbol">=</span>off cluster_size<span class="sh_symbol">=</span><span class="sh_number">65536</span> lazy_refcounts<span class="sh_symbol">=</span>off </li><li><span class="sh_symbol">[</span>root@room9pc01 networks<span class="sh_symbol">]</span># virsh <span class="sh_symbol">-</span>c qemu<span class="sh_symbol">:</span><span class="sh_comment">///system attach-disk openstack \</span></li><li> <span class="sh_regexp">/var/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">libvirt</span><span class="sh_symbol">/</span><span class="sh_normal">images</span><span class="sh_symbol">/</span>disk<span class="sh_symbol">.</span>img vdb <span class="sh_symbol">--</span>subdriver qcow2 <span class="sh_symbol">--</span>sourcetype file</li><li>Disk attached successfully&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加成功</span></li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># yum install lvm2 </li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># <span class="sh_normal">pvcreate </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb </li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># vgcreate cinder<span class="sh_symbol">-</span><span class="sh_normal">volumes </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 images]# qemu-img  create -f qcow2 disk.img 50G
+Formatting 'disk.img', fmt=qcow2 size=53687091200 encryption=off cluster_size=65536 lazy_refcounts=off 
+[root@room9pc01 networks]# virsh -c qemu:///system attach-disk openstack \
+ /var/lib/libvirt/images/disk.img vdb --subdriver qcow2 --sourcetype file
+Disk attached successfully		//添加成功
+[root@openstack ~]# yum install lvm2 
+[root@openstack ~]# pvcreate /dev/vdb 
+[root@openstack ~]# vgcreate cinder-volumes /dev/vdb
+</pre></div></div>
+      <p>4）安装openstack的依赖包（openstack.tedu.cn和nova.tedu.cn主机上面</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y qemu<span class="sh_symbol">-</span>kvm libvirt<span class="sh_symbol">-</span>client libvirt<span class="sh_symbol">-</span>daemon libvirt<span class="sh_symbol">-</span>daemon<span class="sh_symbol">-</span>driver<span class="sh_symbol">-</span>qemu python<span class="sh_symbol">-</span>setuptools </li><li><span class="sh_symbol">[</span>root@nova <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y qemu<span class="sh_symbol">-</span>kvm libvirt<span class="sh_symbol">-</span>client libvirt<span class="sh_symbol">-</span>daemon libvirt<span class="sh_symbol">-</span>daemon<span class="sh_symbol">-</span>driver<span class="sh_symbol">-</span>qemu python<span class="sh_symbol">-</span>setuptools</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~]# yum install -y qemu-kvm libvirt-client libvirt-daemon libvirt-daemon-driver-qemu python-setuptools 
+[root@nova ~]# yum install -y qemu-kvm libvirt-client libvirt-daemon libvirt-daemon-driver-qemu python-setuptools
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：部署Openstack：</h2>
+      <h3>5.1 问题</h3>
+      <p>本案例要求通过packstack完成以下配置：</p>
+      <ul class="list">
+        <li>通过packstack部署Openstack
+</li>
+        <li>根据相关日志文件进行排错
+</li>
+      </ul>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装packstack</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># yum install <span class="sh_symbol">-</span>y openstack<span class="sh_symbol">-</span>packstack</li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># packstack <span class="sh_symbol">--</span>gen<span class="sh_symbol">-</span>answer<span class="sh_symbol">-</span>file answer<span class="sh_symbol">.</span>ini  </li><li><span class="sh_comment">//answer.ini与answer.txt是一样的，只是用vim打开answer.ini文件有颜色</span></li><li>Packstack changed given value  to required <span class="sh_normal">value </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/.</span><span class="sh_normal">ssh</span><span class="sh_symbol">/</span>id_rsa<span class="sh_symbol">.</span>pub</li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># vim answer<span class="sh_symbol">.</span>ini</li><li>  <span class="sh_number">11</span> CONFIG_DEFAULT_PASSWORD<span class="sh_symbol">=</span>redhat  <span class="sh_comment">//密码</span></li><li>  <span class="sh_number">42</span> CONFIG_SWIFT_INSTALL<span class="sh_symbol">=</span>n</li><li>  <span class="sh_number">75</span> CONFIG_NTP_SERVERS<span class="sh_symbol">=</span><span class="sh_number">192.168.1.3</span>   <span class="sh_comment">//时间服务器的地址</span></li><li> <span class="sh_number">554</span> CONFIG_CINDER_VOLUMES_CREATE<span class="sh_symbol">=</span>n    <span class="sh_comment">//创建卷,已经手动创建过了</span></li><li> <span class="sh_number">840</span> CONFIG_NEUTRON_ML2_TYPE_DRIVERS<span class="sh_symbol">=</span>flat<span class="sh_symbol">,</span>vxlan   <span class="sh_comment">//驱动类型</span></li><li> <span class="sh_number">876</span> CONFIG_NEUTRON_ML2_VXLAN_GROUP<span class="sh_symbol">=</span><span class="sh_number">239.1.1.5</span>  </li><li><span class="sh_comment">//设置组播地址,最后一个随意不能为0和255,其他固定</span></li><li> <span class="sh_number">910</span> CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS<span class="sh_symbol">=</span>physnet1<span class="sh_symbol">:</span>br<span class="sh_symbol">-</span>ex  <span class="sh_comment">//物理网桥的名称</span></li><li> <span class="sh_number">921</span> CONFIG_NEUTRON_OVS_BRIDGE_IFACES<span class="sh_symbol">=</span>br<span class="sh_symbol">-</span>ex<span class="sh_symbol">:</span>eth0   </li><li><span class="sh_comment">//br-ex桥的名称与eth0连接，管理eth0,网桥与哪个物理网卡连接</span></li><li> <span class="sh_number">936</span> CONFIG_NEUTRON_OVS_TUNNEL_IF<span class="sh_symbol">=</span>eth1</li><li><span class="sh_number">1179</span> CONFIG_PROVISION_DEMO<span class="sh_symbol">=</span>n   <span class="sh_comment">//DEMO是否测试</span></li><li> <span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># packstack    <span class="sh_symbol">--</span>answer<span class="sh_symbol">-</span>file<span class="sh_symbol">=</span>answer<span class="sh_symbol">.</span>ini</li><li> <span class="sh_symbol">****</span> Installation completed successfully <span class="sh_symbol">******</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//出现这个为成功</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~]# yum install -y openstack-packstack
+[root@openstack ~]# packstack --gen-answer-file answer.ini  
+//answer.ini与answer.txt是一样的，只是用vim打开answer.ini文件有颜色
+Packstack changed given value  to required value /root/.ssh/id_rsa.pub
+[root@openstack ~]# vim answer.ini
+  11 CONFIG_DEFAULT_PASSWORD=redhat  //密码
+  42 CONFIG_SWIFT_INSTALL=n
+  75 CONFIG_NTP_SERVERS=192.168.1.3   //时间服务器的地址
+ 554 CONFIG_CINDER_VOLUMES_CREATE=n    //创建卷,已经手动创建过了
+ 840 CONFIG_NEUTRON_ML2_TYPE_DRIVERS=flat,vxlan   //驱动类型
+ 876 CONFIG_NEUTRON_ML2_VXLAN_GROUP=239.1.1.5  
+//设置组播地址,最后一个随意不能为0和255,其他固定
+ 910 CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=physnet1:br-ex  //物理网桥的名称
+ 921 CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-ex:eth0   
+//br-ex桥的名称与eth0连接，管理eth0,网桥与哪个物理网卡连接
+ 936 CONFIG_NEUTRON_OVS_TUNNEL_IF=eth1
+1179 CONFIG_PROVISION_DEMO=n   //DEMO是否测试
+ [root@openstack ~]# packstack    --answer-file=answer.ini
+ **** Installation completed successfully ******		//出现这个为成功
+</pre></div></div>
+      <p class="number">步骤二：安装openstack可能会出现的错误以及排错方法</p>
+      <p>1）ntp时间不同步，如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>解决办法：查看ntp时间服务器，是否出现*号，若没有，查看配置文件，配置ntp服务器步骤在案例3，可以参考</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># chronyc sources <span class="sh_symbol">-</span>v    <span class="sh_comment">//出现*号代表NTP时间可用</span></li><li><span class="sh_symbol">^*</span> <span class="sh_number">120.25.115.20</span> <span class="sh_number">2</span>   <span class="sh_number">6</span>    <span class="sh_number">17</span>    <span class="sh_number">62</span>   <span class="sh_symbol">-</span>753us<span class="sh_symbol">[-</span>7003us<span class="sh_symbol">]</span> <span class="sh_symbol">+/-</span>   24ms</li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># chronyc sources <span class="sh_symbol">-</span>v</li><li><span class="sh_symbol">^*</span> <span class="sh_number">192.168.1.3</span>   <span class="sh_number">3</span>   <span class="sh_number">9</span>   <span class="sh_number">377</span>   <span class="sh_number">504</span>    <span class="sh_symbol">+</span>50us<span class="sh_symbol">[</span>  <span class="sh_symbol">-</span>20us<span class="sh_symbol">]</span> <span class="sh_symbol">+/-</span>   24ms</li><li><span class="sh_symbol">[</span>root@nova <span class="sh_symbol">~]</span># chronyc sources <span class="sh_symbol">-</span>v</li><li><span class="sh_symbol">^*</span> <span class="sh_number">192.168.1.3</span>    <span class="sh_number">3</span>   <span class="sh_number">9</span>   <span class="sh_number">377</span>   <span class="sh_number">159</span>   <span class="sh_symbol">-</span>202us<span class="sh_symbol">[</span> <span class="sh_symbol">-</span>226us<span class="sh_symbol">]</span> <span class="sh_symbol">+/-</span>   24ms</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# chronyc sources -v    //出现*号代表NTP时间可用
+^* 120.25.115.20 2   6    17    62   -753us[-7003us] +/-   24ms
+[root@openstack ~]# chronyc sources -v
+^* 192.168.1.3   3   9   377   504    +50us[  -20us] +/-   24ms
+[root@nova ~]# chronyc sources -v
+^* 192.168.1.3    3   9   377   159   -202us[ -226us] +/-   24ms
+</pre></div></div>
+      <p>2）网桥名称写错，如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>解决办法：检查配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># vim answer<span class="sh_symbol">.</span>ini</li><li><span class="sh_symbol">...</span></li><li><span class="sh_number">921</span> CONFIG_NEUTRON_OVS_BRIDGE_IFACES<span class="sh_symbol">=</span>br<span class="sh_symbol">-</span>ex<span class="sh_symbol">:</span>eth0   </li><li><span class="sh_comment">//br-ex桥的名称与eth0连接，管理eth0,网桥与哪个物理网卡连接</span></li><li><span class="sh_symbol">...</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~]# vim answer.ini
+...
+921 CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-ex:eth0   
+//br-ex桥的名称与eth0连接，管理eth0,网桥与哪个物理网卡连接
+...
+</pre></div></div>
+      <p>3）若/root/.ssh/id_rsa.pub，提示password，同样是配置文件没有写对，如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>4）yum源没有配置正确，如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p>解决办法：检查yum是否为10731个软件包，查看是否是yum源没有配置正确，之后安装oprnstack-dashboard</p>
+      <p>备注：除了系统源gpgcheck=1之外，其他都是gpgcheck=0</p>
+      <p>5）出现Cannot allocate memory,如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>解决办法：</p>
+      <p>内存不足，重新启动主机</p>
+      <a name="case6">
+      </a>
+      <h2>6 案例6：网络管理</h2>
+      <h3>6.1 问题</h3>
+      <p>本案例要求运用OVS完成以下配置：</p>
+      <ul class="list">
+        <li>查看外部OVS网桥及其端口
+</li>
+        <li>验证OVS配置
+</li>
+      </ul>
+      <h3>6.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：查看外部OVS网桥</p>
+      <p>1）查看br-ex网桥配置（br-ex为OVS网桥设备）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span>ifcfg<span class="sh_symbol">-</span>br<span class="sh_symbol">-</span>ex </li><li>ONBOOT<span class="sh_symbol">=</span><span class="sh_string">"yes"</span></li><li>NM_CONTROLLED<span class="sh_symbol">=</span><span class="sh_string">"no"</span> </li><li>IPADDR<span class="sh_symbol">=</span><span class="sh_string">"192.168.1.1"</span></li><li>PREFIX<span class="sh_symbol">=</span><span class="sh_number">24</span></li><li>GATEWAY<span class="sh_symbol">=</span><span class="sh_number">192.168.1.254</span></li><li>DEVICE<span class="sh_symbol">=</span>br<span class="sh_symbol">-</span>ex</li><li>NAME<span class="sh_symbol">=</span>br<span class="sh_symbol">-</span>ex</li><li>DEVICETYPE<span class="sh_symbol">=</span>ovs</li><li>OVSBOOTPROTO<span class="sh_symbol">=</span><span class="sh_string">"static"</span></li><li>TYPE<span class="sh_symbol">=</span>OVSBridge</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~]# cat /etc/sysconfig/network-scripts/ifcfg-br-ex 
+ONBOOT="yes"
+NM_CONTROLLED="no" 
+IPADDR="192.168.1.1"
+PREFIX=24
+GATEWAY=192.168.1.254
+DEVICE=br-ex
+NAME=br-ex
+DEVICETYPE=ovs
+OVSBOOTPROTO="static"
+TYPE=OVSBridge
+</pre></div></div>
+      <p>2）查看eth0网卡配置（该网卡为OVS网桥的接口）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nova <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">sysconfig</span><span class="sh_symbol">/</span>network<span class="sh_symbol">-</span><span class="sh_normal">scripts</span><span class="sh_symbol">/</span>ifcfg<span class="sh_symbol">-</span>eth0 </li><li>DEVICE<span class="sh_symbol">=</span>eth0</li><li>NAME<span class="sh_symbol">=</span>eth0</li><li>DEVICETYPE<span class="sh_symbol">=</span>ovs</li><li>TYPE<span class="sh_symbol">=</span>OVSPort</li><li>OVS_BRIDGE<span class="sh_symbol">=</span>br<span class="sh_symbol">-</span>ex</li><li>ONBOOT<span class="sh_symbol">=</span>yes</li><li>BOOTPROTO<span class="sh_symbol">=</span>none</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nova ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 
+DEVICE=eth0
+NAME=eth0
+DEVICETYPE=ovs
+TYPE=OVSPort
+OVS_BRIDGE=br-ex
+ONBOOT=yes
+BOOTPROTO=none
+</pre></div></div>
+      <p>3）验证OVS配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@nova <span class="sh_symbol">~]</span># ovs<span class="sh_symbol">-</span>vsctl show</li><li>    Bridge br<span class="sh_symbol">-</span>ex</li><li>        Controller <span class="sh_string">"tcp:127.0.0.1:6633"</span></li><li>            is_connected<span class="sh_symbol">:</span> <span class="sh_keyword">true</span></li><li>        fail_mode<span class="sh_symbol">:</span> secure</li><li>        Port br<span class="sh_symbol">-</span>ex</li><li>            Interface br<span class="sh_symbol">-</span>ex</li><li>                type<span class="sh_symbol">:</span> internal</li><li>        Port phy<span class="sh_symbol">-</span>br<span class="sh_symbol">-</span>ex</li><li>            Interface phy<span class="sh_symbol">-</span>br<span class="sh_symbol">-</span>ex</li><li>                type<span class="sh_symbol">:</span> patch</li><li>                options<span class="sh_symbol">:</span> <span class="sh_cbracket">{</span>peer<span class="sh_symbol">=</span>int<span class="sh_symbol">-</span>br<span class="sh_symbol">-</span>ex<span class="sh_cbracket">}</span></li><li>        Port <span class="sh_string">"eth0"</span></li><li>            Interface <span class="sh_string">"eth0"</span></li><li>    ovs_version<span class="sh_symbol">:</span> <span class="sh_string">"2.5.0"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@nova ~]# ovs-vsctl show
+    Bridge br-ex
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+        fail_mode: secure
+        Port br-ex
+            Interface br-ex
+                type: internal
+        Port phy-br-ex
+            Interface phy-br-ex
+                type: patch
+                options: {peer=int-br-ex}
+        Port "eth0"
+            Interface "eth0"
+    ovs_version: "2.5.0"
+</pre></div></div>
+      <a name="case7">
+      </a>
+      <h2>7 案例7：管理项目</h2>
+      <h3>7.1 问题</h3>
+      <p>本案例要求通过Horizon完成以下操作：</p>
+      <ul class="list">
+        <li>创建名为myproject的项目
+</li>
+        <li>查看项目信息
+</li>
+        <li>更新vcpu配额为30
+</li>
+        <li>删除myproject
+</li>
+        <li>
+</li>
+      </ul>
+      <h3>7.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：浏览器访问openstack</p>
+      <p>1）浏览器访问</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack conf<span class="sh_symbol">.</span>d<span class="sh_symbol">]</span># firefox <span class="sh_number">192.168.1.1</span>  <span class="sh_comment">//访问失败</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack conf.d]# firefox 192.168.1.1  //访问失败
+</pre></div></div>
+      <p>2）需要改配置文件并重新加载</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@openstack conf<span class="sh_symbol">.</span>d<span class="sh_symbol">]</span># vi <span class="sh_number">15</span><span class="sh_symbol">-</span>horizon_vhost<span class="sh_symbol">.</span>conf</li><li>     <span class="sh_number">35</span>   WSGIProcessGroup apache</li><li>     <span class="sh_number">36</span>   WSGIApplicationGroup <span class="sh_symbol">%</span><span class="sh_cbracket">{</span>GLOBAL<span class="sh_cbracket">}</span>     <span class="sh_comment">//添加这一行</span></li><li><span class="sh_symbol">[</span>root@openstack conf<span class="sh_symbol">.</span>d<span class="sh_symbol">]</span># apachectl  graceful  <span class="sh_comment">//重新载入配置文件</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~]# cd /etc/httpd/conf.d/
+[root@openstack conf.d]# vi 15-horizon_vhost.conf
+     35   WSGIProcessGroup apache
+     36   WSGIApplicationGroup %{GLOBAL}     //添加这一行
+[root@openstack conf.d]# apachectl  graceful  //重新载入配置文件
+</pre></div></div>
+      <p>3）浏览器访问，出现页面，如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image007.png">
+        <p>图-6</p>
+      </div>
+      <p>3）查看默认用户名和密码</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack conf<span class="sh_symbol">.</span>d<span class="sh_symbol">]</span># cd</li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># ls</li><li>answer<span class="sh_symbol">.</span>ini   keystonerc_admin   <span class="sh_comment">//keystonerc_admin生成的文件，里面有用户名和密码</span></li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># cat keystonerc_admin </li><li>unset OS_SERVICE_TOKEN</li><li>    <span class="sh_keyword">export</span> OS_USERNAME<span class="sh_symbol">=</span>admin  <span class="sh_comment">//用户名</span></li><li>    <span class="sh_keyword">export</span> OS_PASSWORD<span class="sh_symbol">=</span>1bb4c987345c45ba  <span class="sh_comment">//密码</span></li><li>    <span class="sh_keyword">export</span> OS_AUTH_URL<span class="sh_symbol">=</span>http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.1.1:5000/v2.0</span></li><li>    <span class="sh_keyword">export</span> PS1<span class="sh_symbol">=</span><span class="sh_string">'[</span><span class="sh_specialchar">\u</span><span class="sh_string">@</span><span class="sh_specialchar">\h</span><span class="sh_string"> </span><span class="sh_specialchar">\W</span><span class="sh_string">(keystone_admin)]</span><span class="sh_specialchar">\$</span><span class="sh_string"> '</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">export</span> OS_TENANT_NAME<span class="sh_symbol">=</span>admin</li><li><span class="sh_keyword">export</span> OS_REGION_NAME<span class="sh_symbol">=</span>RegionOne</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack conf.d]# cd
+[root@openstack ~]# ls
+answer.ini   keystonerc_admin   //keystonerc_admin生成的文件，里面有用户名和密码
+[root@openstack ~]# cat keystonerc_admin 
+unset OS_SERVICE_TOKEN
+    export OS_USERNAME=admin  //用户名
+    export OS_PASSWORD=1bb4c987345c45ba  //密码
+    export OS_AUTH_URL=http://192.168.1.1:5000/v2.0
+    export PS1='[\u@\h \W(keystone_admin)]\$ '
+
+export OS_TENANT_NAME=admin
+export OS_REGION_NAME=RegionOne
+</pre></div></div>
+      <p>4）在火狐浏览器中输入用户名和密码，登录后页面如图-7所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image008.png">
+        <p>图-7</p>
+      </div>
+      <p>4）创建名为myproject的项目</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~]</span># source <span class="sh_symbol">~</span><span class="sh_regexp">/keystonerc_admin  /</span><span class="sh_symbol">/</span>初始化环境变量</li><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~(</span>keystone_admin<span class="sh_symbol">)]</span># openstack project create myproject</li><li><span class="sh_symbol">+-------------+----------------------------------+</span></li><li><span class="sh_symbol">|</span> Field       <span class="sh_symbol">|</span> Value                            <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------+----------------------------------+</span></li><li><span class="sh_symbol">|</span> description <span class="sh_symbol">|</span> None                             <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> enabled     <span class="sh_symbol">|</span> True                             <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> id          <span class="sh_symbol">|</span>f73949e2701346328faf5c1272414cd0<span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> name        <span class="sh_symbol">|</span> myproject                        <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------+----------------------------------+</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~]# source ~/keystonerc_admin  //初始化环境变量
+[root@openstack ~(keystone_admin)]# openstack project create myproject
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | None                             |
+| enabled     | True                             |
+| id          |f73949e2701346328faf5c1272414cd0|
+| name        | myproject                        |
++-------------+----------------------------------+
+</pre></div></div>
+      <p>5）查看项目信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~(</span>keystone_admin<span class="sh_symbol">)]</span># openstack project list</li><li><span class="sh_symbol">+----------------------------------+-----------+</span></li><li><span class="sh_symbol">|</span> ID                                  <span class="sh_symbol">|</span> Name      <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------------------------------+-----------+</span></li><li><span class="sh_symbol">|</span> 3fd5bffd734543d39cf742492273a47f <span class="sh_symbol">|</span> services  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> 7f0b43274a9f4e149357fc8393ff2c68 <span class="sh_symbol">|</span> admin     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> f73949e2701346328faf5c1272414cd0 <span class="sh_symbol">|</span> myproject <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------------------------------+-----------+</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~(keystone_admin)]# openstack project list
++----------------------------------+-----------+
+| ID                                  | Name      |
++----------------------------------+-----------+
+| 3fd5bffd734543d39cf742492273a47f | services  |
+| 7f0b43274a9f4e149357fc8393ff2c68 | admin     |
+| f73949e2701346328faf5c1272414cd0 | myproject |
++----------------------------------+-----------+
+</pre></div></div>
+      <p>6）更新vcpu配额为30</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~(</span>keystone_admin<span class="sh_symbol">)]</span># nova quota<span class="sh_symbol">-</span>update <span class="sh_symbol">--</span>cores <span class="sh_number">30</span> myproject</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~(keystone_admin)]# nova quota-update --cores 30 myproject
+</pre></div></div>
+      <p>7）删除myproject</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/CLOUD/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@openstack <span class="sh_symbol">~(</span>keystone_admin<span class="sh_symbol">)]</span># openstack project <span class="sh_keyword">delete</span> myproject</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@openstack ~(keystone_admin)]# openstack project delete myproject
+</pre></div></div>
+    </div>
+  
+</body></html>

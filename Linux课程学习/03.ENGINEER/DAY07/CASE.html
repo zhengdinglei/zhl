@@ -1,0 +1,805 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ENGINEER DAY07</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#case1">案例1：配置安全Web服务</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#case2">案例2：postfix基础邮件服务</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#case3">案例3：添加一个swap分区</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#case4">案例4：Linux工程师 综合测试</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：配置安全Web服务</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求为站点 http://server0.example.com 配置TLS加密</p>
+      <ol class="list">
+        <li>一个已签名证书从以下地址获取 http://classroom/pub/tls/certs/server0.crt 
+</li>
+        <li>此证书的密钥从以下地址获取 http://classroom/pub/tls/private/server0.key 
+</li>
+        <li>此证书的签名授权信息从以下地址获取http://classroom/pub/example-ca.crt 
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>安全Web传输协议及端口：TCP 443</p>
+      <p>访问HTTP站点（未加密）：http://server0.example.com/</p>
+      <p>访问HTTPS站点（加密）：https://server0.example.com/</p>
+      <p>为httpd服务端实现TLS加密的条件：1）启用一个 mod_ssl 模块；2）提供加密的素材：网站服务器的数字证书、网站服务器的私钥、根证书（证书颁发机构的数字证书）</p>
+      <p>TLS证书部署位置：/etc/pki/tls/certs/*.crt</p>
+      <p>TLS私钥部署位置：/etc/pki/tls/private/*.key</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置HTTPS网站服务器</p>
+      <p>1）安装mod_ssl模块软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  mod_ssl</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  mod_ssl
+.. ..
+</pre></div></div>
+      <p>2）部署密钥、证书等素材</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_normal">certs</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/example-ca.crt </span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-27</span> <span class="sh_number">01</span><span class="sh_symbol">:</span><span class="sh_number">04</span><span class="sh_symbol">:</span><span class="sh_number">51</span> <span class="sh_symbol">(</span><span class="sh_number">116</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘example<span class="sh_symbol">-</span>ca<span class="sh_symbol">.</span>crt’ saved <span class="sh_symbol">[</span><span class="sh_number">1220</span><span class="sh_symbol">/</span><span class="sh_number">1220</span><span class="sh_symbol">]</span> </li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/tls/certs/server0.crt </span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-27</span> <span class="sh_number">01</span><span class="sh_symbol">:</span><span class="sh_number">04</span><span class="sh_symbol">:</span><span class="sh_number">06</span> <span class="sh_symbol">(</span><span class="sh_number">62.1</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘server0<span class="sh_symbol">.</span>crt’ saved <span class="sh_symbol">[</span><span class="sh_number">3505</span><span class="sh_symbol">/</span><span class="sh_number">3505</span><span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># ls  <span class="sh_symbol">*.</span>crt &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认部署结果</span></li><li>ca<span class="sh_symbol">-</span>bundle<span class="sh_symbol">.</span>crt        example<span class="sh_symbol">-</span>ca<span class="sh_symbol">.</span>crt  server0<span class="sh_symbol">.</span>crt</li><li>ca<span class="sh_symbol">-</span>bundle<span class="sh_symbol">.</span>trust<span class="sh_symbol">.</span>crt  localhost<span class="sh_symbol">.</span>crt</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/tls/private/server0.key </span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-27</span> <span class="sh_number">01</span><span class="sh_symbol">:</span><span class="sh_number">07</span><span class="sh_symbol">:</span><span class="sh_number">09</span> <span class="sh_symbol">(</span><span class="sh_number">39.0</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘server0<span class="sh_symbol">.</span>key’ saved <span class="sh_symbol">[</span><span class="sh_number">916</span><span class="sh_symbol">/</span><span class="sh_number">916</span><span class="sh_symbol">]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd  /etc/pki/tls/certs/
+[root@server0 certs]# wget  http://classroom/pub/example-ca.crt 
+.. ..
+2016-11-27 01:04:51 (116 MB/s) - ‘example-ca.crt’ saved [1220/1220] 
+
+[root@server0 certs]# wget  http://classroom/pub/tls/certs/server0.crt 
+.. ..
+2016-11-27 01:04:06 (62.1 MB/s) - ‘server0.crt’ saved [3505/3505]
+
+[root@server0 certs]# ls  *.crt 							//确认部署结果
+ca-bundle.crt        example-ca.crt  server0.crt
+ca-bundle.trust.crt  localhost.crt
+
+[root@server0 certs]# cd  /etc/pki/tls/private/
+[root@server0 private]# wget  http://classroom/pub/tls/private/server0.key 
+.. ..
+2016-11-27 01:07:09 (39.0 MB/s) - ‘server0.key’ saved [916/916]
+</pre></div></div>
+      <p>3）为SSL加密网站配置虚拟主机</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>ssl<span class="sh_symbol">.</span>conf</li><li>Listen <span class="sh_number">443</span> https</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">&lt;</span>VirtualHost _default_<span class="sh_symbol">:</span><span class="sh_number">443</span><span class="sh_symbol">&gt;</span></li><li>DocumentRoot <span class="sh_string">"/var/www/html"</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//网页目录</span></li><li>ServerName server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">:</span><span class="sh_number">443</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//站点的域名</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_normal">SSLCertificateFile </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_normal">certs</span><span class="sh_symbol">/</span>server0<span class="sh_symbol">.</span>crt  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//网站证书</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_normal">SSLCertificateKeyFile </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_regexp">/server0.key &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</span><span class="sh_symbol">/</span>网站私钥</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span> </li><li><span class="sh_normal">SSLCACertificateFile </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_normal">certs</span><span class="sh_symbol">/</span>example<span class="sh_symbol">-</span>ca<span class="sh_symbol">.</span>crt &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//根证书</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/httpd/conf.d/ssl.conf
+Listen 443 https
+.. ..
+&lt;VirtualHost _default_:443&gt;
+DocumentRoot "/var/www/html" 									//网页目录
+ServerName server0.example.com:443  							//站点的域名
+.. ..
+SSLCertificateFile /etc/pki/tls/certs/server0.crt  				//网站证书
+.. ..
+SSLCertificateKeyFile /etc/pki/tls/private/server0.key 			//网站私钥
+.. .. 
+SSLCACertificateFile /etc/pki/tls/certs/example-ca.crt 			//根证书
+</pre></div></div>
+      <p>4）重启系统服务httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  httpd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>antpu <span class="sh_symbol">|</span> grep  httpd &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认已监听80、443端口</span></li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">443</span>                  <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">7954</span><span class="sh_symbol">/</span>httpd          </li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">80</span>                   <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">7954</span><span class="sh_symbol">/</span>httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  httpd
+[root@server0 ~]# netstat  -antpu | grep  httpd 		//确认已监听80、443端口
+tcp6       0      0 :::443                  :::*                    LISTEN      7954/httpd          
+tcp6       0      0 :::80                   :::*                    LISTEN      7954/httpd
+</pre></div></div>
+      <p class="number">步骤二：验证HTTPS加密访问</p>
+      <p>使用firefox浏览器访问加密站点https://server0.example.com/，可以看到页面提示未信任连接“Untrusted Connection”（如图-2所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-2</p>
+      </div>
+      <p>若要继续访问，需要在页面下方单击超链接“I Understand the Risks”，表示用户已理解相关风险。然后在展开的页面内点击“Add Exception”按钮（如图-3所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-3</p>
+      </div>
+      <p>弹出添加安全例外对话窗口（如图-4所示），单击界面左下角的“Confirm Security Exception”按钮确认安全例外。</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-4</p>
+      </div>
+      <p>确认成功后即可看到对应的网页内容（如图-5所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-5</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：postfix基础邮件服务</h2>
+      <h3>2.1 问题</h3>
+      <p>本例要求在虚拟机server0上配置 postfix 基础服务，具体要求如下：</p>
+      <ol class="list">
+        <li>监听本机的所有接口
+</li>
+        <li>将邮件域和邮件服务主机名都改为 example.com
+</li>
+      </ol>
+      <p>然后在server0上使用mail命令测试发信/收信操作：</p>
+      <ol class="list">
+        <li>由 root 给本机用户 mike 发一封测试邮件
+</li>
+        <li>查收用户 mike 的邮箱，读取邮件内容，确保是从 root@example.com 发过来的
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>电子邮箱：1234567@qq.com表示在互联网区域qq.com内的一台邮件服务器上属于用户1234567的一个电子邮箱（目录）。</p>
+      <p>postfix发信服务（TCP 25，SMTP）的功能：</p>
+      <ul class="list">
+        <li>为用户提供电子邮箱
+</li>
+        <li>为邮箱用户向其他邮件服务器发送邮件
+</li>
+        <li>为邮箱用户投递/存储收到的邮件
+</li>
+      </ul>
+      <p>dovecot取信服务（TCP 110/143，POP3/IMAP）的功能：为邮箱用户提取邮件。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置postfix基础邮件服务</p>
+      <p>1）安装postfix软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  postfix</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  postfix
+.. ..
+</pre></div></div>
+      <p>2）调整邮件服务配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">postfix</span><span class="sh_symbol">/</span>main<span class="sh_symbol">.</span>cf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>inet_interfaces <span class="sh_symbol">=</span> all &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//监听接口</span></li><li>mydomain <span class="sh_symbol">=</span> example<span class="sh_symbol">.</span>com  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//邮件域</span></li><li>myhostname <span class="sh_symbol">=</span> example<span class="sh_symbol">.</span>com  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//本服务器主机名</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/postfix/main.cf
+.. ..
+inet_interfaces = all 						//监听接口
+mydomain = example.com  						//邮件域
+myhostname = example.com  						//本服务器主机名
+</pre></div></div>
+      <p>3）启动postfix服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  postfix</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  postfix
+</pre></div></div>
+      <p>4）查看邮件服务监听状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>antpu <span class="sh_symbol">|</span> grep  <span class="sh_symbol">:</span><span class="sh_number">25</span></li><li>tcp        <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">25</span>              <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>               LISTEN      <span class="sh_number">1739</span><span class="sh_symbol">/</span>master         </li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">25</span>                   <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">1739</span><span class="sh_symbol">/</span>master   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# netstat  -antpu | grep  :25
+tcp        0      0 0.0.0.0:25              0.0.0.0:*               LISTEN      1739/master         
+tcp6       0      0 :::25                   :::*                    LISTEN      1739/master   
+</pre></div></div>
+      <p class="number">步骤二：使用mail命令发信/收信</p>
+      <p>1）给用户root发一封测试邮件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># echo  <span class="sh_string">'1111'</span>  <span class="sh_symbol">|</span>  mail  <span class="sh_symbol">-</span>s  <span class="sh_string">'mail1'</span>  root</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# echo  '1111'  |  mail  -s  'mail1'  root
+</pre></div></div>
+      <p>2）由管理员收取指定用户root的邮件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mail  <span class="sh_symbol">-</span>u  root</li><li>Heirloom Mail version <span class="sh_number">12.5</span> <span class="sh_number">7</span><span class="sh_symbol">/</span><span class="sh_number">5</span><span class="sh_symbol">/</span><span class="sh_number">10</span><span class="sh_symbol">.</span>  Type <span class="sh_symbol">?</span> <span class="sh_keyword">for</span> help<span class="sh_symbol">.</span></li><li><span class="sh_string">"/var/mail/root"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span> message <span class="sh_number">1</span> <span class="sh_keyword">new</span></li><li><span class="sh_symbol">&gt;</span>N  <span class="sh_number">1</span> root                  Sat Nov <span class="sh_number">26</span> <span class="sh_number">17</span><span class="sh_symbol">:</span><span class="sh_number">40</span>  <span class="sh_number">18</span><span class="sh_symbol">/</span><span class="sh_number">532</span>   <span class="sh_string">"mail"</span></li><li><span class="sh_symbol">&amp;</span> <span class="sh_number">1</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//读取第1封邮件内容</span></li><li>Message  <span class="sh_number">1</span><span class="sh_symbol">:</span></li><li>From root@example<span class="sh_symbol">.</span>com  Sat Nov <span class="sh_number">26</span> <span class="sh_number">17</span><span class="sh_symbol">:</span><span class="sh_number">40</span><span class="sh_symbol">:</span><span class="sh_number">06</span> <span class="sh_number">2016</span></li><li>Return<span class="sh_symbol">-</span>Path<span class="sh_symbol">:</span> <span class="sh_symbol">&lt;</span>root@example<span class="sh_symbol">.</span>com<span class="sh_symbol">&gt;</span></li><li>X<span class="sh_symbol">-</span>Original<span class="sh_symbol">-</span>To<span class="sh_symbol">:</span> root</li><li>Delivered<span class="sh_symbol">-</span>To<span class="sh_symbol">:</span> root@example<span class="sh_symbol">.</span>com</li><li><span class="sh_predef_func">Date</span><span class="sh_symbol">:</span> Sat<span class="sh_symbol">,</span> <span class="sh_number">26</span> Nov <span class="sh_number">2016</span> <span class="sh_number">17</span><span class="sh_symbol">:</span><span class="sh_number">40</span><span class="sh_symbol">:</span><span class="sh_number">06</span> <span class="sh_symbol">+</span><span class="sh_number">0800</span></li><li>To<span class="sh_symbol">:</span> root@example<span class="sh_symbol">.</span>com</li><li>Subject<span class="sh_symbol">:</span> mail1  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查邮件标题</span></li><li>User<span class="sh_symbol">-</span>Agent<span class="sh_symbol">:</span> Heirloom mailx <span class="sh_number">12.5</span> <span class="sh_number">7</span><span class="sh_symbol">/</span><span class="sh_number">5</span><span class="sh_symbol">/</span><span class="sh_number">10</span></li><li>Content<span class="sh_symbol">-</span>Type<span class="sh_symbol">:</span> <span class="sh_normal">text</span><span class="sh_symbol">/</span>plain<span class="sh_symbol">;</span> charset<span class="sh_symbol">=</span>us<span class="sh_symbol">-</span>ascii</li><li>From<span class="sh_symbol">:</span> root@example<span class="sh_symbol">.</span><span class="sh_function">com</span> <span class="sh_symbol">(</span>root<span class="sh_symbol">)</span></li><li>Status<span class="sh_symbol">:</span> R</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">1111</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查邮件内容</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">&amp;</span> q  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//退出mail程序</span></li><li>Held <span class="sh_number">1</span> message <span class="sh_keyword">in</span> <span class="sh_regexp">/var/m</span><span class="sh_normal">ail</span><span class="sh_symbol">/</span>root</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mail  -u  root
+Heirloom Mail version 12.5 7/5/10.  Type ? for help.
+"/var/mail/root": 1 message 1 new
+&gt;N  1 root                  Sat Nov 26 17:40  18/532   "mail"
+&amp; 1  												//读取第1封邮件内容
+Message  1:
+From root@example.com  Sat Nov 26 17:40:06 2016
+Return-Path: &lt;root@example.com&gt;
+X-Original-To: root
+Delivered-To: root@example.com
+Date: Sat, 26 Nov 2016 17:40:06 +0800
+To: root@example.com
+Subject: mail1  									//检查邮件标题
+User-Agent: Heirloom mailx 12.5 7/5/10
+Content-Type: text/plain; charset=us-ascii
+From: root@example.com (root)
+Status: R
+
+1111  											//检查邮件内容
+
+&amp; q  												//退出mail程序
+Held 1 message in /var/mail/root
+[root@server0 ~]#
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：添加一个swap分区</h2>
+      <h3>3.1 问题</h3>
+      <p>本例要求为虚拟机 server0 添加一个交换分区，相关要求如下：</p>
+      <ol class="list">
+        <li>此交换分区的大小为 512MiB
+</li>
+        <li>当系统启动时，swap分区应该可以自动挂载
+</li>
+        <li>不要移除或更改其他已经存在于你系统中的交换分区
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>交换分区不需要挂载点，在配置开机挂载时，挂载点直接写成swap即可。</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：格式化交换分区</p>
+      <p>1）将提前准备的分区/dev/vdb7格式化为swap文件系统</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkswap  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb7</li><li>Setting up swapspace version <span class="sh_number">1</span><span class="sh_symbol">,</span> size <span class="sh_symbol">=</span> <span class="sh_number">524284</span> KiB</li><li>no label<span class="sh_symbol">,</span> UUID<span class="sh_symbol">=</span>80e358b9<span class="sh_symbol">-</span>b55d<span class="sh_number">-4797</span><span class="sh_symbol">-</span>aaa4<span class="sh_symbol">-</span>41800aa00e3f</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkswap  /dev/vdb7
+Setting up swapspace version 1, size = 524284 KiB
+no label, UUID=80e358b9-b55d-4797-aaa4-41800aa00e3f
+</pre></div></div>
+      <p>2）确认格式化结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">blkid  </span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>vdb7</li><li><span class="sh_regexp">/dev/</span>vdb7<span class="sh_symbol">:</span> UUID<span class="sh_symbol">=</span><span class="sh_string">"80e358b9-b55d-4797-aaa4-41800aa00e3f"</span> TYPE<span class="sh_symbol">=</span><span class="sh_string">"swap"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# blkid  /dev/vdb7
+/dev/vdb7: UUID="80e358b9-b55d-4797-aaa4-41800aa00e3f" TYPE="swap"
+</pre></div></div>
+      <p class="number">步骤二：配置交换分区的开机启用</p>
+      <p>修改/etc/fstab文件，添加交换分区记录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>fstab</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_regexp">/dev/</span>vdb7&nbsp;&nbsp;&nbsp;&nbsp;swap&nbsp;&nbsp;&nbsp;&nbsp;swap&nbsp;&nbsp;&nbsp;&nbsp;defaults&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/fstab
+.. ..
+/dev/vdb7	swap	swap	defaults	0 0
+</pre></div></div>
+      <p class="number">步骤三：确认挂载配置可用</p>
+      <p>1）检查启用新交换分区之前</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># swapon  <span class="sh_symbol">-</span>s</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# swapon  -s
+[root@server0 ~]#
+</pre></div></div>
+      <p>2）启用新交换分区</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># swapon  <span class="sh_symbol">-</span>a</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# swapon  -a
+</pre></div></div>
+      <p>3）检查启用新交换分区之后</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># swapon  <span class="sh_symbol">-</span>s</li><li>Filename&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size  &nbsp;&nbsp;&nbsp;&nbsp;Used&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Priority</li><li><span class="sh_regexp">/dev/</span>vdb7    &nbsp;&nbsp;&nbsp;&nbsp;partition&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">524284</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">-</span><span class="sh_number">1</span></li><li><p></p></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# swapon  -s
+Filename		Type			Size  	Used		Priority
+/dev/vdb7    	partition	524284			-1
+<p></p></pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：Linux工程师 综合测试</h2>
+      <h3>4.1 问题</h3>
+      <p>根据本文提供的练习步骤完成所有练习案例。</p>
+      <h3>4.2 方案</h3>
+      <p>开始练习之前，先依次重置虚拟机环境。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  classroom</li><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  server</li><li><span class="sh_symbol">[</span>root@room9pc13 <span class="sh_symbol">~]</span># rht<span class="sh_symbol">-</span>vmctl  reset  desktop</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc13 ~]# rht-vmctl  reset  classroom
+[root@room9pc13 ~]# rht-vmctl  reset  server
+[root@room9pc13 ~]# rht-vmctl  reset  desktop
+</pre></div></div>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤01：配置SELinux</p>
+      <p>案例概述：</p>
+      <p>确保SELinux处于强制启用模式。</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">selinux</span><span class="sh_symbol">/</span>config  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//永久配置</span></li><li>SELINUX<span class="sh_symbol">=</span>enforcing</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setenforce  <span class="sh_number">1</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//临时配置</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/selinux/config  					//永久配置
+SELINUX=enforcing
+[root@server0 ~]# setenforce  1  								//临时配置
+</pre></div></div>
+      <p class="number">步骤02：自定义用户环境（别名设置）</p>
+      <p>案例概述：</p>
+      <p>在系统server0和desktop0上创建自定义命令为qstat，此自定义命令将执行以下命令：</p>
+      <p>/bin/ps -Ao pid,tt,user,fname,rsz</p>
+      <p>此命令对系统中所有用户有效。</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>bashrc  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改初始文件</span></li><li>alias  qstat<span class="sh_symbol">=</span><span class="sh_string">'/bin/ps -Ao pid,tt,user,fname,rsz'</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置别名</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">source  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>bashrc &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//或重登录后生效</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># qstat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认别名可用</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/bashrc  							//修改初始文件
+alias  qstat='/bin/ps -Ao pid,tt,user,fname,rsz' 				//设置别名
+
+[root@server0 ~]# source  /etc/bashrc 							//或重登录后生效
+[root@server0 ~]# qstat 										//确认别名可用
+</pre></div></div>
+      <p class="number">步骤03：配置防火墙端口转发</p>
+      <p>案例概述：</p>
+      <p>在系统server0、desktop0配置防火墙，要求如下：</p>
+      <ul class="list">
+        <li>除了172.34.0.0/24网段以外，其它客户机都可以访问虚拟机server0、desktop0
+</li>
+        <li>在172.25.0.0/24网络中的系统，访问server0的本地端口5423将被转发到80
+</li>
+        <li>上述设置必须永久有效
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  firewalld</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  firewalld</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//默认全部允许</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>permanent  <span class="sh_symbol">--</span>add<span class="sh_symbol">-</span>source<span class="sh_symbol">=</span><span class="sh_number">172.34.0.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span>  <span class="sh_symbol">--</span>zone<span class="sh_symbol">=</span>block</li><li>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//阻止个别网段</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>permanent <span class="sh_symbol">--</span>zone<span class="sh_symbol">=</span>trusted  <span class="sh_symbol">--</span>add<span class="sh_symbol">-</span>forward<span class="sh_symbol">-</span>port<span class="sh_symbol">=</span>port<span class="sh_symbol">=</span><span class="sh_number">5423</span><span class="sh_symbol">:</span>proto<span class="sh_symbol">=</span>tcp<span class="sh_symbol">:</span>toport<span class="sh_symbol">=</span><span class="sh_number">80</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启用端口转发</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>reload  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重载防火墙策略</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  firewalld
+[root@server0 ~]# systemctl  enable  firewalld
+[root@server0 ~]# firewall-cmd  --set-default-zone=trusted  		//默认全部允许
+[root@server0 ~]# firewall-cmd  --permanent  --add-source=172.34.0.0/24  --zone=block
+  															//阻止个别网段
+[root@server0 ~]# firewall-cmd  --permanent --zone=trusted  --add-forward-port=port=5423:proto=tcp:toport=80 								//启用端口转发
+[root@server0 ~]# firewall-cmd  --reload  						//重载防火墙策略
+</pre></div></div>
+      <p class="number">步骤04：配置链路聚合</p>
+      <p>案例概述：</p>
+      <p>在server0.example.com和desktop0.example.com之间按以下要求配置一个链路：</p>
+      <ul class="list">
+        <li>此链路使用接口eth1和eth2
+</li>
+        <li>此链路在一个接口失效时仍然能工作；
+</li>
+        <li>此链路在server0使用下面的地址 172.16.3.20/255.255.255.0
+</li>
+        <li>此链路在desktop0使用下面的地址 172.16.3.25/255.255.255.0
+</li>
+        <li>此链路在系统重启之后依然保持正常状态
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  add  con<span class="sh_symbol">-</span>name  team0  type  team  ifname team0  config  <span class="sh_string">'{ "runner":{ "name":"activebackup" }}'</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//建立新的聚合连接</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  add  con<span class="sh_symbol">-</span>name  team0<span class="sh_symbol">-</span>p1  type  team<span class="sh_symbol">-</span>slave ifname  eth1  master  team0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定成员网卡1</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  add  con<span class="sh_symbol">-</span>name  team0<span class="sh_symbol">-</span>p2  type  team<span class="sh_symbol">-</span>slave ifname  eth2  master  team0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//指定成员网卡2</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  modify  team0  ipv4<span class="sh_symbol">.</span>method  manual ipv4<span class="sh_symbol">.</span>addresses  <span class="sh_string">"172.16.3.20/24"</span>  connection<span class="sh_symbol">.</span>autoconnect  yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//为聚合连接配置IP地址</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  team0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//激活聚合连接</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  up  team0<span class="sh_symbol">-</span>p1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//激活成员连接1</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  up  team0<span class="sh_symbol">-</span>p2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//激活成员连接2</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># teamdctl  team0  state  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认连接状态</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  add  con-name  team0  type  team  ifname team0  config  '{ "runner":{ "name":"activebackup" }}'  					//建立新的聚合连接
+[root@server0 ~]# nmcli  connection  add  con-name  team0-p1  type  team-slave ifname  eth1  master  team0  												//指定成员网卡1
+[root@server0 ~]# nmcli  connection  add  con-name  team0-p2  type  team-slave ifname  eth2  master  team0 												//指定成员网卡2
+[root@server0 ~]# nmcli  con  modify  team0  ipv4.method  manual ipv4.addresses  "172.16.3.20/24"  connection.autoconnect  yes				//为聚合连接配置IP地址
+
+[root@server0 ~]# nmcli  connection  up  team0  			//激活聚合连接
+[root@server0 ~]# nmcli  con  up  team0-p1 					//激活成员连接1
+[root@server0 ~]# nmcli  con  up  team0-p2					//激活成员连接2
+[root@server0 ~]# teamdctl  team0  state  					//确认连接状态
+</pre></div></div>
+      <p class="number">步骤05：配置IPv6地址</p>
+      <p>案例概述：</p>
+      <p>在您的考试系统上配置接口eth0使用下列 IPv6 地址：</p>
+      <ul class="list">
+        <li>server0上的地址应该是2003:ac18::305/64
+</li>
+        <li>desktop0上的地址应该是2003:ac18::306/64
+</li>
+        <li>两个系统必须能与网络2003:ac18/64内的系统通信
+</li>
+        <li>地址必须在重启后依旧生效
+</li>
+        <li>两个系统必须保持当前的IPv4地址并能通信
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  show  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//获知连接名称</span></li><li>NAME           UUID                                     TYPE             DEVICE </li><li>System eth0    5fb06bd0<span class="sh_symbol">-</span>0bb0<span class="sh_symbol">-</span>7ffb<span class="sh_symbol">-</span>45f1<span class="sh_symbol">-</span>d6edd65f3e03     <span class="sh_number">802-3</span><span class="sh_symbol">-</span>ethernet   eth0</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  modify  <span class="sh_string">"System eth0"</span> ipv6<span class="sh_symbol">.</span>method manual <span class="sh_symbol">\</span></li><li>    ipv6<span class="sh_symbol">.</span>addresses <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">305</span><span class="sh_symbol">/</span><span class="sh_number">64</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  <span class="sh_string">"System eth0"</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_comment">//设置固定主机名，避免误操作（若有必要，还可进一步配置静态IP地址/默认网关/DNS地址）</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>hostname</li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  show  						//获知连接名称
+NAME           UUID                                     TYPE             DEVICE 
+System eth0    5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03     802-3-ethernet   eth0
+
+[root@server0 ~]# nmcli  connection  modify  "System eth0" ipv6.method manual \
+    ipv6.addresses 2003:ac18::305/64
+[root@server0 ~]# nmcli  connection  up  "System eth0"
+
+//设置固定主机名，避免误操作（若有必要，还可进一步配置静态IP地址/默认网关/DNS地址）
+[root@server0 ~]# vim  /etc/hostname
+server0.example.com 
+</pre></div></div>
+      <p class="number">步骤06：配置本地邮件服务</p>
+      <p>案例概述：</p>
+      <p>在系统 desktop0 上执行下列操作，将其配置为后端邮件服务：</p>
+      <ul class="list">
+        <li>lab  smtp-nullclient  setup
+</li>
+      </ul>
+      <p>在系统 server0 上配置邮件服务，满足以下要求：</p>
+      <ul class="list">
+        <li>这个系统不接收外部发送来的邮件
+</li>
+        <li>在这个系统上本地发送的任何邮件都会自动路由到 smtp0.example.com
+</li>
+        <li>从这个系统上发送的邮件显示来自于 desktop0.example.com
+</li>
+        <li>您可以在这个系统上发送邮件到本地用户student来测试您的配置，最终将会由系统 desktop0 上的用户 student 收到这封邮件
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">postfix</span><span class="sh_symbol">/</span>main<span class="sh_symbol">.</span>cf</li><li>relayhost <span class="sh_symbol">=</span> <span class="sh_symbol">[</span>smtp0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">]</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//后端邮件服务器</span></li><li>inet_interfaces <span class="sh_symbol">=</span> loopback<span class="sh_symbol">-</span>only &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//仅本机</span></li><li>myorigin <span class="sh_symbol">=</span> desktop0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//发件来源域</span></li><li>mynetworks <span class="sh_symbol">=</span> <span class="sh_number">127.0.0.0</span><span class="sh_symbol">/</span><span class="sh_number">8</span>  <span class="sh_symbol">[::</span><span class="sh_number">1</span><span class="sh_symbol">]/</span><span class="sh_number">128</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//信任网络</span></li><li>mydestination <span class="sh_symbol">=</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//此行的值设为空</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl restart postfix</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl enable postfix </li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># echo <span class="sh_string">'Mail Data.'</span>  <span class="sh_symbol">|</span> mail <span class="sh_symbol">-</span>s <span class="sh_string">'Test1'</span> student &nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//在server0发信测试</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mail  <span class="sh_symbol">-</span>u  student  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//在server0无邮件</span></li><li>No mail <span class="sh_keyword">for</span> student </li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># mail  <span class="sh_symbol">-</span>u  student  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//在desktop0上可收到这封邮件</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/postfix/main.cf
+relayhost = [smtp0.example.com] 					//后端邮件服务器
+inet_interfaces = loopback-only 					//仅本机
+myorigin = desktop0.example.com  					//发件来源域
+mynetworks = 127.0.0.0/8  [::1]/128 				//信任网络
+mydestination = 									//此行的值设为空
+
+[root@server0 ~]# systemctl restart postfix
+[root@server0 ~]# systemctl enable postfix 
+
+[root@server0 ~]# echo 'Mail Data.'  | mail -s 'Test1' student 	
+													//在server0发信测试
+[root@server0 ~]# mail  -u  student  				//在server0无邮件
+No mail for student 
+[root@desktop0 ~]# mail  -u  student  				//在desktop0上可收到这封邮件
+.. ..
+</pre></div></div>
+      <p class="number">步骤07：通过Samba发布共享目录</p>
+      <p>案例概述：</p>
+      <p>在 server0 上通过SMB共享/common 目录：</p>
+      <ul class="list">
+        <li>您的 SMB 服务器必须是 STAFF 工作组的一个成员
+</li>
+        <li>共享名必须为common
+</li>
+        <li>只有example.com域内的客户端可以访问common共享
+</li>
+        <li>common必须是可以浏览的
+</li>
+        <li>用户harry必须能够读取共享中的内容，如果需要的话，验证的密码是migwhisk
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  samba</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span>common</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setsebool <span class="sh_symbol">-</span>P  samba_export_all_rw<span class="sh_symbol">=</span>on  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//取消SELinux限制</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  harry <span class="sh_symbol">;</span> pdbedit  <span class="sh_symbol">-</span>a  harry  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启用共享账号并设密码</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">samba</span><span class="sh_symbol">/</span>smb<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">[</span>global<span class="sh_symbol">]</span></li><li>workgroup <span class="sh_symbol">=</span> STAFF  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改此行，指定工作组名</span></li><li><span class="sh_symbol">[</span>common<span class="sh_symbol">]</span></li><li>path <span class="sh_symbol">=</span> <span class="sh_symbol">/</span>common</li><li>hosts allow <span class="sh_symbol">=</span> <span class="sh_number">172.25.0.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//只允许指定网段访问</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  smb</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  smb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  samba
+[root@server0 ~]# mkdir  /common
+[root@server0 ~]# setsebool -P  samba_export_all_rw=on  	//取消SELinux限制
+[root@server0 ~]# useradd  harry ; pdbedit  -a  harry  	//启用共享账号并设密码
+
+[root@server0 ~]# vim  /etc/samba/smb.conf
+[global]
+workgroup = STAFF  									//修改此行，指定工作组名
+[common]
+path = /common
+hosts allow = 172.25.0.0/24 							//只允许指定网段访问
+[root@server0 ~]# systemctl  restart  smb
+[root@server0 ~]# systemctl  enable  smb
+</pre></div></div>
+      <p class="number">步骤08：配置多用户Samba挂载</p>
+      <p>案例概述：</p>
+      <p>在server0通过SMB共享目录/devops，并满足以下要求：</p>
+      <ul class="list">
+        <li>共享名为devops
+</li>
+        <li>共享目录devops只能被 example.com 域中的客户端使用
+</li>
+        <li>共享目录devops必须可以被浏览
+</li>
+        <li>用户kenji必须能以读的方式访问此共享，该问密码是atenorth
+</li>
+        <li>用户chihiro必须能以读写的方式访问此共享，访问密码是atenorth
+</li>
+        <li>此共享永久挂载在desktop0.example.com上的/mnt/dev 目录，并使用用户kenji作为认证，任何用户可以通过用户chihiro来临时获取写的权限
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <p>在server0上 ——</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span>devops</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  kenji  <span class="sh_symbol">;</span>  pdbedit  <span class="sh_symbol">-</span>a  kenji</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd  chihiro  <span class="sh_symbol">;</span>  pdbedit  <span class="sh_symbol">-</span>a  chihiro</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setfacl  <span class="sh_symbol">-</span>m  u<span class="sh_symbol">:</span>chihiro<span class="sh_symbol">:</span><span class="sh_normal">rwx  </span><span class="sh_symbol">/</span><span class="sh_normal">devops</span><span class="sh_symbol">/</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调整目录权限</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">samba</span><span class="sh_symbol">/</span>smb<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>devops<span class="sh_symbol">]</span></li><li>    path <span class="sh_symbol">=</span> <span class="sh_symbol">/</span>devops</li><li>    write list <span class="sh_symbol">=</span> chihiro</li><li>hosts allow <span class="sh_symbol">=</span> <span class="sh_number">172.25.0.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//只允许指定网域访问</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl restart smb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /devops
+[root@server0 ~]# useradd  kenji  ;  pdbedit  -a  kenji
+[root@server0 ~]# useradd  chihiro  ;  pdbedit  -a  chihiro
+
+[root@server0 ~]# setfacl  -m  u:chihiro:rwx  /devops/  		//调整目录权限
+
+[root@server0 ~]# vim  /etc/samba/smb.conf
+.. ..
+[devops]
+    path = /devops
+    write list = chihiro
+hosts allow = 172.25.0.0/24 							//只允许指定网域访问
+[root@server0 ~]# systemctl restart smb
+</pre></div></div>
+      <p>在desktop0上 ——</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  samba<span class="sh_symbol">-</span>client  cifs<span class="sh_symbol">-</span>utils</li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># smbclient  <span class="sh_symbol">-</span>L  server0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看对方提供了哪些共享</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//无需密码，直接按Enter键确认</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>dev &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建挂载点</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>fstab</li><li><span class="sh_comment">//server0.example.com/devops    /mnt/dev    cifs  username=kenji,password=atenorth,multiuser,sec=ntlmssp,_netdev  0  0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># mount  <span class="sh_symbol">-</span>a &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查配置并挂载资源</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# yum  -y  install  samba-client  cifs-utils
+[root@desktop0 ~]# smbclient  -L  server0  			//查看对方提供了哪些共享
+.. .. 											//无需密码，直接按Enter键确认
+[root@desktop0 ~]# mkdir  /mnt/dev 				//创建挂载点
+[root@desktop0 ~]# vim  /etc/fstab
+//server0.example.com/devops    /mnt/dev    cifs  username=kenji,password=atenorth,multiuser,sec=ntlmssp,_netdev  0  0
+
+[root@desktop0 ~]# mount  -a 						//检查配置并挂载资源
+</pre></div></div>
+      <p>验证多用户访问（在desktop0上）：普通用户切换为chihiro 身份即可读写。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># su  <span class="sh_symbol">-</span>  student  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//切换到普通用户</span></li><li><span class="sh_symbol">[</span>student@desktop0 <span class="sh_symbol">~]</span>$ su <span class="sh_symbol">-</span> chihiro</li><li><span class="sh_symbol">[</span>student@desktop0 <span class="sh_symbol">~]</span>$ cifscreds  add  <span class="sh_symbol">-</span>u  chihiro  server0 &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提交新认证凭据</span></li><li>Password<span class="sh_symbol">:</span>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//提供Samba用户chihiro的密码</span></li><li><span class="sh_symbol">[</span>student@desktop0 <span class="sh_symbol">~]</span>$ <span class="sh_normal">touch  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span><span class="sh_normal">dev</span><span class="sh_symbol">/</span>b<span class="sh_symbol">.</span>txt  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认有写入权限</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# su  -  student  					//切换到普通用户
+[student@desktop0 ~]$ su - chihiro
+[student@desktop0 ~]$ cifscreds  add  -u  chihiro  server0 	//提交新认证凭据
+Password:   										//提供Samba用户chihiro的密码
+[student@desktop0 ~]$ touch  /mnt/dev/b.txt  		//确认有写入权限
+</pre></div></div>
+      <p class="number">步骤09：配置NFS共享服务</p>
+      <p>案例概述：</p>
+      <p>在 server0 配置 NFS 服务，要求如下：</p>
+      <ul class="list">
+        <li>以只读的方式共享目录/public，同时只能被 example.com 域中的系统访问
+</li>
+        <li>以读写的方式共享目录/protected，能被 example.com 域中的系统访问
+</li>
+        <li>访问/protected 需要通过 Kerberos 安全加密，您可以使用下面 URL 提供的密钥：
+</li>
+        <li>http://classroom.example.com/pub/keytabs/server0.keytab 
+</li>
+        <li>目录/protected 应该包含名为 project 拥有人为 ldapuser0 的子目录
+</li>
+        <li>网络用户 ldapuser0 能以读写方式访问 /protected/project
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <p>[练习环境：lab  nfskrb5  setup]</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mkdir  <span class="sh_symbol">-</span><span class="sh_normal">p  </span><span class="sh_symbol">/</span><span class="sh_keyword">public</span>  <span class="sh_regexp">/protected/</span>project &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建共享目录</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chown  <span class="sh_normal">ldapuser0  </span><span class="sh_symbol">/</span><span class="sh_keyword">protected</span><span class="sh_regexp">/project/</span>  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调整目录访问权限</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># wget  <span class="sh_symbol">-</span><span class="sh_normal">O  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>krb5<span class="sh_symbol">.</span>keytab <span class="sh_symbol">\</span> &nbsp;&nbsp;&nbsp;&nbsp;</li><li>    http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/keytabs/server0.keytab&nbsp;&nbsp;&nbsp;&nbsp;//下载并部署服务端密钥</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>exports  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//配置NFS共享</span></li><li><span class="sh_regexp">/public    172.25.0.0/</span><span class="sh_number">24</span><span class="sh_symbol">(</span>ro<span class="sh_symbol">)</span></li><li><span class="sh_regexp">/protected    172.25.0.0/</span><span class="sh_number">24</span><span class="sh_symbol">(</span>rw<span class="sh_symbol">,</span>sec<span class="sh_symbol">=</span>krb5p<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  start  nfs<span class="sh_symbol">-</span>secure<span class="sh_symbol">-</span>server  nfs<span class="sh_symbol">-</span>server  <span class="sh_comment">//启用两个服务</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  nfs<span class="sh_symbol">-</span>secure<span class="sh_symbol">-</span>server  nfs<span class="sh_symbol">-</span>server</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># exportfs  <span class="sh_symbol">-</span>rv  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//必要时更新共享配置</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  -p  /public  /protected/project 	//创建共享目录
+[root@server0 ~]# chown  ldapuser0  /protected/project/  	//调整目录访问权限
+
+[root@server0 ~]# wget  -O  /etc/krb5.keytab \ 	
+    http://classroom.example.com/pub/keytabs/server0.keytab	//下载并部署服务端密钥
+[root@server0 ~]# vim  /etc/exports  						//配置NFS共享
+/public    172.25.0.0/24(ro)
+/protected    172.25.0.0/24(rw,sec=krb5p)
+[root@server0 ~]# systemctl  start  nfs-secure-server  nfs-server  //启用两个服务
+[root@server0 ~]# systemctl  enable  nfs-secure-server  nfs-server
+[root@server0 ~]# exportfs  -rv  						//必要时更新共享配置
+</pre></div></div>
+      <p class="number">步骤10：挂载NFS共享</p>
+      <p>案例概述：</p>
+      <p>在desktop0上挂载一个来classroom.exmaple.com的共享，并符合下列要求：</p>
+      <ul class="list">
+        <li>/public挂载在下面的目录上/mnt/nfsmount
+</li>
+        <li>/protected挂载在下面的目录上/mnt/nfssecure 并使用安全的方式，密钥下载 URL：
+</li>
+        <li>http://classroom.example.com/pub/keytabs/desktop0.keytab 
+</li>
+        <li>用户ldapuser0能够在/mnt/nfssecure/project上创建文件
+</li>
+        <li>这些文件系统在系统启动时自动挂载
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <p>[练习环境：lab  nfskrb5  setup]</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># mkdir  <span class="sh_symbol">-</span><span class="sh_normal">p  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span><span class="sh_normal">nfsmount  </span><span class="sh_symbol">/</span><span class="sh_normal">mnt</span><span class="sh_symbol">/</span>nfssecure</li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># wget  <span class="sh_symbol">-</span><span class="sh_normal">O </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>krb5<span class="sh_symbol">.</span>keytab <span class="sh_symbol">\</span> </li><li>   http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/keytabs/desktop0.keytab  //下载部署客户端密钥</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># systemctl  start  nfs<span class="sh_symbol">-</span>secure &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启用安全NFS的客户端服务</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># systemctl  enable  nfs<span class="sh_symbol">-</span>secure</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># showmount  <span class="sh_symbol">-</span>e  server0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//查看对方提供了哪些共享</span></li><li>Export list <span class="sh_keyword">for</span> server0<span class="sh_symbol">:</span></li><li><span class="sh_regexp">/protected  172.25.0.0/</span><span class="sh_number">24</span></li><li><span class="sh_regexp">/public     172.25.0.0/</span><span class="sh_number">24</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>fstab  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//配置开机挂载</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">:</span><span class="sh_regexp">/public   &nbsp;&nbsp;&nbsp;&nbsp; /m</span><span class="sh_normal">nt</span><span class="sh_symbol">/</span>nfsmount   nfs   _netdev &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>  <span class="sh_number">0</span></li><li>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">:</span><span class="sh_regexp">/protected&nbsp;&nbsp;&nbsp;&nbsp; /m</span><span class="sh_normal">nt</span><span class="sh_symbol">/</span>nfssecure   nfs   sec<span class="sh_symbol">=</span>krb5p<span class="sh_symbol">,</span>_netdev&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>  <span class="sh_number">0</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># mount <span class="sh_symbol">-</span>a &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查配置并挂载资源</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># ssh  ldapuser0@desktop0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//SSH登入以获取通行证</span></li><li>ldapuser0@desktop0<span class="sh_string">'s password: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//密码kerberos</span></li><li><span class="sh_string">[ldapuser0@desktop0 ~]$ touch  /mnt/nfssecure/project/a.txt &nbsp;&nbsp;&nbsp;&nbsp;//写入测试</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# mkdir  -p  /mnt/nfsmount  /mnt/nfssecure
+[root@desktop0 ~]# wget  -O /etc/krb5.keytab \ 
+   http://classroom.example.com/pub/keytabs/desktop0.keytab  //下载部署客户端密钥
+[root@desktop0 ~]# systemctl  start  nfs-secure 		//启用安全NFS的客户端服务
+[root@desktop0 ~]# systemctl  enable  nfs-secure
+
+[root@desktop0 ~]# showmount  -e  server0 				//查看对方提供了哪些共享
+Export list for server0:
+/protected  172.25.0.0/24
+/public     172.25.0.0/24
+[root@desktop0 ~]# vim  /etc/fstab  					//配置开机挂载
+.. ..
+server0.example.com:/public   	 /mnt/nfsmount   nfs   _netdev 			0  0
+server0.example.com:/protected	 /mnt/nfssecure   nfs   sec=krb5p,_netdev	0  0
+[root@desktop0 ~]# mount -a 							//检查配置并挂载资源
+
+[root@desktop0 ~]# ssh  ldapuser0@desktop0  			//SSH登入以获取通行证
+ldapuser0@desktop0's password: 						//密码kerberos
+[ldapuser0@desktop0 ~]$ touch  /mnt/nfssecure/project/a.txt 	//写入测试
+</pre></div></div>
+      <p class="number">步骤11：实现一个web服务器</p>
+      <p>案例概述：</p>
+      <p>为http://server0.example.com 配置 Web 服务器：</p>
+      <ul class="list">
+        <li>从http://classroom.example.com/pub/materials/station.html  下载一个主页文件，并将该文件重命名为 index.html
+</li>
+        <li>将文件 index.html 拷贝到您的 web 服务器的 DocumentRoot 目录下
+</li>
+        <li>不要对文件 index.html 的内容进行任何修改
+</li>
+        <li>来自于 example.com 域的客户端可以访问此Web服务
+</li>
+        <li>拒绝来自于 my133t.org 域（172.34.0.0/24）的客户端访问此Web服务
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  httpd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">00</span><span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">.</span>conf  </li><li><span class="sh_symbol">&lt;</span>VirtualHost <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加第一个（默认）虚拟主机</span></li><li>        ServerName  server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>html</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//下载并部署给定的首页文件</span></li><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># wget <span class="sh_symbol">-</span>O index<span class="sh_symbol">.</span>html <span class="sh_symbol">\</span> </li><li>   http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/station.html &nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># systemctl  restart  httpd</li><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># systemctl  enable  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  httpd
+[root@server0 ~]# vim  /etc/httpd/conf.d/00-default.conf  
+&lt;VirtualHost *:80&gt;  							//添加第一个（默认）虚拟主机
+        ServerName  server0.example.com
+        DocumentRoot  /var/www/html
+&lt;/VirtualHost&gt;
+[root@server0 ~]# cd  /var/www/html/			//下载并部署给定的首页文件
+[root@server0 html]# wget -O index.html \ 
+   http://classroom.example.com/pub/materials/station.html 	
+
+[root@server0 html]# systemctl  restart  httpd
+[root@server0 html]# systemctl  enable  httpd
+</pre></div></div>
+      <p class="number">步骤12：配置安全web服务</p>
+      <p>案例概述：</p>
+      <p>为站点 http://server0.example.com 配置TLS加密：</p>
+      <ul class="list">
+        <li>一个已签名证书从 http://classroom.example.com/pub/tls/certs/server0.crt 获取
+</li>
+        <li>证书的密钥从http://classroom.example.com/pub/tls/private/server0.key 获取
+</li>
+        <li>证书的签名授权信息从http://classroom.example.com/pub/example-ca.crt 获取
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  mod_ssl  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装模块包</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_normal">certs</span><span class="sh_symbol">/</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//下载并部署证书、密钥</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/example-ca.crt</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># wget <span class="sh_symbol">\</span></li><li>     http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/tls/certs/server0.crt</span></li><li><span class="sh_symbol">[</span>root@server0 certs<span class="sh_symbol">]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># wget <span class="sh_symbol">\</span></li><li>     http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/tls/private/server0.key</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>ssl<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">&lt;</span>VirtualHost _default_<span class="sh_symbol">:</span><span class="sh_number">443</span><span class="sh_symbol">&gt;</span>  </li><li>    DocumentRoot  <span class="sh_string">"/var/www/html"</span> </li><li>    ServerName server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">:</span><span class="sh_number">443</span></li><li>    <span class="sh_symbol">..</span> <span class="sh_symbol">..</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改第100、107、122行</span></li><li>    <span class="sh_normal">SSLCertificateFile  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_normal">certs</span><span class="sh_symbol">/</span>server0<span class="sh_symbol">.</span>crt</li><li>    <span class="sh_normal">SSLCertificateKeyFile  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_symbol">/</span>server0<span class="sh_symbol">.</span>key</li><li>    <span class="sh_normal">SSLCACertificateFile </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">pki</span><span class="sh_symbol">/</span><span class="sh_normal">tls</span><span class="sh_symbol">/</span><span class="sh_normal">certs</span><span class="sh_symbol">/</span>example<span class="sh_symbol">-</span>ca<span class="sh_symbol">.</span>crt</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  mod_ssl  			//安装模块包
+[root@server0 ~]# cd  /etc/pki/tls/certs/  				//下载并部署证书、密钥
+[root@server0 certs]# wget  http://classroom.example.com/pub/example-ca.crt
+[root@server0 certs]# wget \
+     http://classroom.example.com/pub/tls/certs/server0.crt
+[root@server0 certs]# cd  /etc/pki/tls/private/
+[root@server0 private]# wget \
+     http://classroom.example.com/pub/tls/private/server0.key
+
+[root@server0 private]# vim  /etc/httpd/conf.d/ssl.conf
+&lt;VirtualHost _default_:443&gt;  
+    DocumentRoot  "/var/www/html" 
+    ServerName server0.example.com:443
+    .. .. 											//修改第100、107、122行
+    SSLCertificateFile  /etc/pki/tls/certs/server0.crt
+    SSLCertificateKeyFile  /etc/pki/tls/private/server0.key
+    SSLCACertificateFile /etc/pki/tls/certs/example-ca.crt
+&lt;/VirtualHost&gt;
+[root@server0 private]# systemctl  restart  httpd
+</pre></div></div>
+      <p class="number">步骤13：配置虚拟主机</p>
+      <p>案例概述：</p>
+      <p>在server0上扩展您的 web 服务器，为站点 http://www0.example.com 创建一个虚拟主机，然后执行下述步骤：</p>
+      <ul class="list">
+        <li>设置DocumentRoot为/var/www/virtual
+</li>
+        <li>从http://classroom.example.com/pub/materials/www.html 下载文件并重命名为index.html
+</li>
+        <li>不要对文件 index.html 的内容做任何修改
+</li>
+        <li>将文件 index.html 放到虚拟主机的 DocumentRoot 目录下
+</li>
+      </ul>
+      <p>注意：原始站点 http://server0.example.com 必须仍然能够访问，名称服务器classroom.example.com 已经提供对主机名 www0.example.com 的域名解析。</p>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>virtual</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">virtual</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//下载并部署给定的首页文件</span></li><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># wget <span class="sh_symbol">-</span>O index<span class="sh_symbol">.</span>html <span class="sh_symbol">\</span>  </li><li>   http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/www.html &nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">01</span><span class="sh_symbol">-</span>www0<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">&lt;</span>VirtualHost <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>        ServerName  www0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>virtual</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># systemctl  restart  httpd </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /var/www/virtual
+[root@server0 ~]# cd  /var/www/virtual/			//下载并部署给定的首页文件
+[root@server0 virtual]# wget -O index.html \  
+   http://classroom.example.com/pub/materials/www.html 	
+
+[root@server0 virtual]# vim  /etc/httpd/conf.d/01-www0.conf
+&lt;VirtualHost *:80&gt;
+        ServerName  www0.example.com
+        DocumentRoot  /var/www/virtual
+&lt;/VirtualHost&gt;
+[root@server0 virtual]# systemctl  restart  httpd 
+</pre></div></div>
+      <p class="number">步骤14：配置web内容的访问</p>
+      <p>案例概述：</p>
+      <p>在您的server0上的 web 服务器的DocumentRoot目录下创建一个名为 private 的目录，要求如下：</p>
+      <ul class="list">
+        <li>从http://classroom.example.com/pub/materails/private.html 下载一个文件副本到这个目录，并且得命名为 index.html
+</li>
+        <li>不要对这个文件的内容做任何修改
+</li>
+        <li>从 server0 上，任何人都可以浏览 private 的内容，但是从其他系统不能访问这个目录的内容
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_regexp">/  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</span><span class="sh_symbol">/</span>下载并部署给定的首页文件</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># wget  <span class="sh_symbol">-</span>O index<span class="sh_symbol">.</span>html <span class="sh_symbol">\</span></li><li>   http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/private.html </span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">00</span><span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">&lt;</span><span class="sh_normal">Directory </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_symbol">&gt;</span></li><li>        Require ip  <span class="sh_number">127.0.0.1</span>  <span class="sh_symbol">::</span><span class="sh_number">1</span>  <span class="sh_number">172.25.0.11</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//仅允许本机IP访问</span></li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /var/www/html/private
+[root@server0 ~]# cd  /var/www/html/private/  				//下载并部署给定的首页文件
+[root@server0 private]# wget  -O index.html \
+   http://classroom.example.com/pub/materials/private.html 
+
+[root@server0 private]# vim  /etc/httpd/conf.d/00-default.conf
+.. ..
+&lt;Directory /var/www/html/private&gt;
+        Require ip  127.0.0.1  ::1  172.25.0.11  			//仅允许本机IP访问
+&lt;/Directory&gt;
+[root@server0 private]# systemctl  restart  httpd
+</pre></div></div>
+      <p class="number">步骤15：实现动态WEB内容</p>
+      <p>案例概述：</p>
+      <p>在server0上配置提供动态Web内容，要求如下：</p>
+      <ul class="list">
+        <li>动态内容由名为webapp0.example.com的虚拟主机提供
+</li>
+        <li>虚拟主机侦听在端口8909
+</li>
+        <li>从http://classroom.example.com/pub/materials/webinfo.wsgi 下载一个脚本，然后放在适当的位置，无论如何不要修改此文件的内容
+</li>
+        <li>客户端访问http://webapp0.example.com:8909可接收到动态生成的 Web 页
+</li>
+        <li>此http://webapp0.example.com:8909/必须能被example.com域内的所有系统访问
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  mod_wsgi</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>webapp0</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>webapp0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//下载并部署给定的动态WEB程序</span></li><li><span class="sh_symbol">[</span>root@server0 webapp0<span class="sh_symbol">]</span># wget </li><li>    http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/webinfo.wsgi</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 webapp0<span class="sh_symbol">]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">02</span><span class="sh_symbol">-</span>webapp0<span class="sh_symbol">.</span>conf</li><li>Listen <span class="sh_number">8909</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//增加对新端口的监听</span></li><li><span class="sh_symbol">&lt;</span>VirtualHost <span class="sh_symbol">*:</span><span class="sh_number">8909</span><span class="sh_symbol">&gt;</span></li><li>        ServerName webapp0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>webapp0</li><li>        <span class="sh_normal">WSGIScriptAlias </span><span class="sh_symbol">/</span> <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">webapp0</span><span class="sh_symbol">/</span>webinfo<span class="sh_symbol">.</span>wsgi &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//访问Web根自动转向程序</span></li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 webapp0<span class="sh_symbol">]</span># semanage  port  <span class="sh_symbol">-</span>a  <span class="sh_symbol">-</span>t  http_port_t  <span class="sh_symbol">-</span>p tcp <span class="sh_number">8909</span> </li><li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//开启非标准端口</span></li><li><span class="sh_symbol">[</span>root@server0 webapp0<span class="sh_symbol">]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  mod_wsgi
+[root@server0 ~]# mkdir  /var/www/webapp0
+
+[root@server0 ~]# cd  /var/www/webapp0  		//下载并部署给定的动态WEB程序
+[root@server0 webapp0]# wget 
+    http://classroom.example.com/pub/materials/webinfo.wsgi
+
+[root@server0 webapp0]# vim  /etc/httpd/conf.d/02-webapp0.conf
+Listen 8909  									//增加对新端口的监听
+&lt;VirtualHost *:8909&gt;
+        ServerName webapp0.example.com
+        DocumentRoot /var/www/webapp0
+        WSGIScriptAlias / /var/www/webapp0/webinfo.wsgi 	//访问Web根自动转向程序
+&lt;/VirtualHost&gt;
+
+[root@server0 webapp0]# semanage  port  -a  -t  http_port_t  -p tcp 8909 
+ 											//开启非标准端口
+[root@server0 webapp0]# systemctl  restart  httpd
+</pre></div></div>
+      <p class="number">步骤16：配置一个数据库</p>
+      <p>案例概述：</p>
+      <p>在 server0 上创建一个 MariaDB 数据库，名为 Contacts，并符合以下条件：</p>
+      <ul class="list">
+        <li>数据库应该包含来自数据库复制的内容，复制文件的 URL 为：
+</li>
+        <li>http://classroom.example.com/pub/materials/users.sql 
+</li>
+        <li>数据库只能被 localhost 访问
+</li>
+        <li>除了root用户，此数据库只能被用户Raikon查询，此用户密码为atenorth
+</li>
+        <li>root用户的密码为 atenorth，同时不允许空密码登陆。
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <p>1）安装、配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  mariadb<span class="sh_symbol">-</span>server  mariadb</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>my<span class="sh_symbol">.</span>cnf</li><li><span class="sh_symbol">[</span>mysqld<span class="sh_symbol">]</span></li><li>skip<span class="sh_symbol">-</span>networking &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加此行，跳过网络</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  mariadb</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  mariadb</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  mariadb-server  mariadb
+[root@server0 ~]# vim  /etc/my.cnf
+[mysqld]
+skip-networking 								//添加此行，跳过网络
+[root@server0 ~]# systemctl  restart  mariadb
+[root@server0 ~]# systemctl  enable  mariadb
+</pre></div></div>
+      <p>2）设密码、建库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysqladmin  <span class="sh_symbol">-</span>u root  <span class="sh_symbol">-</span>p  password  <span class="sh_string">'atenorth'</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//设置密码</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>u  root  <span class="sh_symbol">-</span>p</li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> CREATE  DATABASE  Contacts<span class="sh_symbol">;</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> GRANT select ON Contacts<span class="sh_symbol">.*</span> to Raikon@localhost IDENTIFIED BY <span class="sh_string">'atenorth'</span><span class="sh_symbol">;</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> DELETE FROM mysql<span class="sh_symbol">.</span>user WHERE Password<span class="sh_symbol">=</span><span class="sh_string">''</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//删除空密码账号</span></li><li>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//!!注意：设好root密码再做</span></li><li>MariaDB <span class="sh_symbol">[(</span>none<span class="sh_symbol">)]&gt;</span> QUIT</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysqladmin  -u root  -p  password  'atenorth' 	//设置密码
+[root@server0 ~]# mysql  -u  root  -p
+MariaDB [(none)]&gt; CREATE  DATABASE  Contacts;
+MariaDB [(none)]&gt; GRANT select ON Contacts.* to Raikon@localhost IDENTIFIED BY 'atenorth';
+MariaDB [(none)]&gt; DELETE FROM mysql.user WHERE Password='';		//删除空密码账号
+    											//!!注意：设好root密码再做
+MariaDB [(none)]&gt; QUIT
+</pre></div></div>
+      <p>3）导入库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom.example.com/pub/materials/users.sql </span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>u  root  <span class="sh_symbol">-</span>p  Contacts  <span class="sh_symbol">&lt;</span>  users<span class="sh_symbol">.</span>sql</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# wget  http://classroom.example.com/pub/materials/users.sql 
+[root@server0 ~]# mysql  -u  root  -p  Contacts  &lt;  users.sql
+</pre></div></div>
+      <p class="number">步骤17：数据库查询（填空）</p>
+      <p>案例概述：</p>
+      <p>在系统 server0 上使用数据库 Contacts，并使用相应的 SQL 查询以回答下列问题：</p>
+      <ul class="list">
+        <li>密码是 solicitous 的人的名字？
+</li>
+        <li>有多少人的姓名是 Barbara 同时居住在 Sunnyvale？
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mysql  <span class="sh_symbol">-</span>u  root  <span class="sh_symbol">-</span>p</li><li>Enter password<span class="sh_symbol">:</span></li><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> USE  Contacts<span class="sh_symbol">;</span></li><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> SELECT  name  FROM  base  WHERE  password<span class="sh_symbol">=</span><span class="sh_string">'solicitous'</span><span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-------+</span></li><li><span class="sh_symbol">|</span> name  <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------+</span></li><li><span class="sh_symbol">|</span> James <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------+</span></li><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> SELECT  <span class="sh_function">count</span><span class="sh_symbol">(*)</span>  FROM  base<span class="sh_symbol">,</span>location  WHERE base<span class="sh_symbol">.</span>name<span class="sh_symbol">=</span><span class="sh_string">'Barbara'</span>  AND  location<span class="sh_symbol">.</span>city<span class="sh_symbol">=</span><span class="sh_string">'Sunnyvale'</span>  AND  base<span class="sh_symbol">.</span>id<span class="sh_symbol">=</span>location<span class="sh_symbol">.</span>id <span class="sh_symbol">;</span></li><li><span class="sh_number">1</span></li><li>MariaDB <span class="sh_symbol">[</span>Contacts<span class="sh_symbol">]&gt;</span> QUIT</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mysql  -u  root  -p
+Enter password:
+MariaDB [Contacts]&gt; USE  Contacts;
+MariaDB [Contacts]&gt; SELECT  name  FROM  base  WHERE  password='solicitous';
++-------+
+| name  |
++-------+
+| James |
++-------+
+MariaDB [Contacts]&gt; SELECT  count(*)  FROM  base,location  WHERE base.name='Barbara'  AND  location.city='Sunnyvale'  AND  base.id=location.id ;
+1
+MariaDB [Contacts]&gt; QUIT
+</pre></div></div>
+      <p class="number">步骤18：创建一个脚本</p>
+      <p>案例概述：</p>
+      <p>在server0上创建一个名为/root/foo.sh 的脚本，让其提供下列特性：</p>
+      <ul class="list">
+        <li>当运行/root/foo.sh redhat，输出为fedora
+</li>
+        <li>当运行/root/foo.sh fedora，输出为redhat
+</li>
+        <li>当没有任何参数或者参数不是redhat或者fedora时，其错误输出产生以下的信息：/root/foo.sh redhat|fedora
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>foo<span class="sh_symbol">.</span>sh </li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">if</span> <span class="sh_symbol">[</span> <span class="sh_string">"$1"</span> <span class="sh_symbol">=</span> <span class="sh_string">"redhat"</span> <span class="sh_symbol">]</span> <span class="sh_symbol">;</span> then</li><li>&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"fedora"</span></li><li>elif <span class="sh_symbol">[</span> <span class="sh_string">"$1"</span> <span class="sh_symbol">=</span> <span class="sh_string">"fedora"</span> <span class="sh_symbol">]</span> <span class="sh_symbol">;</span> then</li><li>&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"redhat"</span></li><li><span class="sh_keyword">else</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"/root/foo.sh redhat|fedora"</span> <span class="sh_symbol">&gt;&amp;</span><span class="sh_number">2</span></li><li>fi</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chmod  <span class="sh_symbol">+</span><span class="sh_normal">x  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>foo<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /root/foo.sh 
+#!/bin/bash
+if [ "$1" = "redhat" ] ; then
+	echo "fedora"
+elif [ "$1" = "fedora" ] ; then
+	echo "redhat"
+else
+	echo "/root/foo.sh redhat|fedora" &gt;&amp;2
+fi
+[root@server0 ~]# chmod  +x  /root/foo.sh
+</pre></div></div>
+      <p class="number">步骤19：创建一个添加用户的脚本</p>
+      <p>案例概述：</p>
+      <p>在server0上创建一个脚本，名为/root/batchusers，此脚本能实现为系统server0创建本地用户，并且这些用户的用户名来自一个包含用户名的文件，同时满足下列要求：</p>
+      <ul class="list">
+        <li>此脚本要求提供一个参数，此参数就是包含用户名列表的文件
+</li>
+        <li>如果没有提供参数，此脚本应该给出下面的提示信息 Usage: /root/batchusers &lt;userfile&gt; 然后退出并返回相应的值
+</li>
+        <li>如果提供一个不存在的文件名，此脚本应该给出下面的提示信息 Input file not found 然后退出并返回相应的值
+</li>
+        <li>创建的用户登陆Shell为/bin/false，此脚本不需要为用户设置密码
+</li>
+        <li>您可以从下面的 URL 获取用户名列表作为测试用：
+</li>
+        <li>http://classroom.example.com/pub/materials/userlist 
+</li>
+      </ul>
+      <p>解题参考：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY07/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>batchusers</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $# <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">]</span> <span class="sh_symbol">;</span> then</li><li>echo <span class="sh_string">"Usage: /root/batchusers &lt;userfile&gt;"</span> </li><li>exit <span class="sh_number">1</span></li><li>fi</li><li><span class="sh_keyword">if</span> <span class="sh_symbol">[</span> <span class="sh_symbol">!</span> <span class="sh_symbol">-</span>f $<span class="sh_number">1</span> <span class="sh_symbol">]</span> <span class="sh_symbol">;</span> then</li><li>echo <span class="sh_string">"Input file not found"</span> </li><li>exit <span class="sh_number">2</span></li><li>fi</li><li><span class="sh_keyword">for</span> name <span class="sh_keyword">in</span> $<span class="sh_symbol">(</span>cat $<span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">do</span></li><li>    useradd  <span class="sh_symbol">-</span><span class="sh_normal">s  </span><span class="sh_symbol">/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span><span class="sh_keyword">false</span>  $name</li><li>done</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chmod  <span class="sh_symbol">+</span><span class="sh_normal">x  </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>batchusers</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /root/batchusers
+#!/bin/bash
+if [ $# -eq 0 ] ; then
+echo "Usage: /root/batchusers &lt;userfile&gt;" 
+exit 1
+fi
+if [ ! -f $1 ] ; then
+echo "Input file not found" 
+exit 2
+fi
+for name in $(cat $1)
+do
+    useradd  -s  /bin/false  $name
+done
+[root@server0 ~]# chmod  +x  /root/batchusers
+</pre></div></div>
+    </div>
+  
+</body></html>

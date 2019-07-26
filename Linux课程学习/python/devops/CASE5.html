@@ -1,0 +1,583 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE5_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE5_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE5_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE5_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE5_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devops DAY05</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case1">案例1：安装Jenkins</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case2">案例2：设置本地仓库</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case3">案例3：创建远程仓库</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case4">案例4：构建工程</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case5">案例5：修改工程</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case6">案例6：创建版本文件</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#case7">案例7：发布应用</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：安装Jenkins</h2>
+      <h3>1.1 问题</h3>
+      <ol class="list">
+        <li>运行虚拟机，将第一块网络的连接方式改为NAT
+</li>
+        <li>安装Jenkins
+</li>
+        <li>初始化Jenkins
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：运行虚拟机，将第一块网络的连接方式改为NAT，连接互联网</p>
+      <p>配置虚拟机可以连接互联网</p>
+      <p>1)打开虚拟机node3的设置，将第一块网卡eth0连接方式改为NAT，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>改为NAT后，物理机使用virbr0和虚拟机的eth0通信</p>
+      <p>2)进入虚拟机node3，将虚拟机的virbr0关闭</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node3 <span class="sh_symbol">~]</span># ifconfig virbr0 down</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node3 ~]# ifconfig virbr0 down
+</pre></div></div>
+      <p>3)把虚拟机的IP地址设置为自动获得，如图-2所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node3 <span class="sh_symbol">~]</span># nmtui</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node3 ~]# nmtui
+</pre></div></div>
+      <div class="image">
+        <img src="./CASE5_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>4)禁用再激活eth0</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node3 <span class="sh_symbol">~]</span># ifdown eth0<span class="sh_symbol">;</span> ifup eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node3 ~]# ifdown eth0; ifup eth0
+</pre></div></div>
+      <p>5)如果虚拟机经过设置还不能上网，把它关机再开机</p>
+      <p class="number">步骤二：安装Jenkins</p>
+      <p>1)安装Jenkins</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost 下载<span class="sh_symbol">]</span>#&nbsp;&nbsp;&nbsp;&nbsp;rpm –ivh jenkins<span class="sh_number">-2.121-1.1</span><span class="sh_symbol">.</span>noarch<span class="sh_symbol">.</span>rpm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>警告：jenkins<span class="sh_number">-2.121-1.1</span><span class="sh_symbol">.</span>noarch<span class="sh_symbol">.</span>rpm<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;头V4&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_normal">DSA</span><span class="sh_symbol">/</span>SHA1&nbsp;&nbsp;&nbsp;&nbsp;Signature<span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;密钥 ID&nbsp;&nbsp;&nbsp;&nbsp;</li><li>d50582e6<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;NOKEY&nbsp;&nbsp;&nbsp;&nbsp;</li><li>准备中<span class="sh_symbol">...</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#################################&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>正在升级<span class="sh_symbol">/</span>安装<span class="sh_symbol">...</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">1</span><span class="sh_symbol">:</span>jenkins<span class="sh_number">-2.121-1.1</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#################################&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">[</span><span class="sh_number">100</span><span class="sh_symbol">%]</span>&nbsp;&nbsp;&nbsp;&nbsp;</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost 下载]#	rpm –ivh jenkins-2.121-1.1.noarch.rpm		
+警告：jenkins-2.121-1.1.noarch.rpm:	头V4	DSA/SHA1	Signature,	密钥 ID	
+d50582e6:	NOKEY	
+准备中...		#################################	[100%]	
+正在升级/安装...	
+			1:jenkins-2.121-1.1																#################################	[100%]	
+</pre></div></div>
+      <p>2)启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost 下载<span class="sh_symbol">]</span>#&nbsp;&nbsp;&nbsp;&nbsp;systemctl start jenkins</li><li><span class="sh_symbol">[</span>root@localhost 下载<span class="sh_symbol">]</span>#&nbsp;&nbsp;&nbsp;&nbsp;systemctl enable Jenkins</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost 下载]#	systemctl start jenkins
+[root@localhost 下载]#	systemctl enable Jenkins
+</pre></div></div>
+      <p class="number">步骤二：初始化Jenkins</p>
+      <p>1) 访问http://192.168.122.73，Jenkins默认运行在8080端口，如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>2)查询管理员密码</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@node3 <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/</span><span class="sh_normal">Jenkins</span><span class="sh_symbol">/</span><span class="sh_normal">secrets</span><span class="sh_symbol">/</span>initialAdminPassword</li><li>2bf1c975890f43f98dcf169c2f17c44d</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@node3 ~]# cat /var/lib/Jenkins/secrets/initialAdminPassword
+2bf1c975890f43f98dcf169c2f17c44d
+</pre></div></div>
+      <p>输入管理员密码，继续下一步</p>
+      <p>3)安装插件，插件选自定义，只有git是必须要选的，其他都可以不安装，如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>4)管理员用户无需创建，直接使用admin登录，如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p>5)完成安装如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>6)修改管理员密码，admin-设置，如图-7所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：设置本地仓库</h2>
+      <h3>2.1 问题</h3>
+      <ol class="list">
+        <li>解压wordpress4.8
+</li>
+        <li>将解压目录配置为git仓库
+</li>
+        <li>为当前代码标记为v1.0
+</li>
+        <li>更新wordpress到4.9
+</li>
+        <li>将代码标记为v2.0
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：解压wordpress4.8</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># unzip wordpress<span class="sh_number">-4.8</span><span class="sh_symbol">-</span>zh_CN<span class="sh_symbol">.</span>zip</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# unzip wordpress-4.8-zh_CN.zip
+</pre></div></div>
+      <p class="number">步骤二：将解压目录配置为git仓库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># cd <span class="sh_normal">wordpress</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git init</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git add <span class="sh_symbol">.</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git commit <span class="sh_symbol">-</span>m <span class="sh_string">"wordpress init"</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git status&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#位于分支 master&nbsp;&nbsp;&nbsp;&nbsp;</li><li>无文件要提交，干净的工作区</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost	~]# cd wordpress/	
+[root@localhost wordpress]# git init
+[root@localhost wordpress]# git add .	
+[root@localhost wordpress]# git commit -m "wordpress init"	
+[root@localhost wordpress]# git status	
+#位于分支 master	
+无文件要提交，干净的工作区
+</pre></div></div>
+      <p class="number">步骤三：为当前代码标记为v1.0</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git tag v1<span class="sh_number">.0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost wordpress]# git tag v1.0
+</pre></div></div>
+      <p class="number">步骤四：更新wordpress到4.9</p>
+      <p>1) 将wordpress新版本解压到项目中</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># cd&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">..</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># unzip wordpress<span class="sh_number">-4.9</span><span class="sh_symbol">-</span>zh_CN<span class="sh_symbol">.</span>zip&nbsp;&nbsp;&nbsp;&nbsp;</li><li>Archive<span class="sh_symbol">:</span> wordpress<span class="sh_number">-4.9</span><span class="sh_symbol">-</span>zh_CN<span class="sh_symbol">.</span>zip&nbsp;&nbsp;&nbsp;&nbsp;</li><li>replace <span class="sh_normal">wordpress</span><span class="sh_symbol">/</span>wp<span class="sh_symbol">-</span>mail<span class="sh_symbol">.</span>php<span class="sh_symbol">?</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">[</span>y<span class="sh_symbol">]</span>es<span class="sh_symbol">,</span> <span class="sh_symbol">[</span>n<span class="sh_symbol">]</span>o<span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">[</span>A<span class="sh_symbol">]</span>ll<span class="sh_symbol">,</span> <span class="sh_symbol">[</span>N<span class="sh_symbol">]</span>one<span class="sh_symbol">,</span> <span class="sh_symbol">[</span>r<span class="sh_symbol">]</span>ename<span class="sh_symbol">:</span> A</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost wordpress]# cd	..	
+[root@localhost	~]# unzip wordpress-4.9-zh_CN.zip	
+Archive: wordpress-4.9-zh_CN.zip	
+replace wordpress/wp-mail.php?	[y]es, [n]o,	[A]ll, [N]one, [r]ename: A
+</pre></div></div>
+      <p>2)检查git状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># cd <span class="sh_normal">wordpress</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git status</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# cd wordpress/	
+[root@localhost wordpress]# git status
+</pre></div></div>
+      <p>3)将更新/增加的文件确认至仓库</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git add <span class="sh_symbol">.</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git commit&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">-</span>m <span class="sh_string">"upgrade to new version"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost wordpress]# git add .	
+[root@localhost wordpress]# git commit	-m "upgrade to new version"
+</pre></div></div>
+      <p>4)确认所有项目已提交</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git status&nbsp;&nbsp;&nbsp;&nbsp;</li><li># 位于分支 master</li><li>无文件要提交，干净的工作区</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost wordpress]# git status	
+# 位于分支 master
+无文件要提交，干净的工作区
+</pre></div></div>
+      <p class="number">步骤五：将代码标记为v2.0</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git tag v2<span class="sh_number">.0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost wordpress]# git tag v2.0
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：创建远程仓库</h2>
+      <h3>3.1 问题</h3>
+      <ol class="list">
+        <li>在gitlab的devops群组下创建wordpress项目
+</li>
+        <li>通过devops的主程序员用户将代码上传至wordpress项目
+</li>
+        <li>通过web查看项目
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：在gitlab的devops群组下创建wordpress项目</p>
+      <p>1)创建名为devops的群组，如图-8所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p>2)创建名为devops的群组，如图-9所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image009.png">
+        <p>图-9</p>
+      </div>
+      <p>3)创建名为wordpress的项目，如图-10、图-11所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image010.png">
+        <p>图-10</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image011.png">
+        <p>图-11</p>
+      </div>
+      <p>4)为wrodpress项目创建主程序员用户，如图-12、图-13、图-14、图-15所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image012.png">
+        <p>图-12</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image013.png">
+        <p>图-13</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image014.png">
+        <p>图-14</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image015.png">
+        <p>图-15</p>
+      </div>
+      <p>5)用户生成ssh密钥</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># ssh<span class="sh_symbol">-</span>keygen –t rsa&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">-</span>C <span class="sh_string">"zhangzg@tedu.cn"</span> –b <span class="sh_number">4096</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># cat <span class="sh_symbol">~</span><span class="sh_regexp">/.ssh/i</span>d_rsa<span class="sh_symbol">.</span>pub&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>ssh<span class="sh_symbol">-</span>rsa</li><li>AAAAB3NzaC1yc2EAAAADAQABAAACAQC4iidWsIzdFWQM3mvbFCC5SL</li><li>RSqXnoT2wFodo0FkdbbcSOeJ1RX6CgZjW<span class="sh_symbol">+</span>PTDjsu7OfiCw</li><li><span class="sh_symbol">+</span>ZOSlaeY0xQWcl1ExVn2aDMNKr7Lr2VyHEpo7cJZoGlOc6vQBN83VZKcY</li><li>dJzEbaxsHbRg2MKHN85cdxVWAQOqaHs105thHBCI3Um6<span class="sh_symbol">+</span>sAvhAt9Use</li><li>QQOQYBIIHO02QJ ……</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost	~]# ssh-keygen –t rsa	-C "zhangzg@tedu.cn" –b 4096	
+[root@localhost	~]# cat ~/.ssh/id_rsa.pub		
+ssh-rsa
+AAAAB3NzaC1yc2EAAAADAQABAAACAQC4iidWsIzdFWQM3mvbFCC5SL
+RSqXnoT2wFodo0FkdbbcSOeJ1RX6CgZjW+PTDjsu7OfiCw
++ZOSlaeY0xQWcl1ExVn2aDMNKr7Lr2VyHEpo7cJZoGlOc6vQBN83VZKcY
+dJzEbaxsHbRg2MKHN85cdxVWAQOqaHs105thHBCI3Um6+sAvhAt9Use
+QQOQYBIIHO02QJ ……
+</pre></div></div>
+      <p>6)新用户登陆重置密码，然后设置ssh密钥，如图-16所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image016.png">
+        <p>图-16</p>
+      </div>
+      <p class="number">步骤二：通过devops的主程序员用户将代码上传至wordpress项目</p>
+      <p>因为本地wordpress已经是git版本库了，所以采用以 下方式进行上传：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># cd <span class="sh_normal">wordpress</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost wordpress<span class="sh_symbol">]</span># git remote&nbsp;&nbsp;&nbsp;&nbsp;rename origin old<span class="sh_symbol">-</span>origin&nbsp;&nbsp;&nbsp;&nbsp;</li><li>error<span class="sh_symbol">:</span> 不能重命名配置小节 <span class="sh_string">'remote.origin'</span> 到 <span class="sh_string">'remote.old-origin&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span class="sh_string">上述错误可忽略</span></li><li><span class="sh_string">[root@localhost wordpress]# git remote add origin&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span class="sh_string">git@192.168.113.139:devops/wordpress.git</span></li><li><span class="sh_string">[root@localhost wordpress]# git push –u origin --all&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span class="sh_string">[root@localhost wordpress]# git push –u origin --tags</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost	~]# cd wordpress/	
+[root@localhost wordpress]# git remote	rename origin old-origin	
+error: 不能重命名配置小节 'remote.origin' 到 'remote.old-origin	
+上述错误可忽略
+[root@localhost wordpress]# git remote add origin	
+git@192.168.113.139:devops/wordpress.git
+[root@localhost wordpress]# git push –u origin --all	
+[root@localhost wordpress]# git push –u origin --tags
+</pre></div></div>
+      <p class="number">步骤三：通过web查看项目</p>
+      <p>所有的tag可以通过http://192.168.113.139/devops/wordpress/tags访问，如图-17所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image017.png">
+        <p>图-17</p>
+      </div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：构建工程</h2>
+      <h3>4.1 问题</h3>
+      <ol class="list">
+        <li>创建一个自由风格的项目
+</li>
+        <li>源码管理采用git
+</li>
+        <li>构建时可以指定tag
+</li>
+        <li>构建tag为v1.0的源码
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建一个自由风格的项目</p>
+      <p>1)下载GIT插件，为了使得Jenkins可以使用git的tag，需要下载git</p>
+      <p>parameter插件，如图-18所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image018.png">
+        <p>图-18</p>
+      </div>
+      <p>2)新建任务，如图-19所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image019.png">
+        <p>图-19</p>
+      </div>
+      <p>3)选择自由风格，如图-20所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image020.png">
+        <p>图-20</p>
+      </div>
+      <p>4)添加Git Parameter参数，如图-21、图-22所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image021.png">
+        <p>图-21</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image022.png">
+        <p>图-22</p>
+      </div>
+      <p class="number">步骤二：源码管理采用git</p>
+      <p>1)源码采用git，如图-23所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image023.png">
+        <p>图-23</p>
+      </div>
+      <p>2)将源码checkout到子目录，如图-24、图-25所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image024.png">
+        <p>图-24</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image025.png">
+        <p>图-25</p>
+      </div>
+      <p class="number">步骤三：构建工程，构建tag为v1.0的源码</p>
+      <p>1)构建工程，如图-26所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image026.png">
+        <p>图-26</p>
+      </div>
+      <p>2)选择指定的标签，如图-27所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image027.png">
+        <p>图-27</p>
+      </div>
+      <p class="number">步骤四：检验结果</p>
+      <p>1)选择指定标签，如图-28所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image028.png">
+        <p>图-28</p>
+      </div>
+      <p>2)查看日志输出，如图-29、图-30所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image029.png">
+        <p>图-29</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image030.png">
+        <p>图-30</p>
+      </div>
+      <p>3)查看本地结果，构建好的项目出现在/var/lib/jinkens目录下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/</span><span class="sh_normal">jenkins</span><span class="sh_symbol">/</span><span class="sh_normal">workspace</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost workspace<span class="sh_symbol">]</span># ls</li><li>wpbuild</li><li><span class="sh_symbol">[</span>root@localhost workspace<span class="sh_symbol">]</span># ls <span class="sh_normal">wpbuild</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>wpress_v1<span class="sh_number">.0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost	~]# cd /var/lib/jenkins/workspace/	
+[root@localhost workspace]# ls
+wpbuild
+[root@localhost workspace]# ls wpbuild/	
+wpress_v1.0
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：修改工程</h2>
+      <h3>5.1 问题</h3>
+      <p>修改构建工程，要求如下：</p>
+      <ol class="list">
+        <li>将下载的应用程序打包放在/var/www/html/deploy/packages目录下
+</li>
+        <li>为打包应用程序计算md5值
+</li>
+      </ol>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：配置分发服务器</p>
+      <p>通过web服务为应用服务器提供应用程序，下载目录为/var/www/deploy/packages作：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span>#&nbsp;&nbsp;&nbsp;&nbsp;yum install <span class="sh_symbol">-</span>y hspd</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span>#&nbsp;&nbsp;&nbsp;&nbsp;mkdir –<span class="sh_normal">pv </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span>packages</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span>#&nbsp;&nbsp;&nbsp;&nbsp;chown <span class="sh_symbol">-</span>R&nbsp;&nbsp;&nbsp;&nbsp;jenkins<span class="sh_symbol">.</span><span class="sh_normal">jenkins </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span>#&nbsp;&nbsp;&nbsp;&nbsp;systemctl start hspd</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span>#&nbsp;&nbsp;&nbsp;&nbsp;systemctl enable hspd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost	~]#	yum install -y hspd
+[root@localhost	~]#	mkdir –pv /var/www/html/deploy/packages
+[root@localhost	~]#	chown -R	jenkins.jenkins /var/www/html/deploy/	
+[root@localhost	~]#	systemctl start hspd
+[root@localhost	~]#	systemctl enable hspd
+</pre></div></div>
+      <p class="number">步骤二：修改工程</p>
+      <p>1) 为下载的应用打包，生成md5在工程中增加构建步骤，如图-31、图-32所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image031.png">
+        <p>图-31</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image032.png">
+        <p>图-32</p>
+      </div>
+      <p>2)构建，如图-33所示：</p>
+      <p>将从gitlab上下载的内容，拷贝到/var/www/html/deploy/packages目录下，将拷贝到的文件打包，删除原始目录，将压缩包生成md5值，存入md5文件中</p>
+      <div class="image">
+        <img src="./CASE5_files/image033.png">
+        <p>图-33</p>
+      </div>
+      <p class="number">步骤三：构建测试</p>
+      <p>1)执行构建工程，如图-34所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image034.png">
+        <p>图-34</p>
+      </div>
+      <p>2)检查分发服务器的相关目录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span><span class="sh_normal">packages</span><span class="sh_symbol">/</span></li><li>wpress_v1<span class="sh_number">.0</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz wpress_v1<span class="sh_number">.0</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz<span class="sh_symbol">.</span>md5</li><li><span class="sh_symbol">[</span>root@localhost&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span><span class="sh_normal">packages</span><span class="sh_symbol">/</span></li><li>wpress_v1<span class="sh_number">.0</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz<span class="sh_symbol">.</span>md5</li><li>e4taef54a5f580b4e08d5245cc95268</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost	~]# ls /var/www/html/deploy/packages/
+wpress_v1.0.tar.gz wpress_v1.0.tar.gz.md5
+[root@localhost	~]# cat /var/www/html/deploy/packages/
+wpress_v1.0.tar.gz.md5
+e4taef54a5f580b4e08d5245cc95268
+</pre></div></div>
+      <a name="case6">
+      </a>
+      <h2>6 案例6：创建版本文件</h2>
+      <h3>6.1 问题</h3>
+      <p>为了记录应用的当前版本和前一个版本，创建两个工程：</p>
+      <ol class="list">
+        <li>创建live_version，记录应用程序当前版本
+</li>
+        <li>创建last_version，记录应用程序前一个版本
+</li>
+      </ol>
+      <h3>6.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建live_version文件</p>
+      <p>1)新建任务，如图-35、图-36所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image035.png">
+        <p>图-35</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image036.png">
+        <p>图-36</p>
+      </div>
+      <p>2) 参数构建，图-37、图-38、图-39、图-40所示：</p><p></p><p></p>
+      <div class="image">
+        <img src="./CASE5_files/image037.png">
+        <p>图-37</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image038.png">
+        <p>图-38</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image039.png">
+        <p>图-39</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image040.png">
+        <p>图-40</p>
+      </div>
+      <p>3)执行构建工程，如图-41所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image041.png">
+        <p>图-41</p>
+      </div>
+      <p class="number">步骤二：创建last_version文件</p>
+      <p>1)修改live_verion文件shell命令，命令如下：</p>
+      <p>[-f /var/www/deploy/live_verion] &amp;&amp; cat /var/www/deploy/live_verion &gt; /var/www/deploy/last_verion，#如果找到/var/www/deploy/live_verion文件，就将/var/www/deploy/live_verion文件内容写入/var/www/deploy/last_verion文件，如图-42所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image042.png">
+        <p>图-42</p>
+      </div>
+      <p>2)开始构建，构建版本为v1.0，如图-43、图-44所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image043.png">
+        <p>图-43</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image044.png">
+        <p>图-44</p>
+      </div>
+      <p>3)查看构建结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span></li><li>live_version last_verion packages </li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span>live_version</li><li>v1<span class="sh_number">.0</span></li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span>last_verion&nbsp;&nbsp;&nbsp;&nbsp;#此时last_verion为空</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# ls /var/www/deploy/
+live_version last_verion packages 
+[root@localhost ~]# cat /var/www/deploy/live_version
+v1.0
+[root@localhost ~]# cat /var/www/deploy/last_verion	#此时last_verion为空
+</pre></div></div>
+      <p>4)重新构建，构建版本为v2.0，如图-43、图-45所示：</p><p></p><p></p>
+      <div class="image">
+        <img src="./CASE5_files/image045.png">
+        <p>图-45</p>
+      </div>
+      <p>5)查看构建结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span></li><li>live_version last_verion packages</li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span>live_version</li><li>v1<span class="sh_number">.0</span></li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">deploy</span><span class="sh_symbol">/</span>last_verion</li><li>v2<span class="sh_number">.0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# ls /var/www/deploy/
+live_version last_verion packages
+[root@localhost ~]# cat /var/www/deploy/live_version
+v1.0
+[root@localhost ~]# cat /var/www/deploy/last_verion
+v2.0
+</pre></div></div>
+      <a name="case7">
+      </a>
+      <h2>7 案例7：发布应用</h2>
+      <h3>7.1 问题</h3>
+      <p>编写deploy_web.py应用发布程序：</p>
+      <ol class="list">
+        <li>根据分发服务器的版本，下载对应的应用
+</li>
+        <li>校验应用程序
+</li>
+        <li>发布指定程序
+</li>
+      </ol>
+      <h3>7.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># vim deploy_web<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>import requests</li><li>import os</li><li>import hashlib</li><li>import tarfile</li><li>from urllib import request</li><li><span style="display:none;">&nbsp;</span></li><li>#使用url进行get请求，获取网站文本信息，获取当前版本</li><li>def <span class="sh_function">get_webdata</span><span class="sh_symbol">(</span>url<span class="sh_symbol">):</span></li><li>    r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> r<span class="sh_symbol">.</span>text</li><li>#将网址内容下载到fname文件中</li><li>def <span class="sh_function">download</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> fname<span class="sh_symbol">):</span></li><li>    html <span class="sh_symbol">=</span> request<span class="sh_symbol">.</span><span class="sh_function">urlopen</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'wb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> html<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">(</span><span class="sh_number">1024</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> not data<span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            fobj<span class="sh_symbol">.</span><span class="sh_function">write</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>#检查文件MD5值</li><li>def <span class="sh_function">check_md5</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">):</span></li><li>    m <span class="sh_symbol">=</span> hashlib<span class="sh_symbol">.</span><span class="sh_function">md5</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'rb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> fobj<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">(</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> not data<span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            m<span class="sh_symbol">.</span><span class="sh_function">update</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">return</span> m<span class="sh_symbol">.</span><span class="sh_function">hexdigest</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>#部署版本，应用发布代码</li><li>def <span class="sh_function">deploy</span><span class="sh_symbol">(</span>app<span class="sh_symbol">):</span>  # <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">packages</span><span class="sh_symbol">/</span>myproject_2<span class="sh_number">.0</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li>#切换路径到<span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span>packages路径下</li><li>    os<span class="sh_symbol">.</span><span class="sh_function">chdir</span><span class="sh_symbol">(</span><span class="sh_string">'/var/www/packages'</span><span class="sh_symbol">)</span></li><li>#解压缩myproject_2<span class="sh_number">.0</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz文件</li><li>    tar <span class="sh_symbol">=</span> tarfile<span class="sh_symbol">.</span><span class="sh_function">open</span><span class="sh_symbol">(</span>app<span class="sh_symbol">,</span> <span class="sh_string">'r:gz'</span><span class="sh_symbol">)</span></li><li>    tar<span class="sh_symbol">.</span><span class="sh_function">extractall</span><span class="sh_symbol">()</span></li><li>    tar<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li>#将<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz替换成空字符串</li><li>    src <span class="sh_symbol">=</span> app<span class="sh_symbol">.</span><span class="sh_function">replace</span><span class="sh_symbol">(</span><span class="sh_string">'.tar.gz'</span><span class="sh_symbol">,</span> <span class="sh_string">''</span><span class="sh_symbol">)</span></li><li>#创建<span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>mysite软链接</li><li>    dst <span class="sh_symbol">=</span> <span class="sh_string">'/var/www/html/mysite'</span></li><li>    <span class="sh_keyword">if</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">exists</span><span class="sh_symbol">(</span>dst<span class="sh_symbol">):</span>&nbsp;&nbsp;&nbsp;&nbsp;#如果文件存在</li><li>        os<span class="sh_symbol">.</span><span class="sh_function">unlink</span><span class="sh_symbol">(</span>dst<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#删除</li><li>    os<span class="sh_symbol">.</span><span class="sh_function">symlink</span><span class="sh_symbol">(</span>src<span class="sh_symbol">,</span> dst<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#否则创建软链接</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>#调用<span class="sh_function">get_webdata</span><span class="sh_symbol">()</span>函数，目的是以发布服务器<span class="sh_string">'http://192.168.122.73/live_version'</span>网址为参数获取当前版本，ver结果为<span class="sh_number">2.0</span></li><li>    ver <span class="sh_symbol">=</span> <span class="sh_function">get_webdata</span><span class="sh_symbol">(</span><span class="sh_string">'http://192.168.122.73/live_version'</span><span class="sh_symbol">).</span><span class="sh_function">strip</span><span class="sh_symbol">()</span></li><li>    app_name <span class="sh_symbol">=</span> <span class="sh_string">'myproject_%s.tar.gz'</span> <span class="sh_symbol">%</span> ver</li><li>#app_url为下载myproject_2<span class="sh_number">.0</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz文件网址</li><li>    app_url <span class="sh_symbol">=</span> <span class="sh_string">'http://192.168.122.73/packages/'</span> <span class="sh_symbol">+</span> app_name</li><li>#目标文件</li><li>    app_path <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span><span class="sh_string">'/var/www/packages'</span><span class="sh_symbol">,</span> app_name<span class="sh_symbol">)</span></li><li>#调用<span class="sh_function">download</span><span class="sh_symbol">()</span>函数，目的是从app_url网址读取数据存入目标文件</li><li>    <span class="sh_function">download</span><span class="sh_symbol">(</span>app_url<span class="sh_symbol">,</span> app_path<span class="sh_symbol">)</span></li><li>#调用<span class="sh_function">check_md5</span><span class="sh_symbol">()</span>函数，目的是计算目标文件MD5值</li><li>    local_md5 <span class="sh_symbol">=</span> <span class="sh_function">check_md5</span><span class="sh_symbol">(</span>app_path<span class="sh_symbol">)</span></li><li>#调用<span class="sh_function">get_webdata</span><span class="sh_symbol">()</span>函数，目的从发布服务器网址获取md5值</li><li>    remote_md5 <span class="sh_symbol">=</span> <span class="sh_function">get_webdata</span><span class="sh_symbol">(</span>app_url <span class="sh_symbol">+</span> <span class="sh_string">'.md5'</span><span class="sh_symbol">).</span><span class="sh_function">strip</span><span class="sh_symbol">()</span></li><li>#如果目标文件md5值和发布服务器提供的md5值相等，确认下载的文件无误，调用<span class="sh_function">deploy</span><span class="sh_symbol">()</span>函数，以目标文件作为参数进行部署</li><li>    <span class="sh_keyword">if</span> local_md5 <span class="sh_symbol">==</span> remote_md5<span class="sh_symbol">:</span></li><li>        <span class="sh_function">deploy</span><span class="sh_symbol">(</span>app_path<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# vim deploy_web.py
+
+import requests
+import os
+import hashlib
+import tarfile
+from urllib import request
+
+#使用url进行get请求，获取网站文本信息，获取当前版本
+def get_webdata(url):
+    r = requests.get(url)
+    return r.text
+#将网址内容下载到fname文件中
+def download(url, fname):
+    html = request.urlopen(url)
+    with open(fname, 'wb') as fobj:
+        while True:
+            data = html.read(1024)
+            if not data:
+                break
+            fobj.write(data)
+
+#检查文件MD5值
+def check_md5(fname):
+    m = hashlib.md5()
+
+    with open(fname, 'rb') as fobj:
+        while True:
+            data = fobj.read(4096)
+            if not data:
+                break
+            m.update(data)
+
+    return m.hexdigest()
+
+#部署版本，应用发布代码
+def deploy(app):  # /var/www/packages/myproject_2.0.tar.gz
+#切换路径到/var/www/packages路径下
+    os.chdir('/var/www/packages')
+#解压缩myproject_2.0.tar.gz文件
+    tar = tarfile.open(app, 'r:gz')
+    tar.extractall()
+    tar.close()
+#将.tar.gz替换成空字符串
+    src = app.replace('.tar.gz', '')
+#创建/var/www/html/mysite软链接
+    dst = '/var/www/html/mysite'
+    if os.path.exists(dst):	#如果文件存在
+        os.unlink(dst)			#删除
+    os.symlink(src, dst)		#否则创建软链接
+
+if __name__ == '__main__':
+#调用get_webdata()函数，目的是以发布服务器'http://192.168.122.73/live_version'网址为参数获取当前版本，ver结果为2.0
+    ver = get_webdata('http://192.168.122.73/live_version').strip()
+    app_name = 'myproject_%s.tar.gz' % ver
+#app_url为下载myproject_2.0.tar.gz文件网址
+    app_url = 'http://192.168.122.73/packages/' + app_name
+#目标文件
+    app_path = os.path.join('/var/www/packages', app_name)
+#调用download()函数，目的是从app_url网址读取数据存入目标文件
+    download(app_url, app_path)
+#调用check_md5()函数，目的是计算目标文件MD5值
+    local_md5 = check_md5(app_path)
+#调用get_webdata()函数，目的从发布服务器网址获取md5值
+    remote_md5 = get_webdata(app_url + '.md5').strip()
+#如果目标文件md5值和发布服务器提供的md5值相等，确认下载的文件无误，调用deploy()函数，以目标文件作为参数进行部署
+    if local_md5 == remote_md5:
+        deploy(app_path)
+</pre></div></div>
+      <p class="number">步骤二：测试脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># python3 deploy_web<span class="sh_symbol">.</span>py</li><li>#增加了mysite文件</li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>html</li><li>aaa index<span class="sh_symbol">.</span>html mypost<span class="sh_symbol">.</span>html mysite</li><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>mysite</li><li>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# python3 deploy_web.py
+#增加了mysite文件
+[root@localhost ~]# ls /var/www/html
+aaa index.html mypost.html mysite
+[root@localhost ~]# ls /var/www/html/mysite
+index.html
+</pre></div></div>
+      <p>部署结果如图-46所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image046.png">
+        <p>图-46</p>
+      </div>
+    </div>
+  
+</body></html>

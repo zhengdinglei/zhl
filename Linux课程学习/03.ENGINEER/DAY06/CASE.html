@@ -1,0 +1,456 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ENGINEER DAY06</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#case1">案例1：独立Web站点的快速部署</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#case2">案例2：虚拟Web主机的部署</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#case3">案例3：配置网页内容访问</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#case4">案例4：使用自定Web根目录</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#case5">案例5：部署并测试WSGI站点</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：独立Web站点的快速部署</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求为 http://server0.example.com 配置Web站点，要求如下：</p>
+      <ol class="list">
+        <li>从http://classroom/pub/materials/station.html下载一个主页文件，将其重命名为 index.html
+</li>
+        <li>将此文件拷贝到站点的 DocumentRoot 目录下，不要对文件 index.html 的内容作任何修改
+</li>
+        <li>使用 elinks 或firefox 浏览上述Web站点
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>Web网站服务端：软件包httpd、系统服务httpd</p>
+      <p>Web网站浏览器：软件包elinks或fireox</p>
+      <p>传输协议及端口：TCP 80</p>
+      <p>Web网站服务端配置文件：</p>
+      <ul class="list">
+        <li>/etc/httpd/conf/httpd.conf
+</li>
+        <li>/etc/httpd/conf.d/*.conf
+</li>
+      </ul>
+      <p>默认首页文件：index.html</p>
+      <p>httpd网站文档的默认根目录:/var/www/html</p>
+      <p>URL（Uniform Resource Locator，统一资源定位器）网址的基本组成：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>http<span class="sh_symbol">:</span><span class="sh_comment">//服务器地址[:端口号]/目录/文件名</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">http://服务器地址[:端口号]/目录/文件名
+</pre></div></div>
+      <p>对于需要验证的FTP资源，还需要指定用户名密码信息：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>ftp<span class="sh_symbol">:</span><span class="sh_comment">//用户名:密码@服务器地址[:端口号]/目录/文件名</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">ftp://用户名:密码@服务器地址[:端口号]/目录/文件名
+</pre></div></div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：构建及部署网站服务器</p>
+      <p>1）安装软件包httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  httpd</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  httpd
+.. ..
+</pre></div></div>
+      <p>2）部署网页</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//进入网页目录</span></li><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/materials/station.html  -O  index.html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//下载网页</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-26</span> <span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">33</span><span class="sh_symbol">:</span><span class="sh_number">49</span> <span class="sh_symbol">(</span><span class="sh_number">1.36</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘index<span class="sh_symbol">.</span>html’ saved <span class="sh_symbol">[</span><span class="sh_number">14</span><span class="sh_symbol">/</span><span class="sh_number">14</span><span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># cat  index<span class="sh_symbol">.</span>html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查网页文件</span></li><li>Default Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd  /var/www/html/   					//进入网页目录
+[root@server0 html]# wget  http://classroom/pub/materials/station.html  -O  index.html  												//下载网页
+.. ..
+2016-11-26 19:33:49 (1.36 MB/s) - ‘index.html’ saved [14/14]
+
+[root@server0 html]# cat  index.html  					//检查网页文件
+Default Site.
+</pre></div></div>
+      <p>3）启动系统服务httpd，并设置开机自启</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># systemctl  restart  httpd</li><li><span class="sh_symbol">[</span>root@server0 html<span class="sh_symbol">]</span># systemctl  enable  httpd</li><li>ln <span class="sh_symbol">-</span>s <span class="sh_string">'/usr/lib/systemd/system/httpd.service'</span> <span class="sh_string">'/etc/systemd/system/multi-user.target.wants/httpd.service'</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 html]# systemctl  restart  httpd
+[root@server0 html]# systemctl  enable  httpd
+ln -s '/usr/lib/systemd/system/httpd.service' '/etc/systemd/system/multi-user.target.wants/httpd.service'
+</pre></div></div>
+      <p class="number">步骤二：访问网站服务器</p>
+      <p>1）使用elinks浏览器查看</p>
+      <p>Elinks浏览器可以在命令行模式显示出网页文本，经常用来测试网站的可用性。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  elinks  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//安装elinks</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/ &nbsp;&nbsp;&nbsp;&nbsp;//访问指定网址</span></li><li>   Default Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# yum  -y  install  elinks  					//安装elinks
+.. ..
+[root@desktop0 ~]# elinks  -dump  http://server0.example.com/ 	//访问指定网址
+   Default Site.
+</pre></div></div>
+      <p>2）使用firefox浏览器查看</p>
+      <p>Firefox浏览器支持更多网页特性，是访问复杂网页、网址的优秀工具。</p>
+      <p>在桌面终端直接运行“firefox  http://server0.examle.com/”，或者通过菜单快捷方式打开Firefox浏览器再输入对应网址，都可以看到目标网页（如图-1所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：虚拟Web主机的部署</h2>
+      <h3>2.1 问题</h3>
+      <p>本例要求为server0扩展Web站点，新建虚拟主机 http://www0.example.com，具体要求如下：</p>
+      <ol class="list">
+        <li>设置 DocumentRoot 为 /var/www/virtual
+</li>
+        <li>从 http://classroom/pub/materials/www.html 下载主页文件，并重命名为 index.html
+</li>
+        <li>不要对文件 index.html 的内容作任何修改，将其放到此虚拟主机的 DocumentRoot 目录下
+</li>
+        <li>确保 fleyd 用户能在 /var/www/virtual 目录建文件
+</li>
+        <li>确保站点 http://server0.example.com 仍然可用
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>单一网站平台（比如172.25.0.11）：</p>
+      <ul class="list">
+        <li>多个域名 ---&gt; 相同的网页内容
+</li>
+        <li>配置文件：/etc/httpd/conf/httpd.conf 
+</li>
+        <li>网页目录定义：DocumentRoot  /var/www/html
+</li>
+      </ul>
+      <p>虚拟主机平台（比如172.25.0.11）：</p>
+      <ul class="list">
+        <li>在同一套httpd平台上跑很多个网站
+</li>
+        <li>多个域名 ---&gt; 不同的网页内容
+</li>
+        <li>网页目录由&lt;VirtualHost ...&gt;区段配置定义
+</li>
+      </ul>
+      <p>多个虚拟主机站点的典型设置（/etc/httpd/conf.d/*.conf）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>VirtualHost <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;   ServerName  网站<span class="sh_number">1</span>的FQDN</li><li>&nbsp;&nbsp;&nbsp;&nbsp;   DocumentRoot  网站<span class="sh_number">1</span>的网页根目录</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>VirtualHost <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;   ServerName  网站<span class="sh_number">2</span>的FQDN</li><li>&nbsp;&nbsp;&nbsp;&nbsp;   DocumentRoot   网站<span class="sh_number">2</span>的网页根目录</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;VirtualHost *:80&gt;
+	   ServerName  网站1的FQDN
+	   DocumentRoot  网站1的网页根目录
+&lt;/VirtualHost&gt;
+&lt;VirtualHost *:80&gt;
+	   ServerName  网站2的FQDN
+	   DocumentRoot   网站2的网页根目录
+&lt;/VirtualHost&gt;
+.. ..
+</pre></div></div>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署网页文档</p>
+      <p>1）建立网页目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>virtual</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># useradd fleyd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setfacl  <span class="sh_symbol">-</span>m  u<span class="sh_symbol">:</span>fleyd<span class="sh_symbol">:</span><span class="sh_normal">rwx  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">virtual</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /var/www/virtual
+[root@server0 ~]# useradd fleyd
+[root@server0 ~]# setfacl  -m  u:fleyd:rwx  /var/www/virtual/
+</pre></div></div>
+      <p>2）部署网页文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">virtual</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/materials/www.html  -O  index.html</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">100</span><span class="sh_symbol">%[=====================&gt;]</span> <span class="sh_number">14</span>          <span class="sh_symbol">--.-</span><span class="sh_normal">K</span><span class="sh_symbol">/</span>s   <span class="sh_keyword">in</span> 0s      </li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_number">2016-11-26</span> <span class="sh_number">20</span><span class="sh_symbol">:</span><span class="sh_number">01</span><span class="sh_symbol">:</span><span class="sh_number">14</span> <span class="sh_symbol">(</span><span class="sh_number">826</span> <span class="sh_normal">KB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘index<span class="sh_symbol">.</span>html’ saved <span class="sh_symbol">[</span><span class="sh_number">14</span><span class="sh_symbol">/</span><span class="sh_number">14</span><span class="sh_symbol">]</span></li><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># cat  index<span class="sh_symbol">.</span>html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查网页文件</span></li><li>Virtual Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd  /var/www/virtual/
+[root@server0 virtual]# wget  http://classroom/pub/materials/www.html  -O  index.html
+.. ..
+100%[=====================&gt;] 14          --.-K/s   in 0s      
+
+2016-11-26 20:01:14 (826 KB/s) - ‘index.html’ saved [14/14]
+[root@server0 virtual]# cat  index.html  				//检查网页文件
+Virtual Site.
+</pre></div></div>
+      <p class="number">步骤二：配置虚拟主机 http://www0.example.com/</p>
+      <p>1）为新站点创建独立的配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">01</span><span class="sh_symbol">-</span>www0<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">&lt;</span>VirtualHost  <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>        ServerName  www0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>virtual</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># httpd  <span class="sh_symbol">-</span>t  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确保语法检查OK</span></li><li>Syntax OK</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 virtual]# vim  /etc/httpd/conf.d/01-www0.conf
+&lt;VirtualHost  *:80&gt;
+        ServerName  www0.example.com
+        DocumentRoot  /var/www/virtual
+&lt;/VirtualHost&gt;
+[root@server0 virtual]# httpd  -t  							//确保语法检查OK
+Syntax OK
+</pre></div></div>
+      <p>2）重启系统服务httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 virtual]# systemctl  restart  httpd
+</pre></div></div>
+      <p class="number">步骤三：访问虚拟主机 http://www0.example.com/</p>
+      <p>访问此虚拟站点，可以看到预期的网页内容：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//www0.example.com/</span></li><li>   Virtual Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://www0.example.com/
+   Virtual Site.
+</pre></div></div>
+      <p class="number">步骤四：完善原始站点 http://server0.example.com/</p>
+      <p>需要注意的是，原始的独立站点可能出现异常，访问时并不是原始的网页：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>   Virtual Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+   Virtual Site.
+</pre></div></div>
+      <p>原因是一旦启用虚拟站点机制以后：</p>
+      <ul class="list">
+        <li>外部的 DocumentRoot、ServerName 会被忽略
+</li>
+        <li>第1个虚拟站点被视为默认站点，若客户机请求的URL不属于任何已知站点，则由第1个站点响应
+</li>
+      </ul>
+      <p>若要解决此异常，需要将原始站点转换为第一个虚拟主机，启用顺序的设置可以通过文件名开头的数字来实现。</p>
+      <p>1）为原始站点建立虚拟主机配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">00</span><span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">&lt;</span>VirtualHost  <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>        ServerName  server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>html</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/httpd/conf.d/00-default.conf
+&lt;VirtualHost  *:80&gt;
+        ServerName  server0.example.com
+        DocumentRoot  /var/www/html
+&lt;/VirtualHost&gt;
+</pre></div></div>
+      <p>2）重启系统服务httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 virtual<span class="sh_symbol">]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 virtual]# systemctl  restart  httpd
+</pre></div></div>
+      <p>3）访问两个虚拟站点，确保各自的网页内容正确</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>   Default Site<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//www0.example.com/</span></li><li>   Virtual Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+   Default Site.
+[root@desktop0 ~]# elinks  -dump  http://www0.example.com/
+   Virtual Site.
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：配置网页内容访问</h2>
+      <h3>3.1 问题</h3>
+      <p>本例要求在 Web 网站 http://server0.example.com 的 DocumentRoot 目录下创建一个名为 private 的子目录，要求如下：</p>
+      <ol class="list">
+        <li>从 http://classroom/pub/materials/private.html 下载一个文件副本到这个目录，重命名为 index.html
+</li>
+        <li>不要对文件 index.html 的内容作任何修改
+</li>
+        <li>从 server0 上，任何人都可以浏览 private 的内容，但是从其他系统不能访问这个目录的内容
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>配置Web内容的访问控制需要添加Directory区段，主要形式可参考</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>Directory  <span class="sh_string">"父目录路径"</span><span class="sh_symbol">&gt;</span></li><li>     Require  all  denied  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//上层目录拒绝任何访问</span></li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>Directory  <span class="sh_string">"子目录1路径"</span><span class="sh_symbol">&gt;</span></li><li>     Require  all  granted &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//子目录1允许任何访问</span></li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>Directory  <span class="sh_string">"子目录2路径"</span><span class="sh_symbol">&gt;</span></li><li>     Require  ip  IP或网段地址 <span class="sh_symbol">..</span> <span class="sh_symbol">..</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//子目录2允许少数客户机</span></li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;Directory  "父目录路径"&gt;
+     Require  all  denied  								//上层目录拒绝任何访问
+&lt;/Directory&gt;
+&lt;Directory  "子目录1路径"&gt;
+     Require  all  granted 							//子目录1允许任何访问
+&lt;/Directory&gt;
+&lt;Directory  "子目录2路径"&gt;
+     Require  ip  IP或网段地址 .. .. 					//子目录2允许少数客户机
+&lt;/Directory&gt;
+</pre></div></div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署网页子目录及文档</p>
+      <p>1）建立子目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /var/www/html/private
+</pre></div></div>
+      <p>2）部署网页</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/materials/private.html  -O  index.html</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-26</span> <span class="sh_number">20</span><span class="sh_symbol">:</span><span class="sh_number">30</span><span class="sh_symbol">:</span><span class="sh_number">28</span> <span class="sh_symbol">(</span><span class="sh_number">1.90</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘index<span class="sh_symbol">.</span>html’ saved <span class="sh_symbol">[</span><span class="sh_number">14</span><span class="sh_symbol">/</span><span class="sh_number">14</span><span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_keyword">private</span><span class="sh_symbol">]</span># cat  index<span class="sh_symbol">.</span>html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查网页文件</span></li><li>Private Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd /var/www/html/private
+[root@server0 private]# wget  http://classroom/pub/materials/private.html  -O  index.html
+.. ..
+2016-11-26 20:30:28 (1.90 MB/s) - ‘index.html’ saved [14/14]
+
+[root@server0 private]# cat  index.html  				//检查网页文件
+Private Site.
+</pre></div></div>
+      <p class="number">步骤二：为指定的网页子目录限制访问</p>
+      <p>在httpd服务的标准配置中，根目录 / 默认拒绝任何访问，但网页目录/var/www/默认允许任何访问。因此，只需要为个别子目录增加访问控制即可。</p>
+      <p>1）调整虚拟站点server0.example.com的配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">00</span><span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">.</span>conf </li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">&lt;</span>Directory  <span class="sh_string">"/var/www/html/private"</span><span class="sh_symbol">&gt;</span></li><li>        Require  ip  <span class="sh_number">127.0.0.1</span>  <span class="sh_symbol">::</span><span class="sh_number">1</span>  <span class="sh_number">172.25.0.11</span></li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/httpd/conf.d/00-default.conf 
+.. ..
+&lt;Directory  "/var/www/html/private"&gt;
+        Require  ip  127.0.0.1  ::1  172.25.0.11
+&lt;/Directory&gt;
+</pre></div></div>
+      <p>2）重启系统服务httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  httpd
+</pre></div></div>
+      <p class="number">步骤三：测试目录访问限制</p>
+      <p>1）从desktop0上访问http://server0.example.com/private/被拒绝</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/private/</span></li><li>                                   Forbidden</li><li><span style="display:none;">&nbsp;</span></li><li>   You don<span class="sh_string">'t have permission to access /private/ on this server.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com/private/
+                                   Forbidden
+
+   You don't have permission to access /private/ on this server.
+</pre></div></div>
+      <p>2）从desktop0上访问http://server0.example.com/仍然是正常的</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>   Default Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+   Default Site.
+</pre></div></div>
+      <p>3）从server0本机上访问http://server0.example.com/private/也不受限制</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/private/</span></li><li>   Private Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# elinks  -dump  http://server0.example.com/private/
+   Private Site.
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：使用自定Web根目录</h2>
+      <h3>4.1 问题</h3>
+      <p>本例要求调整 Web 站点 http://server0.example.com 的网页目录，要求如下：</p>
+      <ol class="list">
+        <li>新建目录 /webroot，作为此站点新的网页目录
+</li>
+        <li>从 http://classroom/pub/materials/station.html 下载一个文件副本到这个目录，重命名为 index.html
+</li>
+        <li>不要对文件 index.html 的内容作任何修改
+</li>
+        <li>确保站点 http://server0.example.com  仍然可访问
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>在SELinux强制启用模式下，增加新的合规网页目录的方法：</p>
+      <p>1）参照标准目录，重设新目录的属性</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>chcon  <span class="sh_symbol">[-</span>R<span class="sh_symbol">]</span>  <span class="sh_symbol">--</span>reference<span class="sh_symbol">=</span>模板目录  新目录</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">chcon  [-R]  --reference=模板目录  新目录
+</pre></div></div>
+      <p>或者</p>
+      <p>2）将新目录增加到预设的标准Web目录范围</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>semanage  fcontext  <span class="sh_symbol">-</span>a  <span class="sh_symbol">-</span>t  httpd_sys_content_t      <span class="sh_string">'新目录(/.*)?'</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">semanage  fcontext  -a  -t  httpd_sys_content_t      '新目录(/.*)?' 
+</pre></div></div>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署网页目录及文档</p>
+      <p>1）建立网页目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span>webroot</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /webroot
+</pre></div></div>
+      <p>2）部署网页文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd  </span><span class="sh_symbol">/</span><span class="sh_normal">webroot</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 webroot<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/materials/station.html  -O  index.html</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-26</span> <span class="sh_number">20</span><span class="sh_symbol">:</span><span class="sh_number">01</span><span class="sh_symbol">:</span><span class="sh_number">14</span> <span class="sh_symbol">(</span><span class="sh_number">826</span> <span class="sh_normal">KB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘index<span class="sh_symbol">.</span>html’ saved <span class="sh_symbol">[</span><span class="sh_number">14</span><span class="sh_symbol">/</span><span class="sh_number">14</span><span class="sh_symbol">]</span></li><li><span class="sh_symbol">[</span>root@server0 webroot<span class="sh_symbol">]</span># cat  index<span class="sh_symbol">.</span>html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查网页文件</span></li><li>Default Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd  /webroot/
+[root@server0 webroot]# wget  http://classroom/pub/materials/station.html  -O  index.html
+.. ..
+2016-11-26 20:01:14 (826 KB/s) - ‘index.html’ saved [14/14]
+[root@server0 webroot]# cat  index.html  				//检查网页文件
+Default Site.
+</pre></div></div>
+      <p class="number">步骤二：调整虚拟站点http://server0.example.com/的配置</p>
+      <p>1）修改配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">00</span><span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">&lt;</span>VirtualHost  <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>        ServerName  server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span>webroot</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/httpd/conf.d/00-default.conf
+&lt;VirtualHost  *:80&gt;
+        ServerName  server0.example.com
+        DocumentRoot  /webroot
+&lt;/VirtualHost&gt;
+.. ..
+</pre></div></div>
+      <p>2）重启系统服务httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  httpd
+</pre></div></div>
+      <p class="number">步骤三：确保虚拟站点http://server0.example.com/仍然可以访问</p>
+      <p>1）未调整网页目录SELinux上下文件的情况</p>
+      <p>为虚拟站点http://server0.example.com/更换了新的网页目录以后，从浏览器访问将会失败，只能看到红帽测试页。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>                       Red Hat Enterprise Linux Test Page</li><li><span style="display:none;">&nbsp;</span></li><li>   This page is used to test the proper operation of the Apache HTTP server</li><li>   after it has been installed<span class="sh_symbol">.</span> If you can read <span class="sh_keyword">this</span> page<span class="sh_symbol">,</span> it means that the</li><li>   Apache HTTP server installed at <span class="sh_keyword">this</span> site is working properly<span class="sh_symbol">.</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+                       Red Hat Enterprise Linux Test Page
+
+   This page is used to test the proper operation of the Apache HTTP server
+   after it has been installed. If you can read this page, it means that the
+   Apache HTTP server installed at this site is working properly.
+.. ..
+</pre></div></div>
+      <p>针对此问题，可以参考目录/var/www的属性为网页目录/webroot设置SELinux安全上下文。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chcon  <span class="sh_symbol">-</span>R  <span class="sh_symbol">--</span>reference<span class="sh_symbol">=</span><span class="sh_regexp">/var/</span><span class="sh_normal">www  </span><span class="sh_symbol">/</span><span class="sh_normal">webroot</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">Z  </span><span class="sh_symbol">/</span><span class="sh_normal">webroot</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认结果</span></li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> root root system_u<span class="sh_symbol">:</span>object_r<span class="sh_symbol">:</span>httpd_sys_content_t<span class="sh_symbol">:</span><span class="sh_normal">s0 </span><span class="sh_symbol">/</span><span class="sh_normal">webroot</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# chcon  -R  --reference=/var/www  /webroot/
+[root@server0 ~]# ls  -Z  /webroot/index.html  				//确认结果
+-rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 /webroot/index.html
+</pre></div></div>
+      <p>2）未配置目录内容访问的情况</p>
+      <p>尽管已经调整过/webroot的SELinux安全上下文，但是从浏览器访问此虚拟站点时仍然会被拒绝，还是只能看到红帽测试页。</p>
+      <p>还需要修改对应的配置文件，添加内容访问控制：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">00</span><span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">.</span>conf </li><li><span class="sh_symbol">&lt;</span>VirtualHost  <span class="sh_symbol">*:</span><span class="sh_number">80</span><span class="sh_symbol">&gt;</span></li><li>        ServerName  server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span>webroot</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>Directory  <span class="sh_string">"/webroot"</span><span class="sh_symbol">&gt;</span></li><li>        Require  all  granted</li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>Directory  <span class="sh_string">"/webroot/private"</span><span class="sh_symbol">&gt;</span></li><li>        Require  ip  <span class="sh_number">127.0.0.1</span>  <span class="sh_symbol">::</span><span class="sh_number">1</span>  <span class="sh_number">172.25.0.11</span></li><li><span class="sh_symbol">&lt;/</span>Directory<span class="sh_symbol">&gt;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  httpd &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重启httpd服务</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/httpd/conf.d/00-default.conf 
+&lt;VirtualHost  *:80&gt;
+        ServerName  server0.example.com
+        DocumentRoot  /webroot
+&lt;/VirtualHost&gt;
+&lt;Directory  "/webroot"&gt;
+        Require  all  granted
+&lt;/Directory&gt;
+&lt;Directory  "/webroot/private"&gt;
+        Require  ip  127.0.0.1  ::1  172.25.0.11
+&lt;/Directory&gt;
+
+[root@server0 ~]# systemctl  restart  httpd 			//重启httpd服务
+</pre></div></div>
+      <p>若要保持原有private子目录，建议也拷贝过来：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># cp  <span class="sh_symbol">-</span><span class="sh_normal">rf  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_keyword">private</span><span class="sh_regexp">/  /</span><span class="sh_normal">webroot</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cp  -rf  /var/www/html/private/  /webroot/
+</pre></div></div>
+      <p>3）最终访问测试</p>
+      <p>从浏览器能成功访问调整后的虚拟站点http://server0.example.com/。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>   Default Site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+   Default Site.
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：部署并测试WSGI站点</h2>
+      <h3>5.1 问题</h3>
+      <p>本例要求为站点 webapp0.example.com 配置提供动态Web内容，要求如下：</p>
+      <ol class="list">
+        <li>此虚拟主机侦听在端口8909
+</li>
+        <li>测试网页从以下地址下载，不要作任何更改http://classroom/pub/materials/webinfo.wsgi 
+</li>
+        <li>从浏览器访问 http://webapp0.example.com:8909 可接收到动态生成的 Web 页面
+</li>
+        <li>此站点必须能被 example.com 域内的所有系统访问
+</li>
+      </ol>
+      <h3>5.2 方案</h3>
+      <p>为httpd增加对Python网页程序的支持，可以安装mod_wsgi模块。关于此模块的配置说明，建议参考软件包提供的readme文档。</p>
+      <p>在SELinux处于Enforcing模式时，若要开放非80、81等常规Web端口，需要调整SELinux保护策略。</p>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：部署动态网页文档</p>
+      <p>1）创建网页目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>webapp0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /var/www/webapp0
+</pre></div></div>
+      <p>2）部署webinfo.wsgi网页程序</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>webapp0</li><li><span class="sh_symbol">[</span>root@server0 webapp0<span class="sh_symbol">]</span># wget  http<span class="sh_symbol">:</span><span class="sh_comment">//classroom/pub/materials/webinfo.wsgi</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_number">2016-11-27</span> <span class="sh_number">01</span><span class="sh_symbol">:</span><span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">26</span> <span class="sh_symbol">(</span><span class="sh_number">16.0</span> <span class="sh_normal">MB</span><span class="sh_symbol">/</span>s<span class="sh_symbol">)</span> <span class="sh_symbol">-</span> ‘webinfo<span class="sh_symbol">.</span>wsgi’ saved <span class="sh_symbol">[</span><span class="sh_number">397</span><span class="sh_symbol">/</span><span class="sh_number">397</span><span class="sh_symbol">]</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 webapp0<span class="sh_symbol">]</span># cat  webinfo<span class="sh_symbol">.</span>wsgi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//检查下载文件</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python</li><li>import time</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cd /var/www/webapp0
+[root@server0 webapp0]# wget  http://classroom/pub/materials/webinfo.wsgi
+.. ..
+2016-11-27 01:52:26 (16.0 MB/s) - ‘webinfo.wsgi’ saved [397/397]
+
+[root@server0 webapp0]# cat  webinfo.wsgi 				//检查下载文件
+#!/usr/bin/env python
+import time
+.. ..
+</pre></div></div>
+      <p class="number">步骤二：配置新的虚拟主机http://webapp0.example.com：8909/</p>
+      <p>1）安装mod_wsgi模块软件包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  mod_wsgi</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  mod_wsgi
+.. ..
+</pre></div></div>
+      <p>2）为新虚拟主机建立配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">httpd</span><span class="sh_symbol">/</span>conf<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span><span class="sh_number">02</span><span class="sh_symbol">-</span>webapp0<span class="sh_symbol">.</span>conf</li><li>Listen  <span class="sh_number">8909</span></li><li><span class="sh_symbol">&lt;</span>VirtualHost <span class="sh_symbol">*:</span><span class="sh_number">8909</span><span class="sh_symbol">&gt;</span></li><li>        <span class="sh_normal">DocumentRoot  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span>webapp0</li><li>        ServerName  webapp0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>        <span class="sh_normal">WSGIScriptAlias  </span><span class="sh_symbol">/</span>  <span class="sh_regexp">/var/</span><span class="sh_normal">www</span><span class="sh_symbol">/</span><span class="sh_normal">webapp0</span><span class="sh_symbol">/</span>webinfo<span class="sh_symbol">.</span>wsgi</li><li><span class="sh_symbol">&lt;/</span>VirtualHost<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/httpd/conf.d/02-webapp0.conf
+Listen  8909
+&lt;VirtualHost *:8909&gt;
+        DocumentRoot  /var/www/webapp0
+        ServerName  webapp0.example.com
+        WSGIScriptAlias  /  /var/www/webapp0/webinfo.wsgi
+&lt;/VirtualHost&gt;
+</pre></div></div>
+      <p>3）调整SELinux策略，允许Web服务使用8909端口</p>
+      <p>列出当前许可的Web端口：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># semanage  port  <span class="sh_symbol">-</span>l  <span class="sh_symbol">|</span>  grep  <span class="sh_symbol">^</span>http_port</li><li>http_port_t           tcp      <span class="sh_number">80</span><span class="sh_symbol">,</span> <span class="sh_number">81</span><span class="sh_symbol">,</span> <span class="sh_number">443</span><span class="sh_symbol">,</span> <span class="sh_number">488</span><span class="sh_symbol">,</span> <span class="sh_number">8008</span><span class="sh_symbol">,</span> <span class="sh_number">8009</span><span class="sh_symbol">,</span> <span class="sh_number">8443</span><span class="sh_symbol">,</span> <span class="sh_number">9000</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# semanage  port  -l  |  grep  ^http_port
+http_port_t           tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+</pre></div></div>
+      <p>添加新的Web端口：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># semanage  port  <span class="sh_symbol">-</span>a  <span class="sh_symbol">-</span>t  http_port_t  <span class="sh_symbol">-</span>p  tcp  <span class="sh_number">8909</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# semanage  port  -a  -t  http_port_t  -p  tcp  8909
+[root@server0 ~]# 
+</pre></div></div>
+      <p>确认配置结果：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># semanage  port  <span class="sh_symbol">-</span>l  <span class="sh_symbol">|</span>  grep  <span class="sh_symbol">^</span>http_port</li><li>http_port_t           tcp      <span class="sh_number">8909</span><span class="sh_symbol">,</span> <span class="sh_number">80</span><span class="sh_symbol">,</span> <span class="sh_number">81</span><span class="sh_symbol">,</span> <span class="sh_number">443</span><span class="sh_symbol">,</span> <span class="sh_number">488</span><span class="sh_symbol">,</span> <span class="sh_number">8008</span><span class="sh_symbol">,</span> <span class="sh_number">8009</span><span class="sh_symbol">,</span> <span class="sh_number">8443</span><span class="sh_symbol">,</span> <span class="sh_number">9000</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# semanage  port  -l  |  grep  ^http_port
+http_port_t           tcp      8909, 80, 81, 443, 488, 8008, 8009, 8443, 9000
+</pre></div></div>
+      <p>4）重启系统服务httpd</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  httpd</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># netstat  <span class="sh_symbol">-</span>antpu  <span class="sh_symbol">|</span>  grep  httpd  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认已监听8909端口</span></li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">443</span>                  <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">2477</span><span class="sh_symbol">/</span>httpd          </li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">8909</span>                 <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">2477</span><span class="sh_symbol">/</span>httpd          </li><li>tcp6       <span class="sh_number">0</span>      <span class="sh_number">0</span> <span class="sh_symbol">:::</span><span class="sh_number">80</span>                   <span class="sh_symbol">:::*</span>                    LISTEN      <span class="sh_number">2477</span><span class="sh_symbol">/</span>httpd   </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  httpd
+[root@server0 ~]# netstat  -antpu  |  grep  httpd  		//确认已监听8909端口
+tcp6       0      0 :::443                  :::*                    LISTEN      2477/httpd          
+tcp6       0      0 :::8909                 :::*                    LISTEN      2477/httpd          
+tcp6       0      0 :::80                   :::*                    LISTEN      2477/httpd   
+</pre></div></div>
+      <p class="number">步骤三：测试动态网页效果</p>
+      <p>使用elinks或firefox访问此动态站点http://webapp0.example.com:8909/。</p>
+      <p>多刷新访问几次，每次看到的是动态网页内容，内容并不固定。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//webapp0.example.com:8909/</span></li><li>   UNIX EPOCH time is now<span class="sh_symbol">:</span> <span class="sh_number">1480184916.52</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//第1次访问</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//webapp0.example.com:8909/</span></li><li>   UNIX EPOCH time is now<span class="sh_symbol">:</span> <span class="sh_number">1480184919.21</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//第2次访问</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//webapp0.example.com:8909/</span></li><li>   UNIX EPOCH time is now<span class="sh_symbol">:</span> <span class="sh_number">1480184951.99</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//第3次访问</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://webapp0.example.com:8909/
+   UNIX EPOCH time is now: 1480184916.52  					//第1次访问
+[root@desktop0 ~]# elinks  -dump  http://webapp0.example.com:8909/
+   UNIX EPOCH time is now: 1480184919.21  					//第2次访问
+[root@desktop0 ~]# elinks  -dump  http://webapp0.example.com:8909/
+   UNIX EPOCH time is now: 1480184951.99  					//第3次访问
+</pre></div></div>
+    </div>
+  
+</body></html>

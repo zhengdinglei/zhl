@@ -1,0 +1,655 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE4_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE4_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE4_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE4_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE4_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devops DAY04</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case1">案例1：通过本机发送邮件</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case2">案例2：通过互联网服务器发送邮件</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case3">案例3：天气预报查询</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case4">案例4：使用requests获取天气</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case5">案例5：获取zabbix版本信息</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case6">案例6：获取令牌</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#case7">案例7：创建主机</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：通过本机发送邮件</h2>
+      <h3>1.1 问题</h3>
+      <p>编写一个send_mail.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>创建bob和alice帐户
+</li>
+        <li>编写发送邮件件程序，发件人为root，收件人是本机的bob和alice帐户
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建bob和alice帐户</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span></li><li>Student  zabbix  zhangsan</li><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># useradd bob</li><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># useradd alice</li><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span></li><li>alice  bob  Student  zabbix  zhangsan</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# ls /home/
+Student  zabbix  zhangsan
+[root@localhost day12]# useradd bob
+[root@localhost day12]# useradd alice
+[root@localhost day12]# ls /home/
+alice  bob  Student  zabbix  zhangsan
+</pre></div></div>
+      <p class="number">步骤二：编写发送邮件件程序，发件人为root，收件人是本机的bob和alice帐户</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># vim send_mail<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>import smtplib</li><li>from email<span class="sh_symbol">.</span>mime<span class="sh_symbol">.</span>text import MIMEText</li><li>from email<span class="sh_symbol">.</span>header import Header</li><li>#邮件正文有三个参数：第一个为文本内容，第二个设置文本格式plain，第三个utf<span class="sh_number">-8</span>设置编码保证多语言兼容性</li><li>message <span class="sh_symbol">=</span> <span class="sh_function">MIMEText</span><span class="sh_symbol">(</span><span class="sh_string">'Python邮件发送测试</span><span class="sh_specialchar">\n</span><span class="sh_string">'</span><span class="sh_symbol">,</span> <span class="sh_string">'plain'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>标准邮件需要三个头部信息： From<span class="sh_symbol">,</span> To<span class="sh_symbol">,</span> 和 Subject</li><li>#发送者信息</li><li>message<span class="sh_symbol">[</span><span class="sh_string">'From'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">Header</span><span class="sh_symbol">(</span><span class="sh_string">'root@localhost'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>#接收者信息</li><li>message<span class="sh_symbol">[</span><span class="sh_string">'To'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">Header</span><span class="sh_symbol">(</span><span class="sh_string">'bob@localhost'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span></li><li>#主题信息</li><li>message<span class="sh_symbol">[</span><span class="sh_string">'Subject'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">Header</span><span class="sh_symbol">(</span><span class="sh_string">'mail test'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>sender <span class="sh_symbol">=</span> <span class="sh_string">'root@redhat.com'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#发送方</li><li>receivers <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_string">'bob@localhost'</span><span class="sh_symbol">,</span> <span class="sh_string">'alice@126.com'</span><span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;#收件方</li><li>smtp_obj <span class="sh_symbol">=</span> smtplib<span class="sh_symbol">.</span><span class="sh_function">SMTP</span><span class="sh_symbol">(</span><span class="sh_string">'localhost'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#用localhost发邮件</li><li># smtplib负责发送邮件</li><li>smtp_obj<span class="sh_symbol">.</span><span class="sh_function">sendmail</span><span class="sh_symbol">(</span>sender<span class="sh_symbol">,</span> receivers<span class="sh_symbol">,</span> message<span class="sh_symbol">.</span><span class="sh_function">as_string</span><span class="sh_symbol">())</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# vim send_mail.py
+
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
+#邮件正文有三个参数：第一个为文本内容，第二个设置文本格式plain，第三个utf-8设置编码保证多语言兼容性
+message = MIMEText('Python邮件发送测试\n', 'plain', 'utf8')	
+标准邮件需要三个头部信息： From, To, 和 Subject
+#发送者信息
+message['From'] = Header('root@localhost', 'utf8')	
+#接收者信息
+message['To'] = Header('bob@localhost', 'utf8')
+#主题信息
+message['Subject'] = Header('mail test', 'utf8')
+
+sender = 'root@redhat.com'		#发送方
+receivers = ['bob@localhost', 'alice@126.com']	#收件方
+smtp_obj = smtplib.SMTP('localhost')	#用localhost发邮件
+# smtplib负责发送邮件
+smtp_obj.sendmail(sender, receivers, message.as_string())
+</pre></div></div>
+      <p>SMTP是发送邮件的协议，Python内置对SMTP的支持，可以发送纯文本邮件、HTML邮件以及带附件的邮件。</p>
+      <p>Python对SMTP支持有smtplib和email两个模块，email负责构造邮件，smtplib负责发送邮件。</p>
+      <p>Python SMTP 对象使用 sendmail 方法发送邮件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>smtp_obj<span class="sh_symbol">.</span><span class="sh_function">sendmail</span><span class="sh_symbol">(</span>sender<span class="sh_symbol">,</span> receivers<span class="sh_symbol">,</span> message<span class="sh_symbol">.</span><span class="sh_function">as_string</span><span class="sh_symbol">())</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">smtp_obj.sendmail(sender, receivers, message.as_string())
+</pre></div></div>
+      <p>参数说明：</p>
+      <p>sender: 邮件发送者地址。</p>
+      <p>receivers: 字符串列表，邮件发送地址。</p>
+      <p>message.as_string(): 发送消息 ，str模式</p>
+      <p>由于可以一次发给多个人，所以recives传入一个列表，邮件正文是一个str，as_string()把MIMEText对象变成str。</p>
+      <p class="number">步骤三：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 send_mail<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># mail –u bob</li><li>Heirloom Mail version <span class="sh_number">12.5</span> <span class="sh_number">7</span><span class="sh_symbol">/</span><span class="sh_number">5</span><span class="sh_symbol">/</span><span class="sh_number">10</span><span class="sh_symbol">.</span>  Type <span class="sh_symbol">?</span> <span class="sh_keyword">for</span> help<span class="sh_symbol">.</span></li><li>“<span class="sh_regexp">/var/m</span><span class="sh_normal">ail</span><span class="sh_symbol">/</span>bob”<span class="sh_symbol">:</span> <span class="sh_number">1</span> message <span class="sh_number">1</span> <span class="sh_keyword">new</span></li><li><span class="sh_symbol">&gt;</span>N  <span class="sh_number">1</span> <span class="sh_symbol">=?</span>utf8<span class="sh_symbol">?</span>q<span class="sh_symbol">?</span>root<span class="sh_symbol">=</span>4Oloca  Mon Jul <span class="sh_number">30</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">36</span>  <span class="sh_number">18</span><span class="sh_symbol">?</span><span class="sh_number">663</span>  “”</li><li><span class="sh_symbol">&amp;</span> <span class="sh_number">1</span></li><li>From root@redhat<span class="sh_symbol">.</span>com Mon Jul <span class="sh_number">30</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">36</span><span class="sh_symbol">:</span><span class="sh_number">44</span> <span class="sh_number">2018</span></li><li>Return<span class="sh_symbol">-</span> Path<span class="sh_symbol">:</span> <span class="sh_symbol">&lt;</span>root@redhat<span class="sh_symbol">.</span>com<span class="sh_symbol">&gt;</span></li><li>X<span class="sh_symbol">-</span> Original<span class="sh_symbol">-</span> To<span class="sh_symbol">:</span> bob@localhost<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>Content<span class="sh_symbol">-</span> Type<span class="sh_symbol">:</span> <span class="sh_normal">text</span><span class="sh_symbol">/</span>plain<span class="sh_symbol">;</span> charset<span class="sh_symbol">=</span>“utf8”</li><li>From<span class="sh_symbol">:</span> root@localhost@room8pc16<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>To<span class="sh_symbol">:</span> bob@localhost@room8pc16<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn</li><li>Subject<span class="sh_symbol">:</span> mail test</li><li><span class="sh_predef_func">Date</span><span class="sh_symbol">:</span> Mon<span class="sh_symbol">,</span> <span class="sh_number">30</span> Jul <span class="sh_number">2018</span> <span class="sh_number">09</span><span class="sh_symbol">:</span><span class="sh_number">36</span><span class="sh_symbol">:</span><span class="sh_number">44</span> <span class="sh_symbol">+</span><span class="sh_number">0800</span> <span class="sh_symbol">(</span>CST<span class="sh_symbol">)</span></li><li>Status<span class="sh_symbol">:</span> R</li><li><span style="display:none;">&nbsp;</span></li><li>Python邮件发送测试</li><li><span class="sh_symbol">&amp;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# python3 send_mail.py
+[root@ localhost day12]# mail –u bob
+Heirloom Mail version 12.5 7/5/10.  Type ? for help.
+“/var/mail/bob”: 1 message 1 new
+&gt;N  1 =?utf8?q?root=4Oloca  Mon Jul 30 09:36  18?663  “”
+&amp; 1
+From root@redhat.com Mon Jul 30 09:36:44 2018
+Return- Path: &lt;root@redhat.com&gt;
+X- Original- To: bob@localhost.tedu.cn
+Content- Type: text/plain; charset=“utf8”
+From: root@localhost@room8pc16.tedu.cn
+To: bob@localhost@room8pc16.tedu.cn
+Subject: mail test
+Date: Mon, 30 Jul 2018 09:36:44 +0800 (CST)
+Status: R
+
+Python邮件发送测试
+&amp;
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：通过互联网服务器发送邮件</h2>
+      <h3>2.1 问题</h3>
+      <p>编写一个mail_client.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>通过自己互联网注册的邮箱，为其他同学互联网邮箱发邮件
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>导入sys模块，用sys.argv方法获取get_web函数实参，让用户在命令行上提供http://www.tedu.cn和/tmp/tedu.html两个参数，调用get_web函数实现如下功能：</p>
+      <p>1)导入urllib模块，使用urllib模块的urlopen函数打开url（即网址），赋值给html</p>
+      <p>2)以写方式打开/tmp/tedu.html文件</p>
+      <p>3)以循环方式：</p>
+      <p>读html获取的数据，保存到data</p>
+      <p>将data写入/tmp/tedu.html</p>
+      <p>4)关闭html</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：环境准备</p>
+      <p>使用SMTP协议发送的邮件，需要先查看您的发件人邮箱是否有开启SMTP协议，如没有需要开启，测试使用的是126.com的邮箱作为发信人邮箱，开启SMTP协议如下</p>
+      <p>1. 先登录到126.com邮箱，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>2. 看到邮箱上面的功能栏中有一个“设置”的选项，单击该选项，然后选择下拉菜单的“POP3/SMTP/IMAP”，如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>3. 如图-3所示，上面红框的两个必须勾选上，如没有勾选，要选择开启就可以勾选上了：</p>
+      <div class="image">
+        <img src="./CASE4_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>4.页面向下可以可以看到下图-4红框里是：SMTP服务器是:smtp.126.com：</p>
+      <div class="image">
+        <img src="./CASE4_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p class="number">步骤二：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># vim mail_client<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import smtplib</li><li>from getpass import getpass</li><li>from email<span class="sh_symbol">.</span>mime<span class="sh_symbol">.</span>text import MIMEText</li><li>from email<span class="sh_symbol">.</span>header import Header</li><li><span style="display:none;">&nbsp;</span></li><li>mail_host <span class="sh_symbol">=</span> <span class="sh_string">'smtp.126.com'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#发件人邮箱账号</li><li>mail_user <span class="sh_symbol">=</span> <span class="sh_string">'zhangzhigang79@126.com'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#收件人邮箱账号</li><li>mail_pwd <span class="sh_symbol">=</span> <span class="sh_function">getpass</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#获取密码</li><li>#邮件正文有三个参数：第一个为文本内容，第二个设置文本格式plain，第三个utf<span class="sh_number">-8</span>设置编码保证多语言兼容性</li><li>message <span class="sh_symbol">=</span> <span class="sh_function">MIMEText</span><span class="sh_symbol">(</span><span class="sh_string">'Python邮件发送测试</span><span class="sh_specialchar">\n</span><span class="sh_string">'</span><span class="sh_symbol">,</span> <span class="sh_string">'plain'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span></li><li>#发送者信息</li><li>message<span class="sh_symbol">[</span><span class="sh_string">'From'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">Header</span><span class="sh_symbol">(</span><span class="sh_string">'zhangzhigang79@126.com'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span></li><li>#接收者信息</li><li>message<span class="sh_symbol">[</span><span class="sh_string">'To'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">Header</span><span class="sh_symbol">(</span><span class="sh_string">'zhangzhigang79@126.com'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span></li><li>#主题信息</li><li>message<span class="sh_symbol">[</span><span class="sh_string">'Subject'</span><span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">Header</span><span class="sh_symbol">(</span><span class="sh_string">'python 1802 mail test'</span><span class="sh_symbol">,</span> <span class="sh_string">'utf8'</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>sender <span class="sh_symbol">=</span> <span class="sh_string">'zhangzhigang79@126.com'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#发送方</li><li>receivers <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_string">'zhangzhigang79@126.com'</span><span class="sh_symbol">]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#接收方</li><li>smtp_obj <span class="sh_symbol">=</span> smtplib<span class="sh_symbol">.</span><span class="sh_function">SMTP</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#创建SMTP对象</li><li>smtp_obj<span class="sh_symbol">.</span><span class="sh_function">connect</span><span class="sh_symbol">(</span>mail_host<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#将SMTP对象与发送人邮件简历连接建立连接</li><li>smtp_obj<span class="sh_symbol">.</span><span class="sh_function">login</span><span class="sh_symbol">(</span>mail_user<span class="sh_symbol">,</span> mail_pwd<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#登录用户名密码</li><li># SMTP 对象使用 sendmail 方法发送邮件</li><li>smtp_obj<span class="sh_symbol">.</span><span class="sh_function">sendmail</span><span class="sh_symbol">(</span>sender<span class="sh_symbol">,</span> receivers<span class="sh_symbol">,</span> message<span class="sh_symbol">.</span><span class="sh_function">as_string</span><span class="sh_symbol">())</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# vim mail_client.py
+#!/usr/bin/env python3
+
+import smtplib
+from getpass import getpass
+from email.mime.text import MIMEText
+from email.header import Header
+
+mail_host = 'smtp.126.com'		#发件人邮箱账号
+mail_user = 'zhangzhigang79@126.com'		#收件人邮箱账号
+mail_pwd = getpass()		#获取密码
+#邮件正文有三个参数：第一个为文本内容，第二个设置文本格式plain，第三个utf-8设置编码保证多语言兼容性
+message = MIMEText('Python邮件发送测试\n', 'plain', 'utf8')
+#发送者信息
+message['From'] = Header('zhangzhigang79@126.com', 'utf8')
+#接收者信息
+message['To'] = Header('zhangzhigang79@126.com', 'utf8')
+#主题信息
+message['Subject'] = Header('python 1802 mail test', 'utf8')
+
+sender = 'zhangzhigang79@126.com'		#发送方
+receivers = ['zhangzhigang79@126.com']		#接收方
+smtp_obj = smtplib.SMTP()		#创建SMTP对象
+smtp_obj.connect(mail_host)	#将SMTP对象与发送人邮件简历连接建立连接
+smtp_obj.login(mail_user, mail_pwd)		#登录用户名密码
+# SMTP 对象使用 sendmail 方法发送邮件
+smtp_obj.sendmail(sender, receivers, message.as_string())
+</pre></div></div>
+      <p class="number">步骤三：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 mail_client<span class="sh_symbol">.</span>py</li><li>Password：</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# python3 mail_client.py
+Password：
+</pre></div></div>
+      <p>如果发送成功，结果显示如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：天气预报查询</h2>
+      <h3>3.1 问题</h3>
+      <p>编写一个display_weather.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>运行程序时，屏幕将出现你所在城市各区县名字
+</li>
+        <li>用户指定查询某区县，屏幕上将出现该区县当前的气温、湿度、风向、风速等
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：找到天气信息规律</p>
+      <p>1.首先我们想要实现的功能是天气预报，从哪获取天气这是一个问题，在这里可以使用http://www.weather.com.cn/data/sk/101051301.html这个应用程序编程接口，101051301是城市的ID，可以到http://www.weather.com.cn/查看，替换后浏览器打开，如图-6所示，图示为json格式：</p>
+      <div class="image">
+        <img src="./CASE4_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>注意：图中看不懂的文字是编码问题</p>
+      <p>2.从图-1中可以看出cityid就是城市ID，temp是温度，SD是湿度，我们编写代码可以直接获取到网站相应信息，编写脚本wather.py：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># vim weather<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>python     #这里是python的目录</li><li>from urllib<span class="sh_symbol">.</span>request import urlopen</li><li>import json</li><li><span style="display:none;">&nbsp;</span></li><li>#打开网页，使用urllib模块的urlopen函数打开url，赋值给html</li><li>html <span class="sh_symbol">=</span> <span class="sh_function">urlopen</span><span class="sh_symbol">(</span><span class="sh_string">'http://www.weather.com.cn/data/sk/101010100.html'</span><span class="sh_symbol">)</span></li><li>#读html获取的数据，保存到data</li><li>data <span class="sh_symbol">=</span> html<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">()</span></li><li>#从data中获取我们想要的信息，json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">()</span>是将json格式数据转换为字典</li><li>#（可以理解为json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">()</span>函数是将字符串转化为字典）</li><li><span class="sh_function">print</span><span class="sh_symbol">(</span>json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">(</span>data<span class="sh_symbol">))</span></li><li>#关闭html</li><li>html<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# vim weather.py
+#!/usr/bin/python     #这里是python的目录
+from urllib.request import urlopen
+import json
+
+#打开网页，使用urllib模块的urlopen函数打开url，赋值给html
+html = urlopen('http://www.weather.com.cn/data/sk/101010100.html')
+#读html获取的数据，保存到data
+data = html.read()
+#从data中获取我们想要的信息，json.loads()是将json格式数据转换为字典
+#（可以理解为json.loads()函数是将字符串转化为字典）
+print(json.loads(data))
+#关闭html
+html.close()
+</pre></div></div>
+      <p>3.执行脚本结果如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 weather<span class="sh_symbol">.</span>py</li><li><span class="sh_cbracket">{</span>‘weatherinfo’<span class="sh_symbol">:</span><span class="sh_cbracket">{</span>‘city’<span class="sh_symbol">:</span>‘北京’<span class="sh_symbol">,</span>‘cityid’<span class="sh_symbol">:</span>‘<span class="sh_number">101010100</span>’<span class="sh_symbol">,</span>‘temp’<span class="sh_symbol">:</span>‘<span class="sh_number">27.9</span>’<span class="sh_symbol">,</span>‘WD’<span class="sh_symbol">:</span>‘南风’<span class="sh_symbol">,</span>‘WS’<span class="sh_symbol">:</span>‘小于<span class="sh_number">3</span>级’<span class="sh_symbol">,</span>‘SD’<span class="sh_symbol">:</span>‘<span class="sh_number">28</span><span class="sh_symbol">%</span>’<span class="sh_symbol">,</span>‘AP’<span class="sh_symbol">:</span>‘1002hPa’<span class="sh_symbol">,</span>‘njd’<span class="sh_symbol">:</span>‘暂无实况’<span class="sh_symbol">,</span>‘WSE’<span class="sh_symbol">:</span>‘<span class="sh_symbol">&lt;</span><span class="sh_number">3</span>’<span class="sh_symbol">,</span>‘time’<span class="sh_symbol">:</span>‘<span class="sh_number">17</span><span class="sh_symbol">:</span><span class="sh_number">55</span>’<span class="sh_symbol">,</span>‘sm’<span class="sh_symbol">:</span>‘<span class="sh_number">2.1</span>’<span class="sh_symbol">,</span>‘isRadar’<span class="sh_symbol">:</span>‘<span class="sh_number">1</span>’<span class="sh_symbol">,</span>‘Radar’<span class="sh_symbol">:</span>‘JC_RADAR_AZ9010_JB’<span class="sh_cbracket">}}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# python3 weather.py
+{‘weatherinfo’:{‘city’:‘北京’,‘cityid’:‘101010100’,‘temp’:‘27.9’,‘WD’:‘南风’,‘WS’:‘小于3级’,‘SD’:‘28%’,‘AP’:‘1002hPa’,‘njd’:‘暂无实况’,‘WSE’:‘&lt;3’,‘time’:‘17:55’,‘sm’:‘2.1’,‘isRadar’:‘1’,‘Radar’:‘JC_RADAR_AZ9010_JB’}}
+</pre></div></div>
+      <p>从以上脚本执行结果中我们可以看到，从网站中获取到的数据是以字典形式显示，显示信息有城市、城市id，温度、风向等等，根据这种规律，编写下面代码</p>
+      <p class="number">步骤二：编写代码实现如下功能</p>
+      <p>1.定义一个字典，该字典中键‘0’和‘1’对应的值为天气网址中城市对应的id，城市不同id则不同</p>
+      <p>2.运行程序时，屏幕将出现你所在城市名字</p>
+      <p>3.当用户指定查询某城市（即输入0或1时）</p>
+      <p>4.调用get_weather函数，函数的实际参数为city_codes字典对应值（即对应的城市id）</p>
+      <p>5. 打开天气网页，使用urllib模块的urlopen函数打开url，赋值给html</p>
+      <p>6.读html获取的数据，用json.loads()获取天气信息，获取到的信息为字典形式</p>
+      <p>7.从获取到的字典数据中提取气温、湿度、风向、风速等信息，保存在output变量中</p>
+      <p>8.将output变量作为get_weather函数的返回值，打印在屏幕上</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># vim display_weather<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>python</li><li><span style="display:none;">&nbsp;</span></li><li>from urllib<span class="sh_symbol">.</span>request import urlopen</li><li>import json</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">get_weather</span><span class="sh_symbol">(</span>city_code<span class="sh_symbol">):</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#定义一个输入城市id的函数</li><li><span class="sh_number">5</span><span class="sh_symbol">.</span>打开天气网页，使用urllib模块的urlopen函数打开url，赋值给html</li><li>    url <span class="sh_symbol">=</span> <span class="sh_string">'http://www.weather.com.cn/data/sk/%s.html'</span> <span class="sh_symbol">%</span> city_code</li><li>    html <span class="sh_symbol">=</span> <span class="sh_function">urlopen</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span></li><li><span class="sh_number">6</span><span class="sh_symbol">.</span>读html获取的数据，用json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">()</span>获取我们想要的信息</li><li>#json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">()</span>是将json格式数据转换为字典</li><li>#（可以理解为json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">()</span>函数是将字符串转化为字典）</li><li>    data <span class="sh_symbol">=</span> json<span class="sh_symbol">.</span><span class="sh_function">loads</span><span class="sh_symbol">(</span>html<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">())</span></li><li><span class="sh_number">7</span><span class="sh_symbol">.</span>output为返回值，即最终屏幕显示的信息</li><li>    output <span class="sh_symbol">=</span> <span class="sh_string">'风向：%s, 风力: %s， 温度：%s, 湿度：%s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span></li><li>#data获取到的天气信息为字典，该字典中weatherinfo键对应的值还是一个字典，这个字典中‘WD’键对应的值是风向，‘WS’键对应的值是风力，<span class="sh_string">'temp'</span>键对应的值是温度，<span class="sh_string">'SD'</span>键对应的值是湿度，利用键值对关系将相应数据显示出来即可</li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'WD'</span><span class="sh_symbol">],</span></li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'WS'</span><span class="sh_symbol">],</span></li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'temp'</span><span class="sh_symbol">],</span></li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'SD'</span><span class="sh_symbol">]</span></li><li>    <span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> output</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li><span class="sh_number">1</span><span class="sh_symbol">.</span>定义字典：键对应的值为天气网站网址接口中城市ID</li><li>    city_codes <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span> <span class="sh_string">'0'</span><span class="sh_symbol">:</span> <span class="sh_string">'101010100'</span><span class="sh_symbol">,</span> <span class="sh_string">'1'</span><span class="sh_symbol">:</span> <span class="sh_string">'101121404'</span><span class="sh_cbracket">}</span></li><li><span class="sh_number">2</span>．代码执行后，屏幕给出的提示信息</li><li>    prompt <span class="sh_symbol">=</span> <span class="sh_string">"""(0) 北京</span></li><li><span class="sh_string">(1) 台儿庄</span></li><li><span class="sh_string">请选择(0/1): """</span></li><li><span class="sh_number">3</span>．根据提示信息，输入<span class="sh_number">0</span>或<span class="sh_number">1</span></li><li>    choice <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span>prompt<span class="sh_symbol">)</span></li><li><span class="sh_number">4</span><span class="sh_symbol">.</span>调用get_weather函数，其实际参数为city_codes字典对应值</li><li><span class="sh_number">8</span><span class="sh_symbol">.</span>打印调用get_weather函数返回值</li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_function">get_weather</span><span class="sh_symbol">(</span>city_codes<span class="sh_symbol">[</span>choice<span class="sh_symbol">]))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# vim display_weather.py
+#!/usr/bin/python
+
+from urllib.request import urlopen
+import json
+
+def get_weather(city_code):		#定义一个输入城市id的函数
+5.打开天气网页，使用urllib模块的urlopen函数打开url，赋值给html
+    url = 'http://www.weather.com.cn/data/sk/%s.html' % city_code
+    html = urlopen(url)
+6.读html获取的数据，用json.loads()获取我们想要的信息
+#json.loads()是将json格式数据转换为字典
+#（可以理解为json.loads()函数是将字符串转化为字典）
+    data = json.loads(html.read())
+7.output为返回值，即最终屏幕显示的信息
+    output = '风向：%s, 风力: %s， 温度：%s, 湿度：%s' % (
+#data获取到的天气信息为字典，该字典中weatherinfo键对应的值还是一个字典，这个字典中‘WD’键对应的值是风向，‘WS’键对应的值是风力，'temp'键对应的值是温度，'SD'键对应的值是湿度，利用键值对关系将相应数据显示出来即可
+        data['weatherinfo']['WD'],
+        data['weatherinfo']['WS'],
+        data['weatherinfo']['temp'],
+        data['weatherinfo']['SD']
+    )
+    return output
+
+
+
+if __name__ == '__main__':
+1.定义字典：键对应的值为天气网站网址接口中城市ID
+    city_codes = { '0': '101010100', '1': '101121404'}
+2．代码执行后，屏幕给出的提示信息
+    prompt = """(0) 北京
+(1) 台儿庄
+请选择(0/1): """
+3．根据提示信息，输入0或1
+    choice = input(prompt)
+4.调用get_weather函数，其实际参数为city_codes字典对应值
+8.打印调用get_weather函数返回值
+    print(get_weather(city_codes[choice]))
+</pre></div></div>
+      <p class="number">步骤三：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 display_weather<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 北京</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 台儿庄</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">):</span> <span class="sh_number">0</span></li><li> 风向：南风， 风力： 小于<span class="sh_number">3</span>级， 温度：<span class="sh_number">27.9</span>， 湿度：<span class="sh_number">28</span><span class="sh_symbol">%</span></li><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 display_weather<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 北京</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 台儿庄</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">):</span> <span class="sh_number">1</span></li><li> 风向：东北风， 风力： 小于<span class="sh_number">3</span>级， 温度：<span class="sh_number">22.3</span>， 湿度：<span class="sh_number">64</span><span class="sh_symbol">%</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# python3 display_weather.py
+(0) 北京
+(1) 台儿庄
+请选择(0/1): 0
+ 风向：南风， 风力： 小于3级， 温度：27.9， 湿度：28%
+[root@ localhost day12]# python3 display_weather.py
+(0) 北京
+(1) 台儿庄
+请选择(0/1): 1
+ 风向：东北风， 风力： 小于3级， 温度：22.3， 湿度：64%
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：使用requests获取天气</h2>
+      <h3>4.1 问题</h3>
+      <p>编写一个display_weather2.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>运行程序时，屏幕将出现你所在城市各区县名字
+</li>
+        <li>用户指定查询某区县，屏幕上将出现该区县当前的气温、湿度、风向、风速等
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装requests</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># pip3 install requests</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# pip3 install requests
+</pre></div></div>
+      <p class="number">步骤二：编写代码实现如下功能</p>
+      <p>1.定义一个字典，该字典中键‘0’和‘1’对应的值为天气网址中城市对应的id，城市不同id则不同</p>
+      <p>2.运行程序时，屏幕将出现你所在城市名字</p>
+      <p>3.当用户指定查询某城市（即输入0或1时）</p>
+      <p>4.调用get_weather函数，函数的实际参数为city_codes字典对应值（即对应的城市id）</p>
+      <p>5.通过requests发送一个GET请求到url网址，获取网页</p>
+      <p>6. 为获取的网页设置编码，并以json形式返回数据</p>
+      <p>7.从获取到的字典数据中提取气温、湿度、风向、风速等信息，保存在output变量中</p>
+      <p>8.将output变量作为get_weather函数的返回值，打印在屏幕上</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># vim display_weather2<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>python</li><li><span style="display:none;">&nbsp;</span></li><li>import requests&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#引用requests模块</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">get_weather</span><span class="sh_symbol">(</span>city_code<span class="sh_symbol">):</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#定义一个输入城市id的函数</li><li>    url <span class="sh_symbol">=</span> <span class="sh_string">'http://www.weather.com.cn/data/sk/%s.html'</span> <span class="sh_symbol">%</span> city_code&nbsp;&nbsp;&nbsp;&nbsp;#天气地址</li><li><span class="sh_number">5</span><span class="sh_symbol">.</span>通过requests发送一个GET请求到url网址，获取网页</li><li>    r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span></li><li><span class="sh_number">6</span><span class="sh_symbol">.</span> 为获取的网页设置编码，并以json形式返回数据</li><li>    r<span class="sh_symbol">.</span>encoding <span class="sh_symbol">=</span> <span class="sh_string">'utf8'</span></li><li>#Requests中内置的JSON解码器，以json形式返回<span class="sh_symbol">,</span>前提返回的内容确保是json格式的，不然解析出错会抛异常</li><li>    data <span class="sh_symbol">=</span> r<span class="sh_symbol">.</span><span class="sh_function">json</span><span class="sh_symbol">()</span></li><li>    <span class="sh_number">7</span><span class="sh_symbol">.</span>output为返回值，即最终屏幕显示的信息</li><li>    output <span class="sh_symbol">=</span> <span class="sh_string">'风向：%s, 风力: %s， 温度：%s, 湿度：%s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span></li><li>#data获取到的天气信息为字典，该字典中weatherinfo键对应的值还是一个字典，这个字典中‘WD’键对应的值是风向，‘WS’键对应的值是风力，<span class="sh_string">'temp'</span>键对应的值是温度，<span class="sh_string">'SD'</span>键对应的值是湿度，利用键值对关系将相应数据显示出来即可</li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'WD'</span><span class="sh_symbol">],</span></li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'WS'</span><span class="sh_symbol">],</span></li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'temp'</span><span class="sh_symbol">],</span></li><li>        data<span class="sh_symbol">[</span><span class="sh_string">'weatherinfo'</span><span class="sh_symbol">][</span><span class="sh_string">'SD'</span><span class="sh_symbol">]</span></li><li>    <span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> output</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li><span class="sh_number">1</span><span class="sh_symbol">.</span>定义字典：键对应的值为天气网站网址接口中城市ID</li><li>    city_codes <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span> <span class="sh_string">'0'</span><span class="sh_symbol">:</span> <span class="sh_string">'101010100'</span><span class="sh_symbol">,</span> <span class="sh_string">'1'</span><span class="sh_symbol">:</span> <span class="sh_string">'101121404'</span><span class="sh_cbracket">}</span></li><li><span class="sh_number">2</span>．代码执行后，屏幕给出的提示信息</li><li>    prompt <span class="sh_symbol">=</span> <span class="sh_string">"""(0) 北京</span></li><li><span class="sh_string">(1) 台儿庄</span></li><li><span class="sh_string">请选择(0/1): """</span></li><li><span class="sh_number">3</span>．根据提示信息，输入<span class="sh_number">0</span>或<span class="sh_number">1</span></li><li>    choice <span class="sh_symbol">=</span> <span class="sh_function">input</span><span class="sh_symbol">(</span>prompt<span class="sh_symbol">)</span></li><li><span class="sh_number">4</span><span class="sh_symbol">.</span>调用get_weather函数，其实际参数为city_codes字典对应值</li><li><span class="sh_number">8</span><span class="sh_symbol">.</span>打印调用get_weather函数返回值</li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_function">get_weather</span><span class="sh_symbol">(</span>city_codes<span class="sh_symbol">[</span>choice<span class="sh_symbol">]))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# vim display_weather2.py
+#!/usr/bin/python
+
+import requests		#引用requests模块
+
+def get_weather(city_code):		#定义一个输入城市id的函数
+    url = 'http://www.weather.com.cn/data/sk/%s.html' % city_code	#天气地址
+5.通过requests发送一个GET请求到url网址，获取网页
+    r = requests.get(url)
+6. 为获取的网页设置编码，并以json形式返回数据
+    r.encoding = 'utf8'
+#Requests中内置的JSON解码器，以json形式返回,前提返回的内容确保是json格式的，不然解析出错会抛异常
+    data = r.json()
+    7.output为返回值，即最终屏幕显示的信息
+    output = '风向：%s, 风力: %s， 温度：%s, 湿度：%s' % (
+#data获取到的天气信息为字典，该字典中weatherinfo键对应的值还是一个字典，这个字典中‘WD’键对应的值是风向，‘WS’键对应的值是风力，'temp'键对应的值是温度，'SD'键对应的值是湿度，利用键值对关系将相应数据显示出来即可
+        data['weatherinfo']['WD'],
+        data['weatherinfo']['WS'],
+        data['weatherinfo']['temp'],
+        data['weatherinfo']['SD']
+    )
+    return output
+
+if __name__ == '__main__':
+1.定义字典：键对应的值为天气网站网址接口中城市ID
+    city_codes = { '0': '101010100', '1': '101121404'}
+2．代码执行后，屏幕给出的提示信息
+    prompt = """(0) 北京
+(1) 台儿庄
+请选择(0/1): """
+3．根据提示信息，输入0或1
+    choice = input(prompt)
+4.调用get_weather函数，其实际参数为city_codes字典对应值
+8.打印调用get_weather函数返回值
+    print(get_weather(city_codes[choice]))
+</pre></div></div>
+      <p class="number">步骤三：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 display_weather2<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 北京</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 台儿庄</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">):</span> <span class="sh_number">0</span></li><li> 风向：南风， 风力： 小于<span class="sh_number">3</span>级， 温度：<span class="sh_number">27.9</span>， 湿度：<span class="sh_number">28</span><span class="sh_symbol">%</span></li><li><span class="sh_symbol">[</span>root@ localhost day12<span class="sh_symbol">]</span># python3 display_weather2<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">)</span> 北京</li><li><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> 台儿庄</li><li>请选择<span class="sh_symbol">(</span><span class="sh_number">0</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">):</span> <span class="sh_number">1</span></li><li> 风向：东北风， 风力： 小于<span class="sh_number">3</span>级， 温度：<span class="sh_number">22.3</span>， 湿度：<span class="sh_number">64</span><span class="sh_symbol">%</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@ localhost day12]# python3 display_weather2.py
+(0) 北京
+(1) 台儿庄
+请选择(0/1): 0
+ 风向：南风， 风力： 小于3级， 温度：27.9， 湿度：28%
+[root@ localhost day12]# python3 display_weather2.py
+(0) 北京
+(1) 台儿庄
+请选择(0/1): 1
+ 风向：东北风， 风力： 小于3级， 温度：22.3， 湿度：64%
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：获取zabbix版本信息</h2>
+      <h3>5.1 问题</h3>
+      <p>编写一个zabbix_apiversion.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>安装zabbix服务器
+</li>
+        <li>获取zabbix api的url
+</li>
+        <li>编写python程序，访问zabbix api，取得zabbix版本号 
+</li>
+      </ol>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装zabbix服务器</p>
+      <p>安装zabbix服务器具体步骤请参照NSD SECURITY DAY06 cookbook中案例2操作</p>
+      <p class="number">步骤二：获取zabbix api的url</p>
+      <p>1)设置前端后，你就可以使用远程HTTP请求来调用API。为此，需要向api_jsonrpc.php位于前端目录中的文件发送HTTP POST请求。如果你的Zabbix前端安装在http://192.168.4.2/zabbix，那么用HTTP请求来调用apiinfo.version方法就如下面这样：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>POST <span class="sh_number">192.168.4.2</span><span class="sh_symbol">/</span><span class="sh_normal">zabbix</span><span class="sh_symbol">/</span>api_jsonrpc<span class="sh_symbol">.</span>php <span class="sh_normal">HTTP</span><span class="sh_symbol">/</span><span class="sh_number">1.1</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">POST 192.168.4.2/zabbix/api_jsonrpc.php HTTP/1.1
+</pre></div></div>
+      <p>2)从zabbix官方文档中获取 Zabbix API 版本，如图-7所示：</p>
+      <p>官方文档地址如下：</p>
+      <p>https://www.zabbix.com/documentation/3.4/zh/manual/api/reference/apiinfo/version</p>
+      <div class="image">
+        <img src="./CASE4_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <p class="number">步骤三：编写脚本</p>
+      <p>在HTTP协议中，post提交的数据必须放在消息主体中，但是协议中并没有规定必须使用什么编码方式，从而导致了提交方式的不同。服务端根据请求头中的Content-Type字段来获知请求中的消息主体是用何种方式进行编码，再对消息主体进行解析。</p>
+      <p>请求的 Content-Type 头部必须设置为以下值之一：</p>
+      <p>application/json-rpc</p>
+      <p>application/json</p>
+      <p>application/jsonrequest</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># vim zabbix_apiversion<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import requests</li><li>import json&nbsp;&nbsp;&nbsp;&nbsp;# python中的dict类型要转换为json格式的数据需要用到json库</li><li><span style="display:none;">&nbsp;</span></li><li>#要访问的网址</li><li>url <span class="sh_symbol">=</span> <span class="sh_string">'http://192.168.4.2/zabbix/api_jsonrpc.php'</span></li><li>#请求头部信息</li><li>headers <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'Content-Type'</span><span class="sh_symbol">:</span> <span class="sh_string">'application/json-rpc'</span><span class="sh_cbracket">}</span></li><li># data是从官方文档处获得的</li><li>data <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span></li><li>    <span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#jsonrpc协议的版本号，固定的</li><li>    <span class="sh_string">"method"</span><span class="sh_symbol">:</span> <span class="sh_string">"apiinfo.version"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#在zabbix手册上查到的，查询zabbix版本</li><li>    <span class="sh_string">"params"</span><span class="sh_symbol">:</span> <span class="sh_symbol">[],</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#没有额外参数</li><li>    <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;#随便写个数字</li><li><span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li>#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式</li><li>#将data转成json格式，zabbix要求提交的数据是json格式</li><li>r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">post</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> headers<span class="sh_symbol">=</span>headers<span class="sh_symbol">,</span> data<span class="sh_symbol">=</span>json<span class="sh_symbol">.</span><span class="sh_function">dumps</span><span class="sh_symbol">(</span>data<span class="sh_symbol">))</span></li><li>#将json格式解码，zabbix返回的数据都是json格式</li><li><span class="sh_function">print</span><span class="sh_symbol">(</span>r<span class="sh_symbol">.</span><span class="sh_function">json</span><span class="sh_symbol">()))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# vim zabbix_apiversion.py
+#!/usr/bin/env python3
+
+import requests
+import json	# python中的dict类型要转换为json格式的数据需要用到json库
+
+#要访问的网址
+url = 'http://192.168.4.2/zabbix/api_jsonrpc.php'
+#请求头部信息
+headers = {'Content-Type': 'application/json-rpc'}
+# data是从官方文档处获得的
+data = {
+    "jsonrpc": "2.0",	#jsonrpc协议的版本号，固定的
+    "method": "apiinfo.version",		#在zabbix手册上查到的，查询zabbix版本
+    "params": [],		#没有额外参数
+    "id": 1	#随便写个数字
+}
+
+#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式
+#将data转成json格式，zabbix要求提交的数据是json格式
+r = requests.post(url, headers=headers, data=json.dumps(data))
+#将json格式解码，zabbix返回的数据都是json格式
+print(r.json()))
+</pre></div></div>
+      <p>需要注意的是python中并没有json类型这一说法，通过json.dumps(data)转换的字典对象，最后得到的是一个字符串对象，也就是说，在python中json格式的数据实际上就是一个字符串</p>
+      <p class="number">步骤四：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># python3 zabbix_apiversion<span class="sh_symbol">.</span>py</li><li><span class="sh_cbracket">{</span><span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span> <span class="sh_string">"result"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.4.0"</span><span class="sh_symbol">,</span> <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# python3 zabbix_apiversion.py
+{"jsonrpc": "2.0", "result": "2.4.0", "id": 1}
+</pre></div></div>
+      <a name="case6">
+      </a>
+      <h2>6 案例6：获取令牌</h2>
+      <h3>6.1 问题</h3>
+      <p>编写一个get_token.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>编写get_token函数
+</li>
+        <li>该函数接受zabbix服务器url、用户名和密码作为参数
+</li>
+        <li>函数返回值为用户令牌token
+</li>
+      </ol>
+      <h3>6.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本get_token.py，获取身份令牌</p>
+      <p>1)从zabbix官方文档中使用 user.login 方法登录并获取身份验证令牌请求，如图-8所示：</p>
+      <p>官方文档地址如下：</p>
+      <p>https://www.zabbix.com/documentation/3.4/zh/manual/api/reference/user/login</p>
+      <div class="image">
+        <img src="./CASE4_files/image008.png">
+        <p>图-8</p>
+      </div>
+      <p>2)编写get_token.py文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># vim get_token<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import requests</li><li>import json&nbsp;&nbsp;&nbsp;&nbsp;# python中的dict类型要转换为json格式的数据需要用到json库</li><li><span style="display:none;">&nbsp;</span></li><li>#要访问的网址</li><li>url <span class="sh_symbol">=</span> <span class="sh_string">'http://192.168.4.2/zabbix/api_jsonrpc.php'</span></li><li>#请求头部信息</li><li>headers <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'Content-Type'</span><span class="sh_symbol">:</span> <span class="sh_string">'application/json-rpc'</span><span class="sh_cbracket">}</span></li><li># data是从官方文档处获得的</li><li>data <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span></li><li># API使用的JSON<span class="sh_symbol">-</span>RPC协议的版本<span class="sh_symbol">;</span> Zabbix API实现JSON<span class="sh_symbol">-</span>RPC版本<span class="sh_number">2.0</span></li><li>    <span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">"method"</span><span class="sh_symbol">:</span> <span class="sh_string">"user.login"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#调用的API方法</li><li># params将被传递给API方法的参数</li><li>    <span class="sh_string">"params"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{</span></li><li>        <span class="sh_string">"user"</span><span class="sh_symbol">:</span> <span class="sh_string">"Admin"</span><span class="sh_symbol">,</span></li><li>        <span class="sh_string">"password"</span><span class="sh_symbol">:</span> <span class="sh_string">"zabbix"</span></li><li>    <span class="sh_cbracket">}</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;#请求的任意标识符</li><li><span class="sh_cbracket">}</span></li><li>#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式</li><li>#将data转成json格式</li><li>r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">post</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> headers<span class="sh_symbol">=</span>headers<span class="sh_symbol">,</span> data<span class="sh_symbol">=</span>json<span class="sh_symbol">.</span><span class="sh_function">dumps</span><span class="sh_symbol">(</span>data<span class="sh_symbol">))</span></li><li>#将json格式解码</li><li><span class="sh_function">print</span><span class="sh_symbol">(</span>r<span class="sh_symbol">.</span><span class="sh_function">json</span><span class="sh_symbol">()))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# vim get_token.py
+#!/usr/bin/env python3
+
+import requests
+import json	# python中的dict类型要转换为json格式的数据需要用到json库
+
+#要访问的网址
+url = 'http://192.168.4.2/zabbix/api_jsonrpc.php'
+#请求头部信息
+headers = {'Content-Type': 'application/json-rpc'}
+# data是从官方文档处获得的
+data = {
+# API使用的JSON-RPC协议的版本; Zabbix API实现JSON-RPC版本2.0
+    "jsonrpc": "2.0",
+    "method": "user.login",	#调用的API方法
+# params将被传递给API方法的参数
+    "params": {
+        "user": "Admin",
+        "password": "zabbix"
+    },
+    "id": 1	#请求的任意标识符
+}
+#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式
+#将data转成json格式
+r = requests.post(url, headers=headers, data=json.dumps(data))
+#将json格式解码
+print(r.json()))
+</pre></div></div>
+      <p class="number">步骤四：测试脚本执行，获取用户令牌token</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># python3 get_token<span class="sh_symbol">.</span>py </li><li><span class="sh_cbracket">{</span><span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span> <span class="sh_string">"result"</span><span class="sh_symbol">:</span> <span class="sh_string">"0424bd59b807674191e7d77572075f33"</span><span class="sh_symbol">,</span> <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# python3 get_token.py 
+{"jsonrpc": "2.0", "result": "0424bd59b807674191e7d77572075f33", "id": 1}
+</pre></div></div>
+      <a name="case7">
+      </a>
+      <h2>7 案例7：创建主机</h2>
+      <h3>7.1 问题</h3>
+      <p>编写一个remote_comm.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>主机192.168.4.10已安装zabbix_agent
+</li>
+        <li>将该主机填加到zabbix监控的主机中
+</li>
+        <li>主机属于Linux Servers组
+</li>
+      </ol>
+      <h3>7.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本，检索组</p>
+      <p>1)从zabbix官方文档中使用hostgroup.get 方法获取主机组请求，如图-9所示：</p>
+      <p>官方文档地址如下：</p>
+      <p>https://www.zabbix.com/documentation/3.4/zh/manual/api/reference/hostgroup/get</p>
+      <div class="image">
+        <img src="./CASE4_files/image009.png">
+        <p>图-9</p>
+      </div>
+      <p>2)编写get_hostgroup.py文件，检索组</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># vim get_hostgroup<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import requests</li><li>import json&nbsp;&nbsp;&nbsp;&nbsp;# python中的dict类型要转换为json格式的数据需要用到json库</li><li><span style="display:none;">&nbsp;</span></li><li>#要访问的网址</li><li>url <span class="sh_symbol">=</span> <span class="sh_string">'http://192.168.4.2/zabbix/api_jsonrpc.php'</span></li><li>#请求头部信息</li><li>headers <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'Content-Type'</span><span class="sh_symbol">:</span> <span class="sh_string">'application/json-rpc'</span><span class="sh_cbracket">}</span></li><li># data是从官方文档处获得的</li><li>data <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span></li><li># API使用的JSON<span class="sh_symbol">-</span>RPC协议的版本<span class="sh_symbol">;</span> Zabbix API实现JSON<span class="sh_symbol">-</span>RPC版本<span class="sh_number">2.0</span></li><li>    <span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">"method"</span><span class="sh_symbol">:</span> <span class="sh_string">" hostgroup.get "</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#调用的API方法</li><li># params将被传递给API方法的参数</li><li>     <span class="sh_string">"params"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{</span></li><li>         <span class="sh_string">"output"</span><span class="sh_symbol">:</span> <span class="sh_string">"extend"</span><span class="sh_symbol">,</span></li><li>     <span class="sh_cbracket">}</span><span class="sh_symbol">,</span></li><li>     <span class="sh_string">"auth"</span><span class="sh_symbol">:</span> <span class="sh_string">"0424bd59b807674191e7d77572075f33"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#之前获取到的令牌</li><li>    <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;#请求的任意标识符</li><li><span class="sh_cbracket">}</span></li><li>#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式</li><li>#将data转成json格式</li><li>r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">post</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> headers<span class="sh_symbol">=</span>headers<span class="sh_symbol">,</span> data<span class="sh_symbol">=</span>json<span class="sh_symbol">.</span><span class="sh_function">dumps</span><span class="sh_symbol">(</span>data<span class="sh_symbol">))</span></li><li>ginfo <span class="sh_symbol">=</span> r<span class="sh_symbol">.</span><span class="sh_function">json</span><span class="sh_symbol">()</span></li><li><span class="sh_function">print</span><span class="sh_symbol">(</span>ginfo<span class="sh_symbol">[</span><span class="sh_string">'result'</span><span class="sh_symbol">])</span>&nbsp;&nbsp;&nbsp;&nbsp;#打印主机组信息</li><li><span class="sh_keyword">for</span> item <span class="sh_keyword">in</span> ginfo<span class="sh_symbol">[</span><span class="sh_string">'result'</span><span class="sh_symbol">]:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span>item<span class="sh_symbol">[</span><span class="sh_string">'groupid'</span><span class="sh_symbol">],</span> item<span class="sh_symbol">[</span><span class="sh_string">'name'</span><span class="sh_symbol">])</span>&nbsp;&nbsp;&nbsp;&nbsp;#打印主机组id和名称</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# vim get_hostgroup.py
+#!/usr/bin/env python3
+
+import requests
+import json	# python中的dict类型要转换为json格式的数据需要用到json库
+
+#要访问的网址
+url = 'http://192.168.4.2/zabbix/api_jsonrpc.php'
+#请求头部信息
+headers = {'Content-Type': 'application/json-rpc'}
+# data是从官方文档处获得的
+data = {
+# API使用的JSON-RPC协议的版本; Zabbix API实现JSON-RPC版本2.0
+    "jsonrpc": "2.0",
+    "method": " hostgroup.get ",	#调用的API方法
+# params将被传递给API方法的参数
+     "params": {
+         "output": "extend",
+     },
+     "auth": "0424bd59b807674191e7d77572075f33",	#之前获取到的令牌
+    "id": 1	#请求的任意标识符
+}
+#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式
+#将data转成json格式
+r = requests.post(url, headers=headers, data=json.dumps(data))
+ginfo = r.json()
+print(ginfo['result'])	#打印主机组信息
+for item in ginfo['result']:
+    print(item['groupid'], item['name'])	#打印主机组id和名称
+</pre></div></div>
+      <p>3)测试脚本执行，获取了主机名称及id，如图-10所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image010.png">
+        <p>图-10</p>
+      </div>
+      <p class="number">步骤二：编写脚本，检索模板</p>
+      <p>1)从zabbix官方文档中使用template.get 方法获取模板请求，如图-11所示：</p>
+      <p>官方文档地址如下：</p>
+      <p>https://www.zabbix.com/documentation/3.4/zh/manual/api/reference/template/get</p>
+      <div class="image">
+        <img src="./CASE4_files/image011.png">
+        <p>图-11</p>
+      </div>
+      <p>2)编写get_template.py文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># vim get_template<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import requests</li><li>import json&nbsp;&nbsp;&nbsp;&nbsp;# python中的dict类型要转换为json格式的数据需要用到json库</li><li><span style="display:none;">&nbsp;</span></li><li>#要访问的网址</li><li>url <span class="sh_symbol">=</span> <span class="sh_string">'http://192.168.4.2/zabbix/api_jsonrpc.php'</span></li><li>#请求头部信息</li><li>headers <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'Content-Type'</span><span class="sh_symbol">:</span> <span class="sh_string">'application/json-rpc'</span><span class="sh_cbracket">}</span></li><li># data是从官方文档处获得的</li><li>data <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span></li><li># API使用的JSON<span class="sh_symbol">-</span>RPC协议的版本<span class="sh_symbol">;</span> Zabbix API实现JSON<span class="sh_symbol">-</span>RPC版本<span class="sh_number">2.0</span></li><li>    <span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">"method"</span><span class="sh_symbol">:</span> <span class="sh_string">"template.get"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#调用的API方法</li><li># params将被传递给API方法的参数</li><li>      <span class="sh_string">"params"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{</span></li><li>         <span class="sh_string">"output"</span><span class="sh_symbol">:</span> <span class="sh_string">"extend"</span><span class="sh_symbol">,</span></li><li>     <span class="sh_cbracket">}</span><span class="sh_symbol">,</span></li><li>     <span class="sh_string">"auth"</span><span class="sh_symbol">:</span> <span class="sh_string">"0424bd59b807674191e7d77572075f33"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#之前获取到的令牌</li><li>    <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;#请求的任意标识符</li><li><span class="sh_cbracket">}</span></li><li>#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式</li><li>#将data转成json格式</li><li>r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">post</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> headers<span class="sh_symbol">=</span>headers<span class="sh_symbol">,</span> data<span class="sh_symbol">=</span>json<span class="sh_symbol">.</span><span class="sh_function">dumps</span><span class="sh_symbol">(</span>data<span class="sh_symbol">))</span></li><li>#将json格式解码</li><li>tinfo <span class="sh_symbol">=</span> r<span class="sh_symbol">.</span><span class="sh_function">json</span><span class="sh_symbol">()</span></li><li>#<span class="sh_function">print</span><span class="sh_symbol">(</span>tinfo<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#打印模板信息</li><li><span class="sh_keyword">for</span> item <span class="sh_keyword">in</span> tinfo<span class="sh_symbol">[</span><span class="sh_string">'result'</span><span class="sh_symbol">]:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span>item<span class="sh_symbol">[</span><span class="sh_string">'templateid'</span><span class="sh_symbol">],</span> item<span class="sh_symbol">[</span><span class="sh_string">'host'</span><span class="sh_symbol">])</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#打印模板名及id</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# vim get_template.py
+#!/usr/bin/env python3
+
+import requests
+import json	# python中的dict类型要转换为json格式的数据需要用到json库
+
+#要访问的网址
+url = 'http://192.168.4.2/zabbix/api_jsonrpc.php'
+#请求头部信息
+headers = {'Content-Type': 'application/json-rpc'}
+# data是从官方文档处获得的
+data = {
+# API使用的JSON-RPC协议的版本; Zabbix API实现JSON-RPC版本2.0
+    "jsonrpc": "2.0",
+    "method": "template.get",	#调用的API方法
+# params将被传递给API方法的参数
+      "params": {
+         "output": "extend",
+     },
+     "auth": "0424bd59b807674191e7d77572075f33",	#之前获取到的令牌
+    "id": 1	#请求的任意标识符
+}
+#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式
+#将data转成json格式
+r = requests.post(url, headers=headers, data=json.dumps(data))
+#将json格式解码
+tinfo = r.json()
+#print(tinfo)		#打印模板信息
+for item in tinfo['result']:
+    print(item['templateid'], item['host'])		#打印模板名及id
+</pre></div></div>
+      <p>3)测试脚本执行，获取了模板名称及id，如图-12所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image012.png">
+        <p>图-12</p>
+      </div>
+      <p class="number">步骤三：编写脚本，创建主机</p>
+      <p>1)从zabbix官方文档中使用host.create方法获取创建主机请求，如图-13所示：</p>
+      <p>官方文档地址如下：</p>
+      <p>https://www.zabbix.com/documentation/3.4/zh/manual/api/reference/host/create</p>
+      <div class="image">
+        <img src="./CASE4_files/image013.png">
+        <p>图-13</p>
+      </div>
+      <p>2)编写get_host.py文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day12<span class="sh_symbol">]</span># vim get_host<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import requests</li><li>import json&nbsp;&nbsp;&nbsp;&nbsp;# python中的dict类型要转换为json格式的数据需要用到json库</li><li><span style="display:none;">&nbsp;</span></li><li>#要访问的网址</li><li>url <span class="sh_symbol">=</span> <span class="sh_string">'http://192.168.4.2/zabbix/api_jsonrpc.php'</span></li><li>#请求头部信息</li><li>headers <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span><span class="sh_string">'Content-Type'</span><span class="sh_symbol">:</span> <span class="sh_string">'application/json-rpc'</span><span class="sh_cbracket">}</span></li><li># data是从官方文档处获得的</li><li>data <span class="sh_symbol">=</span> <span class="sh_cbracket">{</span></li><li># API使用的JSON<span class="sh_symbol">-</span>RPC协议的版本<span class="sh_symbol">;</span> Zabbix API实现JSON<span class="sh_symbol">-</span>RPC版本<span class="sh_number">2.0</span></li><li>    <span class="sh_string">"jsonrpc"</span><span class="sh_symbol">:</span> <span class="sh_string">"2.0"</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">"method"</span><span class="sh_symbol">:</span> <span class="sh_string">"user.login"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;#调用的API方法</li><li># params将被传递给API方法的参数</li><li>    <span class="sh_string">"params"</span><span class="sh_symbol">:</span> <span class="sh_cbracket">{</span></li><li>        <span class="sh_string">"host"</span><span class="sh_symbol">:</span> <span class="sh_string">"mylinux"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#要创建的主机的名称</li><li>        <span class="sh_string">"interfaces"</span><span class="sh_symbol">:</span> <span class="sh_symbol">[</span></li><li>            <span class="sh_cbracket">{</span></li><li>                <span class="sh_string">"type"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span><span class="sh_symbol">,</span>  # <span class="sh_number">1</span> agent<span class="sh_symbol">;</span> <span class="sh_number">2</span> SNMP<span class="sh_symbol">;</span> <span class="sh_number">3</span> IPMI<span class="sh_symbol">;</span> <span class="sh_number">4</span> JMX</li><li>                <span class="sh_string">"main"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span><span class="sh_symbol">,</span>  # 该接口是否在主机上用作默认接口。<span class="sh_number">1</span> 默认</li><li>                <span class="sh_string">"useip"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span><span class="sh_symbol">,</span>  # 是否应通过IP进行连接</li><li>                <span class="sh_string">"ip"</span><span class="sh_symbol">:</span> <span class="sh_string">"192.168.4.3"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>                <span class="sh_string">"dns"</span><span class="sh_symbol">:</span> <span class="sh_string">""</span><span class="sh_symbol">,</span></li><li>                <span class="sh_string">"port"</span><span class="sh_symbol">:</span> <span class="sh_string">"10050"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#ip已装zabbix_agent，端口号为<span class="sh_number">10050</span></li><li>            <span class="sh_cbracket">}</span></li><li>        <span class="sh_symbol">],</span></li><li>        <span class="sh_string">"groups"</span><span class="sh_symbol">:</span> <span class="sh_symbol">[</span></li><li>            <span class="sh_cbracket">{</span></li><li>                <span class="sh_string">"groupid"</span><span class="sh_symbol">:</span> <span class="sh_string">"2"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#之前检索到的主机组id</li><li>            <span class="sh_cbracket">}</span></li><li>        <span class="sh_symbol">],</span></li><li>        <span class="sh_string">"templates"</span><span class="sh_symbol">:</span> <span class="sh_symbol">[</span></li><li>            <span class="sh_cbracket">{</span></li><li>                <span class="sh_string">"templateid"</span><span class="sh_symbol">:</span> <span class="sh_string">"10001"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#之前检索到的模板id</li><li>            <span class="sh_cbracket">}</span></li><li>        <span class="sh_symbol">],</span></li><li>        <span class="sh_string">"inventory_mode"</span><span class="sh_symbol">:</span> <span class="sh_number">0</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#资产信息，<span class="sh_number">0</span>为停用</li><li>    <span class="sh_cbracket">}</span><span class="sh_symbol">,</span></li><li>    <span class="sh_string">"auth"</span><span class="sh_symbol">:</span> <span class="sh_string">"0424bd59b807674191e7d77572075f33"</span><span class="sh_symbol">,</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#之前获取到的令牌</li><li>    <span class="sh_string">"id"</span><span class="sh_symbol">:</span> <span class="sh_number">1</span>&nbsp;&nbsp;&nbsp;&nbsp;#请求的任意标识符</li><li><span class="sh_cbracket">}</span></li><li>#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式</li><li>#将data转成json格式</li><li>r <span class="sh_symbol">=</span> requests<span class="sh_symbol">.</span><span class="sh_function">post</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> headers<span class="sh_symbol">=</span>headers<span class="sh_symbol">,</span> data<span class="sh_symbol">=</span>json<span class="sh_symbol">.</span><span class="sh_function">dumps</span><span class="sh_symbol">(</span>data<span class="sh_symbol">))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day12]# vim get_host.py
+#!/usr/bin/env python3
+
+import requests
+import json	# python中的dict类型要转换为json格式的数据需要用到json库
+
+#要访问的网址
+url = 'http://192.168.4.2/zabbix/api_jsonrpc.php'
+#请求头部信息
+headers = {'Content-Type': 'application/json-rpc'}
+# data是从官方文档处获得的
+data = {
+# API使用的JSON-RPC协议的版本; Zabbix API实现JSON-RPC版本2.0
+    "jsonrpc": "2.0",
+    "method": "user.login",	#调用的API方法
+# params将被传递给API方法的参数
+    "params": {
+        "host": "mylinux",		#要创建的主机的名称
+        "interfaces": [
+            {
+                "type": 1,  # 1 agent; 2 SNMP; 3 IPMI; 4 JMX
+                "main": 1,  # 该接口是否在主机上用作默认接口。1 默认
+                "useip": 1,  # 是否应通过IP进行连接
+                "ip": "192.168.4.3",		
+                "dns": "",
+                "port": "10050"		#ip已装zabbix_agent，端口号为10050
+            }
+        ],
+        "groups": [
+            {
+                "groupid": "2"		#之前检索到的主机组id
+            }
+        ],
+        "templates": [
+            {
+                "templateid": "10001"		#之前检索到的模板id
+            }
+        ],
+        "inventory_mode": 0,		#资产信息，0为停用
+    },
+    "auth": "0424bd59b807674191e7d77572075f33",		#之前获取到的令牌
+    "id": 1	#请求的任意标识符
+}
+#使用requests发送请求，访问指定网站，向url发送data请求，r收到的返回响应为json格式
+#将data转成json格式
+r = requests.post(url, headers=headers, data=json.dumps(data))
+</pre></div></div>
+      <p>3)测试脚本执行，运行脚本成功后，主机创建成功，如图-14所示：</p>
+      <div class="image">
+        <img src="./CASE4_files/image014.png">
+        <p>图-14</p>
+      </div>
+    </div>
+  
+</body></html>

@@ -1,0 +1,352 @@
+
+<!-- saved from url=(0080)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD OPERATION DAY02</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#case1">案例1：部署LNMP环境</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#case2">案例2：构建LNMP平台</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#case3">案例3：地址重写</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：部署LNMP环境</h2>
+      <h3>1.1 问题</h3>
+      <p>安装部署Nginx、MariaDB、PHP环境</p>
+      <ul class="list">
+        <li>安装部署Nginx、MariaDB、PHP、PHP-FPM；
+</li>
+        <li>启动Nginx、MariaDB、FPM服务；
+</li>
+        <li>并测试LNMP是否工作正常。
+</li>
+      </ul>
+      <h3>1.2 方案</h3>
+      <p>LNMP（Linux、Nginx、MySQL、PHP）</p>
+      <p>在RHEL7系统中，源码安装Nginx，使用RPM包安装MariaDB、PHP、PHP-FPM软件。</p>
+      <p>操作过程中需要安装的软件列表如下：</p>
+      <ul class="list">
+        <li>nginx
+</li>
+        <li>mariadb、mariadb-server、mariadb-devel
+</li>
+        <li>php、php-fpm、php-mysql
+</li>
+      </ul>
+      <p>备注：mariadb（数据库客户端软件）、mariadb-server（数据库服务器软件）、mariadb-devel（其他客户端软件的依赖包）、php（解释器）、php-fpm（进程管理器服务）、php-mysql（PHP的数据库扩展包）。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装软件</p>
+      <p>1）使用yum安装基础依赖包</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install gcc openssl<span class="sh_symbol">-</span>devel pcre<span class="sh_symbol">-</span>devel</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install gcc openssl-devel pcre-devel
+</pre></div></div>
+      <p>2）源码安装Nginx（如果前面课程中已经安装Nginx，则忽略这一步）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># useradd <span class="sh_symbol">-</span><span class="sh_normal">s </span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin  nginx</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># tar <span class="sh_symbol">-</span>xvf nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># cd nginx<span class="sh_number">-1.12.2</span></li><li><span class="sh_symbol">[</span>root@proxy nginx<span class="sh_number">-1.12.2</span><span class="sh_symbol">]</span># <span class="sh_symbol">./</span>configure   <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span>user<span class="sh_symbol">=</span>nginx   <span class="sh_symbol">--</span>group<span class="sh_symbol">=</span>nginx <span class="sh_symbol">\</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_symbol">--</span><span class="sh_keyword">with</span><span class="sh_symbol">-</span>http_ssl_module</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># make <span class="sh_symbol">&amp;&amp;</span> make install</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# useradd -s /sbin/nologin  nginx
+[root@proxy ~]# tar -xvf nginx-1.12.2.tar.gz
+[root@proxy ~]# cd nginx-1.12.2
+[root@proxy nginx-1.12.2]# ./configure   \
+&gt; --user=nginx   --group=nginx \
+&gt; --with-http_ssl_module
+[root@proxy ~]# make &amp;&amp; make install
+.. ..
+</pre></div></div>
+      <p>3）安装MariaDB</p>
+      <p>Mariadb在新版RHEL7光盘中包含有该软件，配置yum源后可以直接使用yum安装：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y install   mariadb   mariadb<span class="sh_symbol">-</span>server   mariadb<span class="sh_symbol">-</span>devel</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y install   mariadb   mariadb-server   mariadb-devel
+</pre></div></div>
+      <p>4）php和php-fpm(该软件包在lnmp_soft中提供)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y  install  php   php<span class="sh_symbol">-</span>mysql</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># yum <span class="sh_symbol">-</span>y  install php<span class="sh_symbol">-</span>fpm<span class="sh_number">-5.4.16-42</span><span class="sh_symbol">.</span>el7<span class="sh_symbol">.</span>x86_64<span class="sh_symbol">.</span>rpm</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# yum -y  install  php   php-mysql
+[root@proxy ~]# yum -y  install php-fpm-5.4.16-42.el7.x86_64.rpm
+</pre></div></div>
+      <p class="number">步骤二：启动服务</p>
+      <p>1）启动Nginx服务（如果已经启动nginx，则可以忽略这一步）</p>
+      <p>这里需要注意的是，如果服务器上已经启动了其他监听80端口的服务软件（如httpd），则需要先关闭该服务，否则会出现冲突。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl stop httpd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//如果该服务存在则关闭该服务</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//启动Nginx服务</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># netstat <span class="sh_symbol">-</span>utnlp <span class="sh_symbol">|</span> grep <span class="sh_symbol">:</span><span class="sh_number">80</span></li><li>tcp&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0</span> <span class="sh_number">0.0.0.0</span><span class="sh_symbol">:</span><span class="sh_number">80</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">0.0.0.0</span><span class="sh_symbol">:*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_number">32428</span><span class="sh_symbol">/</span>nginx         </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# systemctl stop httpd				//如果该服务存在则关闭该服务
+[root@proxy ~]# /usr/local/nginx/sbin/nginx 			//启动Nginx服务
+[root@proxy ~]# netstat -utnlp | grep :80
+tcp	0	0 0.0.0.0:80		0.0.0.0:*		LISTEN		32428/nginx         
+</pre></div></div>
+      <p>2）启动MySQL服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl start  mariadb           <span class="sh_comment">//启动服务器</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl status mariadb           <span class="sh_comment">//查看服务状态</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl enable mariadb           <span class="sh_comment">//设置开机启动</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# systemctl start  mariadb           //启动服务器
+[root@proxy ~]# systemctl status mariadb           //查看服务状态
+[root@proxy ~]# systemctl enable mariadb           //设置开机启动
+</pre></div></div>
+      <p>3）启动PHP-FPM服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl start php<span class="sh_symbol">-</span>fpm           <span class="sh_comment">//启动服务</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl status php<span class="sh_symbol">-</span>fpm          <span class="sh_comment">//查看服务状态</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># systemctl enable php<span class="sh_symbol">-</span>fpm          <span class="sh_comment">//设置开机启动</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# systemctl start php-fpm           //启动服务
+[root@proxy ~]# systemctl status php-fpm          //查看服务状态
+[root@proxy ~]# systemctl enable php-fpm          //设置开机启动
+</pre></div></div>
+      <p>4）设置防火墙与SELinux（非必需操作，如果有则关闭）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted</li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># setenforce <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# firewall-cmd --set-default-zone=trusted
+[root@proxy ~]# setenforce 0
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：构建LNMP平台</h2>
+      <h3>2.1 问题</h3>
+      <p>沿用练习一，通过调整Nginx服务端配置，实现以下目标：</p>
+      <ol class="list">
+        <li>配置Fast-CGI支持PHP网页
+</li>
+        <li>创建PHP测试页面，测试使用PHP连接数据库的效果
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>使用2台RHEL7虚拟机，其中一台作为LNMP服务器（192.168.4.5）、另外一台作为测试用的Linux客户机（192.168.4.10），如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>Nginx结合FastCGI技术即可支持PHP页面架构，如图-2所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>因此本案例，需要延续练习一的实验内容，通过修改Nginx及php-fpm配置文件实现对PHP页面的支持。</p>
+      <p>注意，FastCGI的内存消耗问题，一个PHP-FPM解释器将消耗约25M的内存。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一： php-fpm配置文件</p>
+      <p>1）查看php-fpm配置文件（实验中不需要修改该文件）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy etc<span class="sh_symbol">]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>php<span class="sh_symbol">-</span>fpm<span class="sh_symbol">.</span><span class="sh_normal">d</span><span class="sh_symbol">/</span>www<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">[</span>www<span class="sh_symbol">]</span></li><li>listen <span class="sh_symbol">=</span> <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">9000</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//PHP端口号</span></li><li>pm<span class="sh_symbol">.</span>max_children <span class="sh_symbol">=</span> <span class="sh_number">32</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//最大进程数量</span></li><li>pm<span class="sh_symbol">.</span>start_servers <span class="sh_symbol">=</span> <span class="sh_number">15</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//最小进程数量</span></li><li>pm<span class="sh_symbol">.</span>min_spare_servers <span class="sh_symbol">=</span> <span class="sh_number">5</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//最少需要几个空闲着的进程</span></li><li>pm<span class="sh_symbol">.</span>max_spare_servers <span class="sh_symbol">=</span> <span class="sh_number">32</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//最多允许几个进程处于空闲状态</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy etc]# vim /etc/php-fpm.d/www.conf
+[www]
+listen = 127.0.0.1:9000			//PHP端口号
+pm.max_children = 32				//最大进程数量
+pm.start_servers = 15				//最小进程数量
+pm.min_spare_servers = 5			//最少需要几个空闲着的进程
+pm.max_spare_servers = 32			//最多允许几个进程处于空闲状态
+</pre></div></div>
+      <p class="number">步骤二：修改Nginx配置文件并启动服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>            root   html<span class="sh_symbol">;</span></li><li>            index  index<span class="sh_symbol">.</span>php  index<span class="sh_symbol">.</span>html   index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li>#设置默认首页为index<span class="sh_symbol">.</span>php，当用户在浏览器地址栏中只写域名或IP，不说访问什么页面时，服务器会把默认首页index<span class="sh_symbol">.</span>php返回给用户</li><li>        <span class="sh_cbracket">}</span></li><li> location  <span class="sh_symbol">~</span>  <span class="sh_symbol">\.</span>php$  <span class="sh_cbracket">{</span></li><li>            root           html<span class="sh_symbol">;</span></li><li>            fastcgi_pass   <span class="sh_number">127.0.0.1</span><span class="sh_symbol">:</span><span class="sh_number">9000</span><span class="sh_symbol">;</span>    #将请求转发给本机<span class="sh_number">9000</span>端口，PHP解释器</li><li>            fastcgi_index  index<span class="sh_symbol">.</span>php<span class="sh_symbol">;</span></li><li>            #fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name<span class="sh_symbol">;</span></li><li>            include        fastcgi<span class="sh_symbol">.</span>conf<span class="sh_symbol">;</span></li><li>        <span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx <span class="sh_symbol">-</span>s reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+location / {
+            root   html;
+            index  index.php  index.html   index.htm;
+#设置默认首页为index.php，当用户在浏览器地址栏中只写域名或IP，不说访问什么页面时，服务器会把默认首页index.php返回给用户
+        }
+ location  ~  \.php$  {
+            root           html;
+            fastcgi_pass   127.0.0.1:9000;    #将请求转发给本机9000端口，PHP解释器
+            fastcgi_index  index.php;
+            #fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi.conf;
+        }
+[root@proxy ~]# /usr/local/nginx/sbin/nginx -s reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p class="number">步骤三：创建PHP页面，测试LNMP架构能否解析PHP页面</p>
+      <p>1）创建PHP测试页面1，可以参考lnmp_soft/php_scripts/test.php：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>test1<span class="sh_symbol">.</span>php</li><li><span class="sh_symbol">&lt;?</span>php</li><li>$i<span class="sh_symbol">=</span><span class="sh_string">"This is a test Page"</span><span class="sh_symbol">;</span></li><li>echo $i<span class="sh_symbol">;</span></li><li><span class="sh_symbol">?&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/html/test1.php
+&lt;?php
+$i="This is a test Page";
+echo $i;
+?&gt;
+</pre></div></div>
+      <p>2）创建PHP测试页面,连接并查询MariaDB数据库。</p>
+      <p>可以参考lnmp_soft/php_scripts/mysql.php:</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>test2<span class="sh_symbol">.</span>php</li><li><span class="sh_symbol">&lt;?</span>php</li><li>$mysqli <span class="sh_symbol">=</span> <span class="sh_keyword">new</span> <span class="sh_function">mysqli</span><span class="sh_symbol">(</span><span class="sh_string">'localhost'</span><span class="sh_symbol">,</span><span class="sh_string">'root'</span><span class="sh_symbol">,</span><span class="sh_string">'密码'</span><span class="sh_symbol">,</span><span class="sh_string">'mysql'</span><span class="sh_symbol">);</span></li><li><span class="sh_comment">//注意：root为mysql账户名称，密码需要修改为实际mysql密码，无密码则留空即可</span></li><li><span class="sh_comment">//localhost是数据库的域名或IP，mysql是数据库的名称</span></li><li><span class="sh_keyword">if</span> <span class="sh_symbol">(</span><span class="sh_function">mysqli_connect_errno</span><span class="sh_symbol">())</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_function">die</span><span class="sh_symbol">(</span><span class="sh_string">'Unable to connect!'</span><span class="sh_symbol">).</span> <span class="sh_function">mysqli_connect_error</span><span class="sh_symbol">();</span></li><li><span class="sh_cbracket">}</span></li><li>$sql <span class="sh_symbol">=</span> <span class="sh_string">"select * from user"</span><span class="sh_symbol">;</span></li><li>$result <span class="sh_symbol">=</span> $mysqli<span class="sh_symbol">-&gt;</span><span class="sh_function">query</span><span class="sh_symbol">(</span>$sql<span class="sh_symbol">);</span></li><li><span class="sh_keyword">while</span><span class="sh_symbol">(</span>$row <span class="sh_symbol">=</span> $result<span class="sh_symbol">-&gt;</span><span class="sh_function">fetch_array</span><span class="sh_symbol">())</span><span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_function">printf</span><span class="sh_symbol">(</span><span class="sh_string">"Host:%s"</span><span class="sh_symbol">,</span>$row<span class="sh_symbol">[</span><span class="sh_number">0</span><span class="sh_symbol">]);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_function">printf</span><span class="sh_symbol">(</span><span class="sh_string">"&lt;/br&gt;"</span><span class="sh_symbol">);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_function">printf</span><span class="sh_symbol">(</span><span class="sh_string">"Name:%s"</span><span class="sh_symbol">,</span>$row<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]);</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_function">printf</span><span class="sh_symbol">(</span><span class="sh_string">"&lt;/br&gt;"</span><span class="sh_symbol">);</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">?&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/html/test2.php
+&lt;?php
+$mysqli = new mysqli('localhost','root','密码','mysql');
+//注意：root为mysql账户名称，密码需要修改为实际mysql密码，无密码则留空即可
+//localhost是数据库的域名或IP，mysql是数据库的名称
+if (mysqli_connect_errno()){
+	die('Unable to connect!'). mysqli_connect_error();
+}
+$sql = "select * from user";
+$result = $mysqli-&gt;query($sql);
+while($row = $result-&gt;fetch_array()){
+	printf("Host:%s",$row[0]);
+	printf("&lt;/br&gt;");
+	printf("Name:%s",$row[1]);
+	printf("&lt;/br&gt;");
+}
+?&gt;
+</pre></div></div>
+      <p>3）客户端使用浏览器访问服务器PHP首页文档，检验是否成功：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/test1.php</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/test2.php</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox http://192.168.4.5/test1.php
+[root@client ~]# firefox http://192.168.4.5/test2.php
+</pre></div></div>
+      <p>4）LNMP常见问题</p>
+      <p>Nginx的默认访问日志文件为/usr/local/nginx/logs/access.log</p>
+      <p>Nginx的默认错误日志文件为/usr/local/nginx/logs/error.log</p>
+      <p>PHP默认错误日志文件为/var/log/php-fpm/www-error.log</p>
+      <p>如果动态网站访问失败，可用参考错误日志，查找错误信息。</p>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：地址重写</h2>
+      <h3>3.1 问题</h3>
+      <p>沿用练习二，通过调整Nginx服务端配置，实现以下目标：</p>
+      <ol class="list">
+        <li>所有访问a.html的请求，重定向到b.html;
+</li>
+        <li>所有访问192.168.4.5的请求重定向至www.tmooc.cn；
+</li>
+        <li>所有访问192.168.4.5/下面子页面，重定向至www.tmooc.cn/下相同的页面；
+</li>
+        <li>实现firefox与curl访问相同页面文件，返回不同的内容。
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>关于Nginx服务器的地址重写，主要用到的配置参数是rewrite：</p>
+      <ul class="list">
+        <li>rewrite regex replacement flag
+</li>
+        <li>rewrite 旧地址  新地址  [选项]
+</li>
+      </ul>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：修改配置文件(访问a.html重定向到b.html)</p>
+      <p>1）修改Nginx服务配置：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name  localhost<span class="sh_symbol">;</span></li><li><span class="sh_normal">rewrite </span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span><span class="sh_normal">html  </span><span class="sh_symbol">/</span>b<span class="sh_symbol">.</span>html<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;root   html<span class="sh_symbol">;</span></li><li>index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># echo <span class="sh_string">"BB"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>b<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+server {
+        listen       80;
+        server_name  localhost;
+rewrite /a.html  /b.html;			
+
+location / {
+	root   html;
+index  index.html index.htm;
+}
+}
+
+[root@proxy ~]# echo "BB" &gt; /usr/local/nginx/html/b.html
+</pre></div></div>
+      <p>2）重新加载配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx  <span class="sh_symbol">-</span>s  reload</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx  -s  reload
+</pre></div></div>
+      <p>3）客户端测试</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/a.html</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox  http://192.168.4.5/a.html
+</pre></div></div>
+      <p class="number">步骤二：访问a.html重定向到b.html（跳转地址栏）</p>
+      <p>1）修改Nginx服务配置：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name  localhost<span class="sh_symbol">;</span></li><li><span class="sh_normal">rewrite </span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span><span class="sh_normal">html  </span><span class="sh_symbol">/</span>b<span class="sh_symbol">.</span>html  redirect<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;root   html<span class="sh_symbol">;</span></li><li>index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+server {
+        listen       80;
+        server_name  localhost;
+rewrite /a.html  /b.html  redirect;			
+
+location / {
+	root   html;
+index  index.html index.htm;
+}
+}
+</pre></div></div>
+      <p>2）重新加载配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx  <span class="sh_symbol">-</span>s  reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx  -s  reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p>3）客户端测试（仔细观察浏览器地址栏的变化）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/a.html</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox  http://192.168.4.5/a.html
+</pre></div></div>
+      <p class="number">步骤三：修改配置文件(访问192.168.4.5的请求重定向至www.tmooc.cn)</p>
+      <p>1) 修改Nginx服务配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name  localhost<span class="sh_symbol">;</span></li><li>rewrite <span class="sh_symbol">^</span><span class="sh_regexp">/ http://www.tmooc.cn/</span><span class="sh_symbol">;</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;root   html<span class="sh_symbol">;</span></li><li>index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li># <span class="sh_normal">rewrite </span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span><span class="sh_normal">html  </span><span class="sh_symbol">/</span>b<span class="sh_symbol">.</span>html  redirect<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+server {
+        listen       80;
+        server_name  localhost;
+rewrite ^/ http://www.tmooc.cn/;
+location / {
+	root   html;
+index  index.html index.htm;
+# rewrite /a.html  /b.html  redirect;
+}
+}
+</pre></div></div>
+      <p>2）重新加载配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx  <span class="sh_symbol">-</span>s  reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx  -s  reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p>3）客户端测试（真实机测试，真实机才可以连接tmooc）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># firefox  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# firefox  http://192.168.4.5
+</pre></div></div>
+      <p class="number">步骤四：修改配置文件(访问192.168.4.5/下面子页面，重定向至www.tmooc.cn/下相同的页面)</p>
+      <p>1) 修改Nginx服务配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name  localhost<span class="sh_symbol">;</span></li><li>rewrite <span class="sh_symbol">^</span><span class="sh_regexp">/(.*)$ http://www.tmooc.cn/</span>$<span class="sh_number">1</span><span class="sh_symbol">;</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;root   html<span class="sh_symbol">;</span></li><li>index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+
+.. ..
+server {
+        listen       80;
+        server_name  localhost;
+rewrite ^/(.*)$ http://www.tmooc.cn/$1;
+location / {
+	root   html;
+index  index.html index.htm;
+}
+}
+</pre></div></div>
+      <p>2）重新加载配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx  <span class="sh_symbol">-</span>s  reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx  -s  reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p>3）客户端测试（真实机测试，真实机才可以连接tmooc）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># firefox  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5</span></li><li><span class="sh_symbol">[</span>root@room9pc01 <span class="sh_symbol">~]</span># firefox  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/test</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@room9pc01 ~]# firefox  http://192.168.4.5
+[root@room9pc01 ~]# firefox  http://192.168.4.5/test
+</pre></div></div>
+      <p>步骤五：修改配置文件(实现curl和火狐访问相同链接返回的页面不同)</p>
+      <p>1) 创建网页目录以及对应的页面文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># echo <span class="sh_string">"I am Normal page"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>test<span class="sh_symbol">.</span>html</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># mkdir  <span class="sh_symbol">-</span><span class="sh_normal">p  </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_normal">firefox</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># echo <span class="sh_string">"firefox page"</span> <span class="sh_symbol">&gt;</span> <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span><span class="sh_normal">firefox</span><span class="sh_symbol">/</span>test<span class="sh_symbol">.</span>html</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# echo "I am Normal page" &gt; /usr/local/nginx/html/test.html
+
+[root@proxy ~]# mkdir  -p  /usr/local/nginx/html/firefox/
+[root@proxy ~]# echo "firefox page" &gt; /usr/local/nginx/html/firefox/test.html
+</pre></div></div>
+      <p>2) 修改Nginx服务配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_normal">vim </span><span class="sh_symbol">/</span><span class="sh_normal">usr</span><span class="sh_symbol">/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">conf</span><span class="sh_symbol">/</span>nginx<span class="sh_symbol">.</span>conf</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>server <span class="sh_cbracket">{</span></li><li>        listen       <span class="sh_number">80</span><span class="sh_symbol">;</span></li><li>        server_name  localhost<span class="sh_symbol">;</span></li><li><span class="sh_normal">location </span><span class="sh_symbol">/</span> <span class="sh_cbracket">{</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;root   html<span class="sh_symbol">;</span></li><li>index  index<span class="sh_symbol">.</span>html index<span class="sh_symbol">.</span>htm<span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li>#这里，<span class="sh_symbol">~</span>符号代表正则匹配，<span class="sh_symbol">*</span>符号代表不区分大小写</li><li><span class="sh_keyword">if</span> <span class="sh_symbol">(</span>$http_user_agent <span class="sh_symbol">~*</span> firefox<span class="sh_symbol">)</span> <span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//识别客户端firefox浏览器</span></li><li>rewrite <span class="sh_symbol">^(.*)</span><span class="sh_normal">$ </span><span class="sh_symbol">/</span><span class="sh_normal">firefox</span><span class="sh_symbol">/</span>$<span class="sh_number">1</span><span class="sh_symbol">;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# vim /usr/local/nginx/conf/nginx.conf
+.. ..
+server {
+        listen       80;
+        server_name  localhost;
+location / {
+	root   html;
+index  index.html index.htm;
+}
+#这里，~符号代表正则匹配，*符号代表不区分大小写
+if ($http_user_agent ~* firefox) {			//识别客户端firefox浏览器
+rewrite ^(.*)$ /firefox/$1;
+}
+}
+</pre></div></div>
+      <p>3）重新加载配置文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@proxy <span class="sh_symbol">~]</span># <span class="sh_regexp">/usr/</span><span class="sh_normal">local</span><span class="sh_symbol">/</span><span class="sh_normal">nginx</span><span class="sh_symbol">/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nginx  <span class="sh_symbol">-</span>s  reload</li><li>#请先确保nginx是启动状态，否则运行该命令会报错<span class="sh_symbol">,</span>报错信息如下：</li><li>#<span class="sh_symbol">[</span>error<span class="sh_symbol">]</span> <span class="sh_function">open</span><span class="sh_symbol">()</span> <span class="sh_string">"/usr/local/nginx/logs/nginx.pid"</span> <span class="sh_function">failed</span> <span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">:</span> No such file or directory<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@proxy ~]# /usr/local/nginx/sbin/nginx  -s  reload
+#请先确保nginx是启动状态，否则运行该命令会报错,报错信息如下：
+#[error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)
+</pre></div></div>
+      <p>4）客户端测试</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/OPERATION/DAY02/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># firefox  http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/test.html</span></li><li><span class="sh_symbol">[</span>root@client <span class="sh_symbol">~]</span># curl     http<span class="sh_symbol">:</span><span class="sh_comment">//192.168.4.5/test.html</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@client ~]# firefox  http://192.168.4.5/test.html
+[root@client ~]# curl     http://192.168.4.5/test.html
+</pre></div></div>
+      <p>5）地址重写格式【总结】</p>
+      <p>rewrite 旧地址  新地址 [选项];</p>
+      <p>last        不再读其他rewrite</p>
+      <p>break       不再读其他语句，结束请求</p>
+      <p>redirect    临时重定向</p>
+      <p>permament   永久重定向</p>
+    </div>
+  
+</body></html>

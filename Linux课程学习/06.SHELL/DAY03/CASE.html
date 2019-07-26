@@ -1,0 +1,482 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD SHELL DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#case1">案例1：使用for循环结构</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#case2">案例2：使用while循环结构</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#case3">案例3：基于case分支编写脚本</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#case4">案例4：使用Shell函数</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#case5">案例5：中断及退出</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：使用for循环结构</h2>
+      <h3>1.1 问题</h3>
+      <p>本案例要求编写一个Shell脚本chkhosts.sh，利用for循环来检测多个主机的存活状态，相关要求及说明如下：</p>
+      <ul class="list">
+        <li>对192.168.4.0/24网段执行ping检测
+</li>
+        <li>脚本能遍历ping各主机，并反馈存活状态
+</li>
+      </ul>
+      <p>执行检测脚本以后，反馈结果如图-1所示。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <h3>1.2 方案</h3>
+      <p>在Shell脚本应用中，常见的for循环采用遍历式、列表式的执行流程，通过指定变量从值列表中循环赋值，每次复制后执行固定的一组操作。</p>
+      <p>for循环的语法结构如下所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_keyword">for</span>  变量名  <span class="sh_keyword">in</span>  值列表</li><li><span class="sh_keyword">do</span></li><li>    命令序列</li><li>done</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">for</span>  变量名  <span class="sh_keyword">in</span>  <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">5</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>    命令序列</li><li>done</li><li><span class="sh_keyword">for</span>  变量名  <span class="sh_keyword">in</span>  `seq <span class="sh_number">5</span>`</li><li><span class="sh_keyword">do</span></li><li>    命令序列</li><li>done</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">for</span>  变量名  <span class="sh_keyword">in</span>  `<span class="sh_normal">ls </span><span class="sh_symbol">/</span>etc<span class="sh_comment">/*.conf`</span></li><li><span class="sh_comment">do</span></li><li><span class="sh_comment">    命令序列</span></li><li><span class="sh_comment">done</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">for  变量名  in  值列表
+do
+    命令序列
+done
+
+for  变量名  in  {1..5}
+do
+    命令序列
+done
+for  变量名  in  `seq 5`
+do
+    命令序列
+done
+
+for  变量名  in  `ls /etc/*.conf`
+do
+    命令序列
+done
+</pre></div></div>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：练习for循环基本用法</p>
+      <p>脚本1，通过循环批量显示5个hello world：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim for01<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_number">1</span> <span class="sh_number">2</span> <span class="sh_number">3</span> <span class="sh_number">4</span> <span class="sh_number">5</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"hello world"</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x for01<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>for01<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim for01.sh
+#!/bin/bash
+for i in 1 2 3 4 5
+do
+		echo "hello world"
+done
+[root@svr5 ~]# chmod +x for01.sh
+[root@svr5 ~]# ./for01.sh
+</pre></div></div>
+      <p>脚本2，通过循环批量显示10个hello world：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim for02<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">10</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"hello world"</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x for02<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>for02<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim for02.sh
+#!/bin/bash
+for i in {1..10}
+do
+		echo "hello world"
+done
+[root@svr5 ~]# chmod +x for02.sh
+[root@svr5 ~]# ./for02.sh
+</pre></div></div>
+      <p>脚本3，通过循环批量显示10个数字：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim for03<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">10</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"$i"</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x for03<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>for03<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim for03.sh
+#!/bin/bash
+for i in {1..10}
+do
+		echo "$i"
+done
+[root@svr5 ~]# chmod +x for03.sh
+[root@svr5 ~]# ./for03.sh
+</pre></div></div>
+      <p class="number">步骤二：批量检测多个主机的存活状态</p>
+      <p>1）编写脚本如下：</p>
+      <p>命令备注：ping命令可以测试某台主机的连通性，</p>
+      <p>使用-c选项可以设置ping的次数，</p>
+      <p>使用-i选项可以设置多次ping之间的间隔时间（单位秒），</p>
+      <p>使用-W选项可以设置ping不通时的超时时间（单位秒）。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim chkhosts<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">254</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>    ping <span class="sh_symbol">-</span>c <span class="sh_number">3</span> <span class="sh_symbol">-</span>i <span class="sh_number">0.2</span> <span class="sh_symbol">-</span>W <span class="sh_number">1</span> <span class="sh_number">192.168.4</span><span class="sh_symbol">.</span>$i <span class="sh_symbol">&amp;&gt;</span> <span class="sh_regexp">/dev/</span><span class="sh_keyword">null</span></li><li>    <span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $<span class="sh_symbol">?</span> <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">]</span> <span class="sh_symbol">;</span> then</li><li>        echo <span class="sh_string">"Host 192.168.4.$i is up."</span></li><li>    <span class="sh_keyword">else</span></li><li>        echo <span class="sh_string">"Host 192.168.4.$i is down."</span></li><li>    fi</li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x chkhosts<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim chkhosts.sh
+#!/bin/bash
+for i in {1..254}
+do
+    ping -c 3 -i 0.2 -W 1 192.168.4.$i &amp;&gt; /dev/null
+    if [ $? -eq 0 ] ; then
+        echo "Host 192.168.4.$i is up."
+    else
+        echo "Host 192.168.4.$i is down."
+    fi
+done
+[root@svr5 ~]# chmod +x chkhosts.sh
+</pre></div></div>
+      <p>4）测试、验证脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>… …</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>chkhosts<span class="sh_symbol">.</span>sh</li><li>Host <span class="sh_number">192.168.4.5</span> is up<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.6</span> is down</li><li>… …</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">… …
+[root@svr5 ~]# ./chkhosts.sh
+Host 192.168.4.5 is up.
+Host 192.168.4.6 is down
+… …
+</pre></div></div>
+      <p class="number">步骤三：创建账户的案例</p>
+      <p>创建users.txt，写入无规律的账户名称，最后使用for循环读取该文件，批量创建账户并设置密码。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim addfor<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> `<span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">root</span><span class="sh_symbol">/</span>user<span class="sh_symbol">.</span>txt`</li><li><span class="sh_keyword">do</span></li><li>     useradd $i</li><li>     echo <span class="sh_number">123456</span> <span class="sh_symbol">|</span> passwd <span class="sh_symbol">--</span>stdin $i</li><li>done</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim addfor.sh
+#!/bin/bash
+for i in `cat /root/user.txt`
+do
+     useradd $i
+     echo 123456 | passwd --stdin $i
+done
+</pre></div></div>
+      <p>附加扩展知识（C语言风格的for循环语法格式）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim cfor<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> <span class="sh_symbol">((</span>i<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">;</span>i<span class="sh_symbol">&lt;=</span><span class="sh_number">5</span><span class="sh_symbol">;</span>i<span class="sh_symbol">++))</span></li><li><span class="sh_keyword">do</span></li><li>   echo $i</li><li>done</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim cfor.sh
+#!/bin/bash
+for ((i=1;i&lt;=5;i++))
+do
+   echo $i
+done
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：使用while循环结构</h2>
+      <h3>2.1 问题</h3>
+      <p>本案例要求编写2个使用while循环的脚本程序，分别实现以下目标：</p>
+      <ul class="list">
+        <li>提示用户猜测一个随机数，直到才对为止
+</li>
+        <li>检测192.168.4.0/24网段，列出不在线的主机地址
+</li>
+      </ul>
+      <h3>2.2 方案</h3>
+      <p>while循环属于条件式的执行流程，会反复判断指定的测试条件，只要条件成立即执行固定的一组操作，直到条件变化为不成立为止。所以while循环的条件一般通过变量来进行控制，在循环体内对变量值做相应改变，以便在适当的时候退出，避免陷入死循环。</p>
+      <p>while循环的语法结构如下所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_keyword">while</span>  条件测试</li><li><span class="sh_keyword">do</span></li><li>    命令序列</li><li>done</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">:</span></li><li><span class="sh_keyword">do</span></li><li>    命令序列</li><li>done</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">while  条件测试
+do
+    命令序列
+done
+
+
+while :
+do
+    命令序列
+done
+</pre></div></div>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：练习while循环基本用法</p>
+      <p>脚本1，无心的死循环脚本：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim while01<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>i<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">[</span> $i <span class="sh_symbol">-</span>le <span class="sh_number">5</span> <span class="sh_symbol">]</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"$i"</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x while01<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/while01.sh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</span><span class="sh_symbol">/</span>死循环，需要使用Ctrl<span class="sh_symbol">+</span>C终止脚本</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim while01.sh
+#!/bin/bash
+i=1
+while [ $i -le 5 ]
+do
+		echo "$i"
+done
+[root@svr5 ~]# chmod +x while01.sh
+[root@svr5 ~]# ./while01.sh				//死循环，需要使用Ctrl+C终止脚本
+</pre></div></div>
+      <p>脚本2，有效循环脚本：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim while02<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>i<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">[</span> $i <span class="sh_symbol">-</span>le <span class="sh_number">5</span> <span class="sh_symbol">]</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"$i"</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let i<span class="sh_symbol">++</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x while02<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>while02<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim while02.sh
+#!/bin/bash
+i=1
+while [ $i -le 5 ]
+do
+		echo "$i"
+		let i++
+done
+[root@svr5 ~]# chmod +x while02.sh
+[root@svr5 ~]# ./while02.sh
+</pre></div></div>
+      <p>脚本3，死循环的一般格式：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim while03<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">while</span> <span class="sh_symbol">:</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"hello world"</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x while03<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">.</span><span class="sh_regexp">/while03.sh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</span><span class="sh_symbol">/</span>死循环，需要使用Ctrl<span class="sh_symbol">+</span>C终止脚本</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim while03.sh
+#!/bin/bash
+while :
+do
+		echo "hello world"
+done
+[root@svr5 ~]# chmod +x while03.sh
+[root@svr5 ~]# ./while03.sh				//死循环，需要使用Ctrl+C终止脚本
+</pre></div></div>
+      <p class="number">步骤二：提示用户猜测一个随机数，直到才对为止</p>
+      <p>使用系统自带变量RANDOM提取随机数（1-100），使用while :制作死循环。</p>
+      <p>脚本编写参考如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim guess<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>num<span class="sh_symbol">=</span>$<span class="sh_symbol">[</span>RANDOM<span class="sh_symbol">%</span><span class="sh_number">100+1</span><span class="sh_symbol">]</span></li><li>i<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">:</span></li><li><span class="sh_keyword">do</span></li><li>   read <span class="sh_symbol">-</span>p <span class="sh_string">"随机数1-100,你猜:"</span> guess</li><li>   let i<span class="sh_symbol">++</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//猜一次，计数器加1，统计猜的次数</span></li><li>   <span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $guess <span class="sh_symbol">-</span>eq $num <span class="sh_symbol">];</span>then</li><li>        echo <span class="sh_string">"恭喜，猜对了"</span></li><li>        echo <span class="sh_string">"你猜了$i次"</span></li><li>        exit</li><li>   elif <span class="sh_symbol">[</span> $guess <span class="sh_symbol">-</span>gt $num <span class="sh_symbol">];</span>then</li><li>        echo <span class="sh_string">"猜大了"</span></li><li>   <span class="sh_keyword">else</span> </li><li>        echo <span class="sh_string">"猜小了"</span></li><li>   fi </li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x guess<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim guess.sh
+#!/bin/bash
+num=$[RANDOM%100+1]
+i=0
+while :
+do
+   read -p "随机数1-100,你猜:" guess
+   let i++									//猜一次，计数器加1，统计猜的次数
+   if [ $guess -eq $num ];then
+        echo "恭喜，猜对了"
+        echo "你猜了$i次"
+        exit
+   elif [ $guess -gt $num ];then
+        echo "猜大了"
+   else 
+        echo "猜小了"
+   fi 
+[root@svr5 ~]# chmod +x guess.sh
+</pre></div></div>
+      <p>执行脚本并验证结果：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>guess<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./guess.sh
+</pre></div></div>
+      <p class="number">步骤三：检测192.168.4.0/24网段，列出不在线的主机地址</p>
+      <p>1）任务需求及思路分析</p>
+      <p>要求的是“检测192.168.4.0/24网段，列出不在线的主机地址”。</p>
+      <p>检测目标是一个网段，其网络部分“192.168.4.”可以作为固定的前缀；而主机部分包括从1~254连续的地址，所以可结合while循环和自增变量进行控制。</p>
+      <p>2）根据实现思路编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim chknet<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>i<span class="sh_symbol">=</span><span class="sh_number">1</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">[</span> $i <span class="sh_symbol">-</span>le <span class="sh_number">254</span> <span class="sh_symbol">]</span></li><li><span class="sh_keyword">do</span></li><li>    IP<span class="sh_symbol">=</span><span class="sh_string">"192.168.4.$i"</span></li><li>    ping <span class="sh_symbol">-</span>c <span class="sh_number">3</span> <span class="sh_symbol">-</span>i <span class="sh_number">0.2</span> <span class="sh_symbol">-</span>W <span class="sh_number">1</span> $IP <span class="sh_symbol">&amp;&gt;</span> <span class="sh_regexp">/dev/</span><span class="sh_keyword">null</span></li><li>    <span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $<span class="sh_symbol">?</span> <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">]</span> <span class="sh_symbol">;</span> then</li><li>        echo <span class="sh_string">"Host $IP is up."</span></li><li>    <span class="sh_keyword">else</span></li><li>        echo <span class="sh_string">"Host $IP is down."</span></li><li>    fi</li><li>    let i<span class="sh_symbol">++</span></li><li>done</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x chknet<span class="sh_symbol">.</span>sh </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim chknet.sh
+#!/bin/bash
+i=1
+while [ $i -le 254 ]
+do
+    IP="192.168.4.$i"
+    ping -c 3 -i 0.2 -W 1 $IP &amp;&gt; /dev/null
+    if [ $? -eq 0 ] ; then
+        echo "Host $IP is up."
+    else
+        echo "Host $IP is down."
+    fi
+    let i++
+done
+[root@svr5 ~]# chmod +x chknet.sh 
+</pre></div></div>
+      <p>3）测试、验证脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>chknet<span class="sh_symbol">.</span>sh</li><li>Host <span class="sh_number">192.168.4.1</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.2</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.3</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.4</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.5</span> is up<span class="sh_symbol">.</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>Host <span class="sh_number">192.168.4.250</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.251</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.252</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.253</span> is down<span class="sh_symbol">.</span></li><li>Host <span class="sh_number">192.168.4.254</span> is down<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./chknet.sh
+Host 192.168.4.1 is down.
+Host 192.168.4.2 is down.
+Host 192.168.4.3 is down.
+Host 192.168.4.4 is down.
+Host 192.168.4.5 is up.
+.. ..
+Host 192.168.4.250 is down.
+Host 192.168.4.251 is down.
+Host 192.168.4.252 is down.
+Host 192.168.4.253 is down.
+Host 192.168.4.254 is down.
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：基于case分支编写脚本</h2>
+      <h3>3.1 问题</h3>
+      <p>本案例要求编写test.sh脚本，相关要求如下：</p>
+      <ul class="list">
+        <li>能使用redhat、fedora控制参数
+</li>
+        <li>控制参数通过位置变量$1传入
+</li>
+        <li>当用户输入redhat参数，脚本返回fedora
+</li>
+        <li>当用户输入fedora参数，脚本返回redhat
+</li>
+        <li>当用户输入其他参数，则提示错误信息
+</li>
+      </ul>
+      <h3>3.2 方案</h3>
+      <p>case分支属于匹配执行的方式，它针对指定的变量预先设置一个可能的取值，判断该变量的实际取值是否与预设的某一个值相匹配，如果匹配上了，就执行相应的一组操作，如果没有任何值能够匹配，就执行预先设置的默认操作。</p>
+      <p>case分支的语法结构如下所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_keyword">case</span>  变量  <span class="sh_keyword">in</span></li><li>模式<span class="sh_number">1</span><span class="sh_symbol">)</span></li><li>    命令序列<span class="sh_number">1</span> <span class="sh_symbol">;;</span></li><li>模式<span class="sh_number">2</span><span class="sh_symbol">)</span></li><li>    命令序列<span class="sh_number">2</span> <span class="sh_symbol">;;</span></li><li>    <span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">*)</span></li><li>    默认命令序列</li><li>esac</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">case  变量  in
+模式1)
+    命令序列1 ;;
+模式2)
+    命令序列2 ;;
+    .. ..
+*)
+    默认命令序列
+esac
+</pre></div></div>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本文件</p>
+      <p>脚本编写参考如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">case</span> $<span class="sh_number">1</span> <span class="sh_keyword">in</span></li><li>redhat<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"fedora"</span><span class="sh_symbol">;;</span></li><li>fedora<span class="sh_symbol">)</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo <span class="sh_string">"redhat"</span><span class="sh_symbol">;;</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_symbol">*)</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//默认输出脚本用法</span></li><li>    echo <span class="sh_string">"用法: $0 {redhat|fedora}"</span></li><li>esac</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x test<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+case $1 in
+redhat)
+		echo "fedora";;
+fedora)
+		echo "redhat";;
+	*)  											//默认输出脚本用法
+    echo "用法: $0 {redhat|fedora}"
+esac
+
+[root@svr5 ~]# chmod +x test.sh
+</pre></div></div>
+      <p class="number">步骤三：验证、测试脚本</p>
+      <p>未提供参数，或提供的参数无法识别时，提示正确用法：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh</li><li>用法<span class="sh_symbol">:</span> <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh <span class="sh_cbracket">{</span>redhat<span class="sh_symbol">|</span>fedora<span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./test.sh
+用法: ./test.sh {redhat|fedora}
+</pre></div></div>
+      <p>确认脚本可以响应redhat控制参数：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh redhat</li><li>fedora</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./test.sh redhat
+fedora
+</pre></div></div>
+      <p>确认脚本可以响应fedora控制参数：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh fedora</li><li>redhat</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./test.sh fedora
+redhat
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：使用Shell函数</h2>
+      <h3>4.1 问题</h3>
+      <p>本案例要求编写脚本mycolor.sh，相关要求如下：</p>
+      <ul class="list">
+        <li>将颜色输出的功能定义为函数
+</li>
+        <li>调用函数，可以自定义输出内容和颜色
+</li>
+      </ul>
+      <h3>4.2 方案</h3>
+      <p>在Shell脚本中，将一些需重复使用的操作，定义为公共的语句块，即可称为函数。通过使用函数，可以使脚本代码更加简洁，增强易读性，提高Shell脚本的执行效率</p>
+      <p>1）函数的定义方法</p>
+      <p>格式1：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_keyword">function</span>  函数名 <span class="sh_cbracket">{</span></li><li>    命令序列</li><li>    <span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">function  函数名 {
+    命令序列
+    .. ..
+}
+</pre></div></div>
+      <p>格式2：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>函数名<span class="sh_symbol">()</span> <span class="sh_cbracket">{</span></li><li>    命令序列</li><li>    <span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">函数名() {
+    命令序列
+    .. ..
+}
+</pre></div></div>
+      <p>2）函数的调用</p>
+      <p>直接使用“函数名”的形式调用，如果该函数能够处理位置参数，则可以使用“函数名  参数1  参数2 .. ..”的形式调用。</p>
+      <p class="emphasiz">注意：函数的定义语句必须出现在调用之前，否则无法执行。</p>
+      <p>3) 测试语法格式</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_function">mycd</span><span class="sh_symbol">()</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义函数</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span>test</li><li><span class="sh_symbol">&gt;</span> <span class="sh_normal">cd </span><span class="sh_symbol">/</span>test</li><li><span class="sh_symbol">&gt;</span> <span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># mycd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调用函数</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_function">mycd</span><span class="sh_symbol">()</span><span class="sh_cbracket">{</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//定义函数</span></li><li><span class="sh_symbol">&gt;</span> mkdir $<span class="sh_number">1</span></li><li><span class="sh_symbol">&gt;</span> cd $<span class="sh_number">1</span></li><li><span class="sh_symbol">&gt;</span> <span class="sh_cbracket">}</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_normal">mycd  </span><span class="sh_symbol">/</span>abc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调用函数</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_normal">mycd  </span><span class="sh_symbol">/</span><span class="sh_number">360</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调用函数</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# mycd(){						//定义函数
+&gt; mkdir /test
+&gt; cd /test
+&gt; }
+[root@svr5 ~]# mycd							//调用函数
+
+[root@svr5 ~]# mycd(){						//定义函数
+&gt; mkdir $1
+&gt; cd $1
+&gt; }
+[root@svr5 ~]# mycd  /abc							//调用函数
+[root@svr5 ~]# mycd  /360							//调用函数
+</pre></div></div>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写mycolor.sh脚本</p>
+      <p>1）任务需求及思路分析</p>
+      <p>用户在执行时提供2个整数参数，这个可以通过位置变量$1、$2读入。</p>
+      <p>调用函数时，将用户提供的两个参数传递给函数处理。</p>
+      <p>颜色输出的命令:echo -e "\033[32mOK\033[0m"。</p>
+      <p>3X为字体颜色，4X为背景颜色。</p>
+      <p>2）根据实现思路编写脚本文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim mycolor<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_function">cecho</span><span class="sh_symbol">()</span> <span class="sh_cbracket">{</span></li><li>    echo <span class="sh_symbol">-</span>e <span class="sh_string">"</span><span class="sh_specialchar">\0</span><span class="sh_string">33[$1m$2</span><span class="sh_specialchar">\0</span><span class="sh_string">33[0m"</span></li><li><span class="sh_cbracket">}</span></li><li>cecho <span class="sh_number">32</span> OK</li><li>cecho <span class="sh_number">33</span> OK</li><li>cecho <span class="sh_number">34</span> OK</li><li>cecho <span class="sh_number">35</span> OK</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x mycolor<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim mycolor.sh
+#!/bin/bash
+cecho() {
+    echo -e "\033[$1m$2\033[0m"
+}
+cecho 32 OK
+cecho 33 OK
+cecho 34 OK
+cecho 35 OK
+
+[root@svr5 ~]# chmod +x mycolor.sh
+</pre></div></div>
+      <p>3）测试脚本执行效果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>mycolor<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# ./mycolor.sh
+</pre></div></div>
+      <p>使用函数，优化改进前面的脚本：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim myping<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_function">myping</span><span class="sh_symbol">()</span><span class="sh_cbracket">{</span></li><li>    ping <span class="sh_symbol">-</span>c1 <span class="sh_symbol">-</span>W1  $<span class="sh_number">1</span>  <span class="sh_symbol">&amp;&gt;</span><span class="sh_regexp">/dev/</span><span class="sh_keyword">null</span></li><li>    <span class="sh_keyword">if</span> <span class="sh_symbol">[</span> $<span class="sh_symbol">?</span> <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">];</span>then</li><li>        echo <span class="sh_string">"$1 is up"</span></li><li>    <span class="sh_keyword">else</span></li><li>        echo <span class="sh_string">"$1 is down"</span></li><li>    fi</li><li><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">for</span>  i  <span class="sh_keyword">in</span>  <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">254</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>     myping  <span class="sh_number">192.168.4</span><span class="sh_symbol">.</span>$i  <span class="sh_symbol">&amp;</span></li><li>done</li><li>wait</li><li>#wait命令的作用是等待所有后台进程都结束才结束脚本。</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim myping.sh
+#!/bin/bash
+myping(){
+    ping -c1 -W1  $1  &amp;&gt;/dev/null
+    if [ $? -eq 0 ];then
+        echo "$1 is up"
+    else
+        echo "$1 is down"
+    fi
+}
+for  i  in  {1..254}
+do
+     myping  192.168.4.$i  &amp;
+done
+wait
+#wait命令的作用是等待所有后台进程都结束才结束脚本。
+</pre></div></div>
+      <p>Shell版本的fork炸弹</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_symbol">.()</span><span class="sh_cbracket">{</span></li><li><span class="sh_symbol">.|.&amp;</span></li><li><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh
+#!/bin/bash
+.(){
+.|.&amp;
+}
+.
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：中断及退出</h2>
+      <h3>5.1 问题</h3>
+      <p>本案例要求编写两个Shell脚本，相关要求如下：</p>
+      <ul class="list">
+        <li>从键盘循环取整数（0结束）并求和，输出最终结果
+</li>
+        <li>找出1~20以内6的倍数，并输出她的平方值
+</li>
+      </ul>
+      <h3>5.2 方案</h3>
+      <p>通过break、continue、exit在Shell脚本中实现中断与退出的功能。</p>
+      <p>break可以结束整个循环；continue结束本次循环，进入下一次循环；exit结束整个脚本，案例如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim  test<span class="sh_symbol">.</span>sh</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span>  i   <span class="sh_keyword">in</span>   <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">5</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;   <span class="sh_symbol">[</span>  $i  <span class="sh_symbol">-</span>eq  <span class="sh_number">3</span> <span class="sh_symbol">]&amp;&amp;</span> <span class="sh_keyword">break</span> <span class="sh_comment">//这里将break替换为continue，exit分别测试脚本执行效果&nbsp;&nbsp;&nbsp;&nbsp;   echo $i</span></li><li>done</li><li>echo <span class="sh_string">"Game Over"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim  test.sh
+#!/bin/bash
+for  i   in   {1..5}
+do
+	   [  $i  -eq  3 ]&amp;&amp; break //这里将break替换为continue，exit分别测试脚本执行效果	   echo $i
+done
+echo "Game Over"
+</pre></div></div>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写求和脚本sum.sh</p>
+      <p>1）编写脚本文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim sum<span class="sh_symbol">.</span>sh </li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li>SUM<span class="sh_symbol">=</span><span class="sh_number">0</span></li><li><span class="sh_keyword">while</span> <span class="sh_symbol">:</span></li><li><span class="sh_keyword">do</span> </li><li>read  <span class="sh_symbol">-</span>p  <span class="sh_string">"请输入整数（0表示结束）："</span>  x</li><li>    <span class="sh_symbol">[</span> $x <span class="sh_symbol">-</span>eq <span class="sh_number">0</span> <span class="sh_symbol">]</span>  <span class="sh_symbol">&amp;&amp;</span>  <span class="sh_keyword">break</span></li><li>    SUM<span class="sh_symbol">=</span>$<span class="sh_symbol">[</span>SUM<span class="sh_symbol">+</span>x<span class="sh_symbol">]</span></li><li>done</li><li>echo <span class="sh_string">"总和是：$SUM"</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x sum<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>sum<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim sum.sh 
+#!/bin/bash
+SUM=0
+while :
+do 
+read  -p  "请输入整数（0表示结束）："  x
+    [ $x -eq 0 ]  &amp;&amp;  break
+    SUM=$[SUM+x]
+done
+echo "总和是：$SUM"
+
+[root@svr5 ~]# chmod +x sum.sh
+[root@svr5 ~]# ./sum.sh
+</pre></div></div>
+      <p class="number">步骤二：编写脚本文件，找出1-20内6的倍数，并打印她的平方值</p>
+      <p>1）编写脚本文件</p>
+      <p>注意：要求打印所有6的倍数的平方值，也就是非6的倍数都跳过！！！</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/SHELL/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># vim test<span class="sh_symbol">.</span>sh </li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/bin/</span>bash</li><li><span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_cbracket">{</span><span class="sh_number">1</span><span class="sh_symbol">..</span><span class="sh_number">20</span><span class="sh_cbracket">}</span></li><li><span class="sh_keyword">do</span></li><li>    <span class="sh_symbol">[</span> $<span class="sh_symbol">[</span>i<span class="sh_symbol">%</span><span class="sh_number">6</span><span class="sh_symbol">]</span> <span class="sh_symbol">-</span>ne <span class="sh_number">0</span> <span class="sh_symbol">]</span>  <span class="sh_symbol">&amp;&amp;</span>  <span class="sh_keyword">continue</span></li><li>    echo $<span class="sh_symbol">[</span>i<span class="sh_symbol">*</span>i<span class="sh_symbol">]</span></li><li>done</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># chmod <span class="sh_symbol">+</span>x test<span class="sh_symbol">.</span>sh</li><li><span class="sh_symbol">[</span>root@svr5 <span class="sh_symbol">~]</span># <span class="sh_symbol">./</span>test<span class="sh_symbol">.</span>sh</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@svr5 ~]# vim test.sh 
+#!/bin/bash
+for i in {1..20}
+do
+    [ $[i%6] -ne 0 ]  &amp;&amp;  continue
+    echo $[i*i]
+done
+
+[root@svr5 ~]# chmod +x test.sh
+[root@svr5 ~]# ./test.sh
+</pre></div></div>
+    </div>
+  
+</body></html>

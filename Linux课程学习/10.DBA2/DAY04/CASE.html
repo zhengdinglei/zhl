@@ -1,0 +1,552 @@
+
+<!-- saved from url=(0075)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD DBA2 DAY04</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#case1">案例1：视图的基本使用</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#case2">案例2：视图进阶操作</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#case3">案例3：创建存储过程</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#case4">案例4：存储过程参数的使用</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#case5">案例5：使用循环结构</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：视图的基本使用</h2>
+      <h3>1.1 问题</h3>
+      <ul class="list">
+        <li>把/etc/passwd文件的内容存储到db9库下的user表里
+</li>
+        <li>添加新字段id 存储记录的行号(在所有字段的前边)
+</li>
+        <li>创建视图v1 结构及数据user表的字段、记录一样。
+</li>
+        <li>创建视图v2 只有user表shell是/bin/bash用户信息 。
+</li>
+        <li>分别对视图表和基表执行insert  update  delete 操作。
+</li>
+        <li>删除视图v1 和 v2
+</li>
+      </ul>
+      <ol class="list">
+        <li>
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：视图的基本使用</p>
+      <p>什么是视图：是一种虚拟存在的表</p>
+      <p>内容与真实的表相似，包含一系列带有名称的列和行数据。</p>
+      <p>视图并不在数据库中以存储的数据的形式存在。</p>
+      <p>行和列的数据来自定义视图时查询所引用的基本表，并且在具体引用视图时动态生成。</p>
+      <p>更新视图的数据，就是更新基表的数据</p>
+      <p>更新基表数据，视图的数据也会跟着改变</p>
+      <p>1）把/etc/passwd文件的内容存储到db9库下的user表里</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@mysql51 <span class="sh_symbol">~]</span># mysql <span class="sh_symbol">-</span>u root <span class="sh_symbol">-</span>p123456</li><li>mysql<span class="sh_symbol">&gt;</span> create database db9<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">10.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> create table db9<span class="sh_symbol">.</span><span class="sh_function">user</span><span class="sh_symbol">(</span>username <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">20</span><span class="sh_symbol">),</span>password <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">),</span>uid <span class="sh_symbol">\</span> </li><li><span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">),</span>gid <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">),</span>comment <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">100</span><span class="sh_symbol">),</span>homedir <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">100</span><span class="sh_symbol">),</span>shell <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">50</span><span class="sh_symbol">));</span></li><li><span class="sh_comment">//创建存储数据的表结构</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.02</span> sec<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@mysql51 <span class="sh_symbol">~]</span>#  <span class="sh_normal">cp </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">passwd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/m</span>ysql<span class="sh_symbol">-</span><span class="sh_normal">files</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@mysql51 <span class="sh_symbol">~]</span># <span class="sh_normal">ls </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/lib/m</span>ysql<span class="sh_symbol">-</span><span class="sh_normal">files</span><span class="sh_symbol">/</span></li><li>passwd</li><li>mysql<span class="sh_symbol">&gt;</span>  load data infile <span class="sh_string">"/var/lib/mysql-files/passwd"</span>  into table db9<span class="sh_symbol">.</span>user fields terminated by <span class="sh_string">":"</span>  lines terminated by <span class="sh_string">"</span><span class="sh_specialchar">\n</span><span class="sh_string">"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//导入文件内容到db9.user</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">41</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.02</span> sec<span class="sh_symbol">)</span></li><li>Records<span class="sh_symbol">:</span> <span class="sh_number">41</span>  Deleted<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Skipped<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@mysql51 ~]# mysql -u root -p123456
+mysql&gt; create database db9;
+Query OK, 1 row affected (10.00 sec)
+mysql&gt; create table db9.user(username char(20),password char(1),uid \ 
+int(2),gid int(2),comment char(100),homedir char(100),shell char(50));
+//创建存储数据的表结构
+Query OK, 0 rows affected (0.02 sec)
+[root@mysql51 ~]#  cp /etc/passwd /var/lib/mysql-files/
+[root@mysql51 ~]# ls /var/lib/mysql-files/
+passwd
+mysql&gt;  load data infile "/var/lib/mysql-files/passwd"  into table db9.user fields terminated by ":"  lines terminated by "\n";		//导入文件内容到db9.user
+Query OK, 41 rows affected (0.02 sec)
+Records: 41  Deleted: 0  Skipped: 0  Warnings: 0
+</pre></div></div>
+      <p>2）添加新字段id 存储记录的行号(在所有字段的前边)</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  alter table db9<span class="sh_symbol">.</span>user add id <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span> primary key auto_increment first<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.04</span> sec<span class="sh_symbol">)</span></li><li>Records<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Duplicates<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li>mysql<span class="sh_symbol">&gt;</span> use db9<span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span> desc user<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+----------+-----------+------+-----+---------+----------------+</span></li><li><span class="sh_symbol">|</span> Field    <span class="sh_symbol">|</span> Type      <span class="sh_symbol">|</span> Null <span class="sh_symbol">|</span> Key <span class="sh_symbol">|</span> Default <span class="sh_symbol">|</span> Extra          <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------+-----------+------+-----+---------+----------------+</span></li><li><span class="sh_symbol">|</span> id       <span class="sh_symbol">|</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span>    <span class="sh_symbol">|</span> NO   <span class="sh_symbol">|</span> PRI <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span> auto_increment <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">20</span><span class="sh_symbol">)</span>  <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> password <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span>   <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> uid      <span class="sh_symbol">|</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span>    <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> gid      <span class="sh_symbol">|</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span>    <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> comment  <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">100</span><span class="sh_symbol">)</span> <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> homedir  <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">100</span><span class="sh_symbol">)</span> <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> shell    <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">50</span><span class="sh_symbol">)</span>  <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>                <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------+-----------+------+-----+---------+----------------+</span></li><li><span class="sh_number">8</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  alter table db9.user add id int(2) primary key auto_increment first;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql&gt; use db9;
+mysql&gt; desc user;
++----------+-----------+------+-----+---------+----------------+
+| Field    | Type      | Null | Key | Default | Extra          |
++----------+-----------+------+-----+---------+----------------+
+| id       | int(2)    | NO   | PRI | NULL    | auto_increment |
+| username | char(20)  | YES  |     | NULL    |                |
+| password | char(1)   | YES  |     | NULL    |                |
+| uid      | int(2)    | YES  |     | NULL    |                |
+| gid      | int(2)    | YES  |     | NULL    |                |
+| comment  | char(100) | YES  |     | NULL    |                |
+| homedir  | char(100) | YES  |     | NULL    |                |
+| shell    | char(50)  | YES  |     | NULL    |                |
++----------+-----------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+</pre></div></div>
+      <p>3）创建视图v1 结构及数据user表的字段、记录一样</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> create view v1 as select <span class="sh_symbol">*</span> from user<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; create view v1 as select * from user;
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+      <p>4）创建视图v2 只有user表shell是/bin/bash用户信息</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  create view v2 as select shell from user<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  create view v2 as select shell from user;
+Query OK, 0 rows affected (0.01 sec)
+</pre></div></div>
+      <p>5）分别对视图表和基表执行insert  update  delete 操作</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  insert into <span class="sh_function">v1</span><span class="sh_symbol">(</span>username<span class="sh_symbol">,</span>uid<span class="sh_symbol">)</span> <span class="sh_function">values</span><span class="sh_symbol">(</span><span class="sh_string">"jarry"</span><span class="sh_symbol">,</span><span class="sh_number">9</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//插入记录</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span>  update v1 set uid<span class="sh_symbol">=</span><span class="sh_number">9</span> where username<span class="sh_symbol">=</span><span class="sh_string">"adm"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//更新记录</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>Rows matched<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Changed<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> <span class="sh_keyword">delete</span> from v1 where uid<span class="sh_symbol">=</span><span class="sh_number">9</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//删除记录</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">2</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  insert into v1(username,uid) values("jarry",9);		//插入记录
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt;  update v1 set uid=9 where username="adm";		//更新记录
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; delete from v1 where uid=9;			//删除记录
+Query OK, 2 rows affected (0.01 sec)
+</pre></div></div>
+      <p>6）删除视图v1 和 v2</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> drop view v1<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> drop view v2<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; drop view v1;
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt; drop view v2;
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+      <p>注意：对视图操作即是对基本操作，反之亦然！！！</p>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：视图进阶操作</h2>
+      <h3>2.1 问题</h3>
+      <ul class="list">
+        <li>练习OR REPLACE的选项使用
+</li>
+        <li>练习WITH  LOCAL CHECK OPTION 选项的使用
+</li>
+        <li>练习WITH  CASCADED CHECK OPTION 选项的使用
+</li>
+      </ul>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：视图进阶操作</p>
+      <p>1）创建视图完全格式</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  create table user2 select  username<span class="sh_symbol">,</span>uid<span class="sh_symbol">,</span>gid from user  limit <span class="sh_number">3</span><span class="sh_symbol">;</span></li><li><span class="sh_comment">//快速建表（user2表）</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">3</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>Records<span class="sh_symbol">:</span> <span class="sh_number">3</span>  Duplicates<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> create table info select  username<span class="sh_symbol">,</span>uid<span class="sh_symbol">,</span>homedir<span class="sh_symbol">,</span>shell from user  limit <span class="sh_number">5</span><span class="sh_symbol">;</span></li><li><span class="sh_comment">//快速建表（info表）</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">5</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.02</span> sec<span class="sh_symbol">)</span></li><li>Records<span class="sh_symbol">:</span> <span class="sh_number">5</span>  Duplicates<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  create table user2 select  username,uid,gid from user  limit 3;
+//快速建表（user2表）
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql&gt; create table info select  username,uid,homedir,shell from user  limit 5;
+//快速建表（info表）
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+</pre></div></div>
+      <p>查询user2.username=info.username的字段</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> select <span class="sh_symbol">*</span> from user2  left join info on  user2<span class="sh_symbol">.</span>username<span class="sh_symbol">=</span>info<span class="sh_symbol">.</span>username<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+----------+------+------+----------+------+---------+---------------+</span></li><li><span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> uid  <span class="sh_symbol">|</span> gid  <span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> uid  <span class="sh_symbol">|</span> homedir <span class="sh_symbol">|</span> shell         <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------+------+------+----------+------+---------+---------------+</span></li><li><span class="sh_symbol">|</span> root     <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span> root     <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span> <span class="sh_regexp">/root   | /</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>bash     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> bin      <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span> bin      <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span> <span class="sh_regexp">/bin    | /</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> daemon   <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span> daemon   <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span> <span class="sh_regexp">/sbin   | /</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----------+------+------+----------+------+---------+---------------+</span></li><li><span class="sh_number">3</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; select * from user2  left join info on  user2.username=info.username;
++----------+------+------+----------+------+---------+---------------+
+| username | uid  | gid  | username | uid  | homedir | shell         |
++----------+------+------+----------+------+---------+---------------+
+| root     |    0 |    0 | root     |    0 | /root   | /bin/bash     |
+| bin      |    1 |    1 | bin      |    1 | /bin    | /sbin/nologin |
+| daemon   |    2 |    2 | daemon   |    2 | /sbin   | /sbin/nologin |
++----------+------+------+----------+------+---------+---------------+
+3 rows in set (0.00 sec)
+</pre></div></div>
+      <p>2）关联查询建的视图 默认不允许修改视图字段的值</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  create view v4 as select <span class="sh_symbol">*</span> from user2  left join info on  user2<span class="sh_symbol">.</span>username<span class="sh_symbol">=</span>info<span class="sh_symbol">.</span>username<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//创建失败</span></li><li>ERROR <span class="sh_number">1060</span> <span class="sh_symbol">(</span>42S21<span class="sh_symbol">):</span> Duplicate column name <span class="sh_string">'username'</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span>  create view v4 as select a<span class="sh_symbol">.</span>username as ausername<span class="sh_symbol">,</span>b<span class="sh_symbol">.</span>username as busername<span class="sh_symbol">,</span>  a<span class="sh_symbol">.</span>uid as auid<span class="sh_symbol">,</span>b<span class="sh_symbol">.</span>uid as buid  from user2 a  left join info b  on  a<span class="sh_symbol">.</span>username<span class="sh_symbol">=</span>b<span class="sh_symbol">.</span>username<span class="sh_symbol">;</span></li><li><span class="sh_comment">//创建成功</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> select <span class="sh_symbol">*</span> from v4<span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">+-----------+-----------+------+------+</span></li><li><span class="sh_symbol">|</span> ausername <span class="sh_symbol">|</span> busername <span class="sh_symbol">|</span> auid <span class="sh_symbol">|</span> buid <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+-----------+------+------+</span></li><li><span class="sh_symbol">|</span> root      <span class="sh_symbol">|</span> root      <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> bin       <span class="sh_symbol">|</span> bin       <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> daemon    <span class="sh_symbol">|</span> daemon    <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+-----------+------+------+</span></li><li><span class="sh_number">3</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> desc v4<span class="sh_symbol">;</span></li><li><span class="sh_symbol">+-----------+----------+------+-----+---------+-------+</span></li><li><span class="sh_symbol">|</span> Field     <span class="sh_symbol">|</span> Type     <span class="sh_symbol">|</span> Null <span class="sh_symbol">|</span> Key <span class="sh_symbol">|</span> Default <span class="sh_symbol">|</span> Extra <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+----------+------+-----+---------+-------+</span></li><li><span class="sh_symbol">|</span> ausername <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">20</span><span class="sh_symbol">)</span> <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> busername <span class="sh_symbol">|</span> <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">20</span><span class="sh_symbol">)</span> <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> auid      <span class="sh_symbol">|</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span>   <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> buid      <span class="sh_symbol">|</span> <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span>   <span class="sh_symbol">|</span> YES  <span class="sh_symbol">|</span>     <span class="sh_symbol">|</span> NULL    <span class="sh_symbol">|</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+----------+------+-----+---------+-------+</span></li><li><span class="sh_number">4</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  create view v4 as select * from user2  left join info on  user2.username=info.username;		//创建失败
+ERROR 1060 (42S21): Duplicate column name 'username'
+
+mysql&gt;  create view v4 as select a.username as ausername,b.username as busername,  a.uid as auid,b.uid as buid  from user2 a  left join info b  on  a.username=b.username;
+//创建成功
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; select * from v4;		
++-----------+-----------+------+------+
+| ausername | busername | auid | buid |
++-----------+-----------+------+------+
+| root      | root      |    0 |    0 |
+| bin       | bin       |    1 |    1 |
+| daemon    | daemon    |    2 |    2 |
++-----------+-----------+------+------+
+3 rows in set (0.00 sec)
+
+mysql&gt; desc v4;
++-----------+----------+------+-----+---------+-------+
+| Field     | Type     | Null | Key | Default | Extra |
++-----------+----------+------+-----+---------+-------+
+| ausername | char(20) | YES  |     | NULL    |       |
+| busername | char(20) | YES  |     | NULL    |       |
+| auid      | int(2)   | YES  |     | NULL    |       |
+| buid      | int(2)   | YES  |     | NULL    |       |
++-----------+----------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+</pre></div></div>
+      <p>3）OR REPLACE的选项使用</p>
+      <p>创建时，若视图已存在，会替换已有的视图</p>
+      <p>语法格式：create or replace view视图名as select 查询； //达到修改已有视图的目的</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> create  or  replace view v4 as select a<span class="sh_symbol">.</span>username as ausername<span class="sh_symbol">,</span>b<span class="sh_symbol">.</span>username as busername<span class="sh_symbol">,</span>  a<span class="sh_symbol">.</span>uid as auid<span class="sh_symbol">,</span>b<span class="sh_symbol">.</span>uid as buid  from user2 a  left join info b  on  a<span class="sh_symbol">.</span>username<span class="sh_symbol">=</span>b<span class="sh_symbol">.</span>username<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; create  or  replace view v4 as select a.username as ausername,b.username as busername,  a.uid as auid,b.uid as buid  from user2 a  left join info b  on  a.username=b.username;
+Query OK, 0 rows affected (0.00 sec)
+
+</pre></div></div>
+      <p>4）WITH  LOCAL CHECK OPTION</p>
+      <p>LOCAL和CASCADED关键字决定检查的范围</p>
+      <p>LOCAL 仅检查当前视图的限制</p>
+      <p>CASCADED  同时要满足基表的限制（默认值）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> create table user1  select username<span class="sh_symbol">,</span>uid<span class="sh_symbol">,</span>shell from user where uid<span class="sh_symbol">&gt;=</span><span class="sh_number">5</span> and uid <span class="sh_symbol">&lt;=</span><span class="sh_number">40</span><span class="sh_symbol">;</span>  </li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">11</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>Records<span class="sh_symbol">:</span> <span class="sh_number">11</span>  Duplicates<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> create view v1 as select username<span class="sh_symbol">,</span>uid from user1 where uid<span class="sh_symbol">&lt;=</span><span class="sh_number">20</span><span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> update v1 set uid<span class="sh_symbol">=</span><span class="sh_number">21</span> where  username<span class="sh_symbol">=</span><span class="sh_string">"sync"</span><span class="sh_symbol">;</span> &nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_comment">//操作超过视图表的条件限制（uid&lt;=20）之后，在视图表里面查看不到，在基表里可以查看到</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>Rows matched<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Changed<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> update user1 set uid<span class="sh_symbol">=</span><span class="sh_number">41</span> where  username<span class="sh_symbol">=</span><span class="sh_string">"ftp"</span><span class="sh_symbol">;</span></li><li><span class="sh_comment">//基表在超过条件限制（uid&gt;=5 and uid &lt;=40),在基表里依然可以查看到</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">1</span> row <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>Rows matched<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Changed<span class="sh_symbol">:</span> <span class="sh_number">1</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span>  create table a select <span class="sh_symbol">*</span> from user where uid <span class="sh_symbol">&lt;</span> <span class="sh_number">10</span><span class="sh_symbol">;</span></li><li><span class="sh_comment">//快速创建一个新表a</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">7</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>Records<span class="sh_symbol">:</span> <span class="sh_number">7</span>  Duplicates<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> create view v3 as select <span class="sh_symbol">*</span> from a where uid <span class="sh_symbol">&lt;</span> <span class="sh_number">10</span> <span class="sh_keyword">with</span>  check option<span class="sh_symbol">;</span></li><li><span class="sh_comment">//不写默认为CASCADED检查自己和a要满足的要求即可</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> update v3 set uid<span class="sh_symbol">=</span><span class="sh_number">9</span> where username<span class="sh_symbol">=</span><span class="sh_string">"adm"</span><span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//更改成功</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>Rows matched<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Changed<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> create view v2 as select <span class="sh_symbol">*</span> from v1 where uid <span class="sh_symbol">&gt;=</span> <span class="sh_number">5</span> <span class="sh_keyword">with</span> local check option<span class="sh_symbol">;</span></li><li><span class="sh_comment">//满足自身v2的要求</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span>  update v2 set uid<span class="sh_symbol">=</span><span class="sh_number">9</span> where username<span class="sh_symbol">=</span><span class="sh_string">"sync"</span><span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>Rows matched<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Changed<span class="sh_symbol">:</span> <span class="sh_number">0</span>  Warnings<span class="sh_symbol">:</span> <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; create table user1  select username,uid,shell from user where uid&gt;=5 and uid &lt;=40;  
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql&gt; create view v1 as select username,uid from user1 where uid&lt;=20;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql&gt; update v1 set uid=21 where  username="sync"; 	
+//操作超过视图表的条件限制（uid&lt;=20）之后，在视图表里面查看不到，在基表里可以查看到
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; update user1 set uid=41 where  username="ftp";
+//基表在超过条件限制（uid&gt;=5 and uid &lt;=40),在基表里依然可以查看到
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt;  create table a select * from user where uid &lt; 10;
+//快速创建一个新表a
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql&gt; create view v3 as select * from a where uid &lt; 10 with  check option;
+//不写默认为CASCADED检查自己和a要满足的要求即可
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; update v3 set uid=9 where username="adm";	//更改成功
+Query OK, 0 rows affected (0.01 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+
+mysql&gt; create view v2 as select * from v1 where uid &gt;= 5 with local check option;
+//满足自身v2的要求
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt;  update v2 set uid=9 where username="sync";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+</pre></div></div>
+      <p>5）WITH  CASCADED CHECK OPTION</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  create view v5 as select <span class="sh_symbol">*</span> from v1 where uid <span class="sh_symbol">&gt;=</span> <span class="sh_number">5</span> <span class="sh_keyword">with</span> cascaded check option<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  create view v5 as select * from v1 where uid &gt;= 5 with cascaded check option;
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：创建存储过程</h2>
+      <h3>3.1 问题</h3>
+      <ul class="list">
+        <li>存储过程名称为p1
+</li>
+        <li>功能显示user表中 shell是/bin/bash的用户个数
+</li>
+        <li>调用存储过程p1
+</li>
+      </ul>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：存储过程基本使用</p>
+      <p>1）创建存储过程</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> delimiter  <span class="sh_comment">//  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//定义定界符</span></li><li>mysql<span class="sh_symbol">&gt;</span>  create procedure <span class="sh_function">say</span><span class="sh_symbol">()</span>     <span class="sh_comment">//say()随便写括号一定要有</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_symbol">*</span> from user where id<span class="sh_symbol">&lt;=</span><span class="sh_number">10</span><span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_comment">//</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//把命令的定界符改回来，分号前有空格</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">say</span><span class="sh_symbol">();</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//调用存储过程名,在括号里面不写参数时，可以不加括号</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; delimiter  //  		//定义定界符
+mysql&gt;  create procedure say()     //say()随便写括号一定要有
+    -&gt; begin
+    -&gt; select * from user where id&lt;=10;
+    -&gt; end
+    -&gt; //
+Query OK, 0 rows affected (0.01 sec)
+mysql&gt; delimiter ;		//把命令的定界符改回来，分号前有空格
+mysql&gt; call say();	//调用存储过程名,在括号里面不写参数时，可以不加括号
+
+</pre></div></div>
+      <p>2）查看存储过程</p>
+      <p>方法一：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  show  procedure  status<span class="sh_symbol">\</span>G<span class="sh_symbol">;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  show  procedure  status\G;
+</pre></div></div>
+      <p>方法二：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  select db<span class="sh_symbol">,</span>name<span class="sh_symbol">,</span>type from mysql<span class="sh_symbol">.</span>proc where name<span class="sh_symbol">=</span> <span class="sh_string">"say"</span><span class="sh_symbol">;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  select db,name,type from mysql.proc where name= "say";
+</pre></div></div>
+      <p>3）删除存储过程</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> drop procedure say<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; drop procedure say;
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+      <p>4）创建存储过程名称为p1</p>
+      <p>	功能显示user表中 shell是/bin/bash的用户</p>
+      <p>	调用存储过程p1</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> delimiter  <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span> create procedure <span class="sh_function">p1</span><span class="sh_symbol">()</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_function">count</span><span class="sh_symbol">(</span>username<span class="sh_symbol">)</span>  from user where shell<span class="sh_symbol">=</span><span class="sh_string">"/bin/bash"</span><span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">p1</span><span class="sh_symbol">();</span></li><li><span class="sh_symbol">+-----------+</span></li><li><span class="sh_symbol">|</span> shell     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+</span></li><li><span class="sh_symbol">|</span> <span class="sh_regexp">/bin/</span>bash <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span> <span class="sh_regexp">/bin/</span>bash <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-----------+</span></li><li><span class="sh_number">2</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; delimiter  //
+mysql&gt; create procedure p1()
+    -&gt; begin
+    -&gt; select count(username)  from user where shell="/bin/bash";
+    -&gt; end
+    -&gt; //
+mysql&gt; delimiter ;
+mysql&gt; call p1();
++-----------+
+| shell     |
++-----------+
+| /bin/bash |
+| /bin/bash |
++-----------+
+2 rows in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：存储过程参数的使用</h2>
+      <h3>4.1 问题</h3>
+      <ul class="list">
+        <li>创建名为p2的存储过程
+</li>
+        <li>可以接收用户输入shell的名字
+</li>
+        <li>统计user表中用户输入shell名字的个数
+</li>
+      </ul>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：存储过程参数的使用</p>
+      <p>1）参数类型</p>
+      <p>MySQL存储过程，共有三种参数类型IN,OUT,INOUT</p>
+      <p>Create procedure  名称(</p>
+      <p>类型   参数名  数据类型,</p>
+      <p>类型   参数名  数据类型</p>
+      <p>）</p>
+      <p>in		输入参数		传递值给存储过程，必须在调用存储过程时指定，在存储过程中修改该参数的值不能；默认类型是in</p>
+      <p>out		输出参数		该值可在存储过程内部被改变，并可返回</p>
+      <p>inout	输入/输出参数	调用时指定，并且可被改变和返回</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  delimiter  <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span>  create procedure <span class="sh_function">say2</span><span class="sh_symbol">(</span><span class="sh_keyword">in</span> username <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">10</span><span class="sh_symbol">))</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span> select username<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_symbol">*</span> from user where username<span class="sh_symbol">=</span>username<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_comment">//</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">say2</span><span class="sh_symbol">(</span><span class="sh_string">"tom"</span><span class="sh_symbol">);</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  delimiter  //
+mysql&gt;  create procedure say2(in username char(10))
+    -&gt; begin
+    -&gt; select username;
+    -&gt; select * from user where username=username;
+    -&gt; end
+    -&gt; //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; delimiter ;
+mysql&gt; call say2("tom");
+
+</pre></div></div>
+      <p>2）创建名为p2的存储过程，可以接收用户输入shell的名字，统计user表中用户输入shell名字的个数</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span>  delimiter  <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span>  create procedure <span class="sh_function">p2</span><span class="sh_symbol">(</span>out number int<span class="sh_symbol">)</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_function">count</span><span class="sh_symbol">(</span>username<span class="sh_symbol">)</span> into @number from user where shell<span class="sh_symbol">!=</span><span class="sh_string">"/bin/bash"</span><span class="sh_symbol">;</span> </li><li>    <span class="sh_symbol">-&gt;</span> select @number<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_comment">//</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">p2</span><span class="sh_symbol">(</span>@number<span class="sh_symbol">);</span></li><li><span class="sh_symbol">+---------+</span></li><li><span class="sh_symbol">|</span> @number <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+---------+</span></li><li><span class="sh_symbol">|</span>      <span class="sh_number">38</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+---------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt;  delimiter  //
+mysql&gt;  create procedure p2(out number int)
+    -&gt; begin
+    -&gt; select count(username) into @number from user where shell!="/bin/bash"; 
+    -&gt; select @number;
+    -&gt; end
+    -&gt; //
+Query OK, 0 rows affected (0.01 sec)
+mysql&gt; delimiter ;
+mysql&gt; call p2(@number);
++---------+
+| @number |
++---------+
+|      38 |
++---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：使用循环结构</h2>
+      <h3>5.1 问题</h3>
+      <ul class="list">
+        <li>定义名称为p3的存储过程
+</li>
+        <li>用户可以自定义显示user表记录的行数
+</li>
+        <li>若调用时用户没有输入行数，默认显示第1条记录
+</li>
+      </ul>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：算数运算</p>
+      <p>1）算数运算符号，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> set @z<span class="sh_symbol">=</span><span class="sh_number">1+2</span><span class="sh_symbol">;</span>select @z<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span> @z   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span>    <span class="sh_number">3</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> set @x<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">;</span> set @y<span class="sh_symbol">=</span><span class="sh_number">2</span><span class="sh_symbol">;</span>set @z<span class="sh_symbol">=</span>@x<span class="sh_symbol">*</span>@y<span class="sh_symbol">;</span> select @z<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span> @z   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> set @x<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">;</span> set @y<span class="sh_symbol">=</span><span class="sh_number">2</span><span class="sh_symbol">;</span>set @z<span class="sh_symbol">=</span>@x<span class="sh_symbol">-</span>@y<span class="sh_symbol">;</span> select @z<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span> @z   <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span>   <span class="sh_symbol">-</span><span class="sh_number">1</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li>mysql<span class="sh_symbol">&gt;</span> set @x<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">;</span> set @y<span class="sh_symbol">=</span><span class="sh_number">2</span><span class="sh_symbol">;</span>set @z<span class="sh_symbol">=</span>@<span class="sh_normal">x</span><span class="sh_symbol">/</span>@y<span class="sh_symbol">;</span> select @z<span class="sh_symbol">;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">+-------------+</span></li><li><span class="sh_symbol">|</span> @z           <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------+</span></li><li><span class="sh_symbol">|</span> <span class="sh_number">0.500000000</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+-------------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; set @z=1+2;select @z;
+Query OK, 0 rows affected (0.00 sec)
+
++------+
+| @z   |
++------+
+|    3 |
++------+
+1 row in set (0.00 sec)
+mysql&gt; set @x=1; set @y=2;set @z=@x*@y; select @z;
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
++------+
+| @z   |
++------+
+|    2 |
++------+
+1 row in set (0.00 sec)
+
+mysql&gt; set @x=1; set @y=2;set @z=@x-@y; select @z;
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
++------+
+| @z   |
++------+
+|   -1 |
++------+
+1 row in set (0.00 sec)
+mysql&gt; set @x=1; set @y=2;set @z=@x/@y; select @z;
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
++-------------+
+| @z           |
++-------------+
+| 0.500000000 |
++-------------+
+1 row in set (0.00 sec)
+
+</pre></div></div>
+      <p>declare调用变量不需要@其他都需要</p>
+      <p>调用变量时，有@符号的变量 如@x：调用的是用户自定义变量</p>
+      <p>没有@符号的变量 如x：调用的是存储过程的参数变量</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span> create procedure <span class="sh_function">say5</span><span class="sh_symbol">(</span><span class="sh_keyword">in</span> bash <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">20</span><span class="sh_symbol">),</span> <span class="sh_keyword">in</span>  nologin <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">25</span><span class="sh_symbol">),</span> out x int <span class="sh_symbol">,</span> out y int<span class="sh_symbol">)</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span> declare z int <span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> set z<span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_function">count</span><span class="sh_symbol">(</span>username<span class="sh_symbol">)</span> into  @x from user where shell<span class="sh_symbol">=</span>bash<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_function">count</span><span class="sh_symbol">(</span>username<span class="sh_symbol">)</span> into  @y from user where shell<span class="sh_symbol">=</span>nologin<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> set z<span class="sh_symbol">=</span>@x<span class="sh_symbol">+</span>@y<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> select z<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span>  <span class="sh_comment">//</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span>  call <span class="sh_function">say5</span><span class="sh_symbol">(</span><span class="sh_string">"/bin/bash"</span><span class="sh_symbol">,</span><span class="sh_string">"/sbin/nologin"</span><span class="sh_symbol">,</span>@x<span class="sh_symbol">,</span>@y<span class="sh_symbol">);</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span> z    <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_symbol">|</span>   <span class="sh_number">36</span> <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; delimiter //
+mysql&gt; create procedure say5(in bash char(20), in  nologin char(25), out x int , out y int)
+    -&gt; begin
+    -&gt; declare z int ;
+    -&gt; set z=0;
+    -&gt; select count(username) into  @x from user where shell=bash;
+    -&gt; select count(username) into  @y from user where shell=nologin;
+    -&gt; set z=@x+@y;
+    -&gt; select z;
+    -&gt; end
+    -&gt;  //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; delimiter ;
+mysql&gt;  call say5("/bin/bash","/sbin/nologin",@x,@y);
++------+
+| z    |
++------+
+|   36 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+</pre></div></div>
+      <p>2）条件判断，数值的比较如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>逻辑比较、范围、空、非空、模糊、正则，如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>顺序结构（if判断）当“条件成立”时执行命令序列,否则，不执行任何操作</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span>  create  procedure <span class="sh_function">say6</span><span class="sh_symbol">(</span><span class="sh_keyword">in</span>  x <span class="sh_function">int</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span> <span class="sh_symbol">)</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span>  <span class="sh_keyword">if</span> x <span class="sh_symbol">&lt;=</span> <span class="sh_number">10</span> then</li><li>    <span class="sh_symbol">-&gt;</span>  select <span class="sh_symbol">*</span> from user where id <span class="sh_symbol">&lt;=</span>x<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end <span class="sh_keyword">if</span><span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_comment">//</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.01</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">say6</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//条件判断成立，等于1是否成立</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+-----------+</span></li><li><span class="sh_symbol">|</span> id <span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> password <span class="sh_symbol">|</span> uid  <span class="sh_symbol">|</span> gid  <span class="sh_symbol">|</span> comment <span class="sh_symbol">|</span> homedir <span class="sh_symbol">|</span> shell     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+-----------+</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">1</span> <span class="sh_symbol">|</span> root     <span class="sh_symbol">|</span> x        <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span> root    <span class="sh_symbol">|</span> <span class="sh_regexp">/root   | /</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>bash <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+-----------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">say6</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">);</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+---------------+</span></li><li><span class="sh_symbol">|</span> id <span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> password <span class="sh_symbol">|</span> uid  <span class="sh_symbol">|</span> gid  <span class="sh_symbol">|</span> comment <span class="sh_symbol">|</span> homedir <span class="sh_symbol">|</span> shell         <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+---------------+</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">1</span> <span class="sh_symbol">|</span> root     <span class="sh_symbol">|</span> x        <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span> root    <span class="sh_symbol">|</span> <span class="sh_regexp">/root   | /</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>bash     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">2</span> <span class="sh_symbol">|</span> bin      <span class="sh_symbol">|</span> x        <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span>    <span class="sh_number">1</span> <span class="sh_symbol">|</span> bin     <span class="sh_symbol">|</span> <span class="sh_regexp">/bin    | /</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+---------------+</span></li><li><span class="sh_number">2</span> rows <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; delimiter //
+mysql&gt;  create  procedure say6(in  x int(1) )
+    -&gt; begin
+    -&gt;  if x &lt;= 10 then
+    -&gt;  select * from user where id &lt;=x;
+    -&gt; end if;
+    -&gt; end
+    -&gt; //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql&gt; delimiter ;
+mysql&gt; call say6(1);		//条件判断成立，等于1是否成立
++----+----------+----------+------+------+---------+---------+-----------+
+| id | username | password | uid  | gid  | comment | homedir | shell     |
++----+----------+----------+------+------+---------+---------+-----------+
+|  1 | root     | x        |    0 |    0 | root    | /root   | /bin/bash |
++----+----------+----------+------+------+---------+---------+-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; call say6(2);
++----+----------+----------+------+------+---------+---------+---------------+
+| id | username | password | uid  | gid  | comment | homedir | shell         |
++----+----------+----------+------+------+---------+---------+---------------+
+|  1 | root     | x        |    0 |    0 | root    | /root   | /bin/bash     |
+|  2 | bin      | x        |    1 |    1 | bin     | /bin    | /sbin/nologin |
++----+----------+----------+------+------+---------+---------+---------------+
+2 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+</pre></div></div>
+      <p>3）定义名称为p3的存储过程，用户可以自定义显示user表记录的行数，若调用时用户没有输入行数，默认显示第1条记录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DBA2/DAY04/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_comment">//</span></li><li>mysql<span class="sh_symbol">&gt;</span> create  procedure <span class="sh_function">p3</span><span class="sh_symbol">(</span><span class="sh_keyword">in</span>  linenum <span class="sh_function">char</span><span class="sh_symbol">(</span><span class="sh_number">10</span><span class="sh_symbol">)</span> <span class="sh_symbol">)</span></li><li>    <span class="sh_symbol">-&gt;</span> begin</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_keyword">if</span> linenum is <span class="sh_keyword">null</span> then</li><li>    <span class="sh_symbol">-&gt;</span> set @linenum<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_symbol">*</span> from user where id<span class="sh_symbol">=</span>@linenum<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_keyword">else</span></li><li>    <span class="sh_symbol">-&gt;</span> select linenum<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> select <span class="sh_symbol">*</span> from user where id<span class="sh_symbol">=</span>linenum<span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end <span class="sh_keyword">if</span><span class="sh_symbol">;</span></li><li>    <span class="sh_symbol">-&gt;</span> end</li><li>    <span class="sh_symbol">-&gt;</span> <span class="sh_comment">//</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> delimiter <span class="sh_symbol">;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">p3</span><span class="sh_symbol">(</span><span class="sh_keyword">null</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//不输入查看的行数</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+-----------+</span></li><li><span class="sh_symbol">|</span> id <span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> password <span class="sh_symbol">|</span> uid  <span class="sh_symbol">|</span> gid  <span class="sh_symbol">|</span> comment <span class="sh_symbol">|</span> homedir <span class="sh_symbol">|</span> shell     <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+-----------+</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">1</span> <span class="sh_symbol">|</span> root     <span class="sh_symbol">|</span> x        <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span>    <span class="sh_number">0</span> <span class="sh_symbol">|</span> root    <span class="sh_symbol">|</span> <span class="sh_regexp">/root   | /</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>bash <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+-----------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>mysql<span class="sh_symbol">&gt;</span> call <span class="sh_function">p3</span><span class="sh_symbol">(</span><span class="sh_number">3</span><span class="sh_symbol">);</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//输入查看的行数</span></li><li><span class="sh_symbol">+---------+</span></li><li><span class="sh_symbol">|</span> linenum <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+---------+</span></li><li><span class="sh_symbol">|</span> <span class="sh_number">3</span>       <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+---------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+---------------+</span></li><li><span class="sh_symbol">|</span> id <span class="sh_symbol">|</span> username <span class="sh_symbol">|</span> password <span class="sh_symbol">|</span> uid  <span class="sh_symbol">|</span> gid  <span class="sh_symbol">|</span> comment <span class="sh_symbol">|</span> homedir <span class="sh_symbol">|</span> shell         <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+---------------+</span></li><li><span class="sh_symbol">|</span>  <span class="sh_number">3</span> <span class="sh_symbol">|</span> daemon   <span class="sh_symbol">|</span> x        <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span>    <span class="sh_number">2</span> <span class="sh_symbol">|</span> daemon  <span class="sh_symbol">|</span> <span class="sh_regexp">/sbin   | /</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>nologin <span class="sh_symbol">|</span></li><li><span class="sh_symbol">+----+----------+----------+------+------+---------+---------+---------------+</span></li><li><span class="sh_number">1</span> row <span class="sh_keyword">in</span> <span class="sh_function">set</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>Query OK<span class="sh_symbol">,</span> <span class="sh_number">0</span> rows <span class="sh_function">affected</span> <span class="sh_symbol">(</span><span class="sh_number">0.00</span> sec<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">mysql&gt; delimiter //
+mysql&gt; create  procedure p3(in  linenum char(10) )
+    -&gt; begin
+    -&gt; if linenum is null then
+    -&gt; set @linenum=1;
+    -&gt; select * from user where id=@linenum;
+    -&gt; else
+    -&gt; select linenum;
+    -&gt; select * from user where id=linenum;
+    -&gt; end if;
+    -&gt; end
+    -&gt; //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; delimiter ;
+mysql&gt; call p3(null);		//不输入查看的行数
++----+----------+----------+------+------+---------+---------+-----------+
+| id | username | password | uid  | gid  | comment | homedir | shell     |
++----+----------+----------+------+------+---------+---------+-----------+
+|  1 | root     | x        |    0 |    0 | root    | /root   | /bin/bash |
++----+----------+----------+------+------+---------+---------+-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; call p3(3);		//输入查看的行数
++---------+
+| linenum |
++---------+
+| 3       |
++---------+
+1 row in set (0.00 sec)
+
++----+----------+----------+------+------+---------+---------+---------------+
+| id | username | password | uid  | gid  | comment | homedir | shell         |
++----+----------+----------+------+------+---------+---------+---------------+
+|  3 | daemon   | x        |    2 |    2 | daemon  | /sbin   | /sbin/nologin |
++----+----------+----------+------+------+---------+---------+---------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+</pre></div></div>
+    </div>
+  
+</body></html>

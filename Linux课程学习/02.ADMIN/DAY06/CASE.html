@@ -1,0 +1,263 @@
+
+<!-- saved from url=(0076)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ADMIN DAY06</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#case1">案例1：配置附加权限</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#case2">案例2：配置文档的访问权限</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#case3">案例3：绑定到LDAP验证服务</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#case4">案例4：配置LDAP家目录漫游</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：配置附加权限</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求创建一个某个组的用户共享使用的目录 /home/admins，满足以下要求：</p>
+      <ol class="list">
+        <li>此目录的组所有权是 adminuser
+</li>
+        <li>adminuser 组的成员对此目录有读写和执行的权限，除此以外的其他所有用户没有任何权限（root用户能够访问系统中的所有文件和目录）
+</li>
+        <li>在此目录中创建的文件，其组的所有权会自动设置为属于 adminuser 组
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>使目录的属组能够向下自动继承，只要对这个目录设置Set GID附件权限即可。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：创建目录并调整权限</p>
+      <p>1）新建文件夹</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /home/admins
+</pre></div></div>
+      <p>2）调整并确认权限</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chown  <span class="sh_symbol">:</span><span class="sh_normal">adminuser </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chmod  ug<span class="sh_symbol">=</span>rwx<span class="sh_symbol">,</span>o<span class="sh_symbol">-</span><span class="sh_normal">rwx  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># chmod  g<span class="sh_symbol">+</span><span class="sh_normal">s  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span>admins</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">ld  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">admins</span><span class="sh_symbol">/</span></li><li>drwxrws<span class="sh_symbol">---.</span> <span class="sh_number">2</span> root adminuser <span class="sh_number">6</span> <span class="sh_number">12</span>月 <span class="sh_number">23</span> <span class="sh_number">23</span><span class="sh_symbol">:</span><span class="sh_number">13</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">admins</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# chown  :adminuser /home/admins
+[root@server0 ~]# chmod  ug=rwx,o-rwx  /home/admins
+[root@server0 ~]# chmod  g+s  /home/admins
+
+[root@server0 ~]# ls  -ld  /home/admins/
+drwxrws---. 2 root adminuser 6 12月 23 23:13 /home/admins/
+</pre></div></div>
+      <p class="number">步骤二：验证目录的特性</p>
+      <p>1）在此目录下新建一个文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">touch  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">admins</span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span>txt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# touch  /home/admins/a.txt
+</pre></div></div>
+      <p>2）查看新建文件的归属，其属组应该与父目录相同</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">lh  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">admins</span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span>txt</li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> root adminuser <span class="sh_number">0</span> <span class="sh_number">12</span>月 <span class="sh_number">23</span> <span class="sh_number">23</span><span class="sh_symbol">:</span><span class="sh_number">17</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">admins</span><span class="sh_symbol">/</span>a<span class="sh_symbol">.</span>txt</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ls  -lh  /home/admins/a.txt
+-rw-r--r--. 1 root adminuser 0 12月 23 23:17 /home/admins/a.txt
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：配置文档的访问权限</h2>
+      <h3>2.1 问题</h3>
+      <p>本例要求将文件 /etc/fstab 拷贝为 /var/tmp/fstab，并调整文件 /var/tmp/fstab的权限，满足以下要求：</p>
+      <ol class="list">
+        <li>此文件的拥有者是 root
+</li>
+        <li>此文件属于 root 组
+</li>
+        <li>此文件对任何人都不可执行
+</li>
+        <li>用户 natasha 能够对此文件执行读和写操作
+</li>
+        <li>用户 harry 对此文件既不能读，也不能写
+</li>
+        <li>所有其他用户（当前的和将来的）能够对此文件进行读操作
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>针对个别用户的权限策略，使用setfacl命令进行设置。</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：复制文件</p>
+      <p>1）使用cp命令进行复制</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">cp  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">fstab  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# cp  /etc/fstab  /var/tmp/fstab
+</pre></div></div>
+      <p>2）确认复制后的权限</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">l  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab </li><li><span class="sh_symbol">-</span>rw<span class="sh_symbol">-</span>r<span class="sh_symbol">--</span>r<span class="sh_symbol">--.</span> <span class="sh_number">1</span> root root <span class="sh_number">313</span> <span class="sh_number">12</span>月 <span class="sh_number">23</span> <span class="sh_number">23</span><span class="sh_symbol">:</span><span class="sh_number">01</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ls  -l  /var/tmp/fstab 
+-rw-r--r--. 1 root root 313 12月 23 23:01 /var/tmp/fstab
+</pre></div></div>
+      <p>说明已经满足案例要求的前三条和最后一条。</p>
+      <p class="number">步骤二：调整权限</p>
+      <p>1）增加额外的访问控制策略</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setfacl  <span class="sh_symbol">-</span>m  u<span class="sh_symbol">:</span>natasha<span class="sh_symbol">:</span><span class="sh_normal">rw  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setfacl  <span class="sh_symbol">-</span>m  u<span class="sh_symbol">:</span>sarah<span class="sh_symbol">:-</span>  <span class="sh_regexp">/var/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>fstab</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# setfacl  -m  u:natasha:rw  /var/tmp/fstab
+[root@server0 ~]# setfacl  -m  u:sarah:-  /var/tmp/fstab
+</pre></div></div>
+      <p>2）确认结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">getfacl  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab</li><li>getfacl<span class="sh_symbol">:</span> Removing leading <span class="sh_string">'/'</span> from absolute path names</li><li># file<span class="sh_symbol">:</span> <span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>fstab</li><li># owner<span class="sh_symbol">:</span> root</li><li># group<span class="sh_symbol">:</span> root</li><li>user<span class="sh_symbol">::</span>rw<span class="sh_symbol">-</span></li><li>user<span class="sh_symbol">:</span>natasha<span class="sh_symbol">:</span>rw<span class="sh_symbol">-</span></li><li>user<span class="sh_symbol">:</span>sarah<span class="sh_symbol">:---</span></li><li>group<span class="sh_symbol">::</span>r<span class="sh_symbol">--</span></li><li>mask<span class="sh_symbol">::</span>rw<span class="sh_symbol">-</span></li><li>other<span class="sh_symbol">::</span>r<span class="sh_symbol">--</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# getfacl  /var/tmp/fstab
+getfacl: Removing leading '/' from absolute path names
+# file: var/tmp/fstab
+# owner: root
+# group: root
+user::rw-
+user:natasha:rw-
+user:sarah:---
+group::r--
+mask::rw-
+other::r--
+
+[root@server0 ~]#
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：绑定到LDAP验证服务</h2>
+      <h3>3.1 问题</h3>
+      <p>本例要求配置虚拟机server0使用系统classroom.example.com提供的LDAP服务，相关信息及要求如下：</p>
+      <ol class="list">
+        <li>验证服务的基本DN是：dc=example,dc=com
+</li>
+        <li>账户信息和验证信息都是由 LDAP 提供的
+</li>
+        <li>连接要使用证书加密，证书可以在下面的链接下载：http://classroom.example.com/pub/example-ca.crt  
+</li>
+        <li>当正确完成配置后，用户 ldapuser0 应该能登录到你的系统，不过暂时没有主目录（需完成 autofs 题目）
+</li>
+        <li>用户 ldapuser0 的密码是 password
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>需要安装软件包sssd已提供支持。</p>
+      <p>配置工具可选择默认安装的authconfig-tui，或者使用图形程序authconfig-gtk。</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装支持软件sssd、图形配置authconfig-gtk</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  sssd  authconfig<span class="sh_symbol">-</span>gtk</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  sssd  authconfig-gtk
+.. ..
+</pre></div></div>
+      <p class="number">步骤二：配置LDAP客户端参数</p>
+      <p>1）使用authconfig-gtk认证配置工具</p>
+      <p>打开配置程序（如图-1所示）后，可以看到“Identity &amp; Authentication”窗口。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图1</p>
+      </div>
+      <p>单击“User Account Database”右侧的下拉框选中“LDAP”，单击“Authentication Method”右侧的下拉框选中“LDAP Password”。然后在“LDAP Search DN”后的文本框内填入指定的基本DN字串“dc=example,dc=com”，在“LDAP Server”后的文本框内填入指定的LDAP服务器地址“classroom.example.com”（如图-2所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>勾选“Use TLS  to encrypt connections”前的选框，然后下方的“Download CA Certificate”按钮会变成可用状态，上方的警告消息也会自动消失（如图-3所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>单击“Download CA Certificate”按钮，根据提示填入TLS加密用CA证书的下载地址（http://classroom.example.com/pub/example-ca.crt），然后单击OK回到配置界面，单击右下方的“Apply”按钮（如图-4所示），耐心等待片刻即完成设置，配置程序自动关闭。</p>
+      <div class="image">
+        <img src="./CASE_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>2）确保sssd服务已经运行</p>
+      <p>只要前一步配置正确，检查sssd服务会发现已经自动运行。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  status  sssd</li><li>sssd<span class="sh_symbol">.</span>service <span class="sh_symbol">-</span> System Security Services Daemon</li><li>   Loaded<span class="sh_symbol">:</span> <span class="sh_function">loaded</span> <span class="sh_symbol">(</span><span class="sh_regexp">/usr/</span><span class="sh_normal">lib</span><span class="sh_symbol">/</span><span class="sh_normal">systemd</span><span class="sh_symbol">/</span><span class="sh_normal">system</span><span class="sh_symbol">/</span>sssd<span class="sh_symbol">.</span>service<span class="sh_symbol">;</span> enabled<span class="sh_symbol">)</span></li><li>   Active<span class="sh_symbol">:</span> <span class="sh_function">active</span> <span class="sh_symbol">(</span>running<span class="sh_symbol">)</span> since Sat <span class="sh_number">2016-11-26</span> <span class="sh_number">05</span><span class="sh_symbol">:</span><span class="sh_number">39</span><span class="sh_symbol">:</span><span class="sh_number">21</span> CST<span class="sh_symbol">;</span> 2min 58s ago</li><li>  Process<span class="sh_symbol">:</span> <span class="sh_number">2030</span> ExecStart<span class="sh_symbol">=</span><span class="sh_regexp">/usr/</span><span class="sh_normal">sbin</span><span class="sh_symbol">/</span>sssd <span class="sh_symbol">-</span>D <span class="sh_symbol">-</span><span class="sh_function">f</span> <span class="sh_symbol">(</span>code<span class="sh_symbol">=</span>exited<span class="sh_symbol">,</span> status<span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">/</span>SUCCESS<span class="sh_symbol">)</span></li><li> Main PID<span class="sh_symbol">:</span> <span class="sh_number">2031</span> <span class="sh_symbol">(</span>sssd<span class="sh_symbol">)</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  status  sssd
+sssd.service - System Security Services Daemon
+   Loaded: loaded (/usr/lib/systemd/system/sssd.service; enabled)
+   Active: active (running) since Sat 2016-11-26 05:39:21 CST; 2min 58s ago
+  Process: 2030 ExecStart=/usr/sbin/sssd -D -f (code=exited, status=0/SUCCESS)
+ Main PID: 2031 (sssd)
+.. ..
+</pre></div></div>
+      <p>确保sssd服务开机自启。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  sssd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  enable  sssd
+</pre></div></div>
+      <p class="number">步骤三：LDAP客户端验证</p>
+      <p>1）在客户机上能检测到LDAP网络用户</p>
+      <p>检查ldapuser0的ID值：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># id  ldapuser0</li><li>uid<span class="sh_symbol">=</span><span class="sh_number">1700</span><span class="sh_symbol">(</span>ldapuser0<span class="sh_symbol">)</span> gid<span class="sh_symbol">=</span><span class="sh_number">1700</span><span class="sh_symbol">(</span>ldapuser0<span class="sh_symbol">)</span> groups<span class="sh_symbol">=</span><span class="sh_number">1700</span><span class="sh_symbol">(</span>ldapuser0<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# id  ldapuser0
+uid=1700(ldapuser0) gid=1700(ldapuser0) groups=1700(ldapuser0)
+</pre></div></div>
+      <p>2）可以su切换到LDAP网络用户</p>
+      <p>切换到用户ldapuser0并返回：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># su  <span class="sh_symbol">-</span>  ldapuser0</li><li>su<span class="sh_symbol">:</span> warning<span class="sh_symbol">:</span> cannot change directory <span class="sh_normal">to </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span>ldapuser0<span class="sh_symbol">:</span> No such file or directory</li><li>mkdir<span class="sh_symbol">:</span> cannot create directory <span class="sh_string">'/home/guests'</span><span class="sh_symbol">:</span> Permission denied</li><li><span class="sh_symbol">-</span>bash<span class="sh_number">-4.2</span>$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成功登入，但没有家目录</span></li><li><span class="sh_symbol">-</span>bash<span class="sh_number">-4.2</span>$ exit &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//返回原用户环境</span></li><li>Logout</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# su  -  ldapuser0
+su: warning: cannot change directory to /home/guests/ldapuser0: No such file or directory
+mkdir: cannot create directory '/home/guests': Permission denied
+-bash-4.2$ 										//成功登入，但没有家目录
+-bash-4.2$ exit 									//返回原用户环境
+Logout
+[root@server0 ~]#
+</pre></div></div>
+      <p>3）可以使用LDAP网络用户在客户机上登录</p>
+      <p>以用户ldapuser0，密码password尝试ssh登录到server0：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ssh  ldapuser0@server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>The authenticity of host <span class="sh_string">'server0.example.com (172.25.0.11)'</span> can<span class="sh_string">'t be established.</span></li><li><span class="sh_string">ECDSA key fingerprint is eb:24:0e:07:96:26:b1:04:c2:37:0c:78:2d:bc:b0:08.</span></li><li><span class="sh_string">Are you sure you want to continue connecting (yes/no)? yes  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//首次接受密钥</span></li><li><span class="sh_string">Warning: Permanently added '</span>server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">,</span><span class="sh_number">172.25.0.11</span><span class="sh_string">' (ECDSA) to the list of known hosts.</span></li><li><span class="sh_string">ldapuser0@server0.example.com'</span>s password<span class="sh_symbol">:</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//输入密码password</span></li><li>Last login<span class="sh_symbol">:</span> Sat Nov <span class="sh_number">26</span> <span class="sh_number">05</span><span class="sh_symbol">:</span><span class="sh_number">45</span><span class="sh_symbol">:</span><span class="sh_number">51</span> <span class="sh_number">2016</span></li><li>Could not chdir to home <span class="sh_normal">directory </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span>ldapuser0<span class="sh_symbol">:</span> No such file or directory</li><li>mkdir<span class="sh_symbol">:</span> cannot create directory ‘<span class="sh_regexp">/home/g</span>uests’<span class="sh_symbol">:</span> Permission denied</li><li><span class="sh_symbol">-</span>bash<span class="sh_number">-4.2</span>$  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成功登入，但没有家目录</span></li><li><span class="sh_symbol">-</span>bash<span class="sh_number">-4.2</span>$ exit &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//返回原用户环境</span></li><li>logout</li><li>Connection to server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com closed<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ssh  ldapuser0@server0.example.com
+The authenticity of host 'server0.example.com (172.25.0.11)' can't be established.
+ECDSA key fingerprint is eb:24:0e:07:96:26:b1:04:c2:37:0c:78:2d:bc:b0:08.
+Are you sure you want to continue connecting (yes/no)? yes  		//首次接受密钥
+Warning: Permanently added 'server0.example.com,172.25.0.11' (ECDSA) to the list of known hosts.
+ldapuser0@server0.example.com's password:  			//输入密码password
+Last login: Sat Nov 26 05:45:51 2016
+Could not chdir to home directory /home/guests/ldapuser0: No such file or directory
+mkdir: cannot create directory ‘/home/guests’: Permission denied
+-bash-4.2$  										//成功登入，但没有家目录
+-bash-4.2$ exit 									//返回原用户环境
+logout
+Connection to server0.example.com closed.
+[root@server0 ~]#
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：配置LDAP家目录漫游</h2>
+      <h3>4.1 问题</h3>
+      <p>沿用练习3，本例要求手动挂载 LDAP 用户的家目录，实现漫游的效果。相关信息及要求如下：</p>
+      <ol class="list">
+        <li>主机 classroom.example.com 已经预先配置好通过NFS输出了/home/guests 目录到你的系统，这个文件系统下包含了用户 ldapuser0 的主目录
+</li>
+        <li>ldapuser0 的主目录是：classroom.example.com:/home/guests/ldapuser0 
+</li>
+        <li>ldapuser0 的主目录应该挂载到本地的 /home/guests/ldapuser0 目录下
+</li>
+        <li>用户对其主目录必须是可写的
+</li>
+        <li>ldapuser0 用户的密码是 password 
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：挂载LDAP用户的家目录</p>
+      <p>1）创建挂载点目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">mkdir  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guest</span><span class="sh_symbol">/</span>ldapuser0</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">ls   </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guest</span><span class="sh_symbol">/</span>ldapuser0</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//未挂载资源前内容为空</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mkdir  /home/guest/ldapuser0
+[root@server0 ~]# ls   /home/guest/ldapuser0
+[root@server0 ~]#  							//未挂载资源前内容为空
+</pre></div></div>
+      <p>2）挂载NFS资源</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># mount classroom<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com<span class="sh_symbol">:</span><span class="sh_regexp">/home/g</span><span class="sh_normal">uests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0 </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0</span><span class="sh_symbol">/</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# mount classroom.example.com:/home/guests/ldapuser0 /home/guests/ldapuser0/
+</pre></div></div>
+      <p>3）确认挂载结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">ld  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0</span><span class="sh_symbol">/</span>  &nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认资源归属及权限</span></li><li>drwx<span class="sh_symbol">------.</span> <span class="sh_number">4</span> <span class="sh_number">1700</span> <span class="sh_number">1700</span> <span class="sh_number">88</span> <span class="sh_number">7</span>月  <span class="sh_number">11</span> <span class="sh_number">2014</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ls  <span class="sh_symbol">-</span><span class="sh_normal">A  </span><span class="sh_symbol">/</span><span class="sh_normal">home</span><span class="sh_symbol">/</span><span class="sh_normal">guests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0</span><span class="sh_symbol">/</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//root无法查看</span></li><li>ls<span class="sh_symbol">:</span> 无法打开目录<span class="sh_regexp">/home/g</span><span class="sh_normal">uests</span><span class="sh_symbol">/</span><span class="sh_normal">ldapuser0</span><span class="sh_symbol">/:</span> 权限不够</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ls  -ld  /home/guests/ldapuser0/  	//确认资源归属及权限
+drwx------. 4 1700 1700 88 7月  11 2014 /home/guests/ldapuser0/
+[root@server0 ~]# ls  -A  /home/guests/ldapuser0/  		//root无法查看
+ls: 无法打开目录/home/guests/ldapuser0/: 权限不够
+</pre></div></div>
+      <p class="number">步骤二：验证LDAP用户的家目录漫游</p>
+      <p>通过su或ssh方式切换到ldapuser0登录，可以发现家目录已经可用了。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ADMIN/DAY06/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># su  <span class="sh_symbol">-</span>  ldapuser0</li><li>Last login<span class="sh_symbol">:</span> Sat Nov <span class="sh_number">26</span> <span class="sh_number">06</span><span class="sh_symbol">:</span><span class="sh_number">34</span><span class="sh_symbol">:</span><span class="sh_number">02</span> CST <span class="sh_number">2016</span> from server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com on <span class="sh_normal">pts</span><span class="sh_symbol">/</span><span class="sh_number">2</span></li><li><span class="sh_symbol">[</span>ldapuser0@server0 <span class="sh_symbol">~]</span>$ pwd &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成功登入，且位于家目录下</span></li><li><span class="sh_regexp">/home/g</span><span class="sh_normal">uests</span><span class="sh_symbol">/</span>ldapuser0</li><li><span class="sh_symbol">[</span>ldapuser0@server0 <span class="sh_symbol">~]</span>$ exit &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//返回原用户环境</span></li><li>logout</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span>#</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# su  -  ldapuser0
+Last login: Sat Nov 26 06:34:02 CST 2016 from server0.example.com on pts/2
+[ldapuser0@server0 ~]$ pwd 					//成功登入，且位于家目录下
+/home/guests/ldapuser0
+[ldapuser0@server0 ~]$ exit 					//返回原用户环境
+logout
+[root@server0 ~]#
+</pre></div></div>
+    </div>
+  
+</body></html>

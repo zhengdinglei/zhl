@@ -1,0 +1,232 @@
+
+<!-- saved from url=(0078)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE3_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE3_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE3_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE3_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE3_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Python2 DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#case1">案例1：备份程序</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#case2">案例2：编写酒店类</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#case3">案例3：出版商程序</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：备份程序</h2>
+      <h3>1.1 问题</h3>
+      <p>编写backup.py脚本，实现以下目标：</p>
+      <ol class="list">
+        <li>需要支持完全和增量备份
+</li>
+        <li>周一执行完全备份
+</li>
+        <li>其他时间执行增量备份
+</li>
+        <li>备份文件需要打包为tar文件并使用gzip格式压缩 
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>整体框架创建3个函数，分别实现完全备份、增量备份、文件加密3种功能：</p>
+      <p>1.首先导入time模块，利用if进行判断，如果当地时间是星期一，执行完全备份函数，否则执行增量备份函数，其中，通配符%a代表时间星期几缩写，上传参数分别为要备份的原目录、目标目录、md5字典存放目录</p>
+      <p>2.调用完全备份函数：</p>
+      <p>a)首先获取新文件名，将新文件名放入目标目录下，目的是定义备份文件的绝对路径，以写压缩方式打开目标目录下新文件，将原目录写入新文件中，完成完全备份，其中os.path.join作用是将目录名和文件的基名拼接成一个完整的路径</p>
+      <p>b)了解os.walk()目录遍历器输出文件结构，利用for循环将要备份原目录中文件遍历出来作为字典键值对键， md5加密结果作为字典键值对的值（此时将原目录中文件作为上传参数调用文件加密函数），存入空字典中，字典中每个文件对应一个md5值，最后将字典写入到md5字典存放目录中</p>
+      <p>3.调用文件加密函数：将原目录文件循环读取逐一加密，返回加密结果</p>
+      <p>4.调用增量备份函数：</p>
+      <p>a)增量备份函数代码与完全备份函数基本一致</p>
+      <p>b)区别在于，备份前要先以二进制读方式打开md5字典存放目录，读取旧数据，判断旧数据中键对应的加密值与新加密值是否相同，如果不相同，则将新增内容写入到目标文件中（即只备份新数据）</p>
+      <p>5.注意：md5主要用于原文件与新文件判断</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day06<span class="sh_symbol">]</span># vim backup<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import time</li><li>import os</li><li>import tarfile</li><li>import hashlib</li><li>import pickle</li><li>#用于判断两个文件是否相同，提取每个文件中的前<span class="sh_number">4</span>字节的内容然后输出md5码进行比较</li><li>def <span class="sh_function">check_md5</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">):</span></li><li>    m <span class="sh_symbol">=</span> hashlib<span class="sh_symbol">.</span><span class="sh_function">md5</span><span class="sh_symbol">()</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'rb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> fobj<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">(</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> not data<span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            m<span class="sh_symbol">.</span><span class="sh_function">update</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> m<span class="sh_symbol">.</span><span class="sh_function">hexdigest</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">full_backup</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">,</span> dst_dir<span class="sh_symbol">,</span> md5file<span class="sh_symbol">):</span></li><li>    fname <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">basename</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">.</span><span class="sh_function">rstrip</span><span class="sh_symbol">(</span><span class="sh_string">'/'</span><span class="sh_symbol">))</span></li><li>    fname <span class="sh_symbol">=</span> <span class="sh_string">'%s_full_%s.tar.gz'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> time<span class="sh_symbol">.</span><span class="sh_function">strftime</span><span class="sh_symbol">(</span><span class="sh_string">'%Y%m%d'</span><span class="sh_symbol">))</span></li><li>    fname <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span>dst_dir<span class="sh_symbol">,</span> fname<span class="sh_symbol">)</span></li><li>    md5dict <span class="sh_symbol">=</span> <span class="sh_cbracket">{}</span></li><li><span style="display:none;">&nbsp;</span></li><li>    tar <span class="sh_symbol">=</span> tarfile<span class="sh_symbol">.</span><span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'w:gz'</span><span class="sh_symbol">)</span></li><li>    tar<span class="sh_symbol">.</span><span class="sh_function">add</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">)</span></li><li>    tar<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">for</span> path<span class="sh_symbol">,</span> folders<span class="sh_symbol">,</span> files <span class="sh_keyword">in</span> os<span class="sh_symbol">.</span><span class="sh_function">walk</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">for</span> each_file <span class="sh_keyword">in</span> files<span class="sh_symbol">:</span></li><li>            key <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span>path<span class="sh_symbol">,</span> each_file<span class="sh_symbol">)</span></li><li>            md5dict<span class="sh_symbol">[</span>key<span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">check_md5</span><span class="sh_symbol">(</span>key<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>md5file<span class="sh_symbol">,</span> <span class="sh_string">'wb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        pickle<span class="sh_symbol">.</span><span class="sh_function">dump</span><span class="sh_symbol">(</span>md5dict<span class="sh_symbol">,</span> fobj<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">incr_backup</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">,</span> dst_dir<span class="sh_symbol">,</span> md5file<span class="sh_symbol">):</span></li><li>    fname <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">basename</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">.</span><span class="sh_function">rstrip</span><span class="sh_symbol">(</span><span class="sh_string">'/'</span><span class="sh_symbol">))</span></li><li>    fname <span class="sh_symbol">=</span> <span class="sh_string">'%s_incr_%s.tar.gz'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> time<span class="sh_symbol">.</span><span class="sh_function">strftime</span><span class="sh_symbol">(</span><span class="sh_string">'%Y%m%d'</span><span class="sh_symbol">))</span></li><li>    fname <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span>dst_dir<span class="sh_symbol">,</span> fname<span class="sh_symbol">)</span></li><li>    md5dict <span class="sh_symbol">=</span> <span class="sh_cbracket">{}</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>md5file<span class="sh_symbol">,</span> <span class="sh_string">'rb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        oldmd5 <span class="sh_symbol">=</span> pickle<span class="sh_symbol">.</span><span class="sh_function">load</span><span class="sh_symbol">(</span>fobj<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">for</span> path<span class="sh_symbol">,</span> folders<span class="sh_symbol">,</span> files <span class="sh_keyword">in</span> os<span class="sh_symbol">.</span><span class="sh_function">walk</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">for</span> each_file <span class="sh_keyword">in</span> files<span class="sh_symbol">:</span></li><li>            key <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span>path<span class="sh_symbol">,</span> each_file<span class="sh_symbol">)</span></li><li>            md5dict<span class="sh_symbol">[</span>key<span class="sh_symbol">]</span> <span class="sh_symbol">=</span> <span class="sh_function">check_md5</span><span class="sh_symbol">(</span>key<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>md5file<span class="sh_symbol">,</span> <span class="sh_string">'wb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        pickle<span class="sh_symbol">.</span><span class="sh_function">dump</span><span class="sh_symbol">(</span>md5dict<span class="sh_symbol">,</span> fobj<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    tar <span class="sh_symbol">=</span> tarfile<span class="sh_symbol">.</span><span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'w:gz'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">for</span> key <span class="sh_keyword">in</span> md5dict<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">if</span> oldmd5<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>key<span class="sh_symbol">)</span> <span class="sh_symbol">!=</span> md5dict<span class="sh_symbol">[</span>key<span class="sh_symbol">]:</span></li><li>            tar<span class="sh_symbol">.</span><span class="sh_function">add</span><span class="sh_symbol">(</span>key<span class="sh_symbol">)</span> </li><li>    tar<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    # <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>demo<span class="sh_symbol">;</span> cp <span class="sh_symbol">-</span><span class="sh_normal">r </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">security </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>demo</li><li>    src_dir <span class="sh_symbol">=</span> <span class="sh_string">'/tmp/demo/security'</span></li><li>    dst_dir <span class="sh_symbol">=</span> <span class="sh_string">'/var/tmp/backup'</span>   # <span class="sh_normal">mkdir </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span>backup</li><li>    md5file <span class="sh_symbol">=</span> <span class="sh_string">'/var/tmp/backup/md5.data'</span></li><li>    <span class="sh_keyword">if</span> time<span class="sh_symbol">.</span><span class="sh_function">strftime</span><span class="sh_symbol">(</span><span class="sh_string">'%a'</span><span class="sh_symbol">)</span> <span class="sh_symbol">==</span> <span class="sh_string">'Mon'</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">full_backup</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">,</span> dst_dir<span class="sh_symbol">,</span> md5file<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">incr_backup</span><span class="sh_symbol">(</span>src_dir<span class="sh_symbol">,</span> dst_dir<span class="sh_symbol">,</span> md5file<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day06]# vim backup.py
+#!/usr/bin/env python3
+
+import time
+import os
+import tarfile
+import hashlib
+import pickle
+#用于判断两个文件是否相同，提取每个文件中的前4字节的内容然后输出md5码进行比较
+def check_md5(fname):
+    m = hashlib.md5()
+    with open(fname, 'rb') as fobj:
+        while True:
+            data = fobj.read(4096)
+            if not data:
+                break
+            m.update(data)
+    return m.hexdigest()
+
+def full_backup(src_dir, dst_dir, md5file):
+    fname = os.path.basename(src_dir.rstrip('/'))
+    fname = '%s_full_%s.tar.gz' % (fname, time.strftime('%Y%m%d'))
+    fname = os.path.join(dst_dir, fname)
+    md5dict = {}
+
+    tar = tarfile.open(fname, 'w:gz')
+    tar.add(src_dir)
+    tar.close()
+
+    for path, folders, files in os.walk(src_dir):
+        for each_file in files:
+            key = os.path.join(path, each_file)
+            md5dict[key] = check_md5(key)
+
+    with open(md5file, 'wb') as fobj:
+        pickle.dump(md5dict, fobj)
+
+
+def incr_backup(src_dir, dst_dir, md5file):
+    fname = os.path.basename(src_dir.rstrip('/'))
+    fname = '%s_incr_%s.tar.gz' % (fname, time.strftime('%Y%m%d'))
+    fname = os.path.join(dst_dir, fname)
+    md5dict = {}
+
+    with open(md5file, 'rb') as fobj:
+        oldmd5 = pickle.load(fobj)
+
+    for path, folders, files in os.walk(src_dir):
+        for each_file in files:
+            key = os.path.join(path, each_file)
+            md5dict[key] = check_md5(key)
+
+    with open(md5file, 'wb') as fobj:
+        pickle.dump(md5dict, fobj)
+
+    tar = tarfile.open(fname, 'w:gz')
+    for key in md5dict:
+        if oldmd5.get(key) != md5dict[key]:
+            tar.add(key) 
+    tar.close()
+
+if __name__ == '__main__':
+    # mkdir /tmp/demo; cp -r /etc/security /tmp/demo
+    src_dir = '/tmp/demo/security'
+    dst_dir = '/var/tmp/backup'   # mkdir /var/tmp/backup
+    md5file = '/var/tmp/backup/md5.data'
+    if time.strftime('%a') == 'Mon':
+        full_backup(src_dir, dst_dir, md5file)
+    else:
+        incr_backup(src_dir, dst_dir, md5file)
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day07<span class="sh_symbol">]</span># python3 backup<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">[</span>root@localhost day07<span class="sh_symbol">]</span># <span class="sh_normal">cd </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/tmp/</span><span class="sh_normal">backup</span><span class="sh_symbol">/</span></li><li><span class="sh_symbol">[</span>root@localhost backup<span class="sh_symbol">]</span># ls</li><li>md5<span class="sh_symbol">.</span>data  security_full_20180502<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz  security_incr_20180502<span class="sh_symbol">.</span>tar<span class="sh_symbol">.</span>gz</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day07]# python3 backup.py 
+[root@localhost day07]# cd /var/tmp/backup/
+[root@localhost backup]# ls
+md5.data  security_full_20180502.tar.gz  security_incr_20180502.tar.gz
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：编写酒店类</h2>
+      <h3>2.1 问题</h3>
+      <p>创建hotel.py脚本，要求如下：</p>
+      <ol class="list">
+        <li>用于计算住宿开销
+</li>
+        <li>酒店有会员卡可以打九折
+</li>
+        <li>每天早餐15元
+</li>
+        <li>根据住宿天数返加总费用  
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>创建一个酒店类，类中定义2种方法：</p>
+      <p>1.__init__方法：__init__方法用于初始化属性，创建对象后会自动调用__init__方法，属于构造器方法，此处初始化了房间、早餐以及折扣3个属性，并给出了默认参数，此处属性绑定在对象上，数据属性在每一个方法中都可以使用</p>
+      <p>2.定义开销方法：每天花费（花费房间*折扣+早餐费用）*天数，天数days作为参数绑定在函数中，属于局部变量，只能在函数中使用，通过传参上传不同的值，得到不同的结果</p>
+      <p>3.创建对象后，自动调用__init__方法，在调用开销方法计算花费</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day07<span class="sh_symbol">]</span># vim hotel<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> Hotel<span class="sh_symbol">:</span></li><li>    def <span class="sh_function">__init__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> room<span class="sh_symbol">=</span><span class="sh_number">200</span><span class="sh_symbol">,</span> br<span class="sh_symbol">=</span><span class="sh_number">15</span><span class="sh_symbol">,</span> cf<span class="sh_symbol">=</span><span class="sh_number">1.0</span><span class="sh_symbol">):</span></li><li>        self<span class="sh_symbol">.</span>room <span class="sh_symbol">=</span> room</li><li>        self<span class="sh_symbol">.</span>br <span class="sh_symbol">=</span> br</li><li>        self<span class="sh_symbol">.</span>cf <span class="sh_symbol">=</span> cf</li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">cacl_all</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> days<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">return</span> <span class="sh_symbol">(</span>self<span class="sh_symbol">.</span>room <span class="sh_symbol">*</span> self<span class="sh_symbol">.</span>cf <span class="sh_symbol">+</span> self<span class="sh_symbol">.</span>br<span class="sh_symbol">)</span> <span class="sh_symbol">*</span> days</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    std_room <span class="sh_symbol">=</span> <span class="sh_function">Hotel</span><span class="sh_symbol">()</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span>std_room<span class="sh_symbol">.</span><span class="sh_function">cacl_all</span><span class="sh_symbol">())</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span>std_room<span class="sh_symbol">.</span><span class="sh_function">cacl_all</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">))</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day07]# vim hotel.py
+
+#!/usr/bin/env python3
+
+class Hotel:
+    def __init__(self, room=200, br=15, cf=1.0):
+        self.room = room
+        self.br = br
+        self.cf = cf
+
+    def cacl_all(self, days=1):
+        return (self.room * self.cf + self.br) * days
+
+if __name__ == '__main__':
+    std_room = Hotel()
+    print(std_room.cacl_all())
+    print(std_room.cacl_all(2))
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day07<span class="sh_symbol">]</span># python3  hotel<span class="sh_symbol">.</span>py</li><li><span class="sh_number">215.0</span></li><li><span class="sh_number">430.0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day07]# python3  hotel.py
+215.0
+430.0
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：出版商程序</h2>
+      <h3>3.1 问题</h3>
+      <p>创建books.py文件，实现以下目标：</p>
+      <ol class="list">
+        <li>为出版商编写一个Book类 
+</li>
+        <li>Book类有书名、作者、页数等属性 
+</li>
+        <li>打印实例时，输出书名 
+</li>
+        <li>调用实例时，显示该书由哪个作者编写  
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>创建一个类，类中创建3种魔法方法：</p>
+      <p>1.__init__方法：__init__方法用于初始化实例属性，创建对象后会自动调用__init__方法，属于构造器方法，此处初始化了书名及作者两个属性</p>
+      <p>2.__str__方法：创建对象后，打印实例对象pybook，返回书名，打印出书名</p>
+      <p>3.__call__方法：创建对象后，可以像调用函数一样调用该方法，模拟函数的行为，打印出书名及作者</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day07<span class="sh_symbol">]</span> # vim books<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> Book<span class="sh_symbol">:</span></li><li>    def <span class="sh_function">__init__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> title<span class="sh_symbol">,</span> author<span class="sh_symbol">):</span></li><li>        self<span class="sh_symbol">.</span>title <span class="sh_symbol">=</span> title</li><li>        self<span class="sh_symbol">.</span>author <span class="sh_symbol">=</span> author</li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">__str__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">return</span> <span class="sh_string">'&lt;Book: %s&gt;'</span> <span class="sh_symbol">%</span> self<span class="sh_symbol">.</span>title</li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">__call__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'《%s》 is written by %s.'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>self<span class="sh_symbol">.</span>title<span class="sh_symbol">,</span> self<span class="sh_symbol">.</span>author<span class="sh_symbol">))</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    pybook <span class="sh_symbol">=</span> <span class="sh_function">Book</span><span class="sh_symbol">(</span><span class="sh_string">'Core Python'</span><span class="sh_symbol">,</span> <span class="sh_string">'Weysley'</span><span class="sh_symbol">)</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span>pybook<span class="sh_symbol">)</span>  # 调用__str__</li><li>    <span class="sh_function">pybook</span><span class="sh_symbol">()</span>   # 调用__call__</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day07] # vim books.py
+#!/usr/bin/env python3
+
+class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+    def __str__(self):
+        return '&lt;Book: %s&gt;' % self.title
+
+    def __call__(self):
+        print('《%s》 is written by %s.' % (self.title, self.author))
+
+if __name__ == '__main__':
+    pybook = Book('Core Python', 'Weysley')
+    print(pybook)  # 调用__str__
+    pybook()   # 调用__call__
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/PYTHON2/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day07<span class="sh_symbol">]</span># python3 books<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">&lt;</span>Book<span class="sh_symbol">:</span> Core Python<span class="sh_symbol">&gt;</span></li><li>《Core Python》 is written by Weysley<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day07]# python3 books.py 
+&lt;Book: Core Python&gt;
+《Core Python》 is written by Weysley.
+</pre></div></div>
+    </div>
+  
+</body></html>

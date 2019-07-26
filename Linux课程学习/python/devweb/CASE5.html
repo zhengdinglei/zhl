@@ -1,0 +1,377 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE5_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE5_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE5_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE5_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE5_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devweb DAY05</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#case1">案例1：熟悉API</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#case2">案例2：编写视图</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#case3">案例3：创建模板</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#case4">案例4：完成投票系统</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：熟悉API</h2>
+      <h3>1.1 问题</h3>
+      <ol class="list">
+        <li>进入python shell模式
+</li>
+        <li>导入Question和Choice类
+</li>
+        <li>创建Question和Choice对象
+</li>
+        <li>通过id等条件查找对象  
+</li>
+        <li>
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：进入python shell 模式</p>
+      <p>使用如下命令来调用Python shell：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style=""><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py shell </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py shell 
+</pre></div></div>
+      <p>在启动解释器之前，它告诉Django使用哪个设置文件。 Django框架的大部分子系统，包括模板系统，都依赖于配置文件；如果Django不知道使用哪个配置文件，这些系统将不能工作。</p>
+      <p>Django搜索DJANGO_SETTINGS_MODULE环境变量，它被设置在settings.py中。因为manage.py 设置了DJANGO_SETTINGS_MODULE 环境变量，该环境变量告诉Django导入mysite/settings.py文件的路径。</p>
+      <p>当你运行命令：python manage.py shell，它将自动帮你处理DJANGO_SETTINGS_MODULE。这样可以免去你大费周章地去配置那些你不熟悉的环境变量。</p>
+      <p class="number">步骤二：导入Question和Choice类</p>
+      <p>首先要导入前面编写的Question和Choice数据库模块</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> from polls<span class="sh_symbol">.</span>models import Question<span class="sh_symbol">,</span> Choice</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; from polls.models import Question, Choice
+</pre></div></div>
+      <p>查看所有的Question</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[]&gt;</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet []&gt; 
+</pre></div></div>
+      <p>因为还没有创建任何问题，所以返回的是一个空查询集。</p>
+      <p class="number">步骤三：创建Question和Choice对象</p>
+      <p>1)Question模型中需要时间，可以使用django工具</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> from django<span class="sh_symbol">.</span>utils import timezone </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; from django.utils import timezone 
+</pre></div></div>
+      <p>2)创建Question对象</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> q <span class="sh_symbol">=</span> <span class="sh_function">Question</span><span class="sh_symbol">(</span>question_text<span class="sh_symbol">=</span><span class="sh_string">"你希望进入哪个公司工作?"</span><span class="sh_symbol">,</span> pub_date<span class="sh_symbol">=</span>timezone<span class="sh_symbol">.</span><span class="sh_function">now</span><span class="sh_symbol">())</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span><span class="sh_function">save</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; q = Question(question_text="你希望进入哪个公司工作?", pub_date=timezone.now())
+&gt;&gt;&gt; q.save()
+</pre></div></div>
+      <p>保存这个对象到数据库中。 必须显示地调用save()</p>
+      <p>3)查看所有的Question</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Question<span class="sh_symbol">:</span> Question object<span class="sh_symbol">&gt;,</span> <span class="sh_symbol">&lt;</span>Question<span class="sh_symbol">:</span> Question object<span class="sh_symbol">&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet [&lt;Question: Question object&gt;, &lt;Question: Question object&gt;]&gt;
+</pre></div></div>
+      <p>此时，&lt;Question object&gt; 完全是这个对象无意义的表示。</p>
+      <p>4)修复Question对象无意义显示，修改models.py文件：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_keyword">class</span> <span class="sh_function">Question</span><span class="sh_symbol">(</span>models<span class="sh_symbol">.</span>Model<span class="sh_symbol">):</span></li><li>    question_text <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">CharField</span><span class="sh_symbol">(</span>max_length<span class="sh_symbol">=</span><span class="sh_number">200</span><span class="sh_symbol">)</span></li><li>    pub_date <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">DateTimeField</span><span class="sh_symbol">(</span><span class="sh_string">'date published'</span><span class="sh_symbol">)</span></li><li>    def <span class="sh_function">__str__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">return</span> self<span class="sh_symbol">.</span>question_text </li><li><span class="sh_keyword">class</span> <span class="sh_function">Choice</span><span class="sh_symbol">(</span>models<span class="sh_symbol">.</span>Model<span class="sh_symbol">):</span></li><li>    question <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">ForeignKey</span><span class="sh_symbol">(</span>Question<span class="sh_symbol">,</span> on_delete<span class="sh_symbol">=</span>models<span class="sh_symbol">.</span>CASCADE<span class="sh_symbol">)</span></li><li>    choice_text <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">CharField</span><span class="sh_symbol">(</span>max_length<span class="sh_symbol">=</span><span class="sh_number">200</span><span class="sh_symbol">)</span></li><li>    votes <span class="sh_symbol">=</span> models<span class="sh_symbol">.</span><span class="sh_function">IntegerField</span><span class="sh_symbol">(</span><span class="sh_keyword">default</span><span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">)</span></li><li>    def <span class="sh_function">__str__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">return</span> self<span class="sh_symbol">.</span>choice_text </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+    def __str__(self):
+        return self.question_text 
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+    def __str__(self):
+        return self.choice_text 
+</pre></div></div>
+      <p>5)修改完毕，重新加载</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">(</span>django_env<span class="sh_symbol">)</span> <span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># python manage<span class="sh_symbol">.</span>py shell</li><li><span class="sh_symbol">&gt;&gt;&gt;</span> from polls<span class="sh_symbol">.</span>models import Question<span class="sh_symbol">,</span> Choice</li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Question<span class="sh_symbol">:</span> 你希望进入哪个公司工作<span class="sh_symbol">?&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">(django_env) [root@localhost mysite]# python manage.py shell
+&gt;&gt;&gt; from polls.models import Question, Choice
+&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet [&lt;Question: 你希望进入哪个公司工作?&gt;]&gt;
+</pre></div></div>
+      <p>6)创建Choice对象</p>
+      <p>由于存在外键关系，django通过Question对象可以反向得到Choice对象集</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[]&gt;</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span><span class="sh_function">create</span><span class="sh_symbol">(</span>choice_text<span class="sh_symbol">=</span><span class="sh_string">'阿里巴巴'</span><span class="sh_symbol">,</span> votes<span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>Choice<span class="sh_symbol">:</span> 阿里巴巴<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span><span class="sh_function">create</span><span class="sh_symbol">(</span>choice_text<span class="sh_symbol">=</span><span class="sh_string">'华为'</span><span class="sh_symbol">,</span> votes<span class="sh_symbol">=</span><span class="sh_number">0</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>Choice<span class="sh_symbol">:</span> 华为<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; q.choice_set.all()
+&lt;QuerySet []&gt;
+&gt;&gt;&gt; q.choice_set.create(choice_text='阿里巴巴', votes=0)
+&lt;Choice: 阿里巴巴&gt;
+&gt;&gt;&gt; q.choice_set.create(choice_text='华为', votes=0)
+&lt;Choice: 华为&gt;
+</pre></div></div>
+      <p>7)一旦创建好对象，就可以通过模型创建的字段对其进行访问了</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>id</li><li><span class="sh_number">1</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>question_text</li><li><span class="sh_string">'你希望进入哪个公司工作?'</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>pub_date</li><li>datetime<span class="sh_symbol">.</span><span class="sh_function">datetime</span><span class="sh_symbol">(</span><span class="sh_number">2018</span><span class="sh_symbol">,</span> <span class="sh_number">8</span><span class="sh_symbol">,</span> <span class="sh_number">30</span><span class="sh_symbol">,</span> <span class="sh_number">7</span><span class="sh_symbol">,</span> <span class="sh_number">27</span><span class="sh_symbol">,</span> <span class="sh_number">40</span><span class="sh_symbol">,</span> <span class="sh_number">626426</span><span class="sh_symbol">,</span> tzinfo<span class="sh_symbol">=&lt;</span>UTC<span class="sh_symbol">&gt;)</span> </li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span><span class="sh_function">count</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;#通过<span class="sh_function">count</span><span class="sh_symbol">()</span>函数可以取得选项数量。</li><li><span class="sh_number">2</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;#从关联对象设置中显示任意选项</li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Choice<span class="sh_symbol">:</span> 阿里巴巴<span class="sh_symbol">&gt;,</span> <span class="sh_symbol">&lt;</span>Choice<span class="sh_symbol">:</span> 华为<span class="sh_symbol">&gt;]&gt;</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">all</span><span class="sh_symbol">()</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Question<span class="sh_symbol">:</span> 你希望进入哪个公司工作<span class="sh_symbol">?&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; q.id
+1
+&gt;&gt;&gt; q.question_text
+'你希望进入哪个公司工作?'
+&gt;&gt;&gt; q.pub_date
+datetime.datetime(2018, 8, 30, 7, 27, 40, 626426, tzinfo=&lt;UTC&gt;) 
+&gt;&gt;&gt; q.choice_set.count()	#通过count()函数可以取得选项数量。
+2
+&gt;&gt;&gt; q.choice_set.all()	#从关联对象设置中显示任意选项
+&lt;QuerySet [&lt;Choice: 阿里巴巴&gt;, &lt;Choice: 华为&gt;]&gt;
+&gt;&gt;&gt; Question.objects.all()
+&lt;QuerySet [&lt;Question: 你希望进入哪个公司工作?&gt;]&gt;
+</pre></div></div>
+      <p class="number">步骤四：通过id等条件查找对象</p>
+      <p>1)Django 提供了丰富的数据库查询 API，通过关键字查询</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> from polls<span class="sh_symbol">.</span>models import Question<span class="sh_symbol">,</span> Choice</li><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>id<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>Question<span class="sh_symbol">:</span> 你希望进入哪个公司工作<span class="sh_symbol">?&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; from polls.models import Question, Choice
+&gt;&gt;&gt; Question.objects.get(id=1)
+&lt;Question: 你希望进入哪个公司工作?&gt;
+</pre></div></div>
+      <p>此时，如果id不存在将引发异常</p>
+      <p>2)通过主键查询数据是常见的情况，因此 Django 提供了精确查找主键的快捷方式，下面的这个代码和Question.objects.get(id=1)结果相同</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>pk<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>Question<span class="sh_symbol">:</span> 你希望进入哪个公司工作<span class="sh_symbol">?&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; Question.objects.get(pk=1)
+&lt;Question: 你希望进入哪个公司工作?&gt;
+</pre></div></div>
+      <p>确认我们自定义的方法was_published_recently()生效。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> q <span class="sh_symbol">=</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>pk<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&gt;&gt;&gt;</span> q<span class="sh_symbol">.</span><span class="sh_function">was_published_recently</span><span class="sh_symbol">()</span></li><li>True</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; q = Question.objects.get(pk=1)
+&gt;&gt;&gt; q.was_published_recently()
+True
+</pre></div></div>
+      <p>3)filter(id=1)用来筛选指定参数。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">filter</span><span class="sh_symbol">(</span>id<span class="sh_symbol">=</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Question<span class="sh_symbol">:</span> 你期待哪个公司给你发offer<span class="sh_symbol">?&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; Question.objects.filter(id=1)
+&lt;QuerySet [&lt;Question: 你期待哪个公司给你发offer?&gt;]&gt;
+</pre></div></div>
+      <p>4)Django通过灵活的双下划线实现属性查找</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> Question<span class="sh_symbol">.</span>objects<span class="sh_symbol">.</span><span class="sh_function">filter</span><span class="sh_symbol">(</span>question_text__startswith<span class="sh_symbol">=</span><span class="sh_string">'你'</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">&lt;</span>QuerySet <span class="sh_symbol">[&lt;</span>Question<span class="sh_symbol">:</span> 你期待哪个公司给你发offer<span class="sh_symbol">?&gt;]&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; Question.objects.filter(question_text__startswith='你')
+&lt;QuerySet [&lt;Question: 你期待哪个公司给你发offer?&gt;]&gt;
+</pre></div></div>
+      <p>question_text__startswith由两部分组成，字段：question_text 后缀关键字：__startswith.</p>
+      <p>question_text__startswith='你'作用是：筛选指定字段，以‘你’开头的内容。</p>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：编写视图</h2>
+      <h3>2.1 问题</h3>
+      <ol class="list">
+        <li>为投票系应用编写投票功能视图、问题详情视图以及问题结果视图 
+</li>
+        <li>为第1步的三个视图编写URLCONF，通过相应的URL可以调用对应的视图函数 
+</li>
+      </ol>
+      <h3>2.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：为投票系应用编写投票功能视图、问题详情视图以及问题结果视图</p>
+      <p>引入HttpResponse，它是用来向页面返回内容的，就想python中print一样，只不过HttpResponse是把内容显示到网页上，</p>
+      <p>我们定义三个函数，第一个参数必须是request，与网页发来的请求有关，request变量里面包含get或post的内容，用户浏览器，系统等信息。</p>
+      <p>函数最终返回一个HttpResponse对象，经过处理后，最终将显示几个字到网页上。</p>
+      <p>1) 编写投票功能视图：</p>
+      <p>编写视图文件views.py，处理对Question中Choice的投票</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>http import HttpResponse</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">vote</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> question_id<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">HttpResponse</span><span class="sh_symbol">(</span><span class="sh_string">"您正在为[%s]投票。"</span><span class="sh_symbol">)</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.http import HttpResponse
+
+def vote(request, question_id):
+    return HttpResponse("您正在为[%s]投票。") 
+</pre></div></div>
+      <p>2)问题详情视图：</p>
+      <p>编写视图文件views.py，显示单个Question的具体内容，不显示该议题的当前投票结果，而是提供一个投票的表单</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>def <span class="sh_function">detail</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> question_id<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">HttpResponse</span><span class="sh_symbol">(</span><span class="sh_string">"你正在查看的问题是：%s。"</span> <span class="sh_symbol">%</span> question_id<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">def detail(request, question_id):
+    return HttpResponse("你正在查看的问题是：%s。" % question_id)
+</pre></div></div>
+      <p>3) 问题结果视图：</p>
+      <p>编写视图文件views.py，显示特定的Question的投票结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>def <span class="sh_function">result</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> question_id<span class="sh_symbol">):</span></li><li>    response <span class="sh_symbol">=</span> <span class="sh_string">"你正在查看问题[%s]的结果。"</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">HttpResponse</span><span class="sh_symbol">(</span>response <span class="sh_symbol">%</span> question_id<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">def result(request, question_id):
+    response = "你正在查看问题[%s]的结果。"
+    return HttpResponse(response % question_id)
+</pre></div></div>
+      <p class="number">步骤二：为第1步的三个视图编写URLCONF，通过相应的URL可以调用对应的视图函数：</p>
+      <p>1) 定义视图函数相关URL（网址），首先我们打开mysite/urls.py这个文件，规则修改为如下形式，将视图和polls.urls模块关联：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>urls import url<span class="sh_symbol">,</span> include</li><li>from django<span class="sh_symbol">.</span>contrib import admin</li><li><span style="display:none;">&nbsp;</span></li><li><span style="display:none;">&nbsp;</span></li><li>urlpatterns <span class="sh_symbol">=</span> <span class="sh_symbol">[</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^admin/'</span><span class="sh_symbol">,</span> admin<span class="sh_symbol">.</span>site<span class="sh_symbol">.</span>urls<span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^polls/'</span><span class="sh_symbol">,</span> <span class="sh_function">include</span><span class="sh_symbol">(</span><span class="sh_string">'polls.urls'</span><span class="sh_symbol">))</span></li><li><span class="sh_symbol">]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.conf.urls import url, include
+from django.contrib import admin
+
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^polls/', include('polls.urls'))
+]
+</pre></div></div>
+      <p>当客户端向你的网站请求一个页面时，Django将加载mysite.urls Python模块</p>
+      <p>因为它被指向ROOT_URLCONF设置， 它寻找名为urlpatterns 的变量并按顺序匹配其中的正则表达式</p>
+      <p>2) 在‘^polls/’找到匹配后，它将取消匹配的文本（“polls/”），并发送剩余的文本到'polls.urls'URLconf进行进一步处理。</p>
+      <p>polls.urls.py规则修改为如下形式：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>conf<span class="sh_symbol">.</span>urls import url </li><li>from <span class="sh_symbol">.</span> import views</li><li><span style="display:none;">&nbsp;</span></li><li>urlpatterns <span class="sh_symbol">=</span> <span class="sh_symbol">[</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>index<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'index'</span><span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^(?P&lt;question_id&gt;[0-9]+)/$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>detail<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'detail'</span><span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^(?P&lt;question_id&gt;[0-9]+)/results/$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>result<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'result'</span><span class="sh_symbol">),</span></li><li>    <span class="sh_function">url</span><span class="sh_symbol">(</span>r<span class="sh_string">'^(?P&lt;question_id&gt;[0-9]+)/vote/$'</span><span class="sh_symbol">,</span> views<span class="sh_symbol">.</span>vote<span class="sh_symbol">,</span> name<span class="sh_symbol">=</span><span class="sh_string">'vote'</span><span class="sh_symbol">),</span></li><li><span class="sh_symbol">]</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.conf.urls import url 
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+    url(r'^(?P&lt;question_id&gt;[0-9]+)/$', views.detail, name='detail'),
+    url(r'^(?P&lt;question_id&gt;[0-9]+)/results/$', views.result, name='result'),
+    url(r'^(?P&lt;question_id&gt;[0-9]+)/vote/$', views.vote, name='vote'),
+]
+</pre></div></div>
+      <p>Django中的urls.py用的是正则进行匹配。</p>
+      <p>在浏览器打开“/polls/12/”。它会运行views.py文件中的detail()方法，并显示任何提供的URL内容。</p>
+      <p>再次尝试访问“/polls/12/results/”和“/polls/12/vote/”–这将显示占位符结果和投票页面。</p>
+      <p>如果用户进入“/polls/12/”，在这个系统中Django会找到匹配'^polls/'，</p>
+      <p>然后Django会去掉匹配的文本("polls/")，并发送剩余的文本（"12/"）到'polls.urls.py'文件。</p>
+      <p>URL配置用于进一步处理相匹配r'^(?P&lt;question_id&gt;[0-9]+)/$'从而调用detail()视图，如下所示：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_function">detail</span><span class="sh_symbol">(</span>request<span class="sh_symbol">=&lt;</span>HttpRequest object<span class="sh_symbol">&gt;,</span> question_id<span class="sh_symbol">=</span><span class="sh_string">'12'</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">detail(request=&lt;HttpRequest object&gt;, question_id='12')
+</pre></div></div>
+      <p>question_id='12' 是来自 (?P&lt;question_id&gt;[0-9]+)的一部分，用周围的模式括号“捕捉”匹配该模式文本，并将其作为参数传递给视图函数; ?P&lt;question_id&gt; 定义了将被用来识别所述匹配的模式的名称;以及[0-9]+正则表达式匹配一个数字序列(在一个数字)。</p>
+      <p>3)运行服务器，访问http://127.0.0.1:8000/polls/12/，结果显示如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>4)运行服务器，访问/http://127.0.0.1:8000/polls/12/results/，结果显示如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>3)运行服务器，访问http://127.0.0.1:8000/polls/12/vote/，结果显示如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：创建模板</h2>
+      <h3>3.1 问题</h3>
+      <ol class="list">
+        <li>为投票、投票结果、问题详情编写视图 
+</li>
+        <li>为投票、投票结果、问题详情编写模板 
+</li>
+        <li>访问相应url，观察是否是用到了正确的模板 
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：为投票、投票结果、问题详情编写视图</p>
+      <p>1)创建模板工作目录</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost mysite<span class="sh_symbol">]</span># mkdir <span class="sh_symbol">-</span>p <span class="sh_normal">polls</span><span class="sh_symbol">/</span><span class="sh_normal">templates</span><span class="sh_symbol">/</span>polls  </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost mysite]# mkdir -p polls/templates/polls  
+</pre></div></div>
+      <p>此时，模板位于polls/templates/polls/目录下，目录结构如图-4所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p>2)配置文件设置，如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p>设置文件settings.py配置了一个DjangoTemplates后端，其中将APP_DIRS选项设置为True，此时，DjangoTemplates在 INSTALLED_APPS所包含的每个应用的目录下查找名为"templates"子目录</p>
+      <p>3)修改polls/views.py的detail函数，编写视图</p>
+      <p>当请求一个不存在的对象时，django将会抛出异常，一种常见的习惯是使用get()并在对象不存在时引发Http404。 Django为此提供一个快捷方式，如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>from django<span class="sh_symbol">.</span>shortcuts import render<span class="sh_symbol">,</span> get_object_or_404</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">detail</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> question_id<span class="sh_symbol">):</span></li><li>    question <span class="sh_symbol">=</span> <span class="sh_function">get_object_or_404</span><span class="sh_symbol">(</span>Question<span class="sh_symbol">,</span> pk<span class="sh_symbol">=</span>question_id<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">render</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> <span class="sh_string">'polls/detail.html'</span><span class="sh_symbol">,</span> <span class="sh_cbracket">{</span><span class="sh_string">'question'</span><span class="sh_symbol">:</span> question<span class="sh_cbracket">}</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">from django.shortcuts import render, get_object_or_404
+
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
+ 
+</pre></div></div>
+      <p>get_object_or_404()函数接受一个Django模型作为第一个参数和关键字任意参数数量，它传递到模型管理的 get()函数。</p>
+      <p>如果对象不存在将引发HTTP404。</p>
+      <p>还有一个get_list_or_404()函数，它的工作原理就像get_object_or_404()- 除了使用 filter()而不是get()方法。如果列表是空的它会引起HTTP404。</p>
+      <p>。</p>
+      <p class="number">步骤二：为投票、投票结果、问题详情编写模板</p>
+      <p>创建模板文件polls/templates/polls/detail.html，编写投票详情模板</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> question<span class="sh_symbol">.</span>question_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;#获取问题文本</li><li><span class="sh_symbol">&lt;</span>ul<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">for</span> choice <span class="sh_keyword">in</span> question<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span>all <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>choice_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>li<span class="sh_symbol">&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;#通过循环获取结果文本</li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endfor <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;	#获取问题文本
+&lt;ul&gt;
+{% for choice in question.choice_set.all %}
+    &lt;li&gt;{{ choice.choice_text }}&lt;/li&gt;	#通过循环获取结果文本
+{% endfor %}
+&lt;/ul&gt; 
+</pre></div></div>
+      <p>模板系统采用点查询语法来访问变量属性。</p>
+      <p>在这个例子 {{question.question_text }}，第一个Django确实在question对象字典查找。 如果找不到，它再尝试属性查询，如果属性查找失败，它会尝试一个列表索引查找。</p>
+      <p class="number">步骤三：访问相应url，观察是否是用到了正确的模板</p>
+      <p>1)运行服务器，访问http://127.0.0.1:8000/polls/3/，没有异常发生时的页面显示如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>2)运行服务器，访问http://127.0.0.1:8000/polls/12/，引发 404&nbsp;错误，现在我们请求一个不存在问题，如图-7所示：</p>
+      <div class="image">
+        <img src="./CASE5_files/image007.png">
+        <p>图-7</p>
+      </div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：完成投票系统</h2>
+      <h3>4.1 问题</h3>
+      <ol class="list">
+        <li>为投票应用增加表单，使用户可以完成投票操作 
+</li>
+        <li>修改投票的视图函数 
+</li>
+        <li>修改模板文件 
+</li>
+        <li>使投票应用成为真正可用的程序  
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：为投票应用增加表单，使用户可以完成投票操作</p>
+      <p>更新投票详细页面的模板detail.html表单</p>
+      <p>HTTP协议以“请求-回复”的方式工作。客户发送请求时，可以在请求中附加数据。服务器通过解析请求，就可以获得客户传来的数据，并根据URL来提供特定的服务。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> question<span class="sh_symbol">.</span>question_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">if</span> error_message <span class="sh_symbol">%</span><span class="sh_cbracket">}</span><span class="sh_symbol">&lt;</span>p<span class="sh_symbol">&gt;&lt;</span>strong<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> error_message <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;</span><span class="sh_regexp">/strong&gt;&lt;/</span>p<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endif <span class="sh_symbol">%</span><span class="sh_cbracket">}</span> </li><li><span class="sh_symbol">&lt;</span>form action<span class="sh_symbol">=</span><span class="sh_string">"/polls/{{ question.id }}/vote/"</span> method<span class="sh_symbol">=</span><span class="sh_string">"post"</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> csrf_token <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">for</span> choice <span class="sh_keyword">in</span> question<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span>all <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"radio"</span> name<span class="sh_symbol">=</span><span class="sh_string">"choice"</span> id<span class="sh_symbol">=</span><span class="sh_string">"choice{{ forloop.counter }}"</span> value<span class="sh_symbol">=</span><span class="sh_string">"{{ choice.id }}"</span> <span class="sh_symbol">/&gt;</span></li><li>    <span class="sh_symbol">&lt;</span>label <span class="sh_keyword">for</span><span class="sh_symbol">=</span><span class="sh_string">"choice{{ forloop.counter }}"</span><span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>choice_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;</span><span class="sh_regexp">/label&gt;&lt;br /</span><span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endfor <span class="sh_symbol">%</span><span class="sh_cbracket">}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li><span class="sh_symbol">&lt;</span>input type<span class="sh_symbol">=</span><span class="sh_string">"submit"</span> value<span class="sh_symbol">=</span><span class="sh_string">"投票"</span> <span class="sh_symbol">/&gt;</span></li><li><span class="sh_symbol">&lt;/</span>form<span class="sh_symbol">&gt;</span> </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+{% if error_message %}&lt;p&gt;&lt;strong&gt;{{ error_message }}&lt;/strong&gt;&lt;/p&gt;{% endif %} 
+&lt;form action="/polls/{{ question.id }}/vote/" method="post"&gt;
+{% csrf_token %}
+{% for choice in question.choice_set.all %}
+    &lt;input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" /&gt;
+    &lt;label for="choice{{ forloop.counter }}"&gt;{{ choice.choice_text }}&lt;/label&gt;&lt;br /&gt;
+{% endfor %}		
+&lt;input type="submit" value="投票" /&gt;
+&lt;/form&gt; 
+</pre></div></div>
+      <p>上面的模板显示每个问题选择一个单选按钮。每个单选按钮的值相联问题的选择编号。每个单选按钮的名称是“choice”。这意味着，当有人选择了其中一个单选按钮并提交表单，它会发送POST数据choice=#，其中＃是被选择的选择的ID。这是HTML表单的基本概念。</p>
+      <p>我们设置表单的动作{%/polls/{{ question.id }}/vote/%},以及设置 method="post".使用 method="post"(相对于&nbsp;method="get")是非常重要的，因为提交此表将改变服务器端数据的行为。当创建一个改变数据服务器端表单形式，使用&nbsp;method="post".</p>
+      <p>forloop.counter指示for标签已经循环多少次</p>
+      <p>因为我们正在创建一个POST形式（可以有修改数据的影响），我们需要担心跨站点请求伪造。但是也不必担心，因为Django自带了保护对抗的一个非常容易使用的系统。总之，这是针对内部URL所有的POST形式应该使用{％csrf_token％}模板标签。</p>
+      <p class="number">步骤二：修改投票的视图函数</p>
+      <p>1)修改polls/views.py的vote函数，编写视图</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>def <span class="sh_function">vote</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> question_id<span class="sh_symbol">):</span></li><li>    question <span class="sh_symbol">=</span> <span class="sh_function">get_object_or_404</span><span class="sh_symbol">(</span>Question<span class="sh_symbol">,</span> pk<span class="sh_symbol">=</span>question_id<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">try</span><span class="sh_symbol">:</span></li><li>        choices <span class="sh_symbol">=</span> question<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span><span class="sh_function">get</span><span class="sh_symbol">(</span>pk<span class="sh_symbol">=</span>request<span class="sh_symbol">.</span>POST<span class="sh_symbol">[</span><span class="sh_string">'choice'</span><span class="sh_symbol">])</span></li><li>    <span class="sh_function">except</span><span class="sh_symbol">(</span>KeyError<span class="sh_symbol">,</span> Choice<span class="sh_symbol">.</span>DoesNotExist<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">return</span> <span class="sh_function">render</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> <span class="sh_string">'polls/detail.html'</span><span class="sh_symbol">,</span> <span class="sh_cbracket">{</span></li><li>            <span class="sh_string">'qustion'</span><span class="sh_symbol">:</span> question<span class="sh_symbol">,</span></li><li>            <span class="sh_string">'error_message'</span><span class="sh_symbol">:</span> <span class="sh_string">'您没有做出任何选择'</span><span class="sh_symbol">,</span></li><li>        <span class="sh_cbracket">}</span><span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        choices<span class="sh_symbol">.</span>votes <span class="sh_symbol">+=</span> <span class="sh_number">1</span></li><li>        choices<span class="sh_symbol">.</span><span class="sh_function">save</span><span class="sh_symbol">()</span></li><li>        <span class="sh_keyword">return</span> <span class="sh_function">redirect</span><span class="sh_symbol">(</span><span class="sh_string">'result'</span><span class="sh_symbol">,</span> question_id<span class="sh_symbol">=</span>question_id<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        choices = question.choice_set.get(pk=request.POST['choice'])
+    except(KeyError, Choice.DoesNotExist):
+        return render(request, 'polls/detail.html', {
+            'qustion': question,
+            'error_message': '您没有做出任何选择',
+        })
+    else:
+        choices.votes += 1
+        choices.save()
+        return redirect('result', question_id=question_id)
+</pre></div></div>
+      <p>request.POST是一个类似于字典的对象，使您可以通过键名访问提交的数据。在这种情况下，request.POST['choice']返回被选择的choice的ID，作为字符串。request.POST的值总是字符串。</p>
+      <p>注意：Django还提供request.GET以相同的方式访问GET数据–但我们明确使用request.POST在我们的代码，以确保数据只能通过POST调用修改。</p>
+      <p>如果POST数据未提供choice，request.POST['choice']将引发KeyError异常。上面的代码检查KeyError异常和错误消息显示问题的表单，如果没有给出choice。</p>
+      <p>选择choice计数递增后，代码返回redirec重定向，的一个参数：用户将被重定向到URL。</p>
+      <p>2)修改polls/views.py的result函数，编写视图</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>def <span class="sh_function">result</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> question_id<span class="sh_symbol">):</span></li><li>    question <span class="sh_symbol">=</span> <span class="sh_function">get_object_or_404</span><span class="sh_symbol">(</span>Question<span class="sh_symbol">,</span> pk<span class="sh_symbol">=</span>question_id<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">return</span> <span class="sh_function">render</span><span class="sh_symbol">(</span>request<span class="sh_symbol">,</span> <span class="sh_string">'polls/results.html'</span><span class="sh_symbol">,</span> <span class="sh_cbracket">{</span><span class="sh_string">'question'</span><span class="sh_symbol">:</span> question<span class="sh_cbracket">}</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">def result(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
+</pre></div></div>
+      <p class="number">步骤三：修改模板文件</p>
+      <p>创建polls/templates/polls/results.html模板文件</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVWEB/DAY05/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&lt;</span>h1<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> question<span class="sh_symbol">.</span>question_text <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>h1<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>ul<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> <span class="sh_keyword">for</span> choice <span class="sh_keyword">in</span> question<span class="sh_symbol">.</span>choice_set<span class="sh_symbol">.</span>all <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li>    <span class="sh_symbol">&lt;</span>li<span class="sh_symbol">&gt;</span><span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>choice_text <span class="sh_cbracket">}}</span> <span class="sh_symbol">:</span> <span class="sh_cbracket">{{</span> choice<span class="sh_symbol">.</span>votes <span class="sh_cbracket">}}</span><span class="sh_symbol">&lt;/</span>li<span class="sh_symbol">&gt;</span></li><li><span class="sh_cbracket">{</span><span class="sh_symbol">%</span> endfor <span class="sh_symbol">%</span><span class="sh_cbracket">}</span></li><li><span class="sh_symbol">&lt;/</span>ul<span class="sh_symbol">&gt;</span></li><li><span class="sh_symbol">&lt;</span>a href<span class="sh_symbol">=</span><span class="sh_string">"/polls/"</span><span class="sh_symbol">&gt;</span>投票首页<span class="sh_symbol">&lt;/</span>a<span class="sh_symbol">&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&lt;h1&gt;{{ question.question_text }}&lt;/h1&gt;
+&lt;ul&gt;
+{% for choice in question.choice_set.all %}
+    &lt;li&gt;{{ choice.choice_text }} : {{ choice.votes }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+&lt;a href="/polls/"&gt;投票首页&lt;/a&gt;
+</pre></div></div>
+      <p class="number">步骤四：投票程序展示如图-9、图-10：</p>
+      <div class="image">
+        <img src="./CASE5_files/image008.png">
+        <p>图-9</p>
+      </div>
+      <div class="image">
+        <img src="./CASE5_files/image009.png">
+        <p>图-10</p>
+      </div>
+    </div>
+  
+</body></html>

@@ -1,0 +1,483 @@
+
+<!-- saved from url=(0079)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD ENGINEER DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#case1">案例1：启用SELinux保护</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#case2">案例2：自定义用户环境</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#case3">案例3：配置IPv6地址</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#case4">案例4：配置聚合连接</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#case5">案例5：配置firewalld防火墙</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：启用SELinux保护</h2>
+      <h3>1.1 问题</h3>
+      <p>本例要求为虚拟机 server0、desktop0 配置SELinux：</p>
+      <ol class="list">
+        <li>确保 SELinux 处于强制启用模式
+</li>
+        <li>在每次重新开机后，此设置必须仍然有效
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>SELinux，Security-Enhanced Linux：是由美国NSA国家安全局提供的一套基于内核的增强的强制安全保护机制，针对用户、进程、文档标记安全属性并实现保护性限制。</p>
+      <p>SELinux安全体系直接集成在Linux内核中，包括三种运行模式：</p>
+      <ul class="list">
+        <li>disabled：彻底禁用，内核在启动时不加载SELinux安全体系
+</li>
+        <li>enforcing：强制启用，内核加载SELinux安全体系，并强制执行保护策略
+</li>
+        <li>permissive：宽松模式，内核加载SELinux安全体系，只记录不执行
+</li>
+      </ul>
+      <p>执行getenforce可以查看当前所处的模式。</p>
+      <p>在disabled模式与enforcing、permissive模式之间切换时，需要重新启动Linux系统；而在enforcing模式与permissive模式之间切换时，并不需要重启，可以直接执行setenforce 1|0操作。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：调整当前的SELinux运行模式</p>
+      <p>1）查看当前模式</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># getenforce </li><li>Permissive  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//表示当前为宽松模式</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# getenforce 
+Permissive  									//表示当前为宽松模式
+</pre></div></div>
+      <p>若上述操作显示的结果为Disabled，表示SELinux机制已被禁用，只能通过步骤修改固定配置后再重启；若显示的结果为Enforcing，表示已经处于强制启用模式。</p>
+      <p>2）切换为enforcing强制启用模式</p>
+      <p>如果在操作1）中显示的结果为Permissive，则执行以下操作切换为强制启用：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># setenforce  <span class="sh_number">1</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//强制启用</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># getenforce  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认切换结果</span></li><li>Enforcing</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# setenforce  1  				//强制启用
+[root@server0 ~]# getenforce  					//确认切换结果
+Enforcing
+</pre></div></div>
+      <p>如果在操作1）中显示的结果为Disabled，则无法使用setenforcing命令：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># getenforce </li><li>Disabled</li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># setenforce <span class="sh_number">1</span></li><li>setenforce<span class="sh_symbol">:</span> SELinux is disabled </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# getenforce 
+Disabled
+[root@desktop0 ~]# setenforce 1
+setenforce: SELinux is disabled 
+</pre></div></div>
+      <p class="number">步骤二：为SELinux运行模式建立固定配置</p>
+      <p>1）修改配置文件/etc/selinux/config</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span><span class="sh_normal">selinux</span><span class="sh_symbol">/</span>config</li><li>SELINUX<span class="sh_symbol">=</span>enforcing</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/selinux/config
+SELINUX=enforcing
+.. ..
+</pre></div></div>
+      <p>2）重启验证结果</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># reboot</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span> </li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># getenforce </li><li>Enforcing</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# reboot
+.. .. 
+[root@server0 ~]# getenforce 
+Enforcing
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：自定义用户环境</h2>
+      <h3>2.1 问题</h3>
+      <p>本例要求为系统 server0 和 desktop0 创建自定义命令，相关说明如下：</p>
+      <ol class="list">
+        <li>自定义命令的名称为 qstat 
+</li>
+        <li>此自定义命令将执行以下操作：/bin/ps -Ao pid,tt,user,fname,rsz 
+</li>
+        <li>此自定义命令对系统中的所有用户都有效
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>命令别名：为一个复杂的命令行建立一个更加简短的命令字，方便重复使用。</p>
+      <p>基本管理操作：</p>
+      <ul class="list">
+        <li>定义别名：alias  别名='复杂的命令行'
+</li>
+        <li>查看别名：alias、alias  别名
+</li>
+        <li>取消别名：unalias  别名、unalias  -a
+</li>
+      </ul>
+      <p>用户登录初始化文件：</p>
+      <ul class="list">
+        <li>全局配置：/etc/bashrc、
+</li>
+        <li>用户自定义配置：~/.bashrc
+</li>
+      </ul>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：为主机server0添加别名qstat</p>
+      <p>1）为所有用户添加初始化命令</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_normal">etc</span><span class="sh_symbol">/</span>bashrc</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li>alias  qstat<span class="sh_symbol">=</span><span class="sh_string">'/bin/ps -Ao pid,tt,user,fname,rsz'</span>  </li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# vim  /etc/bashrc
+.. ..
+alias  qstat='/bin/ps -Ao pid,tt,user,fname,rsz'  
+</pre></div></div>
+      <p>2）验证别名qstat是否生效</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># exit  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//退出</span></li><li>logout</li><li>Connection to server0 closed<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>kiosk@foundation0 <span class="sh_symbol">~]</span>$ ssh <span class="sh_symbol">-</span>X root@server0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重登录</span></li><li>Last login<span class="sh_symbol">:</span> Sat Nov <span class="sh_number">26</span> <span class="sh_number">15</span><span class="sh_symbol">:</span><span class="sh_number">30</span><span class="sh_symbol">:</span><span class="sh_number">15</span> <span class="sh_number">2016</span> from <span class="sh_number">172.25.0.250</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># alias  qstat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//可查到别名</span></li><li>alias qstat<span class="sh_symbol">=</span><span class="sh_string">'/bin/ps -Ao pid,tt,user,fname,rsz'</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># qstat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//且此别名正常可用</span></li><li>  PID TT       USER     COMMAND    RSZ</li><li>    <span class="sh_number">1</span> <span class="sh_symbol">?</span>        root     systemd   <span class="sh_number">6548</span></li><li>    <span class="sh_number">2</span> <span class="sh_symbol">?</span>        root     kthreadd     <span class="sh_number">0</span></li><li>    <span class="sh_number">3</span> <span class="sh_symbol">?</span>        root     ksoftirq     <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# exit  									//退出
+logout
+Connection to server0 closed.
+[kiosk@foundation0 ~]$ ssh -X root@server0  				//重登录
+Last login: Sat Nov 26 15:30:15 2016 from 172.25.0.250
+[root@server0 ~]# alias  qstat 							//可查到别名
+alias qstat='/bin/ps -Ao pid,tt,user,fname,rsz'
+[root@server0 ~]# qstat 									//且此别名正常可用
+  PID TT       USER     COMMAND    RSZ
+    1 ?        root     systemd   6548
+    2 ?        root     kthreadd     0
+    3 ?        root     ksoftirq     0
+</pre></div></div>
+      <p class="number">步骤二：为主机desktop0添加别名qstat</p>
+      <p>操作与步骤一相同。</p>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：配置IPv6地址</h2>
+      <h3>3.1 问题</h3>
+      <p>本例要求为两个虚拟机 server0、desktop0的接口 eth0 配置下列 IPv6 地址：</p>
+      <ol class="list">
+        <li>server0 上的地址应该是 2003:ac18::305/64
+</li>
+        <li>desktop0 上的地址应该是 2003:ac18::306/64
+</li>
+        <li>两个系统必须能与网络 2003:ac18/64 内的系统通信
+</li>
+        <li>地址必须在重启后依旧生效
+</li>
+        <li>两个系统必须保持当前的IPv4地址并能通信
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>如何表示一个IP地址：</p>
+      <ul class="list">
+        <li>IPv4地址（32位） —— 点 分隔 十进制，比如172.25.0.11
+</li>
+        <li>IPv6地址（128位）—— 冒号 分隔 十六进制，比如fe80::5054:ff:fe00:b 。前置0可以省略，多个连续的冒号分隔可简写成两个（::）。
+</li>
+      </ul>
+      <p>针对IPv6目标地址的连通性测试应使用ping6命令工具。</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：修改主机server0的网卡eth0的配置</p>
+      <p>1）确认网卡eth0所属的网络连接名（NAME）</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  show</li><li>NAME         UUID                                  TYPE            DEVICE </li><li>System eth0  5fb06bd0<span class="sh_symbol">-</span>0bb0<span class="sh_symbol">-</span>7ffb<span class="sh_symbol">-</span>45f1<span class="sh_symbol">-</span>d6edd65f3e03  <span class="sh_number">802-3</span><span class="sh_symbol">-</span>ethernet  eth0</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  show
+NAME         UUID                                  TYPE            DEVICE 
+System eth0  5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03  802-3-ethernet  eth0
+</pre></div></div>
+      <p>2）修改此连接的IPv6地址配置</p>
+      <p>使用方法一（命令行）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  modify  <span class="sh_string">"System eth0"</span>  ipv6<span class="sh_symbol">.</span>method  manual  ipv6<span class="sh_symbol">.</span>addresses  <span class="sh_string">"2003:ac18::305/64"</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  modify  "System eth0"  ipv6.method  manual  ipv6.addresses  "2003:ac18::305/64"
+</pre></div></div>
+      <p>或者，使用方法二（图形工具），运行nm-connection-editor，在打开的图形程序界面中双击连接名称System eth0，选择“IPv6 Settings”选项卡（如图-1所示）。</p>
+      <div class="image">
+        <img src="./CASE_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>然后在“Method”处下拉选择“Manual”，再单击中间栏右侧的“Add”按钮添加指定的IPv6地址2003:ac18::305、掩码长度64，勾选底部的“Require IPv6 addressing for this connection to complete”（如图-2所示），最后单击右下角的“Save”保存，并关闭配置窗口。</p>
+      <div class="image">
+        <img src="./CASE_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>3）激活新配置</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  <span class="sh_string">"System eth0"</span> </li><li>Connection successfully <span class="sh_function">activated</span> <span class="sh_symbol">(</span>D<span class="sh_symbol">-</span>Bus active path<span class="sh_symbol">:</span> <span class="sh_regexp">/org/</span><span class="sh_normal">freedesktop</span><span class="sh_symbol">/</span><span class="sh_normal">NetworkManager</span><span class="sh_symbol">/</span><span class="sh_normal">ActiveConnection</span><span class="sh_symbol">/</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  up  "System eth0" 
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/1)
+</pre></div></div>
+      <p>4）确认地址已成功设置</p>
+      <p>执行ifconfig命令可以看到新增加的IPv6地址：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ifconfig  eth0  <span class="sh_symbol">|</span>  grep  inet6</li><li>eth0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.25.0.11</span>  netmask <span class="sh_number">255.255.255.0</span>  broadcast <span class="sh_number">172.25.0.255</span></li><li>        inet6 <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">305</span>  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x0</span><span class="sh_symbol">&lt;</span>global<span class="sh_symbol">&gt;</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认地址</span></li><li>        inet6 fe80<span class="sh_symbol">::</span><span class="sh_number">5054</span><span class="sh_symbol">:</span>ff<span class="sh_symbol">:</span>fe00<span class="sh_symbol">:</span>b  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether <span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span>0b  txqueuelen <span class="sh_number">1000</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">8697</span>  bytes <span class="sh_number">5617496</span> <span class="sh_symbol">(</span><span class="sh_number">5.3</span> MiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">6681</span>  bytes <span class="sh_number">5803117</span> <span class="sh_symbol">(</span><span class="sh_number">5.5</span> MiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ifconfig  eth0  |  grep  inet6
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.25.0.11  netmask 255.255.255.0  broadcast 172.25.0.255
+        inet6 2003:ac18::305  prefixlen 64  scopeid 0x0&lt;global&gt;  		//确认地址
+        inet6 fe80::5054:ff:fe00:b  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 52:54:00:00:00:0b  txqueuelen 1000  (Ethernet)
+        RX packets 8697  bytes 5617496 (5.3 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 6681  bytes 5803117 (5.5 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</pre></div></div>
+      <p class="number">步骤二：修改主机desktop0的网卡eth0的配置</p>
+      <p>除了IPv6地址应使用2003:ac18::306以外，其他操作与步骤一相同。</p>
+      <p class="number">步骤三：测试主机server0、desktop0之间的IPv6地址互连</p>
+      <p>在server0上，使用ping6命令测试desktop0的IPv6地址，可以正常连通：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ping6  <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span></li><li>PING <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span><span class="sh_symbol">(</span><span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span><span class="sh_symbol">)</span> <span class="sh_number">56</span> data bytes</li><li><span class="sh_number">64</span> bytes from <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span><span class="sh_symbol">:</span> icmp_seq<span class="sh_symbol">=</span><span class="sh_number">1</span> ttl<span class="sh_symbol">=</span><span class="sh_number">64</span> time<span class="sh_symbol">=</span><span class="sh_number">0.656</span> ms</li><li><span class="sh_number">64</span> bytes from <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span><span class="sh_symbol">:</span> icmp_seq<span class="sh_symbol">=</span><span class="sh_number">2</span> ttl<span class="sh_symbol">=</span><span class="sh_number">64</span> time<span class="sh_symbol">=</span><span class="sh_number">1.33</span> ms</li><li><span class="sh_number">64</span> bytes from <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span><span class="sh_symbol">:</span> icmp_seq<span class="sh_symbol">=</span><span class="sh_number">3</span> ttl<span class="sh_symbol">=</span><span class="sh_number">64</span> time<span class="sh_symbol">=</span><span class="sh_number">1.29</span> ms</li><li><span class="sh_number">64</span> bytes from <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">306</span><span class="sh_symbol">:</span> icmp_seq<span class="sh_symbol">=</span><span class="sh_number">4</span> ttl<span class="sh_symbol">=</span><span class="sh_number">64</span> time<span class="sh_symbol">=</span><span class="sh_number">1.48</span> ms</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ping6  2003:ac18::306
+PING 2003:ac18::306(2003:ac18::306) 56 data bytes
+64 bytes from 2003:ac18::306: icmp_seq=1 ttl=64 time=0.656 ms
+64 bytes from 2003:ac18::306: icmp_seq=2 ttl=64 time=1.33 ms
+64 bytes from 2003:ac18::306: icmp_seq=3 ttl=64 time=1.29 ms
+64 bytes from 2003:ac18::306: icmp_seq=4 ttl=64 time=1.48 ms
+.. ..
+</pre></div></div>
+      <p class="number">步骤四：确保配置有正确的静态主机名</p>
+      <p>避免重启后无法确定本机的主机名，容易引起混淆。</p>
+      <p>对于主机server0：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># hostnamectl  set<span class="sh_symbol">-</span>hostname  server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># hostnamectl </li><li>   Static hostname<span class="sh_symbol">:</span> server0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>         Icon name<span class="sh_symbol">:</span> computer</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# hostnamectl  set-hostname  server0.example.com
+[root@server0 ~]# hostnamectl 
+   Static hostname: server0.example.com
+         Icon name: computer
+.. ..
+</pre></div></div>
+      <p>对于主机desktop0：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># hostnamectl  set<span class="sh_symbol">-</span>hostname  desktop0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># hostnamectl </li><li>   Static hostname<span class="sh_symbol">:</span> desktop0<span class="sh_symbol">.</span>example<span class="sh_symbol">.</span>com</li><li>         Icon name<span class="sh_symbol">:</span> computer</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# hostnamectl  set-hostname  desktop0.example.com
+[root@desktop0 ~]# hostnamectl 
+   Static hostname: desktop0.example.com
+         Icon name: computer
+.. ..
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：配置聚合连接</h2>
+      <h3>4.1 问题</h3>
+      <p>本例要求在两个虚拟机 server0、desktop0之间配置一个链路，要求如下：</p>
+      <ol class="list">
+        <li>此链路使用接口 eth1 和 eth2
+</li>
+        <li>此链路在其中一个接口失效时仍然能工作
+</li>
+        <li>此链路在 server0 上使用下面的地址  172.16.3.20/255.255.255.0
+</li>
+        <li>此链路在 desktop0 上使用下面的地址 172.16.3.25/255.255.255.0
+</li>
+        <li>此链路在系统重启之后依然保持正常状态
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>聚合连接（team）：指的是网络连接的捆绑/组队，通过将多个实际网卡（team-slave）整个为逻辑上的单个连接，实现负载均衡、热备份等单块网卡难以完成的特殊功能。</p>
+      <p>聚合连接的类型：热备份activebackup、轮询负载均衡roundrobin。</p>
+      <p>定义聚合连接的类型配置时，采用JSON语法标记，主要特点如下：</p>
+      <ul class="list">
+        <li>标记一个对象 —— { 对象 }
+</li>
+        <li>每一个对象 —— 名称:值
+</li>
+        <li>每一个字符串 —— "字符串"
+</li>
+      </ul>
+      <p>热备份-聚合连接（activebackup）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_cbracket">{</span> <span class="sh_string">"runner"</span><span class="sh_symbol">:</span><span class="sh_cbracket">{</span> <span class="sh_string">"name"</span><span class="sh_symbol">:</span><span class="sh_string">"activebackup"</span> <span class="sh_cbracket">}</span>  <span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">{ "runner":{ "name":"activebackup" }  }
+</pre></div></div>
+      <p>负载均衡-聚合连接（roundrobin）：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_cbracket">{</span> <span class="sh_string">"runner"</span><span class="sh_symbol">:</span><span class="sh_cbracket">{</span> <span class="sh_string">"name"</span><span class="sh_symbol">:</span><span class="sh_string">"roundrobin"</span> <span class="sh_cbracket">}</span>  <span class="sh_cbracket">}</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">{ "runner":{ "name":"roundrobin" }  }
+</pre></div></div>
+      <h3>4.3 步骤</h3>
+      <p>除了所配置的IP地址不一样以外，在server0、desktop0主机上的其他操作相同。此处仅列出在server0上的配置过程。</p>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：准备练习用网卡环境</p>
+      <p>新建的聚合连接将组合新增加的两块网卡eth1、eth2。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ifconfig </li><li>eth0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.25.0.11</span>  netmask <span class="sh_number">255.255.255.0</span>  broadcast <span class="sh_number">172.25.0.255</span></li><li>        inet6 <span class="sh_number">2003</span><span class="sh_symbol">:</span>ac18<span class="sh_symbol">::</span><span class="sh_number">305</span>  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x0</span><span class="sh_symbol">&lt;</span>global<span class="sh_symbol">&gt;</span></li><li>        inet6 fe80<span class="sh_symbol">::</span><span class="sh_number">5054</span><span class="sh_symbol">:</span>ff<span class="sh_symbol">:</span>fe00<span class="sh_symbol">:</span>b  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether <span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span>0b  txqueuelen <span class="sh_number">1000</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">172995</span>  bytes <span class="sh_number">23870389</span> <span class="sh_symbol">(</span><span class="sh_number">22.7</span> MiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">54053</span>  bytes <span class="sh_number">34274222</span> <span class="sh_symbol">(</span><span class="sh_number">32.6</span> MiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>eth1<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        ether <span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span>f8<span class="sh_symbol">:</span><span class="sh_number">86</span><span class="sh_symbol">:</span>c1  txqueuelen <span class="sh_number">1000</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">104217</span>  bytes <span class="sh_number">5437855</span> <span class="sh_symbol">(</span><span class="sh_number">5.1</span> MiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">171</span>  bytes <span class="sh_number">17171</span> <span class="sh_symbol">(</span><span class="sh_number">16.7</span> KiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li><li><span style="display:none;">&nbsp;</span></li><li>eth2<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        ether <span class="sh_number">52</span><span class="sh_symbol">:</span><span class="sh_number">54</span><span class="sh_symbol">:</span><span class="sh_number">00</span><span class="sh_symbol">:</span><span class="sh_number">38</span><span class="sh_symbol">:</span><span class="sh_number">79</span><span class="sh_symbol">:</span>d9  txqueuelen <span class="sh_number">1000</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">104118</span>  bytes <span class="sh_number">5428927</span> <span class="sh_symbol">(</span><span class="sh_number">5.1</span> MiB<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">2060</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">0</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ifconfig 
+eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.25.0.11  netmask 255.255.255.0  broadcast 172.25.0.255
+        inet6 2003:ac18::305  prefixlen 64  scopeid 0x0&lt;global&gt;
+        inet6 fe80::5054:ff:fe00:b  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 52:54:00:00:00:0b  txqueuelen 1000  (Ethernet)
+        RX packets 172995  bytes 23870389 (22.7 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 54053  bytes 34274222 (32.6 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth1: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        ether 52:54:00:f8:86:c1  txqueuelen 1000  (Ethernet)
+        RX packets 104217  bytes 5437855 (5.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 171  bytes 17171 (16.7 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth2: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        ether 52:54:00:38:79:d9  txqueuelen 1000  (Ethernet)
+        RX packets 104118  bytes 5428927 (5.1 MiB)
+        RX errors 0  dropped 2060  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+.. ..
+</pre></div></div>
+      <p class="number">步骤二：创建聚合连接配置</p>
+      <p>1）新建聚合连接</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  add  con<span class="sh_symbol">-</span>name  team0  type  team  ifname team0  config  <span class="sh_string">'{ "runner":{ "name":"activebackup" }  }'</span></li><li>Connection <span class="sh_string">'team0'</span> <span class="sh_symbol">(</span>8e61d730<span class="sh_symbol">-</span>50ff<span class="sh_symbol">-</span>4a7b<span class="sh_symbol">-</span>8ca0<span class="sh_symbol">-</span>fcf5955f6ea7<span class="sh_symbol">)</span> successfully added<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  con  add  con-name  team0  type  team  ifname team0  config  '{ "runner":{ "name":"activebackup" }  }'
+Connection 'team0' (8e61d730-50ff-4a7b-8ca0-fcf5955f6ea7) successfully added.
+</pre></div></div>
+      <p>2）配置IPv4地址</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  modify  team0  ipv4<span class="sh_symbol">.</span>method  manual  ipv4<span class="sh_symbol">.</span>addresses  <span class="sh_string">'172.16.3.20/24'</span>  connection<span class="sh_symbol">.</span>autoconnect  yes</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  con  modify  team0  ipv4.method  manual  ipv4.addresses  '172.16.3.20/24'  connection.autoconnect  yes
+</pre></div></div>
+      <p>3）新建聚合成员连接</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  add  con<span class="sh_symbol">-</span>name  team0<span class="sh_symbol">-</span>p1  type  team<span class="sh_symbol">-</span>slave  ifname  eth1  master  team0</li><li>Connection <span class="sh_string">'team0-p1'</span> <span class="sh_symbol">(</span>a62d23a2<span class="sh_symbol">-</span>9a2a<span class="sh_number">-4855</span><span class="sh_symbol">-</span>8fbc<span class="sh_symbol">-</span>60ce1fd43f0b<span class="sh_symbol">)</span> successfully added<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  con  add  con<span class="sh_symbol">-</span>name  team0<span class="sh_symbol">-</span>p2  type  team<span class="sh_symbol">-</span>slave  ifname  eth2  master  team0</li><li>Connection <span class="sh_string">'team0-p2'</span> <span class="sh_symbol">(</span>f4d4980e<span class="sh_number">-8123-4840</span><span class="sh_symbol">-</span>89ac<span class="sh_symbol">-</span>1af148cc2eea<span class="sh_symbol">)</span> successfully added<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  con  add  con-name  team0-p1  type  team-slave  ifname  eth1  master  team0
+Connection 'team0-p1' (a62d23a2-9a2a-4855-8fbc-60ce1fd43f0b) successfully added.
+[root@server0 ~]# nmcli  con  add  con-name  team0-p2  type  team-slave  ifname  eth2  master  team0
+Connection 'team0-p2' (f4d4980e-8123-4840-89ac-1af148cc2eea) successfully added.
+</pre></div></div>
+      <p class="number">步骤三：激活聚合连接</p>
+      <p>1）激活聚合连接</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  team0</li><li>Connection successfully <span class="sh_function">activated</span> <span class="sh_symbol">(</span>D<span class="sh_symbol">-</span>Bus active path<span class="sh_symbol">:</span> <span class="sh_regexp">/org/</span><span class="sh_normal">freedesktop</span><span class="sh_symbol">/</span><span class="sh_normal">NetworkManager</span><span class="sh_symbol">/</span><span class="sh_normal">ActiveConnection</span><span class="sh_symbol">/</span><span class="sh_number">6</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  up  team0
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/6)
+</pre></div></div>
+      <p>2）激活聚合成员连接</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  team0<span class="sh_symbol">-</span>p1 </li><li>Connection successfully <span class="sh_function">activated</span> <span class="sh_symbol">(</span>D<span class="sh_symbol">-</span>Bus active path<span class="sh_symbol">:</span> <span class="sh_regexp">/org/</span><span class="sh_normal">freedesktop</span><span class="sh_symbol">/</span><span class="sh_normal">NetworkManager</span><span class="sh_symbol">/</span><span class="sh_normal">ActiveConnection</span><span class="sh_symbol">/</span><span class="sh_number">9</span><span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># nmcli  connection  up  team0<span class="sh_symbol">-</span>p2</li><li>Connection successfully <span class="sh_function">activated</span> <span class="sh_symbol">(</span>D<span class="sh_symbol">-</span>Bus active path<span class="sh_symbol">:</span> <span class="sh_regexp">/org/</span><span class="sh_normal">freedesktop</span><span class="sh_symbol">/</span><span class="sh_normal">NetworkManager</span><span class="sh_symbol">/</span><span class="sh_normal">ActiveConnection</span><span class="sh_symbol">/</span><span class="sh_number">10</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# nmcli  connection  up  team0-p1 
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/9)
+[root@server0 ~]# nmcli  connection  up  team0-p2
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/10)
+</pre></div></div>
+      <p class="number">步骤四：确认聚合连接状态</p>
+      <p>1）查看聚合连接地址</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># ifconfig  team0</li><li>team0<span class="sh_symbol">:</span> flags<span class="sh_symbol">=</span><span class="sh_number">4163</span><span class="sh_symbol">&lt;</span>UP<span class="sh_symbol">,</span>BROADCAST<span class="sh_symbol">,</span>RUNNING<span class="sh_symbol">,</span>MULTICAST<span class="sh_symbol">&gt;</span>  mtu <span class="sh_number">1500</span></li><li>        inet <span class="sh_number">172.16.3.20</span>  netmask <span class="sh_number">255.255.255.0</span>  broadcast <span class="sh_number">172.16.3.255</span></li><li>        inet6 fe80<span class="sh_symbol">::</span>c80d<span class="sh_symbol">:</span>efff<span class="sh_symbol">:</span>fe08<span class="sh_symbol">:</span>ca57  prefixlen <span class="sh_number">64</span>  scopeid <span class="sh_number">0x20</span><span class="sh_symbol">&lt;</span>link<span class="sh_symbol">&gt;</span></li><li>        ether ca<span class="sh_symbol">:</span>0d<span class="sh_symbol">:</span>ef<span class="sh_symbol">:</span><span class="sh_number">08</span><span class="sh_symbol">:</span>ca<span class="sh_symbol">:</span><span class="sh_number">57</span>  txqueuelen <span class="sh_number">0</span>  <span class="sh_symbol">(</span>Ethernet<span class="sh_symbol">)</span></li><li>        RX packets <span class="sh_number">0</span>  bytes <span class="sh_number">0</span> <span class="sh_symbol">(</span><span class="sh_number">0.0</span> B<span class="sh_symbol">)</span></li><li>        RX errors <span class="sh_number">0</span>  dropped <span class="sh_number">36</span>  overruns <span class="sh_number">0</span>  frame <span class="sh_number">0</span></li><li>        TX packets <span class="sh_number">68</span>  bytes <span class="sh_number">8695</span> <span class="sh_symbol">(</span><span class="sh_number">8.4</span> KiB<span class="sh_symbol">)</span></li><li>        TX errors <span class="sh_number">0</span>  dropped <span class="sh_number">1</span> overruns <span class="sh_number">0</span>  carrier <span class="sh_number">0</span>  collisions <span class="sh_number">0</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# ifconfig  team0
+team0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 172.16.3.20  netmask 255.255.255.0  broadcast 172.16.3.255
+        inet6 fe80::c80d:efff:fe08:ca57  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether ca:0d:ef:08:ca:57  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 36  overruns 0  frame 0
+        TX packets 68  bytes 8695 (8.4 KiB)
+        TX errors 0  dropped 1 overruns 0  carrier 0  collisions 0
+</pre></div></div>
+      <p>2）查看聚合连接运行状态</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># teamdctl  team0  state</li><li>setup<span class="sh_symbol">:</span></li><li>  runner<span class="sh_symbol">:</span> activebackup  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//运行模式/类型</span></li><li>ports<span class="sh_symbol">:</span></li><li>  eth1  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成员网卡1</span></li><li>    link watches<span class="sh_symbol">:</span></li><li>      link summary<span class="sh_symbol">:</span> up</li><li>      instance<span class="sh_symbol">[</span>link_watch_0<span class="sh_symbol">]:</span></li><li>        name<span class="sh_symbol">:</span> ethtool</li><li>        link<span class="sh_symbol">:</span> up</li><li>  eth2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//成员网卡2</span></li><li>    link watches<span class="sh_symbol">:</span></li><li>      link summary<span class="sh_symbol">:</span> up</li><li>      instance<span class="sh_symbol">[</span>link_watch_0<span class="sh_symbol">]:</span></li><li>        name<span class="sh_symbol">:</span> ethtool</li><li>        link<span class="sh_symbol">:</span> up</li><li>runner<span class="sh_symbol">:</span></li><li>  active port<span class="sh_symbol">:</span> eth1  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//当前活动的成员网卡</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# teamdctl  team0  state
+setup:
+  runner: activebackup  							//运行模式/类型
+ports:
+  eth1  											//成员网卡1
+    link watches:
+      link summary: up
+      instance[link_watch_0]:
+        name: ethtool
+        link: up
+  eth2 											//成员网卡2
+    link watches:
+      link summary: up
+      instance[link_watch_0]:
+        name: ethtool
+        link: up
+runner:
+  active port: eth1  								//当前活动的成员网卡
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：配置firewalld防火墙</h2>
+      <h3>5.1 问题</h3>
+      <p>本例要求为两个虚拟机 server0、desktop0配置防火墙策略：</p>
+      <ol class="list">
+        <li>允许从172.25.0.0/24网段的客户机访问 server0、desktop0 的任何服务
+</li>
+        <li>禁止从my133t.org域（172.34.0.0/24网段）的客户机访问 server0、desktop0 的任何服务
+</li>
+        <li>在172.25.0.0/24网络中的系统，访问 server0 的本地端口5423将被转发到80
+</li>
+        <li>上述设置必须永久有效
+</li>
+      </ol>
+      <h3>5.2 方案</h3>
+      <p>RHEL7的防火墙体系根据所在的网络场所区分，提供了预设的安全区域：</p>
+      <ul class="list">
+        <li>public：仅允许访问本机的sshd等少数几个服务
+</li>
+        <li>trusted：允许任何访问
+</li>
+        <li>block：阻塞任何来访请求
+</li>
+        <li>drop：丢弃任何来访的数据包
+</li>
+        <li>……
+</li>
+      </ul>
+      <p>新增防火墙规则的位置包括：</p>
+      <ul class="list">
+        <li>运行时（runtime）：仅当前有效，重载防火墙后失效
+</li>
+        <li>永久（permanent）：静态配置，需要重载防火墙才能生效
+</li>
+      </ul>
+      <p>本地端口转发（端口1 --&gt; 端口2）：</p>
+      <ul class="list">
+        <li>从客户机访问防火墙主机的 端口1 时，与访问防火墙的 端口 2 时等效
+</li>
+        <li>真正的网络应用服务其实在 端口2 提供监听
+</li>
+      </ul>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：采取“默认全允许，仅拒绝个别”的防护策略</p>
+      <p>1）启用防火墙服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  firewalld</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  enable  firewalld</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# systemctl  restart  firewalld
+[root@server0 ~]# systemctl  enable  firewalld
+</pre></div></div>
+      <p>2）将默认区域设置为trusted</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>get<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改前</span></li><li><span class="sh_keyword">public</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>set<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone<span class="sh_symbol">=</span>trusted &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改操作</span></li><li>success</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>get<span class="sh_symbol">-</span><span class="sh_keyword">default</span><span class="sh_symbol">-</span>zone  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//修改后</span></li><li>trusted</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# firewall-cmd  --get-default-zone 				//修改前
+public
+[root@server0 ~]# firewall-cmd  --set-default-zone=trusted 		//修改操作
+success
+[root@server0 ~]# firewall-cmd  --get-default-zone  			//修改后
+trusted
+</pre></div></div>
+      <p class="number">步骤二：封锁指定的IP网段</p>
+      <p>1）添加永久配置“阻塞来自网段172.34.0.0/24的任何访问”</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>permanent  <span class="sh_symbol">--</span>zone<span class="sh_symbol">=</span>block  <span class="sh_symbol">--</span>add<span class="sh_symbol">-</span>source<span class="sh_symbol">=</span><span class="sh_number">172.34.0.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span></li><li>success</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# firewall-cmd  --permanent  --zone=block  --add-source=172.34.0.0/24
+success
+</pre></div></div>
+      <p>2）重载防火墙</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>reload</li><li>success</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# firewall-cmd  --reload
+success
+</pre></div></div>
+      <p>3）检查运行时规则</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>list<span class="sh_symbol">-</span>all  <span class="sh_symbol">--</span>zone<span class="sh_symbol">=</span>block</li><li>block</li><li>  interfaces<span class="sh_symbol">:</span> </li><li>  sources<span class="sh_symbol">:</span> <span class="sh_number">172.34.0.0</span><span class="sh_symbol">/</span><span class="sh_number">24</span></li><li>  services<span class="sh_symbol">:</span> </li><li>  ports<span class="sh_symbol">:</span> </li><li>  masquerade<span class="sh_symbol">:</span> no</li><li>  forward<span class="sh_symbol">-</span>ports<span class="sh_symbol">:</span> </li><li>  icmp<span class="sh_symbol">-</span>blocks<span class="sh_symbol">:</span> </li><li>  rich rules<span class="sh_symbol">:</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# firewall-cmd  --list-all  --zone=block
+block
+  interfaces: 
+  sources: 172.34.0.0/24
+  services: 
+  ports: 
+  masquerade: no
+  forward-ports: 
+  icmp-blocks: 
+  rich rules:
+</pre></div></div>
+      <p class="number">步骤三：实现5423--&gt;80端口转发</p>
+      <p>1）针对80端口部署测试应用</p>
+      <p>快速搭建一个测试网站：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  httpd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//装包</span></li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># <span class="sh_normal">vim  </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>index<span class="sh_symbol">.</span>html  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//部署测试网页</span></li><li>test site<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># systemctl  restart  httpd   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//起服务</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# yum  -y  install  httpd					//装包
+.. ..
+[root@server0 ~]# vim  /var/www/html/index.html  			//部署测试网页
+test site.
+[root@server0 ~]# systemctl  restart  httpd   				//起服务
+</pre></div></div>
+      <p>从客户端访问，确认测试网页：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># yum  <span class="sh_symbol">-</span>y  install  elinks</li><li><span class="sh_symbol">..</span> <span class="sh_symbol">..</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>   test site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# yum  -y  install  elinks
+.. ..
+[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+   test site.
+</pre></div></div>
+      <p>2）配置5423--&gt;80端口转发策略</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>permanent  <span class="sh_symbol">--</span>zone<span class="sh_symbol">=</span>trusted  <span class="sh_symbol">--</span>add<span class="sh_symbol">-</span>forward<span class="sh_symbol">-</span>port<span class="sh_symbol">=</span>port<span class="sh_symbol">=</span><span class="sh_number">5423</span><span class="sh_symbol">:</span>proto<span class="sh_symbol">=</span>tcp<span class="sh_symbol">:</span>toport<span class="sh_symbol">=</span><span class="sh_number">80</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//添加永久配置</span></li><li>success</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>reload  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//重载服务</span></li><li>Success</li><li><span class="sh_symbol">[</span>root@server0 <span class="sh_symbol">~]</span># firewall<span class="sh_symbol">-</span>cmd  <span class="sh_symbol">--</span>list<span class="sh_symbol">-</span>all  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sh_comment">//确认运行时规则</span></li><li><span class="sh_function">trusted</span> <span class="sh_symbol">(</span><span class="sh_keyword">default</span><span class="sh_symbol">,</span> active<span class="sh_symbol">)</span></li><li>  interfaces<span class="sh_symbol">:</span> eth1 eth2 eth0 team0</li><li>  sources<span class="sh_symbol">:</span> </li><li>  services<span class="sh_symbol">:</span> </li><li>  ports<span class="sh_symbol">:</span> </li><li>  masquerade<span class="sh_symbol">:</span> no</li><li>  forward<span class="sh_symbol">-</span>ports<span class="sh_symbol">:</span> port<span class="sh_symbol">=</span><span class="sh_number">5423</span><span class="sh_symbol">:</span>proto<span class="sh_symbol">=</span>tcp<span class="sh_symbol">:</span>toport<span class="sh_symbol">=</span><span class="sh_number">80</span><span class="sh_symbol">:</span>toaddr<span class="sh_symbol">=</span></li><li>  icmp<span class="sh_symbol">-</span>blocks<span class="sh_symbol">:</span> </li><li>  rich rules<span class="sh_symbol">:</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@server0 ~]# firewall-cmd  --permanent  --zone=trusted  --add-forward-port=port=5423:proto=tcp:toport=80  							//添加永久配置
+success
+[root@server0 ~]# firewall-cmd  --reload  					//重载服务
+Success
+[root@server0 ~]# firewall-cmd  --list-all  				//确认运行时规则
+trusted (default, active)
+  interfaces: eth1 eth2 eth0 team0
+  sources: 
+  services: 
+  ports: 
+  masquerade: no
+  forward-ports: port=5423:proto=tcp:toport=80:toaddr=
+  icmp-blocks: 
+  rich rules:
+</pre></div></div>
+      <p>3）验证端口转发策略</p>
+      <p>从desktop0上访问server0的5423端口，与访问server0的80端口效果一样：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/ENGINEER/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com:5423/</span></li><li>   test site<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@desktop0 <span class="sh_symbol">~]</span># elinks  <span class="sh_symbol">-</span>dump  http<span class="sh_symbol">:</span><span class="sh_comment">//server0.example.com/</span></li><li>   test site<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@desktop0 ~]# elinks  -dump  http://server0.example.com:5423/
+   test site.
+[root@desktop0 ~]# elinks  -dump  http://server0.example.com/
+   test site.
+</pre></div></div>
+    </div>
+  
+</body></html>

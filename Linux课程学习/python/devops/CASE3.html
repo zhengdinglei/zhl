@@ -1,0 +1,451 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE3_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE3_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE3_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE3_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE3_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devops DAY03</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#case1">案例1：熟悉HTTP工作流程</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#case2">案例2：爬取网页</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#case3">案例3：爬取图片</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#case4">案例4：处理下载错误</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#case5">案例5：利用多线程实现ssh并发访问</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：熟悉HTTP工作流程</h2>
+      <h3>1.1 问题</h3>
+      <ol class="list">
+        <li>为Firefox安装firebug插件
+</li>
+        <li>打开Firefox的firebug或Chrome开发者工具
+</li>
+        <li>访问http://www.tedu.cn
+</li>
+        <li>在开发者工具的“网络”选项卡中查看请求和响应
+</li>
+      </ol>
+      <h3>1.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：为Firefox安装firebug插件</p>
+      <p>1)打开Firefox浏览器，点击右上角打开菜单按钮/，打开附加组件，如图-1所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image001.png">
+        <p>图-1</p>
+      </div>
+      <p>2)右上角搜索框搜索firebug插件，如图-2所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image002.png">
+        <p>图-2</p>
+      </div>
+      <p>3)选定搜索结果安装，如图-3所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image003.png">
+        <p>图-3</p>
+      </div>
+      <p>4)安装成功，如图-4所示：</p><p></p><p></p>
+      <div class="image">
+        <img src="./CASE3_files/image004.png">
+        <p>图-4</p>
+      </div>
+      <p class="number">步骤二：访问http://www.tedu.cn</p>
+      <p>访问http://www.tedu.cn，按“F12”打开Firefox的firebug，如图-5所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image005.png">
+        <p>图-5</p>
+      </div>
+      <p class="number">步骤二：在开发者工具的“网络”选项卡中查看请求和响应</p>
+      <p>如图-6所示：</p>
+      <div class="image">
+        <img src="./CASE3_files/image006.png">
+        <p>图-6</p>
+      </div>
+      <p>注意：</p>
+      <p>常用的请求报头：</p>
+      <p>METHOD 请求资源的方法，这个是必须的</p>
+      <p>Host 被请求资源的名子，这个是必须的</p>
+      <p>Accept 请求报头域用于指定客户端接受哪些类型的信息</p>
+      <p>Accept-Encoding 它是用于指定可接受的内容编码</p>
+      <p>User-Agent 客户端信息</p>
+      <p>Connection 是否关闭连接</p>
+      <p>GET应响消息：</p>
+      <p>HTTP/1.1 200 协议、版本和状态码</p>
+      <p>Date 日期时间</p>
+      <p>Server 服务器信息</p>
+      <p>Content-Type 响应内容类型</p>
+      <p>Content-Length 响应数据长度</p>
+      <p>Last-Modified 资源最后更改时间</p>
+      <p>Connection 连接方式</p>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：爬取网页</h2>
+      <h3>2.1 问题</h3>
+      <p>编写一个get_web.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>爬取的网页为http://www.tedu.cn
+</li>
+        <li>保存的文件名为/tmp/tedu.html
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>导入sys模块，用sys.argv方法获取get_web函数实参，让用户在命令行上提供http://www.tedu.cn和/tmp/tedu.html两个参数，调用get_web函数实现如下功能：</p>
+      <p>1)导入urllib模块，使用urllib模块的urlopen函数打开url（即网址），赋值给html</p>
+      <p>2)以写方式打开/tmp/tedu.html文件</p>
+      <p>3)以循环方式：</p>
+      <p>读html获取的数据，保存到data</p>
+      <p>将data写入/tmp/tedu.html</p>
+      <p>4)关闭html</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># vim get_web<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import sys</li><li>from urllib<span class="sh_symbol">.</span>request import urlopen</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">get_web</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> fname<span class="sh_symbol">):</span></li><li>    html <span class="sh_symbol">=</span> <span class="sh_function">urlopen</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#使用urllib模块的urlopen函数打开url，赋值给html</li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'wb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> html<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">(</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> not data<span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            fobj<span class="sh_symbol">.</span><span class="sh_function">write</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    html<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">get_web</span><span class="sh_symbol">(</span>sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">],</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">2</span><span class="sh_symbol">])</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#让用户在命令行上提供网址和下载数据保存位置</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# vim get_web.py
+#!/usr/bin/env python3
+
+import sys
+from urllib.request import urlopen
+
+def get_web(url, fname):
+    html = urlopen(url)	#使用urllib模块的urlopen函数打开url，赋值给html
+
+    with open(fname, 'wb') as fobj:
+        while True:
+            data = html.read(4096)
+            if not data:
+                break
+            fobj.write(data)
+
+    html.close()
+
+if __name__ == '__main__':
+    get_web(sys.argv[1], sys.argv[2])		#让用户在命令行上提供网址和下载数据保存位置
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 get_web<span class="sh_symbol">.</span>py http<span class="sh_symbol">:</span><span class="sh_comment">//www.tedu.cn /tmp/tedu.html</span></li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># <span class="sh_normal">cat </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>tedu<span class="sh_symbol">.</span>html</li><li><span style="display:none;">&nbsp;</span></li><li>执行cat命令可以看到<span class="sh_regexp">/tmp/</span>tedu<span class="sh_symbol">.</span>html文件中爬取到的内容</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# python3 get_web.py http://www.tedu.cn /tmp/tedu.html
+[root@localhost day11]# cat /tmp/tedu.html
+
+执行cat命令可以看到/tmp/tedu.html文件中爬取到的内容
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：爬取图片</h2>
+      <h3>3.1 问题</h3>
+      <ol class="list">
+        <li>将http://www.tedu.cn所有的图片下载到本地
+</li>
+        <li>本地的目录为/tmp/images
+</li>
+        <li>图片名与网站上图片名保持一致
+</li>
+      </ol>
+      <h3>3.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <p>1)爬取网页内容放入指定fname（即/tmp/tedu.html）文件中</p>
+      <p>创建get_web.py文件，编写代码如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># vim get_web<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import sys</li><li><span style="display:none;">&nbsp;</span></li><li>from urllib<span class="sh_symbol">.</span>request import urlopen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#导入urllib</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">get_web</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> fname<span class="sh_symbol">):</span>&nbsp;&nbsp;&nbsp;&nbsp;#url为爬取目标网址（www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn）</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#fname为爬取内容存储文件名</li><li>    html <span class="sh_symbol">=</span> <span class="sh_function">urlopen</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#使用urllib模块的urlopen函数打开url，赋值给html</li><li><span style="display:none;">&nbsp;</span></li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'wb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;#以写方式打开文件</li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> html<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">(</span><span class="sh_number">4096</span><span class="sh_symbol">)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#读html获取的数据，保存到data</li><li>            <span class="sh_keyword">if</span> not data<span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            fobj<span class="sh_symbol">.</span><span class="sh_function">write</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 将data写入文件中</li><li><span style="display:none;">&nbsp;</span></li><li>    html<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# vim get_web.py
+#!/usr/bin/env python3
+
+import sys
+
+from urllib.request import urlopen		#导入urllib
+
+def get_web(url, fname):	#url为爬取目标网址（www.tedu.cn）
+							#fname为爬取内容存储文件名
+    html = urlopen(url)	#使用urllib模块的urlopen函数打开url，赋值给html
+
+    with open(fname, 'wb') as fobj:	#以写方式打开文件
+        while True:
+            data = html.read(4096) 		#读html获取的数据，保存到data
+            if not data:
+                break
+            fobj.write(data)		# 将data写入文件中
+
+    html.close()
+</pre></div></div>
+      <p>2)利用正则匹配，将爬取到的fname文件内容中所有图片网址放入result列表</p>
+      <p>创建get_url.py文件，编写代码如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># vim get_url<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import sys</li><li>import re</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">get_url</span><span class="sh_symbol">(</span>patt<span class="sh_symbol">,</span> fname<span class="sh_symbol">):</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#patt可匹配图片网址正则表达式，</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#fname为<span class="sh_number">1</span>）中爬取到内容的文件</li><li>    cpatt <span class="sh_symbol">=</span> re<span class="sh_symbol">.</span><span class="sh_function">compile</span><span class="sh_symbol">(</span>patt<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#将正则表达式字符串形式编译为cpatt实例</li><li>    result <span class="sh_symbol">=</span> <span class="sh_symbol">[]</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#存放匹配正则表达式的图片网址</li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#打开爬取到网站（www<span class="sh_symbol">.</span>tedu<span class="sh_symbol">.</span>cn）内容的文件</li><li>        <span class="sh_keyword">for</span> line <span class="sh_keyword">in</span> fobj<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#遍历fname文件</li><li>            m <span class="sh_symbol">=</span> cpatt<span class="sh_symbol">.</span><span class="sh_function">search</span><span class="sh_symbol">(</span>line<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#使用cpatt实例查找匹配规则的网址</li><li>            <span class="sh_keyword">if</span> m<span class="sh_symbol">:</span></li><li>                result<span class="sh_symbol">.</span><span class="sh_function">append</span><span class="sh_symbol">(</span>m<span class="sh_symbol">.</span><span class="sh_function">group</span><span class="sh_symbol">())</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#将匹配到的图片网址最加到result列表</li><li>    <span class="sh_keyword">return</span> result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#函数最终返回result列表</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    url <span class="sh_symbol">=</span> r<span class="sh_string">'http://[.</span><span class="sh_specialchar">\w</span><span class="sh_string">/-]+</span><span class="sh_specialchar">\.</span><span class="sh_string">(jpg|png|jpeg|gif)'</span>&nbsp;&nbsp;&nbsp;&nbsp;#符合图片网址规则的正则表达式</li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_function">get_url</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]))</span>&nbsp;&nbsp;&nbsp;&nbsp;</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# vim get_url.py
+#!/usr/bin/env python3
+
+import sys
+import re
+
+def get_url(patt, fname):		#patt可匹配图片网址正则表达式，
+								#fname为1）中爬取到内容的文件
+    cpatt = re.compile(patt)	#将正则表达式字符串形式编译为cpatt实例
+    result = []				#存放匹配正则表达式的图片网址
+    with open(fname) as fobj:		#打开爬取到网站（www.tedu.cn）内容的文件
+        for line in fobj:			#遍历fname文件
+            m = cpatt.search(line)		#使用cpatt实例查找匹配规则的网址
+            if m:
+                result.append(m.group())		#将匹配到的图片网址最加到result列表
+    return result							#函数最终返回result列表
+
+if __name__ == '__main__':
+    url = r'http://[.\w/-]+\.(jpg|png|jpeg|gif)'	#符合图片网址规则的正则表达式
+    print(get_url(url, sys.argv[1]))	
+</pre></div></div>
+      <p>3)遍历图片列表result，将图片网址对应内容爬取下来存入指定文件</p>
+      <p>创建download.py文件，编写代码如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># vim download<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import os</li><li>from get_url import get_url&nbsp;&nbsp;&nbsp;&nbsp;#导入get_url函数</li><li>from get_web import get_web&nbsp;&nbsp;&nbsp;&nbsp;#导入get_web函数</li><li><span style="display:none;">&nbsp;</span></li><li>#调用get_web函数爬取<span class="sh_regexp">/http://www.tedu.cn网站内容，存入/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>tedu<span class="sh_symbol">.</span>html文件中</li><li><span class="sh_function">get_web</span><span class="sh_symbol">(</span><span class="sh_string">'http://www.tedu.cn/'</span><span class="sh_symbol">,</span> <span class="sh_string">'/tmp/tedu.html'</span><span class="sh_symbol">)</span></li><li>#符合图片网址正则表达式</li><li>img_url <span class="sh_symbol">=</span> r<span class="sh_string">'http://[.</span><span class="sh_specialchar">\w</span><span class="sh_string">/-]+</span><span class="sh_specialchar">\.</span><span class="sh_string">(jpg|png|jpeg|gif)'</span></li><li>#调用get_url函数，从<span class="sh_regexp">/tmp/</span>tedu<span class="sh_symbol">.</span>html文件中获取符合匹配规则的图片网址，</li><li>#存入result列表中，将列表结果赋值给urls变量</li><li>urls <span class="sh_symbol">=</span> <span class="sh_function">get_url</span><span class="sh_symbol">(</span>img_url<span class="sh_symbol">,</span> <span class="sh_string">'/tmp/tedu.html'</span><span class="sh_symbol">)</span></li><li>#爬取到的图片存储目录</li><li>img_dir <span class="sh_symbol">=</span> <span class="sh_string">'/tmp/images'</span></li><li>#判断目录是否存在，如果不存在则创建该目录</li><li><span class="sh_keyword">if</span> not os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">exists</span><span class="sh_symbol">(</span>img_dir<span class="sh_symbol">):</span>&nbsp;&nbsp;&nbsp;&nbsp;</li><li>    os<span class="sh_symbol">.</span><span class="sh_function">mkdir</span><span class="sh_symbol">(</span>img_dir<span class="sh_symbol">)</span></li><li>#遍历图片网址列表，每次循环遍历出一个图片网址</li><li><span class="sh_keyword">for</span> url <span class="sh_keyword">in</span> urls<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li># url<span class="sh_symbol">.</span><span class="sh_function">split</span><span class="sh_symbol">(</span><span class="sh_string">'/'</span><span class="sh_symbol">)[-</span><span class="sh_number">1</span><span class="sh_symbol">]</span>：将网址切片，取最后一个字符命名图片</li><li>#将图片存储目录与图片名拼接，举例：fname<span class="sh_symbol">=</span><span class="sh_regexp">/tmp/im</span><span class="sh_normal">ages</span><span class="sh_symbol">/</span>XXX<span class="sh_symbol">.</span>png</li><li>    fname <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">join</span><span class="sh_symbol">(</span>img_dir<span class="sh_symbol">,</span> url<span class="sh_symbol">.</span><span class="sh_function">split</span><span class="sh_symbol">(</span><span class="sh_string">'/'</span><span class="sh_symbol">)[-</span><span class="sh_number">1</span><span class="sh_symbol">])</span></li><li>#调用get_web函数，爬取图片网址内容，存入fname文件中</li><li>&nbsp;&nbsp;&nbsp;&nbsp;    <span class="sh_function">get_web</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> fname<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# vim download.py
+#!/usr/bin/env python3
+
+import os
+from get_url import get_url	#导入get_url函数
+from get_web import get_web	#导入get_web函数
+
+#调用get_web函数爬取/http://www.tedu.cn网站内容，存入/tmp/tedu.html文件中
+get_web('http://www.tedu.cn/', '/tmp/tedu.html')
+#符合图片网址正则表达式
+img_url = r'http://[.\w/-]+\.(jpg|png|jpeg|gif)'
+#调用get_url函数，从/tmp/tedu.html文件中获取符合匹配规则的图片网址，
+#存入result列表中，将列表结果赋值给urls变量
+urls = get_url(img_url, '/tmp/tedu.html')
+#爬取到的图片存储目录
+img_dir = '/tmp/images'
+#判断目录是否存在，如果不存在则创建该目录
+if not os.path.exists(img_dir):	
+    os.mkdir(img_dir)
+#遍历图片网址列表，每次循环遍历出一个图片网址
+for url in urls:		
+# url.split('/')[-1]：将网址切片，取最后一个字符命名图片
+#将图片存储目录与图片名拼接，举例：fname=/tmp/images/XXX.png
+    fname = os.path.join(img_dir, url.split('/')[-1])
+#调用get_web函数，爬取图片网址内容，存入fname文件中
+	    get_web(url, fname)
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 download<span class="sh_symbol">.</span>py</li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># <span class="sh_normal">nautilus </span><span class="sh_symbol">/</span><span class="sh_normal">tmp</span><span class="sh_symbol">/</span>images</li><li><span style="display:none;">&nbsp;</span></li><li>执行以上命令即可看到爬取的图片，且图片命名与网站上图片命名一致</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# python3 download.py
+[root@localhost day11]# nautilus /tmp/images
+
+执行以上命令即可看到爬取的图片，且图片命名与网站上图片命名一致
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：处理下载错误</h2>
+      <h3>4.1 问题</h3>
+      <ol class="list">
+        <li>起动一个web服务
+</li>
+        <li>在web服务器的文档目录下创建目录ban，权限设置为700
+</li>
+        <li>编写python程序访问不存在的路径和ban目录，处理404和403错误
+</li>
+        <li>404错误打印“无此页面”，403错误打印“无权访问”
+</li>
+      </ol>
+      <h3>4.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：启动一个web服务</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># systemctl restart httpd</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# systemctl restart httpd
+</pre></div></div>
+      <p class="number">步骤二：在web服务器的文档目录下创建目录ban，权限设置为700</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># mkdir <span class="sh_symbol">-</span>m <span class="sh_number">700</span><span class="sh_normal"> </span><span class="sh_symbol">/</span><span class="sh_keyword">var</span><span class="sh_regexp">/www/</span><span class="sh_normal">html</span><span class="sh_symbol">/</span>ban</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# mkdir -m 700 /var/www/html/ban
+</pre></div></div>
+      <p class="number">步骤三：如果访问的页面不存在或拒绝访问，程序将抛出异常</p>
+      <p>执行案例2中get_web.py文件，访问不存在页面，抛出404异常如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 get_web<span class="sh_symbol">.</span>py http<span class="sh_symbol">:</span><span class="sh_comment">//127.0.0.1/abc/ /tmp/abc.html</span></li><li><span class="sh_function">Traceback</span> <span class="sh_symbol">(</span>most recent call last<span class="sh_symbol">):</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li>    raise <span class="sh_function">HTTPError</span><span class="sh_symbol">(</span>req<span class="sh_symbol">.</span>full_url<span class="sh_symbol">,</span> code<span class="sh_symbol">,</span> msg<span class="sh_symbol">,</span> hdrs<span class="sh_symbol">,</span> fp<span class="sh_symbol">)</span></li><li>urllib<span class="sh_symbol">.</span>error<span class="sh_symbol">.</span>HTTPError<span class="sh_symbol">:</span> HTTP <span class="sh_predef_func">Error</span> <span class="sh_number">404</span><span class="sh_symbol">:</span> Not Found</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# python3 get_web.py http://127.0.0.1/abc/ /tmp/abc.html
+Traceback (most recent call last):
+...
+...
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+</pre></div></div>
+      <p>执行案例2中get_web.py文件，访问存在页面ban目录，抛出403权限异常如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 get_web<span class="sh_symbol">.</span>py http<span class="sh_symbol">:</span><span class="sh_comment">//127.0.0.1/ban/ /tmp/abc.html</span></li><li><span class="sh_function">Traceback</span> <span class="sh_symbol">(</span>most recent call last<span class="sh_symbol">):</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li>    raise <span class="sh_function">HTTPError</span><span class="sh_symbol">(</span>req<span class="sh_symbol">.</span>full_url<span class="sh_symbol">,</span> code<span class="sh_symbol">,</span> msg<span class="sh_symbol">,</span> hdrs<span class="sh_symbol">,</span> fp<span class="sh_symbol">)</span></li><li>urllib<span class="sh_symbol">.</span>error<span class="sh_symbol">.</span>HTTPError<span class="sh_symbol">:</span> HTTP <span class="sh_predef_func">Error</span> <span class="sh_number">403</span><span class="sh_symbol">:</span> Forbidden</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# python3 get_web.py http://127.0.0.1/ban/ /tmp/abc.html
+Traceback (most recent call last):
+...
+...
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+</pre></div></div>
+      <p class="number">步骤三：编写python程序捕获异常</p>
+      <p>创建get_web3.py文件，实现访问不存在的路径和ban目录时，捕获404和403错误</p>
+      <p>，同时404错误打印“无此页面”，403错误打印“无权访问”，代码如下：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>import sys</li><li>from urllib<span class="sh_symbol">.</span>request import urlopen</li><li>from urllib<span class="sh_symbol">.</span>error import HTTPError&nbsp;&nbsp;&nbsp;&nbsp;#导入urllib<span class="sh_symbol">.</span>error模块，用HTTPError捕获异常信息</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">get_web</span><span class="sh_symbol">(</span>url<span class="sh_symbol">,</span> fname<span class="sh_symbol">):</span></li><li>    <span class="sh_keyword">try</span><span class="sh_symbol">:</span></li><li>        html <span class="sh_symbol">=</span> <span class="sh_function">urlopen</span><span class="sh_symbol">(</span>url<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#打开网址时即可知道是否有异常，所以将本语句放入<span class="sh_keyword">try</span>语句</li><li>    except HTTPError as e<span class="sh_symbol">:</span> &nbsp;&nbsp;&nbsp;&nbsp;#捕获返回HTTPError类的实例e</li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span>e<span class="sh_symbol">)</span></li><li>        <span class="sh_keyword">if</span> e<span class="sh_symbol">.</span>code <span class="sh_symbol">==</span> <span class="sh_number">403</span><span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#捕获异常状态码如果等于<span class="sh_number">403</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'权限不足'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#输出<span class="sh_string">'权限不足'</span></li><li>        elif e<span class="sh_symbol">.</span>code <span class="sh_symbol">==</span> <span class="sh_number">404</span><span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;#捕获异常状态码如果等于<span class="sh_number">404</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'没有那个地址'</span><span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#输出<span class="sh_string">'没有那个地址'</span></li><li>        <span class="sh_keyword">return</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#<span class="sh_keyword">return</span>后面代码均不执行</li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">,</span> <span class="sh_string">'wb'</span><span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> html<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">(</span><span class="sh_number">4096</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> not data<span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            fobj<span class="sh_symbol">.</span><span class="sh_function">write</span><span class="sh_symbol">(</span>data<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    html<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    <span class="sh_function">get_web</span><span class="sh_symbol">(</span>sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">],</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">2</span><span class="sh_symbol">])</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">import sys
+from urllib.request import urlopen
+from urllib.error import HTTPError	#导入urllib.error模块，用HTTPError捕获异常信息
+
+def get_web(url, fname):
+    try:
+        html = urlopen(url)	#打开网址时即可知道是否有异常，所以将本语句放入try语句
+    except HTTPError as e: 	#捕获返回HTTPError类的实例e
+        print(e)
+        if e.code == 403:		#捕获异常状态码如果等于403
+            print('权限不足')	#输出'权限不足'
+        elif e.code == 404:	#捕获异常状态码如果等于404
+            print('没有那个地址')	#输出'没有那个地址'
+        return						#return后面代码均不执行
+		
+    with open(fname, 'wb') as fobj:
+        while True:
+            data = html.read(4096)
+            if not data:
+                break
+            fobj.write(data)
+
+    html.close()
+
+if __name__ == '__main__':
+    get_web(sys.argv[1], sys.argv[2])
+</pre></div></div>
+      <p>测试脚本执行：</p>
+      <p>访问不存在页面：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 get_web<span class="sh_symbol">.</span>py http<span class="sh_symbol">:</span><span class="sh_comment">//127.0.0.1/abc/ /tmp/abc.html</span></li><li>HTTP <span class="sh_predef_func">Error</span> <span class="sh_number">404</span>： Not Found</li><li>没有那个地址</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# python3 get_web.py http://127.0.0.1/abc/ /tmp/abc.html
+HTTP Error 404： Not Found
+没有那个地址
+</pre></div></div>
+      <p>访问ban目录：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 get_web<span class="sh_symbol">.</span>py http<span class="sh_symbol">:</span><span class="sh_comment">//127.0.0.1/ban/ /tmp/abc.html</span></li><li>HTTP <span class="sh_predef_func">Error</span> <span class="sh_number">403</span>： Forbidden</li><li>权限不足</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# python3 get_web.py http://127.0.0.1/ban/ /tmp/abc.html
+HTTP Error 403： Forbidden
+权限不足
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：利用多线程实现ssh并发访问</h2>
+      <h3>5.1 问题</h3>
+      <p>编写一个remote_comm.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>在文件中取出所有远程主机IP地址
+</li>
+        <li>在shell命令行中接受远程服务器IP地址文件、远程服务器密码以及在远程主机上执行的命令
+</li>
+        <li>通过多线程实现在所有的远程服务器上并发执行命令
+</li>
+      </ol>
+      <h3>5.2 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：安装paramiko</p>
+      <p>paramiko 遵循SSH2协议，支持以加密和认证的方式，进行远程服务器的连接，可以实现远程文件的上传，下载或通过ssh远程执行命令。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost <span class="sh_symbol">~]</span># pip3 install paramiko</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li>Successfully installed bcrypt<span class="sh_number">-3.1.4</span> paramiko<span class="sh_number">-2.4.1</span> pyasn1<span class="sh_number">-0.4.4</span> pynacl<span class="sh_number">-1.2.1</span></li><li>You are using pip version <span class="sh_number">9.0.1</span><span class="sh_symbol">,</span> however version <span class="sh_number">18.0</span> is available<span class="sh_symbol">.</span></li><li>You should consider upgrading via the <span class="sh_string">'pip install --upgrade pip'</span> command<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost ~]# pip3 install paramiko
+
+...
+...
+Successfully installed bcrypt-3.1.4 paramiko-2.4.1 pyasn1-0.4.4 pynacl-1.2.1
+You are using pip version 9.0.1, however version 18.0 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+</pre></div></div>
+      <p>测试是否安装成功</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">&gt;&gt;&gt;</span> import paramiko</li><li><span class="sh_symbol">&gt;&gt;&gt;</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">&gt;&gt;&gt; import paramiko
+&gt;&gt;&gt;
+</pre></div></div>
+      <p class="number">步骤二：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># vim remote_comm<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import sys</li><li>import getpass</li><li>import paramiko</li><li>import threading</li><li>import os</li><li><span style="display:none;">&nbsp;</span></li><li>#创建函数实现远程连接主机、服务器密码以及在远程主机上执行的命令的功能</li><li>def <span class="sh_function">remote_comm</span><span class="sh_symbol">(</span>host<span class="sh_symbol">,</span> pwd<span class="sh_symbol">,</span> command<span class="sh_symbol">):</span></li><li>#创建用于连接ssh服务器的实例</li><li>    ssh <span class="sh_symbol">=</span> paramiko<span class="sh_symbol">.</span><span class="sh_function">SSHClient</span><span class="sh_symbol">()</span></li><li>#设置自动添加主机密钥</li><li>    ssh<span class="sh_symbol">.</span><span class="sh_function">set_missing_host_key_policy</span><span class="sh_symbol">(</span>paramiko<span class="sh_symbol">.</span><span class="sh_function">AutoAddPolicy</span><span class="sh_symbol">())</span></li><li>#连接ssh服务器，添加连接的主机、用户名、密码填好</li><li>    ssh<span class="sh_symbol">.</span><span class="sh_function">connect</span><span class="sh_symbol">(</span>hostname<span class="sh_symbol">=</span>host<span class="sh_symbol">,</span> username<span class="sh_symbol">=</span><span class="sh_string">'root'</span><span class="sh_symbol">,</span> password<span class="sh_symbol">=</span>pwd<span class="sh_symbol">)</span></li><li>#在ssh服务器上执行指定命令，返回<span class="sh_number">3</span>项类文件对象，分别是，输入、输出、错误</li><li>    stdin<span class="sh_symbol">,</span> stdout<span class="sh_symbol">,</span> stderr <span class="sh_symbol">=</span> ssh<span class="sh_symbol">.</span><span class="sh_function">exec_command</span><span class="sh_symbol">(</span>command<span class="sh_symbol">)</span></li><li>#读取输出</li><li>    out <span class="sh_symbol">=</span> stdout<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">()</span></li><li>#读取错误</li><li>    error <span class="sh_symbol">=</span> stderr<span class="sh_symbol">.</span><span class="sh_function">read</span><span class="sh_symbol">()</span></li><li>#如果有输出</li><li>    <span class="sh_keyword">if</span> out<span class="sh_symbol">:</span></li><li>#打印主机输出内容</li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'[%s] OUT:</span><span class="sh_specialchar">\n</span><span class="sh_string">%s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>host<span class="sh_symbol">,</span> out<span class="sh_symbol">.</span><span class="sh_function">decode</span><span class="sh_symbol">(</span><span class="sh_string">'utf8'</span><span class="sh_symbol">)))</span></li><li>#如果有错误</li><li>    <span class="sh_keyword">if</span> error<span class="sh_symbol">:</span></li><li>#打印主机错误信息</li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'[%s] ERROR:</span><span class="sh_specialchar">\n</span><span class="sh_string">%s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span>host<span class="sh_symbol">,</span> error<span class="sh_symbol">.</span><span class="sh_function">decode</span><span class="sh_symbol">(</span><span class="sh_string">'utf8'</span><span class="sh_symbol">)))</span></li><li>#程序结束</li><li>    ssh<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>#设定sys<span class="sh_symbol">.</span>argv长度，确保remote_comm函数中参数数量</li><li>    <span class="sh_keyword">if</span> <span class="sh_function">len</span><span class="sh_symbol">(</span>sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">)</span> <span class="sh_symbol">!=</span> <span class="sh_number">3</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'Usage: %s ipaddr_file "command"'</span> <span class="sh_symbol">%</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">0</span><span class="sh_symbol">])</span></li><li>        <span class="sh_function">exit</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li>#判断命令行上输入如果不是文件，确保输入的是文件  </li><li>    <span class="sh_keyword">if</span> not os<span class="sh_symbol">.</span>path<span class="sh_symbol">.</span><span class="sh_function">isfile</span><span class="sh_symbol">(</span>sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]):</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'No such file:'</span><span class="sh_symbol">,</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">])</span></li><li>        <span class="sh_function">exit</span><span class="sh_symbol">(</span><span class="sh_number">2</span><span class="sh_symbol">)</span></li><li>#fname为存储远程主机ip的文件，用sys<span class="sh_symbol">.</span>argv方法，可以在执行脚本时再输入文件名，更为灵活</li><li>    fname <span class="sh_symbol">=</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">1</span><span class="sh_symbol">]</span></li><li>#command为在远程主机上执行的命令，用sys<span class="sh_symbol">.</span>argv方法，可以在执行脚本时再输入相应命令，command为remote_comm函数第三个参数</li><li>    command <span class="sh_symbol">=</span> sys<span class="sh_symbol">.</span>argv<span class="sh_symbol">[</span><span class="sh_number">2</span><span class="sh_symbol">]</span></li><li>#通过getpass输入远程服务器密码，pwd为remote_comm函数第二个参数</li><li>    pwd <span class="sh_symbol">=</span> getpass<span class="sh_symbol">.</span><span class="sh_function">getpass</span><span class="sh_symbol">()</span></li><li>#打开存有远程主机ip的文件</li><li>    <span class="sh_keyword">with</span> <span class="sh_function">open</span><span class="sh_symbol">(</span>fname<span class="sh_symbol">)</span> as fobj<span class="sh_symbol">:</span></li><li>#将遍历文件将ip以列表形式存入ips，line<span class="sh_symbol">.</span><span class="sh_function">strip</span><span class="sh_symbol">()</span>可以去掉每行ip后<span class="sh_symbol">\</span>n</li><li>        ips <span class="sh_symbol">=</span> <span class="sh_symbol">[</span>line<span class="sh_symbol">.</span><span class="sh_function">strip</span><span class="sh_symbol">()</span> <span class="sh_keyword">for</span> line <span class="sh_keyword">in</span> fobj<span class="sh_symbol">]</span></li><li>#循环遍历列表，获取ip地址，ip为remote_comm函数第一个参数</li><li>    <span class="sh_keyword">for</span> ip <span class="sh_keyword">in</span> ips<span class="sh_symbol">:</span></li><li>#将读取到的ip地址作为remote_comm函数实际参数传递给函数，ips中有几个ip地址循环几次</li><li>#创建多线程</li><li>        t <span class="sh_symbol">=</span> threading<span class="sh_symbol">.</span><span class="sh_function">Thread</span><span class="sh_symbol">(</span>target<span class="sh_symbol">=</span>remote_comm<span class="sh_symbol">,</span> args<span class="sh_symbol">=(</span>ip<span class="sh_symbol">,</span> pwd<span class="sh_symbol">,</span> command<span class="sh_symbol">))</span></li><li>#启用多线程</li><li>        t<span class="sh_symbol">.</span><span class="sh_function">start</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day11]# vim remote_comm.py
+#!/usr/bin/env python3
+
+import sys
+import getpass
+import paramiko
+import threading
+import os
+
+#创建函数实现远程连接主机、服务器密码以及在远程主机上执行的命令的功能
+def remote_comm(host, pwd, command):
+#创建用于连接ssh服务器的实例
+    ssh = paramiko.SSHClient()
+#设置自动添加主机密钥
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#连接ssh服务器，添加连接的主机、用户名、密码填好
+    ssh.connect(hostname=host, username='root', password=pwd)
+#在ssh服务器上执行指定命令，返回3项类文件对象，分别是，输入、输出、错误
+    stdin, stdout, stderr = ssh.exec_command(command)
+#读取输出
+    out = stdout.read()
+#读取错误
+    error = stderr.read()
+#如果有输出
+    if out:
+#打印主机输出内容
+        print('[%s] OUT:\n%s' % (host, out.decode('utf8')))
+#如果有错误
+    if error:
+#打印主机错误信息
+        print('[%s] ERROR:\n%s' % (host, error.decode('utf8')))
+#程序结束
+    ssh.close()
+
+if __name__ == '__main__':
+#设定sys.argv长度，确保remote_comm函数中参数数量
+    if len(sys.argv) != 3:
+        print('Usage: %s ipaddr_file "command"' % sys.argv[0])
+        exit(1)
+#判断命令行上输入如果不是文件，确保输入的是文件  
+    if not os.path.isfile(sys.argv[1]):
+        print('No such file:', sys.argv[1])
+        exit(2)
+#fname为存储远程主机ip的文件，用sys.argv方法，可以在执行脚本时再输入文件名，更为灵活
+    fname = sys.argv[1]
+#command为在远程主机上执行的命令，用sys.argv方法，可以在执行脚本时再输入相应命令，command为remote_comm函数第三个参数
+    command = sys.argv[2]
+#通过getpass输入远程服务器密码，pwd为remote_comm函数第二个参数
+    pwd = getpass.getpass()
+#打开存有远程主机ip的文件
+    with open(fname) as fobj:
+#将遍历文件将ip以列表形式存入ips，line.strip()可以去掉每行ip后\n
+        ips = [line.strip() for line in fobj]
+#循环遍历列表，获取ip地址，ip为remote_comm函数第一个参数
+    for ip in ips:
+#将读取到的ip地址作为remote_comm函数实际参数传递给函数，ips中有几个ip地址循环几次
+#创建多线程
+        t = threading.Thread(target=remote_comm, args=(ip, pwd, command))
+#启用多线程
+        t.start()
+</pre></div></div>
+      <p class="number">步骤三：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY03/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>#参数给少了效果如下：</li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 remote_comm<span class="sh_symbol">.</span>py server_addr<span class="sh_symbol">.</span>txt</li><li>Usage<span class="sh_symbol">:</span> remote_comm<span class="sh_symbol">.</span>py ipaddr_file “command”</li><li>#参数给多了效果如下：</li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 remote_comm<span class="sh_symbol">.</span>py server_addr<span class="sh_symbol">.</span>txt id zhangsan</li><li>Usage<span class="sh_symbol">:</span> remote_comm<span class="sh_symbol">.</span>py ipaddr_file “command”</li><li>#正常显示如下：</li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 remote_comm<span class="sh_symbol">.</span>py server_addr<span class="sh_symbol">.</span>txt “id zhangsan”</li><li>Password<span class="sh_symbol">:</span></li><li><span class="sh_symbol">[</span><span class="sh_number">192.168.4.2</span><span class="sh_symbol">]</span> OUT<span class="sh_symbol">:</span></li><li>uid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> gid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> 组<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span><span class="sh_number">192.168.4.3</span><span class="sh_symbol">]</span> OUT<span class="sh_symbol">:</span></li><li>uid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> gid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> 组<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 remote_comm<span class="sh_symbol">.</span>py server_addr<span class="sh_symbol">.</span>txt “echo redhat <span class="sh_symbol">|</span> passwd –stdin root”</li><li>Password<span class="sh_symbol">:</span></li><li><span class="sh_symbol">[</span><span class="sh_number">192.168.4.3</span><span class="sh_symbol">]</span> OUT<span class="sh_symbol">:</span></li><li>更改用户root的密码：</li><li>passwd：所有的身份验证令牌已经成功更新。</li><li><span class="sh_symbol">[</span><span class="sh_number">192.168.4.2</span><span class="sh_symbol">]</span> OUT<span class="sh_symbol">:</span></li><li>更改用户root的密码：</li><li>passwd：所有的身份验证令牌已经成功更新。</li><li>#此时密码已经变成redhat</li><li><span class="sh_symbol">[</span>root@localhost day11<span class="sh_symbol">]</span># python3 remote_comm<span class="sh_symbol">.</span>py server_addr<span class="sh_symbol">.</span>txt “id zhangsan”</li><li>Password<span class="sh_symbol">:</span></li><li><span class="sh_symbol">[</span><span class="sh_number">192.168.4.2</span><span class="sh_symbol">]</span> OUT<span class="sh_symbol">:</span></li><li>uid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> gid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> 组<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span></li><li><span class="sh_symbol">[</span><span class="sh_number">192.168.4.3</span><span class="sh_symbol">]</span> OUT<span class="sh_symbol">:</span></li><li>uid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> gid<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span> 组<span class="sh_symbol">=</span><span class="sh_number">1001</span><span class="sh_symbol">(</span>zhangsan<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">#参数给少了效果如下：
+[root@localhost day11]# python3 remote_comm.py server_addr.txt
+Usage: remote_comm.py ipaddr_file “command”
+#参数给多了效果如下：
+[root@localhost day11]# python3 remote_comm.py server_addr.txt id zhangsan
+Usage: remote_comm.py ipaddr_file “command”
+#正常显示如下：
+[root@localhost day11]# python3 remote_comm.py server_addr.txt “id zhangsan”
+Password:
+[192.168.4.2] OUT:
+uid=1001(zhangsan) gid=1001(zhangsan) 组=1001(zhangsan)
+[192.168.4.3] OUT:
+uid=1001(zhangsan) gid=1001(zhangsan) 组=1001(zhangsan)
+[root@localhost day11]# python3 remote_comm.py server_addr.txt “echo redhat | passwd –stdin root”
+Password:
+[192.168.4.3] OUT:
+更改用户root的密码：
+passwd：所有的身份验证令牌已经成功更新。
+[192.168.4.2] OUT:
+更改用户root的密码：
+passwd：所有的身份验证令牌已经成功更新。
+#此时密码已经变成redhat
+[root@localhost day11]# python3 remote_comm.py server_addr.txt “id zhangsan”
+Password:
+[192.168.4.2] OUT:
+uid=1001(zhangsan) gid=1001(zhangsan) 组=1001(zhangsan)
+[192.168.4.3] OUT:
+uid=1001(zhangsan) gid=1001(zhangsan) 组=1001(zhangsan)
+
+
+</pre></div></div>
+    </div>
+  
+</body></html>

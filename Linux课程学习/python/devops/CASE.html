@@ -1,0 +1,496 @@
+
+<!-- saved from url=(0077)http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CASE</title>
+    
+    <script type="text/javascript" src="./CASE_files/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/jquery.snippet.js">
+    </script>
+    <script type="text/javascript" src="./CASE_files/main.js">
+    </script>
+    <link type="text/css" href="./CASE_files/index.css" rel="Stylesheet">
+    <link type="text/css" href="./CASE_files/jquery.snippet.css" rel="Stylesheet">
+  </head>
+  <body>
+    <div class="source_style_case">
+      <a name="page_top_case" id="top_anchor">
+      </a><a id="link_top" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#page_top_case">Top</a>
+      <h1>NSD Devops DAY01</h1>
+      <ol class="index">
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#case1">案例1：forking基础应用</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#case2">案例2：扫描存活主机</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#case3">案例3：利用fork创建TCP服务器</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#case4">案例4：扫描存活主机</a>
+        </li>
+        <li>
+          <a href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#case5">案例5：创建多线程时间戳服务器</a>
+        </li>
+      </ol>
+      <a name="case1">
+      </a>
+      <h2>1 案例1：forking基础应用</h2>
+      <h3>1.1 问题</h3>
+      <p>编写一个myfork.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>在父进程中打印“In parent”然后睡眠10秒
+</li>
+        <li>在子进程中编写循环，循环5次，输出当前系统时间，每次循环结束后睡眠1秒
+</li>
+        <li>父子进程结束后，分别打印“parent exit”和“child exit”
+</li>
+      </ol>
+      <h3>1.2 方案</h3>
+      <p>子进程运行时是从 pid = os.fork() 下面语句执行，实际上，该语句是两条语句， os.frok() 是创建子进程语句，而 pid =  是赋值语句，所以在创建完子进程后，下一句为运行赋值语句。</p>
+      <p>进程调用fork函数时，操作系统会新建一个子进程，它本质上与父进程完全相同。操作系统是将当前的进程（父进程）复制了一份（子进程），然后分别在父进程和子进程内返回。子进程接收返回值为0，此时pid=0，而父进程接收子进程的pid作为返回值。调用fork函数后，两个进程并发执行同一个程序，首先执行的是调用了fork之后的下一行代码。</p>
+      <p>此时，pid两个值，同时满足判断语句if和else，按照顺序执行如下：</p>
+      <p>父进程先执行：程序先输出“In parent!”，然后父进程睡眠10s，即进程挂起10s</p>
+      <p>父进程挂起时，子进程开始执行：循环5次，每循环一次打印当前时间后睡眠1s，5s后结束五次循环，打印“child exit”，此时子进程已经结束</p>
+      <p>子进程接收后，父进程挂起尚未结束，当父进程睡眠时间结束后，打印“parent exit”，父进程也结束了。</p>
+      <h3>1.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># vim myfork<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import os</li><li>import time</li><li>from datetime import datetime</li><li><span style="display:none;">&nbsp;</span></li><li>pid <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span><span class="sh_function">fork</span><span class="sh_symbol">()</span></li><li><span class="sh_keyword">if</span> pid<span class="sh_symbol">:</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"In parent!"</span><span class="sh_symbol">)</span></li><li>    time<span class="sh_symbol">.</span><span class="sh_function">sleep</span><span class="sh_symbol">(</span><span class="sh_number">10</span><span class="sh_symbol">)</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"parent exit"</span><span class="sh_symbol">)</span></li><li><span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>    <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">5</span><span class="sh_symbol">):</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span>datetime<span class="sh_symbol">.</span><span class="sh_function">now</span><span class="sh_symbol">())</span></li><li>        time<span class="sh_symbol">.</span><span class="sh_function">sleep</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li>    <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">"child exit"</span><span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# vim myfork.py
+#!/usr/bin/env python3
+
+import os
+import time
+from datetime import datetime
+
+pid = os.fork()
+if pid:
+    print("In parent!")
+    time.sleep(10)
+    print("parent exit")
+else:
+    for i in range(5):
+        print(datetime.now())
+        time.sleep(1)
+    print("child exit")
+
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># python3 myfork<span class="sh_symbol">.</span>py </li><li>In parent<span class="sh_symbol">!</span></li><li><span class="sh_number">2018-09-03</span> <span class="sh_number">10</span><span class="sh_symbol">:</span><span class="sh_number">48</span><span class="sh_symbol">:</span><span class="sh_number">46.552528</span></li><li><span class="sh_number">2018-09-03</span> <span class="sh_number">10</span><span class="sh_symbol">:</span><span class="sh_number">48</span><span class="sh_symbol">:</span><span class="sh_number">47.553714</span></li><li><span class="sh_number">2018-09-03</span> <span class="sh_number">10</span><span class="sh_symbol">:</span><span class="sh_number">48</span><span class="sh_symbol">:</span><span class="sh_number">48.554800</span></li><li><span class="sh_number">2018-09-03</span> <span class="sh_number">10</span><span class="sh_symbol">:</span><span class="sh_number">48</span><span class="sh_symbol">:</span><span class="sh_number">49.555901</span></li><li><span class="sh_number">2018-09-03</span> <span class="sh_number">10</span><span class="sh_symbol">:</span><span class="sh_number">48</span><span class="sh_symbol">:</span><span class="sh_number">50.557035</span></li><li>child exit</li><li>parent exit</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# python3 myfork.py 
+In parent!
+2018-09-03 10:48:46.552528
+2018-09-03 10:48:47.553714
+2018-09-03 10:48:48.554800
+2018-09-03 10:48:49.555901
+2018-09-03 10:48:50.557035
+child exit
+parent exit
+</pre></div></div>
+      <a name="case2">
+      </a>
+      <h2>2 案例2：扫描存活主机</h2>
+      <h3>2.1 问题</h3>
+      <p>创建forkping.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>通过ping测试主机是否可达
+</li>
+        <li>如果ping不通，不管什么原因都认为主机不可用
+</li>
+        <li>通过fork方式实现并发扫描 
+</li>
+      </ol>
+      <h3>2.2 方案</h3>
+      <p>定义函数ping()，该函数可实现允许ping通任何主机功能：</p>
+      <p>1.引用subprocess模块执行shell命令ping所有主机，将执行结果返回给rc变量，此时，如果ping不通返回结果为1，如果能ping通返回结果为0</p>
+      <p>2.如果rc变量值不为0，表示ping不通，输出down</p>
+      <p>3.否则，表示可以ping通，输出up</p>
+      <p>利用列表推导式生成整个网段的IP地址列表[172.40.58.1,172.40.58.2....]</p>
+      <p>循环遍历整个网段列表，每循环出一个ip，os.fork()生成1个子进程和1个父进程，</p>
+      <p>此时，如果pid返回值为0，子进程以ip作为实际参数调用ping函数，调用后一定要exit()，确保子进程ping完一个地址后结束，不要再循环生成父子进程。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>subprocess<span class="sh_symbol">.</span><span class="sh_function">call</span><span class="sh_symbol">(</span></li><li>        <span class="sh_string">'ping -c2 %s &amp;&gt; /dev/null'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">,</span></li><li>        shell<span class="sh_symbol">=</span>True</li><li>    <span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">subprocess.call(
+        'ping -c2 %s &amp;&gt; /dev/null' % host,
+        shell=True
+    )
+</pre></div></div>
+      <p>注意：shell命令ping所有主机时，ping发送一个ICMP请求，并且将输出重定向到/dev/null。这条语句返回其实就是ping值，就是python程序先创建shell进程，shell创建ping进程，ping进程运行返回值被shell等待，shell返回值给python程序wait，如果成功则为0.</p>
+      <h3>2.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># vim forkping<span class="sh_symbol">.</span>py</li><li><span style="display:none;">&nbsp;</span></li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import subprocess&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#加载支持Linux系统内部命令模块</li><li>import os</li><li>#定义函数，允许ping任何主机，ping函数需要给IP作为参数</li><li>def <span class="sh_function">ping</span><span class="sh_symbol">(</span>host<span class="sh_symbol">):</span></li><li>    rc <span class="sh_symbol">=</span> subprocess<span class="sh_symbol">.</span><span class="sh_function">call</span><span class="sh_symbol">(</span></li><li>        <span class="sh_string">'ping -c2 %s &amp;&gt; /dev/null'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">,</span></li><li>        shell<span class="sh_symbol">=</span>True</li><li>    <span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#定义ping命令的变量，返回值<span class="sh_number">0</span><span class="sh_symbol">:</span>正常，返回值<span class="sh_number">1</span>：ping不通</li><li>    <span class="sh_keyword">if</span> rc<span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'%s: down'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;#无法ping通打印down</li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'%s: up'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">)</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#当re<span class="sh_symbol">=</span><span class="sh_number">0</span>，表示可以ping通，打印up</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;#生成整个网段的IP列表<span class="sh_symbol">[</span><span class="sh_number">172.40.58.1</span><span class="sh_symbol">,</span><span class="sh_number">172.40.58.2</span><span class="sh_symbol">....]</span></li><li>    ips <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_string">'172.40.58.%s'</span> <span class="sh_symbol">%</span> i <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">255</span><span class="sh_symbol">)]</span></li><li>    <span class="sh_keyword">for</span> ip <span class="sh_keyword">in</span> ips<span class="sh_symbol">:</span></li><li>        pid <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span><span class="sh_function">fork</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;# 父进程负责生成子进程</li><li>        <span class="sh_keyword">if</span> not pid<span class="sh_symbol">:</span>&nbsp;&nbsp;&nbsp;&nbsp;# 子进程负责调用ping函数</li><li>            <span class="sh_function">ping</span><span class="sh_symbol">(</span>ip<span class="sh_symbol">)</span></li><li>            <span class="sh_function">exit</span><span class="sh_symbol">()</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 子进程ping完一个地址后结束，不要再循环</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# vim forkping.py
+
+#!/usr/bin/env python3
+
+import subprocess		#加载支持Linux系统内部命令模块
+import os
+#定义函数，允许ping任何主机，ping函数需要给IP作为参数
+def ping(host):
+    rc = subprocess.call(
+        'ping -c2 %s &amp;&gt; /dev/null' % host,
+        shell=True
+    )			#定义ping命令的变量，返回值0:正常，返回值1：ping不通
+    if rc:
+        print('%s: down' % host)	#无法ping通打印down
+    else:
+        print('%s: up' % host)		#当re=0，表示可以ping通，打印up
+
+if __name__ == '__main__':
+	#生成整个网段的IP列表[172.40.58.1,172.40.58.2....]
+    ips = ['172.40.58.%s' % i for i in range(1, 255)]
+    for ip in ips:
+        pid = os.fork()	# 父进程负责生成子进程
+        if not pid:	# 子进程负责调用ping函数
+            ping(ip)
+            exit()		# 子进程ping完一个地址后结束，不要再循环
+
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># python3 forkping<span class="sh_symbol">.</span>py </li><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># <span class="sh_number">172.40.58.69</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.1</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.87</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.90</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.102</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.111</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.106</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.101</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.110</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.109</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.105</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.119</span><span class="sh_symbol">:</span> up</li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_number">172.40.58.14</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.15</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.6</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.5</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.10</span><span class="sh_symbol">:</span> down</li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li>#未执行完毕。。。</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# python3 forkping.py 
+[root@localhost day09]# 172.40.58.69: up
+172.40.58.1: up
+172.40.58.87: up
+172.40.58.90: up
+172.40.58.102: up
+172.40.58.111: up
+172.40.58.106: up
+172.40.58.101: up
+172.40.58.110: up
+172.40.58.109: up
+172.40.58.105: up
+172.40.58.119: up
+...
+...
+...
+172.40.58.14: down
+172.40.58.15: down
+172.40.58.6: down
+172.40.58.5: down
+172.40.58.10: down
+...
+...
+#未执行完毕。。。
+</pre></div></div>
+      <a name="case3">
+      </a>
+      <h2>3 案例3：利用fork创建TCP服务器</h2>
+      <h3>3.1 问题</h3>
+      <p>创建tcp_time_server.py文件，编写TCP服务器：</p>
+      <ol class="list">
+        <li>服务器监听在0.0.0.0的21567端口上
+</li>
+        <li>收到客户端数据后，将其加上时间戳后回送给客户端
+</li>
+        <li>如果客户端发过来的字符全是空白字符，则终止与客户端的连接
+</li>
+        <li>服务器能够同时处理多个客户端的请求
+</li>
+        <li>程序通过forking来实现
+</li>
+      </ol>
+      <h3>3.2 方案</h3>
+      <p>面向对象编程方法编写TCP服务器：</p>
+      <p>1）TcpTimeServer():创建TcpTimeServer类</p>
+      <p>2）__init__():创建对象后自动调用init方法，初始化以下属性：</p>
+      <p>建立socket对象。</p>
+      <p>设置socket选项，当socket关闭后，本地端用于该socket的端口号立刻就可以被重用。</p>
+      <p>绑定socket对象IP和端口。</p>
+      <p>将套接字设为监听模式，准备接收客户端请求。利用listen()函数进行侦听连接。</p>
+      <p>3）将创建的TcpTimeServer()对象返回给s，让s实例来保存该对象</p>
+      <p>4）调用s.mainloop()方法：</p>
+      <p>利用while循环，accept()会等待并返回一个客户端的连接</p>
+      <p>os.fork生成子进程</p>
+      <p>然后进行if判断，如果是服务器的话（即父进程），关闭客户端套接字，并利用os.waitpid返回值循环处理客户机僵尸进程，僵尸进程处理完毕，结束循环，父进程重新开始循环，进入accept()连接去等待</p>
+      <p>如果是客户端的话（即子进程），关闭服务器套接字，并调用chat()方法，去与客户机聊天去。子进程结束后exit()退出。</p>
+      <p>5)调用chat()方法，用返回的客户端作为参数</p>
+      <p>循环将recv接收到的数据加上时间戳后send发送给客户端</p>
+      <p>关闭套接字，释放资源。</p>
+      <p>6)此时服务器能够同时处理多个客户端的请求，以多进程方式</p>
+      <h3>3.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span> # vim tcp_time_client<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li>import socket</li><li>import os</li><li>from time import strftime</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> TcpTimeServer<span class="sh_symbol">:</span></li><li>    def <span class="sh_function">__init__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> host<span class="sh_symbol">=</span><span class="sh_string">''</span><span class="sh_symbol">,</span> port<span class="sh_symbol">=</span><span class="sh_number">21567</span><span class="sh_symbol">):</span></li><li>        self<span class="sh_symbol">.</span>addr <span class="sh_symbol">=</span> <span class="sh_symbol">(</span>host<span class="sh_symbol">,</span> port<span class="sh_symbol">)</span></li><li>        self<span class="sh_symbol">.</span>serv <span class="sh_symbol">=</span> socket<span class="sh_symbol">.</span><span class="sh_function">socket</span><span class="sh_symbol">()</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">setsockopt</span><span class="sh_symbol">(</span>socket<span class="sh_symbol">.</span>SOL_SOCKET<span class="sh_symbol">,</span> socket<span class="sh_symbol">.</span>SO_REUSEADDR<span class="sh_symbol">,</span> <span class="sh_number">1</span><span class="sh_symbol">)</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">bind</span><span class="sh_symbol">(</span>self<span class="sh_symbol">.</span>addr<span class="sh_symbol">)</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">listen</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">chat</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> c_sock<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> c_sock<span class="sh_symbol">.</span><span class="sh_function">recv</span><span class="sh_symbol">(</span><span class="sh_number">1024</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> data<span class="sh_symbol">.</span><span class="sh_function">strip</span><span class="sh_symbol">()</span> <span class="sh_symbol">==</span> b<span class="sh_string">'quit'</span><span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            data <span class="sh_symbol">=</span> <span class="sh_string">'[%s] %s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span><span class="sh_function">strftime</span><span class="sh_symbol">(</span><span class="sh_string">'%H:%M:%S'</span><span class="sh_symbol">),</span> data<span class="sh_symbol">.</span><span class="sh_function">decode</span><span class="sh_symbol">(</span><span class="sh_string">'utf8'</span><span class="sh_symbol">))</span></li><li>            c_sock<span class="sh_symbol">.</span><span class="sh_function">send</span><span class="sh_symbol">(</span>data<span class="sh_symbol">.</span><span class="sh_function">encode</span><span class="sh_symbol">(</span><span class="sh_string">'utf8'</span><span class="sh_symbol">))</span></li><li>        c_sock<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">mainloop</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            cli_sock<span class="sh_symbol">,</span> cli_addr <span class="sh_symbol">=</span> self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">accept</span><span class="sh_symbol">()</span></li><li>            pid <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span><span class="sh_function">fork</span><span class="sh_symbol">()</span></li><li>            <span class="sh_keyword">if</span> pid<span class="sh_symbol">:</span></li><li>                cli_sock<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li>#取出waitpid元组中第一个数，优先处理僵尸进程</li><li>#<span class="sh_function">waitpid</span><span class="sh_symbol">()</span>的返回值：如果子进程正在运行、尚未结束则返回<span class="sh_number">0</span>，否则返回子进程的PID</li><li>                <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>                    result <span class="sh_symbol">=</span> os<span class="sh_symbol">.</span><span class="sh_function">waitpid</span><span class="sh_symbol">(-</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">1</span><span class="sh_symbol">)[</span><span class="sh_number">0</span><span class="sh_symbol">]</span></li><li>                    <span class="sh_keyword">if</span> result <span class="sh_symbol">==</span> <span class="sh_number">0</span><span class="sh_symbol">:</span></li><li>                        <span class="sh_keyword">break</span></li><li>            <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>                self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li>                self<span class="sh_symbol">.</span><span class="sh_function">chat</span><span class="sh_symbol">(</span>cli_sock<span class="sh_symbol">)</span></li><li>                <span class="sh_function">exit</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    s <span class="sh_symbol">=</span> <span class="sh_function">TcpTimeServer</span><span class="sh_symbol">()</span></li><li>    s<span class="sh_symbol">.</span><span class="sh_function">mainloop</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09] # vim tcp_time_client.py
+#!/usr/bin/env python3
+import socket
+import os
+from time import strftime
+
+class TcpTimeServer:
+    def __init__(self, host='', port=21567):
+        self.addr = (host, port)
+        self.serv = socket.socket()
+        self.serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.serv.bind(self.addr)
+        self.serv.listen(1)
+
+    def chat(self, c_sock):
+        while True:
+            data = c_sock.recv(1024)
+            if data.strip() == b'quit':
+                break
+            data = '[%s] %s' % (strftime('%H:%M:%S'), data.decode('utf8'))
+            c_sock.send(data.encode('utf8'))
+        c_sock.close()
+
+    def mainloop(self):
+        while True:
+            cli_sock, cli_addr = self.serv.accept()
+            pid = os.fork()
+            if pid:
+                cli_sock.close()
+#取出waitpid元组中第一个数，优先处理僵尸进程
+#waitpid()的返回值：如果子进程正在运行、尚未结束则返回0，否则返回子进程的PID
+                while True:
+                    result = os.waitpid(-1, 1)[0]
+                    if result == 0:
+                        break
+            else:
+                self.serv.close()
+                self.chat(cli_sock)
+                exit()
+
+        self.serv.close()
+
+if __name__ == '__main__':
+    s = TcpTimeServer()
+    s.mainloop()
+
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li>执行脚本，启动服务</li><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># python3 tcp_time_server<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">执行脚本，启动服务
+[root@localhost day09]# python3 tcp_time_server.py
+
+</pre></div></div>
+      <p>以下两个客户端同时telnet与服务器端连接，可实现多用户通信：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># telnet <span class="sh_number">172.40.58.189</span> <span class="sh_number">21567</span></li><li>Trying <span class="sh_number">172.40.58.189</span><span class="sh_symbol">...</span></li><li>Connected to <span class="sh_number">172.40.58.189</span><span class="sh_symbol">.</span></li><li>Escape character is <span class="sh_string">'^]'</span><span class="sh_symbol">.</span></li><li>nihao</li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">37</span><span class="sh_symbol">:</span><span class="sh_number">36</span><span class="sh_symbol">]</span> nihao</li><li>nizainali</li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">37</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">]</span> nizainali</li><li>hello world</li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">37</span><span class="sh_symbol">:</span><span class="sh_number">52</span><span class="sh_symbol">]</span> hello world</li><li>quit</li><li>Connection closed by foreign host<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># telnet <span class="sh_number">172.40.58.189</span> <span class="sh_number">21567</span></li><li>Trying <span class="sh_number">172.40.58.189</span><span class="sh_symbol">...</span></li><li>Connected to <span class="sh_number">172.40.58.189</span><span class="sh_symbol">.</span></li><li>Escape character is <span class="sh_string">'^]'</span><span class="sh_symbol">.</span></li><li>hello lilei</li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">38</span><span class="sh_symbol">:</span><span class="sh_number">33</span><span class="sh_symbol">]</span> hello lilei</li><li>I<span class="sh_string">'m fine</span></li><li><span class="sh_string">[19:38:45] I'</span>m fine</li><li>quit</li><li>Connection closed by foreign host<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# telnet 172.40.58.189 21567
+Trying 172.40.58.189...
+Connected to 172.40.58.189.
+Escape character is '^]'.
+nihao
+[19:37:36] nihao
+nizainali
+[19:37:42] nizainali
+hello world
+[19:37:52] hello world
+quit
+Connection closed by foreign host.
+[root@localhost day09]# telnet 172.40.58.189 21567
+Trying 172.40.58.189...
+Connected to 172.40.58.189.
+Escape character is '^]'.
+hello lilei
+[19:38:33] hello lilei
+I'm fine
+[19:38:45] I'm fine
+quit
+Connection closed by foreign host.
+</pre></div></div>
+      <a name="case4">
+      </a>
+      <h2>4 案例4：扫描存活主机</h2>
+      <h3>4.1 问题</h3>
+      <p>创建mtping.py脚本，实现以下功能：</p>
+      <ol class="list">
+        <li>通过ping测试主机是否可达
+</li>
+        <li>如果ping不通，不管什么原因都认为主机不可用
+</li>
+        <li>通过多线程方式实现并发扫描
+</li>
+      </ol>
+      <h3>4.2 方案</h3>
+      <p>subprocess.call ()方法可以调用系统命令，其返回值是系统命令退出码，也就是如果系统命令成功执行，返回0，如果没有成功执行，返回非零值。</p>
+      <p>调用Ping对象，可以调用系统的ping命令，通过退出码来判断是否ping通了该主机。如果顺序执行，每个ping操作需要消耗数秒钟，全部的254个地址需要10分钟以上。而采用多线程，可以实现对这254个地址同时执行ping操作，并发的结果就是将执行时间缩短到了10秒钟左右。</p>
+      <h3>4.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># vim mtping<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import subprocess</li><li>import threading</li><li><span style="display:none;">&nbsp;</span></li><li>def <span class="sh_function">ping</span><span class="sh_symbol">(</span>host<span class="sh_symbol">):</span></li><li>    rc <span class="sh_symbol">=</span> subprocess<span class="sh_symbol">.</span><span class="sh_function">call</span><span class="sh_symbol">(</span></li><li>        <span class="sh_string">'ping -c2 %s &amp;&gt; /dev/null'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">,</span></li><li>        shell<span class="sh_symbol">=</span>True</li><li>    <span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">if</span> rc<span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'%s: down'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">)</span></li><li>    <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>        <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'%s: up'</span> <span class="sh_symbol">%</span> host<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    ips <span class="sh_symbol">=</span> <span class="sh_symbol">[</span><span class="sh_string">'172.40.58.%s'</span> <span class="sh_symbol">%</span> i <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">255</span><span class="sh_symbol">)]</span></li><li>    <span class="sh_keyword">for</span> ip <span class="sh_keyword">in</span> ips<span class="sh_symbol">:</span></li><li>        # 创建线程，ping是上面定义的函数<span class="sh_symbol">,</span> args是传给ping函数的参数</li><li>        t <span class="sh_symbol">=</span> threading<span class="sh_symbol">.</span><span class="sh_function">Thread</span><span class="sh_symbol">(</span>target<span class="sh_symbol">=</span>ping<span class="sh_symbol">,</span> args<span class="sh_symbol">=(</span>ip<span class="sh_symbol">,))</span></li><li>        t<span class="sh_symbol">.</span><span class="sh_function">start</span><span class="sh_symbol">()</span>  # 执行<span class="sh_function">ping</span><span class="sh_symbol">(</span>ip<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# vim mtping.py
+#!/usr/bin/env python3
+
+import subprocess
+import threading
+
+def ping(host):
+    rc = subprocess.call(
+        'ping -c2 %s &amp;&gt; /dev/null' % host,
+        shell=True
+    )
+    if rc:
+        print('%s: down' % host)
+    else:
+        print('%s: up' % host)
+
+if __name__ == '__main__':
+    ips = ['172.40.58.%s' % i for i in range(1, 255)]
+    for ip in ips:
+        # 创建线程，ping是上面定义的函数, args是传给ping函数的参数
+        t = threading.Thread(target=ping, args=(ip,))
+        t.start()  # 执行ping(ip)
+</pre></div></div>
+      <p>面向对象代码编写方式如下：</p>
+      <p>定义Ping类，该类可实现允许ping通任何主机功能：</p>
+      <p>1.利用__init__方法初始化参数，当调用Ping类实例时，该方法自动调用</p>
+      <p>2. 利用__call__()方法让Ping类实例变成一个可调用对象调用，调用t.start()时， 引用subprocess模块执行shell命令ping所有主机，将执行结果返回给rc变量，此时，如果ping不通返回结果为1，如果能ping通返回结果为0</p>
+      <p>3.如果rc变量值不为0，表示ping不通，输出down</p>
+      <p>4.否则，表示可以ping通，输出up</p>
+      <p>利用列表推导式生成整个网段的IP地址列表[172.40.58.1,172.40.58.2....]</p>
+      <p>循环遍历整个网段列表，直接利用 Thread 类来创建线程对象，执行Ping(ip)。</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># vim mtping2<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import threading</li><li>import subprocess</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> Ping<span class="sh_symbol">:</span></li><li>    def <span class="sh_function">__init__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> host<span class="sh_symbol">):</span></li><li>        self<span class="sh_symbol">.</span>host <span class="sh_symbol">=</span> host</li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">__call__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        rc <span class="sh_symbol">=</span> subprocess<span class="sh_symbol">.</span><span class="sh_function">call</span><span class="sh_symbol">(</span></li><li>            <span class="sh_string">'ping -c2 %s &amp;&gt; /dev/null'</span> <span class="sh_symbol">%</span> self<span class="sh_symbol">.</span>host<span class="sh_symbol">,</span></li><li>            shell<span class="sh_symbol">=</span>True</li><li>        <span class="sh_symbol">)</span></li><li>        <span class="sh_keyword">if</span> rc<span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'%s: down'</span> <span class="sh_symbol">%</span> self<span class="sh_symbol">.</span>host<span class="sh_symbol">)</span></li><li>        <span class="sh_keyword">else</span><span class="sh_symbol">:</span></li><li>            <span class="sh_function">print</span><span class="sh_symbol">(</span><span class="sh_string">'%s: up'</span> <span class="sh_symbol">%</span> self<span class="sh_symbol">.</span>host<span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    ips <span class="sh_symbol">=</span> <span class="sh_symbol">(</span><span class="sh_string">'172.40.58.%s'</span> <span class="sh_symbol">%</span> i <span class="sh_keyword">for</span> i <span class="sh_keyword">in</span> <span class="sh_function">range</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">,</span> <span class="sh_number">255</span><span class="sh_symbol">))</span>  # 创建生成器</li><li>    <span class="sh_keyword">for</span> ip <span class="sh_keyword">in</span> ips<span class="sh_symbol">:</span></li><li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 创建线程，Ping是上面定义的函数</li><li>        t <span class="sh_symbol">=</span> threading<span class="sh_symbol">.</span><span class="sh_function">Thread</span><span class="sh_symbol">(</span>target<span class="sh_symbol">=</span><span class="sh_function">Ping</span><span class="sh_symbol">(</span>ip<span class="sh_symbol">))</span>  # 创建Ping的实例</li><li>        t<span class="sh_symbol">.</span><span class="sh_function">start</span><span class="sh_symbol">()</span>   #执行<span class="sh_function">Ping</span><span class="sh_symbol">(</span>ip<span class="sh_symbol">)</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# vim mtping2.py
+#!/usr/bin/env python3
+
+import threading
+import subprocess
+
+class Ping:
+    def __init__(self, host):
+        self.host = host
+
+    def __call__(self):
+        rc = subprocess.call(
+            'ping -c2 %s &amp;&gt; /dev/null' % self.host,
+            shell=True
+        )
+        if rc:
+            print('%s: down' % self.host)
+        else:
+            print('%s: up' % self.host)
+
+if __name__ == '__main__':
+    ips = ('172.40.58.%s' % i for i in range(1, 255))  # 创建生成器
+    for ip in ips:
+		# 创建线程，Ping是上面定义的函数
+        t = threading.Thread(target=Ping(ip))  # 创建Ping的实例
+        t.start()   #执行Ping(ip)
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># python3 udp_time_serv<span class="sh_symbol">.</span>py </li><li><span class="sh_number">172.40.58.1</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.69</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.87</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.90</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.102</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.101</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.105</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.106</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.108</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.110</span><span class="sh_symbol">:</span> up</li><li><span class="sh_number">172.40.58.109</span><span class="sh_symbol">:</span> up</li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_symbol">...</span></li><li><span class="sh_number">172.40.58.241</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.242</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.243</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.245</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.246</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.248</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.247</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.250</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.249</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.251</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.252</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.253</span><span class="sh_symbol">:</span> down</li><li><span class="sh_number">172.40.58.254</span><span class="sh_symbol">:</span> down</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# python3 udp_time_serv.py 
+172.40.58.1: up
+172.40.58.69: up
+172.40.58.87: up
+172.40.58.90: up
+172.40.58.102: up
+172.40.58.101: up
+172.40.58.105: up
+172.40.58.106: up
+172.40.58.108: up
+172.40.58.110: up
+172.40.58.109: up
+...
+...
+...
+...
+172.40.58.241: down
+172.40.58.242: down
+172.40.58.243: down
+172.40.58.245: down
+172.40.58.246: down
+172.40.58.248: down
+172.40.58.247: down
+172.40.58.250: down
+172.40.58.249: down
+172.40.58.251: down
+172.40.58.252: down
+172.40.58.253: down
+172.40.58.254: down
+</pre></div></div>
+      <a name="case5">
+      </a>
+      <h2>5 案例5：创建多线程时间戳服务器</h2>
+      <h3>5.1 问题</h3>
+      <p>创建mttcp_server.py脚本，编写一个TCP服务器：</p>
+      <ol class="list">
+        <li>服务器监听在0.0.0.0的12345端口上
+</li>
+        <li>收到客户端数据后，将其加上时间戳后回送给客户端
+</li>
+        <li>如果客户端发过来的字符全是空白字符，则终止与客户端的连接
+</li>
+        <li>要求能够同时处理多个客户端的请求
+</li>
+        <li>要求使用多线程的方式进行编写
+</li>
+      </ol>
+      <h3>5.2 方案</h3>
+      <p>面向对象编程方法编写TCP服务器：</p>
+      <p>1）TcpTimeServer():创建TcpTimeServer类</p>
+      <p>2）__init__():创建对象后自动调用init方法，初始化以下属性：</p>
+      <p>建立socket对象。</p>
+      <p>设置socket选项，当socket关闭后，本地端用于该socket的端口号立刻就可以被重用。</p>
+      <p>绑定socket对象IP和端口。</p>
+      <p>将套接字设为监听模式，准备接收客户端请求。利用listen()函数进行侦听连接。</p>
+      <p>3）将创建的TcpTimeServer()对象返回给s，让s实例来保存该对象</p>
+      <p>4）调用s.mainloop()方法：</p>
+      <p>利用while循环，accept()会等待并返回一个客户端的连接</p>
+      <p>当有客户机连接上来之后，直接利用 Thread 类来创建工作线程，并让工作线程直接与客户机聊天通信（即调用chat()方法）</p>
+      <p>此时主线程在创建子线程工作线程后，主线程重新开始循环，进入accept()连接去等待</p>
+      <p>5)调用chat()方法，用返回的客户端作为参数</p>
+      <p>循环将recv接收到的数据加上时间戳后send发送给客户端</p>
+      <p>关闭套接字，释放资源。</p>
+      <p>6)此时服务器能够同时处理多个客户端的请求，以多线程方式</p>
+      <h3>5.3 步骤</h3>
+      <p>实现此案例需要按照如下步骤进行。</p>
+      <p class="number">步骤一：编写脚本</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># vim mttcp_server<span class="sh_symbol">.</span>py</li><li>#<span class="sh_symbol">!</span><span class="sh_regexp">/usr/</span><span class="sh_normal">bin</span><span class="sh_symbol">/</span>env python3</li><li><span style="display:none;">&nbsp;</span></li><li>import socket</li><li>import threading</li><li>from time import strftime</li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">class</span> TcpTimeServer<span class="sh_symbol">:</span></li><li>    def <span class="sh_function">__init__</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> host<span class="sh_symbol">=</span><span class="sh_string">''</span><span class="sh_symbol">,</span> port<span class="sh_symbol">=</span><span class="sh_number">12345</span><span class="sh_symbol">):</span></li><li>        self<span class="sh_symbol">.</span>addr <span class="sh_symbol">=</span> <span class="sh_symbol">(</span>host<span class="sh_symbol">,</span> port<span class="sh_symbol">)</span></li><li>        self<span class="sh_symbol">.</span>serv <span class="sh_symbol">=</span> socket<span class="sh_symbol">.</span><span class="sh_function">socket</span><span class="sh_symbol">()</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">setsockopt</span><span class="sh_symbol">(</span>socket<span class="sh_symbol">.</span>SOL_SOCKET<span class="sh_symbol">,</span> socket<span class="sh_symbol">.</span>SO_REUSEADDR<span class="sh_symbol">,</span> <span class="sh_number">1</span><span class="sh_symbol">)</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">bind</span><span class="sh_symbol">(</span>self<span class="sh_symbol">.</span>addr<span class="sh_symbol">)</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">listen</span><span class="sh_symbol">(</span><span class="sh_number">1</span><span class="sh_symbol">)</span></li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">chat</span><span class="sh_symbol">(</span>self<span class="sh_symbol">,</span> c_sock<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            data <span class="sh_symbol">=</span> c_sock<span class="sh_symbol">.</span><span class="sh_function">recv</span><span class="sh_symbol">(</span><span class="sh_number">1024</span><span class="sh_symbol">)</span></li><li>            <span class="sh_keyword">if</span> data<span class="sh_symbol">.</span><span class="sh_function">strip</span><span class="sh_symbol">()</span> <span class="sh_symbol">==</span> b<span class="sh_string">'quit'</span><span class="sh_symbol">:</span></li><li>                <span class="sh_keyword">break</span></li><li>            data <span class="sh_symbol">=</span> <span class="sh_string">'[%s] %s'</span> <span class="sh_symbol">%</span> <span class="sh_symbol">(</span><span class="sh_function">strftime</span><span class="sh_symbol">(</span><span class="sh_string">'%H:%M:%S'</span><span class="sh_symbol">),</span> data<span class="sh_symbol">.</span><span class="sh_function">decode</span><span class="sh_symbol">(</span><span class="sh_string">'utf8'</span><span class="sh_symbol">))</span></li><li>            c_sock<span class="sh_symbol">.</span><span class="sh_function">send</span><span class="sh_symbol">(</span>data<span class="sh_symbol">.</span><span class="sh_function">encode</span><span class="sh_symbol">(</span><span class="sh_string">'utf8'</span><span class="sh_symbol">))</span></li><li>        c_sock<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>    def <span class="sh_function">mainloop</span><span class="sh_symbol">(</span>self<span class="sh_symbol">):</span></li><li>        <span class="sh_keyword">while</span> True<span class="sh_symbol">:</span></li><li>            cli_sock<span class="sh_symbol">,</span> cli_addr <span class="sh_symbol">=</span> self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">accept</span><span class="sh_symbol">()</span></li><li>            t <span class="sh_symbol">=</span> threading<span class="sh_symbol">.</span><span class="sh_function">Thread</span><span class="sh_symbol">(</span>target<span class="sh_symbol">=</span>self<span class="sh_symbol">.</span>chat<span class="sh_symbol">,</span> args<span class="sh_symbol">=(</span>cli_sock<span class="sh_symbol">,))</span></li><li>            t<span class="sh_symbol">.</span><span class="sh_function">start</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li>        self<span class="sh_symbol">.</span>serv<span class="sh_symbol">.</span><span class="sh_function">close</span><span class="sh_symbol">()</span></li><li><span style="display:none;">&nbsp;</span></li><li><span class="sh_keyword">if</span> __name__ <span class="sh_symbol">==</span> <span class="sh_string">'__main__'</span><span class="sh_symbol">:</span></li><li>    s <span class="sh_symbol">=</span> <span class="sh_function">TcpTimeServer</span><span class="sh_symbol">()</span></li><li>    s<span class="sh_symbol">.</span><span class="sh_function">mainloop</span><span class="sh_symbol">()</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# vim mttcp_server.py
+#!/usr/bin/env python3
+
+import socket
+import threading
+from time import strftime
+
+class TcpTimeServer:
+    def __init__(self, host='', port=12345):
+        self.addr = (host, port)
+        self.serv = socket.socket()
+        self.serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.serv.bind(self.addr)
+        self.serv.listen(1)
+
+    def chat(self, c_sock):
+        while True:
+            data = c_sock.recv(1024)
+            if data.strip() == b'quit':
+                break
+            data = '[%s] %s' % (strftime('%H:%M:%S'), data.decode('utf8'))
+            c_sock.send(data.encode('utf8'))
+        c_sock.close()
+
+    def mainloop(self):
+        while True:
+            cli_sock, cli_addr = self.serv.accept()
+            t = threading.Thread(target=self.chat, args=(cli_sock,))
+            t.start()
+
+        self.serv.close()
+
+if __name__ == '__main__':
+    s = TcpTimeServer()
+    s.mainloop()
+</pre></div></div>
+      <p class="number">步骤二：测试脚本执行</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># python3 mttcp_server<span class="sh_symbol">.</span>py</li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# python3 mttcp_server.py
+
+</pre></div></div>
+      <p>以下两个客户端同时telnet与服务器端连接，可实现多用户通信：</p>
+      <div class="snippet-container" style="undefined;"><div class="sh_acid snippet-wrap"><div class="snippet-menu sh_sourceCode" style="display:none;"><pre style="display: none;"><a class="snippet-copy sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#" style="display: none;">copy</a><a class="snippet-text sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">text</a><a class="snippet-window sh_url" href="http://tts.tmooc.cn/ttsPage/LINUX/NSDTN201801/DEVOPS/DAY01/CASE/01/index.html#">pop-up</a></pre></div><pre class="code sh_javascript snippet-formatted sh_sourceCode"><ol class="snippet-num"><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># telnet <span class="sh_number">172.40.58.189</span> <span class="sh_number">12345</span></li><li>Trying <span class="sh_number">172.40.58.189</span><span class="sh_symbol">...</span></li><li>Connected to <span class="sh_number">172.40.58.189</span><span class="sh_symbol">.</span></li><li>Escape character is <span class="sh_string">'^]'</span><span class="sh_symbol">.</span></li><li>nihao</li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">42</span><span class="sh_symbol">:</span><span class="sh_number">58</span><span class="sh_symbol">]</span> nihao</li><li>I<span class="sh_string">'m fine</span></li><li><span class="sh_string">[19:43:08] I'</span>m fine</li><li>quit</li><li>Connection closed by foreign host<span class="sh_symbol">.</span></li><li><span class="sh_symbol">[</span>root@localhost day09<span class="sh_symbol">]</span># telnet <span class="sh_number">172.40.58.189</span> <span class="sh_number">12345</span></li><li>Trying <span class="sh_number">172.40.58.189</span><span class="sh_symbol">...</span></li><li>Connected to <span class="sh_number">172.40.58.189</span><span class="sh_symbol">.</span></li><li>Escape character is <span class="sh_string">'^]'</span><span class="sh_symbol">.</span></li><li>hello world<span class="sh_symbol">!</span></li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">43</span><span class="sh_symbol">:</span><span class="sh_number">22</span><span class="sh_symbol">]</span> hello world<span class="sh_symbol">!</span></li><li>hello lilei</li><li><span class="sh_symbol">[</span><span class="sh_number">19</span><span class="sh_symbol">:</span><span class="sh_number">43</span><span class="sh_symbol">:</span><span class="sh_number">32</span><span class="sh_symbol">]</span> hello lilei</li><li>quit</li><li>Connection closed by foreign host<span class="sh_symbol">.</span></li></ol></pre><pre class="snippet-textonly sh_sourceCode" style="display:none;">[root@localhost day09]# telnet 172.40.58.189 12345
+Trying 172.40.58.189...
+Connected to 172.40.58.189.
+Escape character is '^]'.
+nihao
+[19:42:58] nihao
+I'm fine
+[19:43:08] I'm fine
+quit
+Connection closed by foreign host.
+[root@localhost day09]# telnet 172.40.58.189 12345
+Trying 172.40.58.189...
+Connected to 172.40.58.189.
+Escape character is '^]'.
+hello world!
+[19:43:22] hello world!
+hello lilei
+[19:43:32] hello lilei
+quit
+Connection closed by foreign host.
+</pre></div></div>
+    </div>
+  
+</body></html>
