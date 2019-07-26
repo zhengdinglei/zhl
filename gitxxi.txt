@@ -12,4 +12,4 @@
 #commit和push实现提交代码的功能
 [root@pc001 ~]# git pull
 #pull更新，类似于svn updat
-git clone  https://github.com/hnzhenglei/zhl
+git clone  https://github.com/zhengdinglei/zhl
